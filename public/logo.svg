@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="hwgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="50%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+    <linearGradient id="barGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="#111827"/>
+  <rect width="46" height="46" x="1" y="1" rx="11" stroke="url(#hwgGrad)" stroke-width="1.5" stroke-opacity="0.4"/>
+  <path d="M12 34V28M20 34V22M28 34V16M36 34V10" stroke="url(#hwgGrad)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M12 24L20 18L28 12L36 6" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="36" cy="6" r="3" fill="#34D399"/>
+</svg>

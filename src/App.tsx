@@ -31,6 +31,7 @@ export function App() {
   });
 
   const [selectedStorePlatform, setSelectedStorePlatform] = useState<SocialPlatform>('all');
+  const [prefilledToolUrl, setPrefilledToolUrl] = useState<string | undefined>(undefined);
 
   const handleCurrencyChange = (newCurr: 'BDT' | 'USD') => {
     setCurrency(newCurr);
@@ -91,7 +92,7 @@ export function App() {
         {/* Hero Section shown on primary landing tabs */}
         {(activeTab === 'store' || activeTab === 'bundles') && (
           <HeroSection
-            onExploreStore={() => {
+            onExploreStore={(_query) => {
               setActiveTab('store');
               window.scrollTo({ top: 480, behavior: 'smooth' });
             }}
@@ -99,7 +100,10 @@ export function App() {
               setActiveTab('bundles');
               window.scrollTo({ top: 480, behavior: 'smooth' });
             }}
-            onExploreTools={() => {
+            onExploreTools={(url) => {
+              if (url) {
+                setPrefilledToolUrl(url);
+              }
               setActiveTab('tools');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
@@ -128,6 +132,7 @@ export function App() {
           <FreeToolsSection
             currency={currency}
             onSelectServiceTab={handleSelectServiceTabFromTool}
+            initialPrefilledUrl={prefilledToolUrl}
           />
         )}
 
@@ -138,43 +143,45 @@ export function App() {
             onRefreshOrders={refreshOrders}
             wallet={wallet}
             currency={currency}
-            onExploreServices={() => setActiveTab('store')}
+            onTopUpClick={() => setIsWalletModalOpen(true)}
           />
         )}
 
-        {/* Tab 5: Reseller API Docs */}
-        {activeTab === 'api' && <ApiDocsSection />}
+        {/* Tab 5: Reseller API Documentation */}
+        {activeTab === 'api' && (
+          <ApiDocsSection currency={currency} />
+        )}
 
       </main>
 
-      {/* Modals */}
+      {/* Footer */}
+      <Footer onNavigate={setActiveTab} />
+
+      {/* Wallet Deposit Modal */}
       <WalletModal
         isOpen={isWalletModalOpen}
         onClose={() => setIsWalletModalOpen(false)}
         wallet={wallet}
-        onWalletUpdated={(updated) => setWallet(updated)}
         currency={currency}
+        onWalletUpdated={(updated) => setWallet(updated)}
       />
 
+      {/* Place Order Modal */}
       <OrderModal
         isOpen={orderModalState.isOpen}
         onClose={() => setOrderModalState({ isOpen: false, service: null, bundle: null })}
         service={orderModalState.service}
         bundle={orderModalState.bundle}
-        currency={currency}
         wallet={wallet}
+        currency={currency}
         onOrderPlaced={handleOrderPlaced}
-        onOpenWallet={() => setIsWalletModalOpen(true)}
+        onOpenWallet={() => {
+          setOrderModalState({ isOpen: false, service: null, bundle: null });
+          setIsWalletModalOpen(true);
+        }}
       />
-
-      {/* Footer */}
-      <Footer onNavigateTab={(tab) => {
-        setActiveTab(tab);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }} />
 
     </div>
   );
 }
-
 export default App;

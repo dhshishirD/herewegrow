@@ -50,7 +50,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
   const currentBalance = currency === 'BDT' ? wallet.balanceBDT : wallet.balanceUSD;
   const hasSufficientBalance = currentBalance >= totalCost;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -66,7 +66,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    try {
       let targetService: SmmService;
       if (service) {
         targetService = service;
@@ -87,7 +87,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
         };
       }
 
-      const result = createOrder(targetService, link, quantity, currency);
+      const result = await createOrder(targetService, link, quantity, currency);
       setIsSubmitting(false);
 
       if (result.success && result.order) {
@@ -114,7 +114,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({
       } else {
         setErrorMessage(result.message);
       }
-    }, 1000);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setErrorMessage(err.message || 'Error processing order');
+    }
   };
 
   const title = bundle ? bundle.title : service?.name;

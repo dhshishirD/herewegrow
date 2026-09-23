@@ -8,6 +8,7 @@ import { OrdersTracker } from './components/OrdersTracker';
 import { ApiDocsSection } from './components/ApiDocsSection';
 import { WalletModal } from './components/WalletModal';
 import { OrderModal } from './components/OrderModal';
+import { ProviderSettingsModal } from './components/ProviderSettingsModal';
 import { Footer } from './components/Footer';
 import { getLocalWallet, getLocalOrders, saveLocalWallet } from './services/growthService';
 import type { UserWallet, SmmOrder, SmmService, GrowthBundle, SocialPlatform } from './types';
@@ -20,6 +21,7 @@ export function App() {
   
   // Modals state
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isProviderModalOpen, setIsProviderModalOpen] = useState(false);
   const [orderModalState, setOrderModalState] = useState<{
     isOpen: boolean;
     service: SmmService | null;
@@ -144,6 +146,7 @@ export function App() {
             wallet={wallet}
             currency={currency}
             onTopUpClick={() => setIsWalletModalOpen(true)}
+            onOpenProviderSettings={() => setIsProviderModalOpen(true)}
           />
         )}
 
@@ -179,6 +182,12 @@ export function App() {
           setOrderModalState({ isOpen: false, service: null, bundle: null });
           setIsWalletModalOpen(true);
         }}
+      />
+
+      {/* Wholesale SMM Provider Settings Modal */}
+      <ProviderSettingsModal
+        isOpen={isProviderModalOpen}
+        onClose={() => setIsProviderModalOpen(false)}
       />
 
     </div>

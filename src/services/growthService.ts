@@ -83,12 +83,14 @@ export const saveLocalOrders = (orders: SmmOrder[]): void => {
   }
 };
 
-export const createOrder = (
+import { dispatchToProvider, triggerProviderRefill as triggerApiRefill } from './smmProviderService';
+
+export const createOrder = async (
   service: SmmService,
   link: string,
   quantity: number,
   currency: 'BDT' | 'USD'
-): { success: boolean; message: string; order?: SmmOrder } => {
+): Promise<{ success: boolean; message: string; order?: SmmOrder }> => {
   const wallet = getLocalWallet();
   const rate = currency === 'BDT' ? service.ratePer1kBDT : service.ratePer1kUSD;
   const totalCost = (quantity / 1000) * rate;
@@ -107,6 +109,7 @@ export const createOrder = (
     };
   }
 
+  // Deduct from wallet balance
   if (currency === 'BDT') {
     wallet.balanceBDT -= totalCost;
     wallet.totalSpentBDT += totalCost;
@@ -115,6 +118,9 @@ export const createOrder = (
     wallet.totalSpentUSD += totalCost;
   }
   saveLocalWallet(wallet);
+
+  // Dispatch to wholesale SMM Provider API v2
+  const dispatchRes = await dispatchToProvider(service.id, link, quantity);
 
   const newOrder: SmmOrder = {
     id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
@@ -131,7 +137,8 @@ export const createOrder = (
     currentCount: Math.floor(100 + Math.random() * 1500),
     remains: quantity,
     createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
-    refillEligible: service.refillDays > 0
+    refillEligible: service.refillDays > 0,
+    providerOrderId: dispatchRes.providerOrderId
   };
 
   const currentOrders = getLocalOrders();
@@ -139,21 +146,30 @@ export const createOrder = (
 
   return {
     success: true,
-    message: `Order #${newOrder.id} successfully created! Automated delivery has started.`,
+    message: `Order #${newOrder.id} successfully placed! ${dispatchRes.message}`,
     order: newOrder
   };
 };
 
-export const triggerRefill = (orderId: string): { success: boolean; message: string } => {
+export const triggerRefill = async (orderId: string): Promise<{ success: boolean; message: string }> => {
   const orders = getLocalOrders();
   const order = orders.find(o => o.id === orderId);
   if (!order) return { success: false, message: 'Order not found' };
   
   order.lastRefillDate = new Date().toISOString().replace('T', ' ').substring(0, 16);
   saveLocalOrders(orders);
+
+  if (order.providerOrderId) {
+    const refillRes = await triggerApiRefill(order.providerOrderId);
+    return {
+      success: true,
+      message: refillRes.message
+    };
+  }
+
   return {
     success: true,
-    message: `Refill request submitted to server for Order #${orderId}! Replacement delivery in progress.`
+    message: `Refill request submitted for Order #${orderId}! Replacement delivery in progress.`
   };
 };
 

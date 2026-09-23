@@ -17,7 +17,9 @@ interface OrdersTrackerProps {
   onRefreshOrders: () => void;
   wallet: UserWallet;
   currency: 'BDT' | 'USD';
-  onExploreServices: () => void;
+  onExploreServices?: () => void;
+  onTopUpClick?: () => void;
+  onOpenProviderSettings?: () => void;
 }
 
 export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
@@ -26,12 +28,13 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
   wallet,
   currency,
   onExploreServices,
+  onOpenProviderSettings,
 }) => {
   const [refillStatusMessage, setRefillStatusMessage] = useState<string | null>(null);
   const [copiedAffiliate, setCopiedAffiliate] = useState(false);
 
-  const handleRefill = (orderId: string) => {
-    const res = triggerRefill(orderId);
+  const handleRefill = async (orderId: string) => {
+    const res = await triggerRefill(orderId);
     setRefillStatusMessage(res.message);
     onRefreshOrders();
     setTimeout(() => setRefillStatusMessage(null), 4000);
@@ -59,13 +62,24 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
           </h2>
         </div>
 
-        <button
-          onClick={onRefreshOrders}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all shadow-xs self-start md:self-auto"
-        >
-          <RotateCw className="w-3.5 h-3.5" />
-          <span>Refresh Live Status</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {onOpenProviderSettings && (
+            <button
+              onClick={onOpenProviderSettings}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+            >
+              <span>⚙️ Provider API Settings</span>
+            </button>
+          )}
+
+          <button
+            onClick={onRefreshOrders}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all shadow-xs cursor-pointer"
+          >
+            <RotateCw className="w-3.5 h-3.5" />
+            <span>Refresh Live Status</span>
+          </button>
+        </div>
       </div>
 
       {/* Refill Notification Toast */}

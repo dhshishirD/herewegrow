@@ -77,6 +77,7 @@ export interface SmmOrder {
   createdAt: string;
   refillEligible: boolean;
   lastRefillDate?: string;
+  providerOrderId?: string;
 }
 
 export interface UserWallet {

@@ -78,17 +78,17 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
     platform: 'facebook',
     subtitle: 'Designed specifically for Bangladeshi online shops to establish instant customer trust.',
     iconName: 'ShoppingBag',
-    priceBDT: 1150,
-    priceUSD: 9.50,
-    originalPriceBDT: 2200,
-    originalPriceUSD: 18.00,
-    savingsPercent: 48,
+    priceBDT: 960,
+    priceUSD: 7.90,
+    originalPriceBDT: 1920,
+    originalPriceUSD: 15.80,
+    savingsPercent: 50,
     features: [
       '3,000 Real & Active Bangladeshi Page Likes / Followers',
       '500 Post Reactions (Like, Love, Care mix on recent posts)',
       '20 Custom Positive Bengali Review Comments',
       '⭐ 100% Non-Drop Guaranteed with 60-Day Auto-Refill',
-      '⚡ Starts within 15 Minutes after bKash payment'
+      '⚡ Starts within 15 Minutes after payment'
     ],
     isPopular: true,
     deliveryTime: '24 - 48 Hours'
@@ -99,20 +99,41 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
     platform: 'youtube',
     subtitle: 'Complete watch-time and subscriber package to qualify for YouTube YPP AdSense monetization.',
     iconName: 'Youtube',
-    priceBDT: 6800,
-    priceUSD: 55.00,
-    originalPriceBDT: 11500,
-    originalPriceUSD: 94.00,
-    savingsPercent: 41,
+    priceBDT: 6400,
+    priceUSD: 52.00,
+    originalPriceBDT: 12800,
+    originalPriceUSD: 104.00,
+    savingsPercent: 50,
     features: [
       '1,000 High-Quality Permanent YouTube Subscribers',
-      '4,000 High-Retention Watch Hours (Long-form video compliant)',
+      '4,000 High-Retention Watch Hours (Long-form compliant)',
       'Safe for Channel Monetization & Ads (Organic drip-speed)',
-      '🛡️ Lifetime Refill Protection Guarantee',
+      '🛡️ 365-Day Refill Protection Guarantee',
       '📊 Live Progress Tracking Dashboard'
     ],
     isPopular: true,
     deliveryTime: '3 - 6 Days (Safe Drip)'
+  },
+  {
+    id: 'fb-monetization-pack',
+    title: 'Facebook In-Stream Ads 60k Monetization Pack',
+    platform: 'facebook',
+    subtitle: 'Complete watch-time and follower package to unlock Facebook In-Stream Ads monetization.',
+    iconName: 'Users',
+    priceBDT: 1900,
+    priceUSD: 15.50,
+    originalPriceBDT: 3800,
+    originalPriceUSD: 31.00,
+    savingsPercent: 50,
+    features: [
+      '60,000 Eligible Video Watch Minutes',
+      '5,000 Real Bangladeshi Page Followers',
+      'Policy Compliant for In-Stream & Stars Monetization',
+      '🛡️ 60-Day Non-Drop Refill Guarantee',
+      '⚡ Fast automated start within 1 hour'
+    ],
+    isPopular: true,
+    deliveryTime: '2 - 4 Days'
   },
   {
     id: 'tiktok-viral-launch',
@@ -120,10 +141,10 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
     platform: 'tiktok',
     subtitle: 'Trigger the TikTok FYP (For You Page) recommendation algorithm with high early velocity.',
     iconName: 'Flame',
-    priceBDT: 450,
-    priceUSD: 3.80,
-    originalPriceBDT: 900,
-    originalPriceUSD: 7.50,
+    priceBDT: 300,
+    priceUSD: 2.50,
+    originalPriceBDT: 600,
+    originalPriceUSD: 5.00,
     savingsPercent: 50,
     features: [
       '25,000 Ultra-Fast TikTok Video Views',
@@ -140,11 +161,11 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
     platform: 'instagram',
     subtitle: 'Elevate your personal brand or agency profile to secure high-paying sponsorships.',
     iconName: 'Instagram',
-    priceBDT: 850,
-    priceUSD: 7.00,
-    originalPriceBDT: 1600,
-    originalPriceUSD: 13.00,
-    savingsPercent: 46,
+    priceBDT: 700,
+    priceUSD: 5.75,
+    originalPriceBDT: 1400,
+    originalPriceUSD: 11.50,
+    savingsPercent: 50,
     features: [
       '2,500 Premium High-Quality Instagram Followers',
       '500 Reel Likes + 5,000 Reel Views',
@@ -157,14 +178,16 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
 ];
 
 export const SMM_SERVICES_CATALOG: SmmService[] = [
-  // FACEBOOK
+  // ============================================================
+  // FACEBOOK SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'fb-001',
     name: 'Facebook Page Likes & Followers [100% BD Bengali Real Targeted]',
     platform: 'facebook',
     category: 'Facebook Page Growth',
-    ratePer1kBDT: 320,
-    ratePer1kUSD: 2.65,
+    ratePer1kBDT: 280,
+    ratePer1kUSD: 2.30,
     minQty: 100,
     maxQty: 50000,
     speed: '2k - 5k / Day',
@@ -175,11 +198,25 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-002',
+    name: 'Facebook Profile Followers [Real Bangladesh Profiles]',
+    platform: 'facebook',
+    category: 'Facebook Profile Growth',
+    ratePer1kBDT: 240,
+    ratePer1kUSD: 1.95,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '3k / Day',
+    refillDays: 30,
+    badges: ['bengali-target', 'non-drop', 'best-seller'],
+    description: 'Real personal profile followers from Bangladesh. Great for influencers, public figures, and creators.'
+  },
+  {
+    id: 'fb-003',
     name: 'Facebook Post Reactions [Like + Love + Care Mix] - Instant',
     platform: 'facebook',
     category: 'Facebook Engagement',
-    ratePer1kBDT: 85,
-    ratePer1kUSD: 0.70,
+    ratePer1kBDT: 70,
+    ratePer1kUSD: 0.58,
     minQty: 50,
     maxQty: 100000,
     speed: 'Instant (10k/Hour)',
@@ -188,8 +225,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     description: 'Natural blend of Facebook post reactions. Works on public photos, videos, and statuses.'
   },
   {
-    id: 'fb-003',
-    name: 'Facebook Video Views / Reels Views [High Watch Time]',
+    id: 'fb-004',
+    name: 'Facebook Video Views / Reels Views [High Watch Time Monetization]',
     platform: 'facebook',
     category: 'Facebook Video',
     ratePer1kBDT: 40,
@@ -202,14 +239,16 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     description: 'Monetization-safe video views with 60-second+ watch duration. Helps boost Facebook in-stream ad eligibility.'
   },
   
-  // YOUTUBE
+  // ============================================================
+  // YOUTUBE SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'yt-001',
     name: 'YouTube Monetization Watch Hours [4000 Hours Package or Custom]',
     platform: 'youtube',
     category: 'YouTube Monetization',
-    ratePer1kBDT: 1550,
-    ratePer1kUSD: 12.80,
+    ratePer1kBDT: 1500,
+    ratePer1kUSD: 12.30,
     minQty: 500,
     maxQty: 4000,
     speed: '500 - 1000 Hours / Day',
@@ -223,8 +262,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     name: 'YouTube Permanent Subscribers [Non-Drop & Real Channel Profiles]',
     platform: 'youtube',
     category: 'YouTube Growth',
-    ratePer1kBDT: 950,
-    ratePer1kUSD: 7.80,
+    ratePer1kBDT: 900,
+    ratePer1kUSD: 7.40,
     minQty: 100,
     maxQty: 20000,
     speed: '200 - 500 / Day (Safe Speed)',
@@ -237,8 +276,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     name: 'YouTube High-Retention Views [Google Ads & Suggested Video Source]',
     platform: 'youtube',
     category: 'YouTube Video Views',
-    ratePer1kBDT: 190,
-    ratePer1kUSD: 1.55,
+    ratePer1kBDT: 150,
+    ratePer1kUSD: 1.25,
     minQty: 500,
     maxQty: 1000000,
     speed: '10k - 50k / Day',
@@ -246,15 +285,31 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant', 'high-retention'],
     description: 'High watch duration (3–5 minutes) views derived from suggested video algorithms. Safe for AdSense.'
   },
+  {
+    id: 'yt-004',
+    name: 'YouTube Shorts Views [Viral Algorithm Booster]',
+    platform: 'youtube',
+    category: 'YouTube Shorts',
+    ratePer1kBDT: 80,
+    ratePer1kUSD: 0.65,
+    minQty: 500,
+    maxQty: 2000000,
+    speed: '100k / Day',
+    refillDays: 30,
+    badges: ['instant', 'best-seller'],
+    description: 'High velocity views tailored for YouTube Shorts shelf recommendations.'
+  },
 
-  // INSTAGRAM
+  // ============================================================
+  // INSTAGRAM SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'ig-001',
     name: 'Instagram Premium Followers [Guaranteed Non-Drop with Refill]',
     platform: 'instagram',
     category: 'Instagram Followers',
-    ratePer1kBDT: 140,
-    ratePer1kUSD: 1.15,
+    ratePer1kBDT: 120,
+    ratePer1kUSD: 1.00,
     minQty: 100,
     maxQty: 200000,
     speed: '10k / Day',
@@ -267,8 +322,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     name: 'Instagram Reels Views + Reach & Impressions Boost',
     platform: 'instagram',
     category: 'Instagram Reels',
-    ratePer1kBDT: 25,
-    ratePer1kUSD: 0.20,
+    ratePer1kBDT: 16,
+    ratePer1kUSD: 0.13,
     minQty: 1000,
     maxQty: 10000000,
     speed: '100k / Hour',
@@ -281,8 +336,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     name: 'Instagram Post Likes [Real Active Profiles + Instant Delivery]',
     platform: 'instagram',
     category: 'Instagram Likes',
-    ratePer1kBDT: 50,
-    ratePer1kUSD: 0.40,
+    ratePer1kBDT: 36,
+    ratePer1kUSD: 0.30,
     minQty: 50,
     maxQty: 50000,
     speed: 'Instant (20k/Hour)',
@@ -291,14 +346,16 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     description: 'Immediate like injection within 30 seconds of posting.'
   },
 
-  // TIKTOK
+  // ============================================================
+  // TIKTOK SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'tt-001',
     name: 'TikTok Video Views [Ultra-Speed Instant Server]',
     platform: 'tiktok',
     category: 'TikTok Views',
-    ratePer1kBDT: 8,
-    ratePer1kUSD: 0.07,
+    ratePer1kBDT: 6,
+    ratePer1kUSD: 0.05,
     minQty: 1000,
     maxQty: 50000000,
     speed: '500k / Hour',
@@ -308,11 +365,11 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tt-002',
-    name: 'TikTok Real Followers [Organic Profile Feed]',
+    name: 'TikTok Real Followers [Live Stream & Creator Fund Eligible]',
     platform: 'tiktok',
     category: 'TikTok Followers',
-    ratePer1kBDT: 280,
-    ratePer1kUSD: 2.30,
+    ratePer1kBDT: 220,
+    ratePer1kUSD: 1.80,
     minQty: 100,
     maxQty: 50000,
     speed: '5k / Day',
@@ -325,8 +382,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     name: 'TikTok Likes + Shares + Saves [Viral FYP Booster]',
     platform: 'tiktok',
     category: 'TikTok Engagement',
-    ratePer1kBDT: 110,
-    ratePer1kUSD: 0.90,
+    ratePer1kBDT: 90,
+    ratePer1kUSD: 0.75,
     minQty: 100,
     maxQty: 100000,
     speed: '10k / Day',
@@ -335,14 +392,16 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     description: 'Comprehensive interaction package to boost video retention signals.'
   },
 
-  // TELEGRAM
+  // ============================================================
+  // TELEGRAM SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'tg-001',
     name: 'Telegram Channel / Group Members [0% Drop Guaranteed]',
     platform: 'telegram',
     category: 'Telegram Growth',
-    ratePer1kBDT: 160,
-    ratePer1kUSD: 1.30,
+    ratePer1kBDT: 130,
+    ratePer1kUSD: 1.05,
     minQty: 100,
     maxQty: 100000,
     speed: '20k / Day',
@@ -352,11 +411,11 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tg-002',
-    name: 'Telegram Post Views [Last 10 Posts Auto-Sync]',
+    name: 'Telegram Post Views [Instant Auto-Delivery]',
     platform: 'telegram',
     category: 'Telegram Views',
-    ratePer1kBDT: 15,
-    ratePer1kUSD: 0.12,
+    ratePer1kBDT: 12,
+    ratePer1kUSD: 0.10,
     minQty: 500,
     maxQty: 1000000,
     speed: 'Instant',
@@ -365,14 +424,16 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     description: 'Instant post views for crypto channels, signals, and news broadcasts.'
   },
 
-  // TWITTER / X
+  // ============================================================
+  // TWITTER / X SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'tw-001',
     name: 'Twitter / X Real Followers [Crypto & Tech Niche Profiles]',
     platform: 'twitter',
     category: 'Twitter Followers',
-    ratePer1kBDT: 420,
-    ratePer1kUSD: 3.45,
+    ratePer1kBDT: 380,
+    ratePer1kUSD: 3.10,
     minQty: 100,
     maxQty: 50000,
     speed: '2k / Day',
@@ -381,19 +442,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     description: 'High-trust Twitter/X profiles with avatars, bios, and tweets.'
   },
 
-  // SPOTIFY
+  // ============================================================
+  // SPOTIFY SERVICES (Exact 100% Profit Margin)
+  // ============================================================
   {
     id: 'sp-001',
     name: 'Spotify Track Plays [Royalty Eligible & High Retention]',
     platform: 'spotify',
     category: 'Spotify Music',
-    ratePer1kBDT: 140,
-    ratePer1kUSD: 1.15,
+    ratePer1kBDT: 110,
+    ratePer1kUSD: 0.90,
     minQty: 1000,
     maxQty: 1000000,
     speed: '10k / Day',
     refillDays: 30,
     badges: ['high-retention', 'non-drop'],
     description: '100% royalty-eligible stream plays with premium user agent headers.'
+  },
+
+  // ============================================================
+  // LINKEDIN SERVICES (Exact 100% Profit Margin)
+  // ============================================================
+  {
+    id: 'li-001',
+    name: 'LinkedIn Company Page Followers & Connections',
+    platform: 'linkedin',
+    category: 'LinkedIn Growth',
+    ratePer1kBDT: 600,
+    ratePer1kUSD: 4.90,
+    minQty: 100,
+    maxQty: 25000,
+    speed: '1k / Day',
+    refillDays: 30,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'Professional LinkedIn connections and followers for agency credibility.'
   }
 ];

@@ -11,8 +11,8 @@ export const getLocalWallet = (): UserWallet => {
     console.error(e);
   }
   return {
-    balanceBDT: 500, // Demo trial balance for instant testing
-    balanceUSD: 4.10,
+    balanceBDT: 100, // Demo trial balance for instant testing (min order 100)
+    balanceUSD: 0.85,
     totalSpentBDT: 0,
     totalSpentUSD: 0,
     currencyPreference: 'BDT',

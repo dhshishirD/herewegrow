@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { FreeToolsSection } from './components/FreeToolsSection';
@@ -73,7 +73,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#090D16] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
       
       {/* Top Navigation */}
       <Navbar
@@ -93,11 +93,11 @@ export function App() {
           <HeroSection
             onExploreStore={() => {
               setActiveTab('store');
-              window.scrollTo({ top: 450, behavior: 'smooth' });
+              window.scrollTo({ top: 480, behavior: 'smooth' });
             }}
             onExploreBundles={() => {
               setActiveTab('bundles');
-              window.scrollTo({ top: 450, behavior: 'smooth' });
+              window.scrollTo({ top: 480, behavior: 'smooth' });
             }}
             onExploreTools={() => {
               setActiveTab('tools');

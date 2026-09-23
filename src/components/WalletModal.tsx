@@ -34,11 +34,10 @@ export const WalletModal: React.FC<WalletModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const [paymentMode, setPaymentMode] = useState<'automated' | 'manual_bkash' | 'manual_nagad' | 'binance'>('automated');
+  const [paymentMode, setPaymentMode] = useState<'automated' | 'binance'>('automated');
   const [selectedAmount, setSelectedAmount] = useState<number>(currency === 'BDT' ? 500 : 10);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [trxId, setTrxId] = useState('');
-  const [senderNumber, setSenderNumber] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -73,10 +72,10 @@ export const WalletModal: React.FC<WalletModalProps> = ({
       setIsProcessing(false);
 
       if (res.success && res.paymentUrl) {
-        // Open the official secure payment page in a new popup or redirect
+        // Redirect to secure payment gateway
         window.location.href = res.paymentUrl;
       } else {
-        setGatewayError(res.message || 'Payment gateway connection timeout. Please choose Direct bKash.');
+        setGatewayError(res.message || 'Payment gateway connection timeout. Please try again.');
       }
     } catch (err: any) {
       setIsProcessing(false);
@@ -90,17 +89,13 @@ export const WalletModal: React.FC<WalletModalProps> = ({
     if (finalAmount <= 0) return;
 
     if (!trxId.trim()) {
-      alert('Please enter your Transaction ID (TrxID) after completing payment.');
+      alert('Please enter your Binance Order ID / TxID.');
       return;
     }
 
     setIsProcessing(true);
     setTimeout(() => {
-      const updated = depositFunds(
-        paymentMode === 'binance' ? 'binance' : paymentMode === 'manual_nagad' ? 'nagad' : 'bkash',
-        finalAmount,
-        currency
-      );
+      const updated = depositFunds('binance', finalAmount, currency);
       onWalletUpdated(updated);
       setIsProcessing(false);
       setDepositSuccess(true);
@@ -163,68 +158,45 @@ export const WalletModal: React.FC<WalletModalProps> = ({
             {/* Payment Method Selector Tabs */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">Select Payment Method</label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 
-                {/* 1. Automated Gateway */}
+                {/* 1. Automated Gateway (Paymently / UddoktaPay) */}
                 <button
                   type="button"
                   onClick={() => setPaymentMode('automated')}
-                  className={`p-2.5 rounded-2xl border text-center transition-all cursor-pointer relative ${
+                  className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
                     paymentMode === 'automated'
-                      ? 'bg-indigo-50 border-indigo-600 text-indigo-950 shadow-xs font-bold'
+                      ? 'bg-indigo-50/80 border-indigo-600 text-indigo-950 shadow-xs font-bold'
                       : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                   }`}
                 >
-                  <span className="absolute -top-2 right-2 text-[8px] font-black uppercase px-1.5 py-0.2 rounded-full bg-indigo-600 text-white">
-                    Auto
+                  <span className="absolute -top-2 right-2 text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-indigo-600 text-white">
+                    Instant Auto
                   </span>
-                  <div className="text-xs font-bold text-indigo-700 flex items-center justify-center gap-1">
-                    <Sparkles className="w-3 h-3" />
+                  <div className="text-sm font-extrabold text-indigo-700 flex items-center justify-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
                     <span>Instant Pay</span>
                   </div>
-                  <div className="text-[9px] text-slate-500 mt-0.5">bKash/Nagad/Card</div>
+                  <div className="text-[10px] text-slate-500 font-medium mt-1">bKash • Nagad • Rocket • Cards</div>
                 </button>
 
-                {/* 2. Direct bKash */}
-                <button
-                  type="button"
-                  onClick={() => setPaymentMode('manual_bkash')}
-                  className={`p-2.5 rounded-2xl border text-center transition-all cursor-pointer ${
-                    paymentMode === 'manual_bkash'
-                      ? 'bg-pink-50 border-pink-500 text-pink-950 shadow-xs font-bold'
-                      : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="text-xs font-extrabold text-[#D12053]">bKash</div>
-                  <div className="text-[9px] text-pink-800">Merchant Pay</div>
-                </button>
-
-                {/* 3. Direct Nagad */}
-                <button
-                  type="button"
-                  onClick={() => setPaymentMode('manual_nagad')}
-                  className={`p-2.5 rounded-2xl border text-center transition-all cursor-pointer ${
-                    paymentMode === 'manual_nagad'
-                      ? 'bg-amber-50 border-amber-500 text-amber-950 shadow-xs font-bold'
-                      : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-                  }`}
-                >
-                  <div className="text-xs font-extrabold text-[#F7931E]">Nagad</div>
-                  <div className="text-[9px] text-amber-800">Send Money</div>
-                </button>
-
-                {/* 4. Binance Pay */}
+                {/* 2. Binance Pay */}
                 <button
                   type="button"
                   onClick={() => setPaymentMode('binance')}
-                  className={`p-2.5 rounded-2xl border text-center transition-all cursor-pointer ${
+                  className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
                     paymentMode === 'binance'
-                      ? 'bg-yellow-50 border-yellow-500 text-yellow-950 shadow-xs font-bold'
+                      ? 'bg-yellow-50/80 border-yellow-500 text-yellow-950 shadow-xs font-bold'
                       : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                   }`}
                 >
-                  <div className="text-xs font-extrabold text-[#F3BA2F]">Binance</div>
-                  <div className="text-[9px] text-yellow-800">Pay ID: 1280862245</div>
+                  <span className="absolute -top-2 right-2 text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-600 text-white">
+                    0% Fee
+                  </span>
+                  <div className="text-sm font-extrabold text-[#D97706] flex items-center justify-center gap-1.5">
+                    <span>Binance Pay</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 font-medium mt-1">Pay ID: 1280862245 (USDT)</div>
                 </button>
               </div>
             </div>
@@ -334,130 +306,7 @@ export const WalletModal: React.FC<WalletModalProps> = ({
             )}
 
             {/* ========================================================= */}
-            {/* VIEW 2: DIRECT BKASH MERCHANT PAYMENT */}
-            {/* ========================================================= */}
-            {paymentMode === 'manual_bkash' && (
-              <form onSubmit={handleManualDeposit} className="space-y-4">
-                <div className="p-4 rounded-2xl bg-pink-50/70 border border-pink-200 text-left space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-pink-200 text-pink-900">
-                        bKash Merchant Payment
-                      </span>
-                      <div className="text-sm font-extrabold text-slate-950 mt-1 font-mono tracking-wide">
-                        01981505761
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleCopy('01981505761')}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-pink-100 border border-pink-300 text-xs font-bold text-pink-900 shadow-2xs transition-all cursor-pointer"
-                    >
-                      {copiedNumber ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-pink-700" />}
-                      <span>{copiedNumber ? 'Copied!' : 'Copy Number'}</span>
-                    </button>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-white border border-pink-200 text-[11px] text-slate-700 space-y-1 font-medium">
-                    <div>1. Open bKash App or dial *247#</div>
-                    <div>2. Select <strong>"Make Payment" (পেমেন্ট করুন)</strong></div>
-                    <div>3. Merchant Number: <strong>01981505761</strong> • Counter: 1 • Ref: HWG</div>
-                    <div>4. Enter Amount & PIN to confirm payment</div>
-                    <div>5. Enter TrxID below to credit instantly!</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Sender Number (e.g. 017...)"
-                    value={senderNumber}
-                    onChange={(e) => setSenderNumber(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:border-slate-900 font-medium"
-                  />
-                  <input
-                    type="text"
-                    required
-                    placeholder="TrxID (e.g. BKT982172)"
-                    value={trxId}
-                    onChange={(e) => setTrxId(e.target.value.toUpperCase())}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:border-slate-900 font-mono font-bold uppercase"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isProcessing}
-                  className="w-full py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-                >
-                  {isProcessing ? <span>Verifying TrxID...</span> : <span>Verify & Add ৳{customAmount || selectedAmount} Balance</span>}
-                </button>
-              </form>
-            )}
-
-            {/* ========================================================= */}
-            {/* VIEW 3: DIRECT NAGAD PAYMENT */}
-            {/* ========================================================= */}
-            {paymentMode === 'manual_nagad' && (
-              <form onSubmit={handleManualDeposit} className="space-y-4">
-                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-left space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-200 text-amber-900">
-                        Nagad Send Money
-                      </span>
-                      <div className="text-sm font-extrabold text-slate-950 mt-1 font-mono tracking-wide">
-                        01981505761
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleCopy('01981505761')}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-amber-100 border border-amber-300 text-xs font-bold text-amber-900 shadow-2xs transition-all cursor-pointer"
-                    >
-                      {copiedNumber ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-amber-700" />}
-                      <span>{copiedNumber ? 'Copied!' : 'Copy Number'}</span>
-                    </button>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-white border border-amber-200 text-[11px] text-slate-700 space-y-1 font-medium">
-                    <div>1. Open Nagad App or dial *167#</div>
-                    <div>2. Select <strong>"Send Money"</strong> ➔ Number: <strong>01981505761</strong></div>
-                    <div>3. Enter Amount & Reference: HWG</div>
-                    <div>4. Enter PIN to confirm & paste TrxID below!</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Sender Number (e.g. 018...)"
-                    value={senderNumber}
-                    onChange={(e) => setSenderNumber(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:border-slate-900 font-medium"
-                  />
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nagad TrxID (e.g. 71JA821)"
-                    value={trxId}
-                    onChange={(e) => setTrxId(e.target.value.toUpperCase())}
-                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-hidden focus:border-slate-900 font-mono font-bold uppercase"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isProcessing}
-                  className="w-full py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
-                >
-                  {isProcessing ? <span>Verifying TrxID...</span> : <span>Verify & Add ৳{customAmount || selectedAmount} Balance</span>}
-                </button>
-              </form>
-            )}
-
-            {/* ========================================================= */}
-            {/* VIEW 4: BINANCE PAY (0% FEE INSTANT) */}
+            {/* VIEW 2: BINANCE PAY (0% FEE INSTANT) */}
             {/* ========================================================= */}
             {paymentMode === 'binance' && (
               <form onSubmit={handleManualDeposit} className="space-y-4">

@@ -1,6 +1,6 @@
 /**
  * Standard SMM Provider API v2 Client Engine for HereWeGrow
- * Compatible with all standard SMM API v2 wholesale providers.
+ * Configured for JustAnotherPanel (https://justanotherpanel.com/api/v2) & all standard SMM API v2 providers.
  */
 
 export interface SmmProviderConfig {
@@ -11,8 +11,9 @@ export interface SmmProviderConfig {
 }
 
 export interface ProviderBalanceResponse {
-  balance: string;
-  currency: string;
+  balance?: string;
+  currency?: string;
+  error?: string;
 }
 
 export interface ProviderOrderResponse {
@@ -31,7 +32,7 @@ export interface ProviderStatusResponse {
 
 const PROVIDER_STORAGE_KEY = 'herewegrow_smm_provider_config_v1';
 
-// Default / Stored Provider Config
+// Default JAP Configuration
 export const getProviderConfig = (): SmmProviderConfig => {
   try {
     const saved = localStorage.getItem(PROVIDER_STORAGE_KEY);
@@ -40,10 +41,10 @@ export const getProviderConfig = (): SmmProviderConfig => {
     console.error('Error loading provider config:', e);
   }
   return {
-    apiUrl: 'https://api.smm-provider.com/api/v2',
+    apiUrl: 'https://justanotherpanel.com/api/v2',
     apiKey: '',
     isActive: false,
-    name: 'Wholesale SMM Node #1'
+    name: 'JustAnotherPanel (JAP) - Main Node'
   };
 };
 
@@ -56,42 +57,76 @@ export const saveProviderConfig = (config: SmmProviderConfig): void => {
 };
 
 /**
+ * Helper to execute POST requests with CORS-aware fallback
+ */
+const postToProviderApi = async (url: string, params: Record<string, string>): Promise<any> => {
+  const formData = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => formData.append(k, v));
+
+  try {
+    // 1. Try direct fetch
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData.toString()
+    });
+    return await response.json();
+  } catch (directError) {
+    console.warn('Direct provider API fetch failed, trying CORS proxy fallback:', directError);
+    // 2. Fallback via reliable CORS proxy for client-side API testing
+    try {
+      const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+      const proxyResponse = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData.toString()
+      });
+      return await proxyResponse.json();
+    } catch (proxyError) {
+      console.error('All provider API attempts failed:', proxyError);
+      throw proxyError;
+    }
+  }
+};
+
+/**
  * 1. Check Wholesale Provider Balance
+ * action: "balance"
  */
 export const fetchProviderBalance = async (): Promise<{ success: boolean; balance?: string; currency?: string; message?: string }> => {
   const config = getProviderConfig();
   if (!config.apiKey || !config.isActive) {
     return {
       success: true,
-      balance: '248.50',
+      balance: '100.84',
       currency: 'USD',
-      message: 'Simulation Mode: Connect your live API Key in Provider Settings.'
+      message: 'Simulation Mode: Enter your JustAnotherPanel API key to connect live.'
     };
   }
 
   try {
-    const formData = new URLSearchParams();
-    formData.append('key', config.apiKey);
-    formData.append('action', 'balance');
-
-    const res = await fetch(config.apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
+    const data = await postToProviderApi(config.apiUrl, {
+      key: config.apiKey,
+      action: 'balance'
     });
-    const data: ProviderBalanceResponse = await res.json();
+
     if (data.balance) {
-      return { success: true, balance: data.balance, currency: data.currency || 'USD' };
+      return { success: true, balance: String(data.balance), currency: data.currency || 'USD' };
     }
-    return { success: false, message: 'Invalid response from supplier API.' };
-  } catch (error) {
-    console.error('Provider balance fetch error:', error);
-    return { success: false, message: 'Could not connect to Provider API endpoint.' };
+    return { success: false, message: data.error || 'Invalid API key or balance response from provider.' };
+  } catch (error: any) {
+    console.error('Provider balance error:', error);
+    return { success: false, message: 'Could not connect to JustAnotherPanel API endpoint.' };
   }
 };
 
 /**
  * 2. Dispatch Order to Wholesale SMM Provider
+ * action: "add", service: id, link: url, quantity: qty
  */
 export const dispatchToProvider = async (
   providerServiceId: number | string,
@@ -100,54 +135,49 @@ export const dispatchToProvider = async (
 ): Promise<{ success: boolean; providerOrderId?: string; message: string }> => {
   const config = getProviderConfig();
 
-  // If live provider is not configured, simulate order placement with auto-generated ID
+  // If live provider is not configured, simulate order placement
   if (!config.apiKey || !config.isActive) {
-    const mockId = 'PRV-' + Math.floor(100000 + Math.random() * 900000);
+    const mockId = 'JAP-' + Math.floor(100000 + Math.random() * 900000);
     return {
       success: true,
       providerOrderId: mockId,
-      message: `Order dispatched to queue (Simulated Node #${mockId})`
+      message: `Order queued (JAP Simulation #${mockId})`
     };
   }
 
   try {
-    const formData = new URLSearchParams();
-    formData.append('key', config.apiKey);
-    formData.append('action', 'add');
-    formData.append('service', String(providerServiceId));
-    formData.append('link', link);
-    formData.append('quantity', String(quantity));
-
-    const res = await fetch(config.apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
+    const data = await postToProviderApi(config.apiUrl, {
+      key: config.apiKey,
+      action: 'add',
+      service: String(providerServiceId),
+      link,
+      quantity: String(quantity)
     });
 
-    const data: ProviderOrderResponse = await res.json();
     if (data.order) {
       return {
         success: true,
         providerOrderId: String(data.order),
-        message: `Order successfully pushed to wholesale server (Order #${data.order})`
+        message: `Order #${data.order} successfully pushed to JustAnotherPanel!`
       };
     }
 
     return {
       success: false,
-      message: data.error || 'Provider rejected the order request.'
+      message: data.error || 'Provider rejected the order.'
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Provider dispatch error:', error);
     return {
       success: false,
-      message: 'Network timeout connecting to wholesale provider server.'
+      message: 'Network error connecting to JustAnotherPanel API.'
     };
   }
 };
 
 /**
  * 3. Query Real-Time Status from Wholesale Provider
+ * action: "status", order: orderId
  */
 export const queryProviderOrderStatus = async (
   providerOrderId: string
@@ -158,24 +188,18 @@ export const queryProviderOrderStatus = async (
     return {
       status: 'In progress',
       start_count: '150',
-      remains: '200',
-      charge: '0.45'
+      remains: '120',
+      charge: '0.28'
     };
   }
 
   try {
-    const formData = new URLSearchParams();
-    formData.append('key', config.apiKey);
-    formData.append('action', 'status');
-    formData.append('order', providerOrderId);
-
-    const res = await fetch(config.apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
+    const data = await postToProviderApi(config.apiUrl, {
+      key: config.apiKey,
+      action: 'status',
+      order: providerOrderId
     });
 
-    const data: ProviderStatusResponse = await res.json();
     return data;
   } catch (error) {
     console.error('Provider status check error:', error);
@@ -185,6 +209,7 @@ export const queryProviderOrderStatus = async (
 
 /**
  * 4. Trigger Provider Refill
+ * action: "refill", order: orderId
  */
 export const triggerProviderRefill = async (
   providerOrderId: string
@@ -200,23 +225,17 @@ export const triggerProviderRefill = async (
   }
 
   try {
-    const formData = new URLSearchParams();
-    formData.append('key', config.apiKey);
-    formData.append('action', 'refill');
-    formData.append('order', providerOrderId);
-
-    const res = await fetch(config.apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
+    const data = await postToProviderApi(config.apiUrl, {
+      key: config.apiKey,
+      action: 'refill',
+      order: providerOrderId
     });
 
-    const data = await res.json();
     if (data.refill) {
       return {
         success: true,
         refillId: String(data.refill),
-        message: `Refill #${data.refill} initiated by provider server.`
+        message: `Refill #${data.refill} initiated on JustAnotherPanel!`
       };
     }
     return { success: false, message: data.error || 'Provider rejected refill request.' };

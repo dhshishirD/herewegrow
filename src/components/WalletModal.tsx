@@ -76,16 +76,18 @@ export const WalletModal: React.FC<WalletModalProps> = ({
       ]
     },
     binance: {
-      number: 'TP52oP9wG2vL8k1n3VbQmZ4yK8xR9tW',
-      type: 'Binance Pay / USDT (TRC-20)',
-      badge: 'USDT TRC20 / Binance Pay',
+      number: '1280862245',
+      type: 'Binance Pay (Instant 0% Fee)',
+      badge: 'Binance Pay ID: 1280862245',
       counter: '',
       ref: 'HWG',
       instructions: [
-        '1. Open Binance App ➔ Pay or Withdraw USDT',
-        '2. Network: Tron (TRC-20) or Binance Pay ID',
-        '3. Deposit to address above',
-        '4. Enter Binance TxID below to credit instantly!'
+        '1. Open Binance App ➔ tap "Pay" or "Binance Pay"',
+        '2. Select "Send" ➔ choose "Pay ID / Binance ID"',
+        '3. Enter Binance Pay ID: 1280862245',
+        '4. Select Currency: USDT & enter Amount ($ USD)',
+        '5. Note / Reference: HWG & Confirm Transfer',
+        '6. Enter your Binance Order/TxID below to credit instantly!'
       ]
     }
   };

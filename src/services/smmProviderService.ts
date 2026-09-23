@@ -42,8 +42,8 @@ export const getProviderConfig = (): SmmProviderConfig => {
   }
   return {
     apiUrl: 'https://justanotherpanel.com/api/v2',
-    apiKey: '',
-    isActive: false,
+    apiKey: 'c36a3bb16f6dfe3b333b470cf939c4c7',
+    isActive: true,
     name: 'JustAnotherPanel (JAP) - Main Node'
   };
 };

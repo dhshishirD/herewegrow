@@ -120,7 +120,7 @@ export const createOrder = async (
   saveLocalWallet(wallet);
 
   // Dispatch to wholesale SMM Provider API v2
-  const dispatchRes = await dispatchToProvider(service.id, link, quantity);
+  const dispatchRes = await dispatchToProvider(service.providerServiceId || service.id, link, quantity);
 
   const newOrder: SmmOrder = {
     id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),

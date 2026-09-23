@@ -40,6 +40,7 @@ export interface SmmService {
   badges: ServiceBadge[];
   description: string;
   guaranteeText?: string;
+  providerServiceId?: number | string;
 }
 
 export interface GrowthBundle {

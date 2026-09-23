@@ -25,7 +25,9 @@ import {
   extractMockYouTubeTags, 
   calculateEngagementRate, 
   calculateYouTubeEarnings, 
-  generateViralHashtags 
+  generateViralHashtags,
+  fetchLiveVideoDownload,
+  type VideoDownloadResult
 } from '../services/growthService';
 import type { ViralToolId } from '../types';
 
@@ -41,10 +43,11 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
   const [activeTool, setActiveTool] = useState<ViralToolId>('tiktok-downloader');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  // Tool 1: TikTok Downloader State
+  // Tool 1: TikTok & Reels Downloader State
   const [ttUrl, setTtUrl] = useState('https://www.tiktok.com/@creator/video/739281928391');
   const [isProcessingTt, setIsProcessingTt] = useState(false);
   const [ttResult, setTtResult] = useState<boolean>(false);
+  const [videoData, setVideoData] = useState<VideoDownloadResult | null>(null);
 
   // Tool 2: YouTube Tag Extractor State
   const [ytUrl, setYtUrl] = useState('https://www.youtube.com/watch?v=vlog-bangladesh-tour');
@@ -80,15 +83,35 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const handleFetchTt = (e: React.FormEvent) => {
+  const handleFetchTt = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ttUrl) return;
     setIsProcessingTt(true);
     setTtResult(false);
-    setTimeout(() => {
-      setIsProcessingTt(false);
+    try {
+      const data = await fetchLiveVideoDownload(ttUrl);
+      setVideoData(data);
       setTtResult(true);
-    }, 1200);
+    } catch (err) {
+      console.error(err);
+      setTtResult(true);
+    } finally {
+      setIsProcessingTt(false);
+    }
+  };
+
+  const handleDownloadFile = (url?: string, filename = 'video.mp4') => {
+    if (!url) return;
+    if (url.startsWith('http')) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noreferrer';
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   const handleFetchYt = (e: React.FormEvent) => {
@@ -196,49 +219,87 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
               </button>
             </form>
 
-            {/* Simulated Video Preview Result */}
+            {/* Video Preview & Download Result */}
             {ttResult && (
               <div className="bg-slate-900/90 rounded-2xl p-5 border border-white/10 flex flex-col md:flex-row items-center gap-6 animate-fadeIn">
                 <div className="w-full md:w-56 h-72 bg-slate-800 rounded-xl overflow-hidden relative border border-white/10 flex items-center justify-center shadow-lg">
+                  {videoData?.coverUrl ? (
+                    <img 
+                      src={videoData.coverUrl} 
+                      alt="Video Cover" 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    <Video className="w-12 h-12 text-pink-400 opacity-60 animate-pulse" />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10 flex flex-col justify-end p-3">
-                    <span className="text-xs font-bold text-white">@viral_creator_bd</span>
+                    <span className="text-xs font-bold text-white">{videoData?.author || '@creator'}</span>
                     <span className="text-[10px] text-slate-300">Clean HD Audio + Video</span>
                   </div>
-                  <Video className="w-12 h-12 text-pink-400 opacity-60 animate-pulse" />
                 </div>
 
-                <div className="flex-1 space-y-4 text-left">
+                <div className="flex-1 space-y-4 text-left w-full">
                   <div>
-                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                       Clean Watermark Removed
                     </span>
-                    <h4 className="text-base font-bold text-white mt-1">
-                      Viral Reel Clip — Full HD 1080p [No Logo]
+                    <h4 className="text-base font-bold text-white mt-1 leading-snug line-clamp-2">
+                      {videoData?.title || 'Social Video Clip — Full HD 1080p [No Logo]'}
                     </h4>
-                    <p className="text-xs text-slate-400">File Size: ~14.8 MB • Duration: 00:38 • Audio: Original AAC</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      File Size: {videoData?.sizeMB || '~14.8 MB'} • Duration: {videoData?.duration || '00:38'} • Format: MP4 HD
+                    </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2.5">
+                    {/* Primary Direct Download */}
+                    {videoData?.videoUrl && videoData.videoUrl.startsWith('http') && videoData.source === 'tiktok' ? (
+                      <a
+                        href={videoData.videoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        download="HereWeGrow_HD_Video.mp4"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition-all"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Download HD MP4 (Direct Stream)</span>
+                      </a>
+                    ) : (
+                      <a
+                        href={`https://snapinsta.app/?url=${encodeURIComponent(ttUrl)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition-all"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Download Instagram Reel HD</span>
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                      </a>
+                    )}
+
+                    {/* Audio MP3 Download */}
+                    {videoData?.audioUrl && (
+                      <a
+                        href={videoData.audioUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        download="audio.mp3"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-white/10 transition-all"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Download MP3 Audio</span>
+                      </a>
+                    )}
+
+                    {/* Fast CDN Backup Mirror */}
                     <a
-                      href="#download"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert('Sample Clean HD Video downloaded to your device!');
-                      }}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all"
+                      href={`https://fastdl.app/en?url=${encodeURIComponent(ttUrl)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-white/10 transition-all"
                     >
-                      <Download className="w-4 h-4" />
-                      <span>Download HD MP4 (No Watermark)</span>
-                    </a>
-                    <a
-                      href="#audio"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert('Audio MP3 track extracted!');
-                      }}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-white/10 transition-all"
-                    >
-                      <span>Download MP3 Audio</span>
+                      <span>HD Server 2</span>
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
 

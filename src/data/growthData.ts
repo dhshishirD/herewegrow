@@ -10,6 +10,8 @@ export const PLATFORMS_META = [
   { id: 'twitter', name: 'Twitter / X', icon: 'Twitter', color: 'from-slate-700 to-slate-900' },
   { id: 'spotify', name: 'Spotify', icon: 'Music', color: 'from-emerald-500 to-green-600' },
   { id: 'linkedin', name: 'LinkedIn', icon: 'Briefcase', color: 'from-blue-700 to-cyan-700' },
+  { id: 'traffic', name: 'Web Traffic & SEO', icon: 'Globe', color: 'from-amber-500 to-orange-600' },
+  { id: 'discord', name: 'Discord & Twitch', icon: 'Radio', color: 'from-violet-600 to-purple-700' },
 ] as const;
 
 export const VIRAL_TOOLS_META = [
@@ -171,7 +173,7 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
 
 export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
-  // FACEBOOK SERVICES (14 Services - F-Commerce & Creator Monetization)
+  // FACEBOOK SERVICES (16 Services)
   // ============================================================
   {
     id: 'fb-001',
@@ -384,9 +386,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['non-drop'],
     description: 'Boost event credibility and social proof for concerts, webinars, conferences, and launches.'
   },
+  {
+    id: 'fb-015',
+    providerServiceId: 27269,
+    name: 'Facebook Live Stream Viewers [120-Minute Extended Retention]',
+    platform: 'facebook',
+    category: 'Facebook Live',
+    ratePer1kBDT: 980,
+    ratePer1kUSD: 8.00,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: '2-hour extended live viewership for tournament livestreams, concerts, and long workshops.'
+  },
+  {
+    id: 'fb-016',
+    providerServiceId: 29351,
+    name: 'Facebook Monetization 5,000 Follower Fast-Track Package',
+    platform: 'facebook',
+    category: 'Facebook Monetization',
+    ratePer1kBDT: 260,
+    ratePer1kUSD: 2.15,
+    minQty: 5000,
+    maxQty: 5000,
+    speed: '3k / Day',
+    refillDays: 90,
+    badges: ['non-drop', 'auto-refill', 'best-seller'],
+    description: 'Fulfills the 5,000 page follower requirement to unlock In-Stream Ads and Facebook Stars.'
+  },
 
   // ============================================================
-  // YOUTUBE SERVICES (14 Services - Monetization, Watch Time & SEO)
+  // YOUTUBE SERVICES (16 Services)
   // ============================================================
   {
     id: 'yt-001',
@@ -599,9 +631,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant', 'best-seller'],
     description: 'Boost external referral traffic signals on YouTube Studio analytics.'
   },
+  {
+    id: 'yt-015',
+    providerServiceId: 31705,
+    name: 'YouTube 60-Minute Video Full Watch Time Session',
+    platform: 'youtube',
+    category: 'YouTube Monetization',
+    ratePer1kBDT: 340,
+    ratePer1kUSD: 2.80,
+    minQty: 100,
+    maxQty: 10000,
+    speed: '1k / Day',
+    refillDays: 90,
+    badges: ['high-retention', 'auto-refill'],
+    description: 'Full 60-minute duration watch retention on long-form podcast or gaming videos.'
+  },
+  {
+    id: 'yt-016',
+    providerServiceId: 27269,
+    name: 'YouTube Shorts 10 Million Views Monetization Fast-Track',
+    platform: 'youtube',
+    category: 'YouTube Shorts',
+    ratePer1kBDT: 70,
+    ratePer1kUSD: 0.57,
+    minQty: 5000,
+    maxQty: 10000000,
+    speed: '500k / Day',
+    refillDays: 30,
+    badges: ['instant', 'best-seller'],
+    description: 'High volume Shorts views to hit the 10M Shorts views threshold for YPP monetization.'
+  },
 
   // ============================================================
-  // INSTAGRAM SERVICES (14 Services - Real Followers, Likes, Reels)
+  // INSTAGRAM SERVICES (16 Services)
   // ============================================================
   {
     id: 'ig-001',
@@ -813,9 +875,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant'],
     description: 'Instant engagement for Threads posts to gain traction on algorithmic feeds.'
   },
+  {
+    id: 'ig-015',
+    providerServiceId: 36642,
+    name: 'Instagram USA / Tier 1 High-Quality Followers',
+    platform: 'instagram',
+    category: 'Instagram Followers',
+    ratePer1kBDT: 380,
+    ratePer1kUSD: 3.10,
+    minQty: 100,
+    maxQty: 25000,
+    speed: '2k / Day',
+    refillDays: 60,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'English-speaking accounts from the US and UK to attract international brand sponsorships.'
+  },
+  {
+    id: 'ig-016',
+    providerServiceId: 27269,
+    name: 'Instagram Reel Send to DM & Share Signals',
+    platform: 'instagram',
+    category: 'Instagram Engagement',
+    ratePer1kBDT: 40,
+    ratePer1kUSD: 0.32,
+    minQty: 100,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: 'Drives DM share counts — one of Instagram’s top viral distribution metrics in 2026.'
+  },
 
   // ============================================================
-  // TIKTOK SERVICES (12 Services - FYP Algorithm, Views & Live)
+  // TIKTOK SERVICES (15 Services)
   // ============================================================
   {
     id: 'tt-001',
@@ -997,9 +1089,54 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant'],
     description: 'Signals viral value to the algorithm through recorded video download counts.'
   },
+  {
+    id: 'tt-013',
+    providerServiceId: 27269,
+    name: 'TikTok 60-Minute Live Concurrent Viewers',
+    platform: 'tiktok',
+    category: 'TikTok Live',
+    ratePer1kBDT: 720,
+    ratePer1kUSD: 5.90,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: '1-hour continuous live viewers to keep your stream ranking near the top of Live feed.'
+  },
+  {
+    id: 'tt-014',
+    providerServiceId: 27269,
+    name: 'TikTok Profile Profile Shares & Link Clicks',
+    platform: 'tiktok',
+    category: 'TikTok Engagement',
+    ratePer1kBDT: 45,
+    ratePer1kUSD: 0.36,
+    minQty: 100,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Boost profile share activity signals to increase overall account authority.'
+  },
+  {
+    id: 'tt-015',
+    providerServiceId: 31874,
+    name: 'TikTok 1,000 Follower Live Fast-Unlock Package',
+    platform: 'tiktok',
+    category: 'TikTok Followers',
+    ratePer1kBDT: 215,
+    ratePer1kUSD: 1.75,
+    minQty: 1000,
+    maxQty: 1000,
+    speed: 'Instant Queue (3k/Day)',
+    refillDays: 60,
+    badges: ['non-drop', 'auto-refill', 'best-seller'],
+    description: 'Unlocks the 1,000 follower requirement for TikTok Live streaming on mobile.'
+  },
 
   // ============================================================
-  // TELEGRAM SERVICES (8 Services - Channels, Groups, Boosts & Views)
+  // TELEGRAM SERVICES (10 Services)
   // ============================================================
   {
     id: 'tg-001',
@@ -1121,9 +1258,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['high-retention'],
     description: 'Custom organic discussion chatter for linked discussion groups.'
   },
+  {
+    id: 'tg-009',
+    providerServiceId: 31702,
+    name: 'Telegram Level 10 Mega Boosts [Full Custom Emojis & Themes]',
+    platform: 'telegram',
+    category: 'Telegram Growth',
+    ratePer1kBDT: 1800,
+    ratePer1kUSD: 14.50,
+    minQty: 1,
+    maxQty: 10,
+    speed: '1 Day',
+    refillDays: 30,
+    badges: ['non-drop', 'best-seller'],
+    description: 'Max out your Telegram channel level to unlock custom emojis, themes, and audio.'
+  },
+  {
+    id: 'tg-010',
+    providerServiceId: 27269,
+    name: 'Telegram Post Forward Shares [Viral Spreading Signal]',
+    platform: 'telegram',
+    category: 'Telegram Engagement',
+    ratePer1kBDT: 50,
+    ratePer1kUSD: 0.40,
+    minQty: 100,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Increases the forward count badge on public channel announcements.'
+  },
 
   // ============================================================
-  // TWITTER / X SERVICES (7 Services - Followers, Retweets, Space)
+  // TWITTER / X SERVICES (9 Services)
   // ============================================================
   {
     id: 'tw-001',
@@ -1230,9 +1397,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant'],
     description: 'Bookmarks are heavily weighted by the X algorithm for For You recommendations.'
   },
+  {
+    id: 'tw-008',
+    providerServiceId: 31702,
+    name: 'Twitter / X Tier-1 USA / UK Targeted Followers',
+    platform: 'twitter',
+    category: 'Twitter Followers',
+    ratePer1kBDT: 590,
+    ratePer1kUSD: 4.80,
+    minQty: 100,
+    maxQty: 25000,
+    speed: '1k / Day',
+    refillDays: 60,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'High-net-worth North American & European followers for finance and tech brands.'
+  },
+  {
+    id: 'tw-009',
+    providerServiceId: 27269,
+    name: 'Twitter / X Spaces 60-Minute Extended Listeners',
+    platform: 'twitter',
+    category: 'Twitter Live',
+    ratePer1kBDT: 890,
+    ratePer1kUSD: 7.25,
+    minQty: 50,
+    maxQty: 2000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: '1-hour sustained listener attendance to keep Space visible on Twitter feed top bar.'
+  },
 
   // ============================================================
-  // SPOTIFY SERVICES (6 Services - Royalty Eligible Streams & Followers)
+  // SPOTIFY SERVICES (8 Services)
   // ============================================================
   {
     id: 'sp-001',
@@ -1324,9 +1521,39 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant', 'high-retention'],
     description: 'Signals strong listener loyalty to Spotify Release Radar algorithms.'
   },
+  {
+    id: 'sp-007',
+    providerServiceId: 27269,
+    name: 'Spotify Full Album Multi-Track Stream Pack',
+    platform: 'spotify',
+    category: 'Spotify Music',
+    ratePer1kBDT: 450,
+    ratePer1kUSD: 3.70,
+    minQty: 500,
+    maxQty: 100000,
+    speed: '5k / Day',
+    refillDays: 30,
+    badges: ['high-retention'],
+    description: 'Distributes streams evenly across all tracks on your EP or full studio album.'
+  },
+  {
+    id: 'sp-008',
+    providerServiceId: 36642,
+    name: 'Spotify Algorithmic Release Radar Trigger Pack',
+    platform: 'spotify',
+    category: 'Spotify Music',
+    ratePer1kBDT: 320,
+    ratePer1kUSD: 2.60,
+    minQty: 250,
+    maxQty: 25000,
+    speed: '1k / Day',
+    refillDays: 30,
+    badges: ['best-seller', 'high-retention'],
+    description: 'Combines saves, playlist additions, and full 90-second plays to trigger algorithm.'
+  },
 
   // ============================================================
-  // LINKEDIN SERVICES (6 Services - Corporate, Connections & B2B)
+  // LINKEDIN SERVICES (8 Services)
   // ============================================================
   {
     id: 'li-001',
@@ -1417,6 +1644,284 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     refillDays: 0,
     badges: ['instant', 'high-retention'],
     description: 'Elevate subscriber counts and read statistics on LinkedIn company newsletters.'
+  },
+  {
+    id: 'li-007',
+    providerServiceId: 31702,
+    name: 'LinkedIn Skill Endorsements & Profile Recommendations',
+    platform: 'linkedin',
+    category: 'LinkedIn Growth',
+    ratePer1kBDT: 850,
+    ratePer1kUSD: 6.90,
+    minQty: 20,
+    maxQty: 1000,
+    speed: '50 / Day',
+    refillDays: 60,
+    badges: ['non-drop'],
+    description: 'Endorse top profile skills to establish domain expertise for job searches & freelancing.'
+  },
+  {
+    id: 'li-008',
+    providerServiceId: 36643,
+    name: 'LinkedIn Love / Insightful Reaction Filter',
+    platform: 'linkedin',
+    category: 'LinkedIn Engagement',
+    ratePer1kBDT: 480,
+    ratePer1kUSD: 3.90,
+    minQty: 50,
+    maxQty: 10000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant'],
+    description: 'Targeted reaction types (❤️ Love or 💡 Insightful) on professional thought leadership posts.'
+  },
+
+  // ============================================================
+  // WEB TRAFFIC & SEO (8 Services)
+  // ============================================================
+  {
+    id: 'tr-001',
+    providerServiceId: 27269,
+    name: 'Google Organic Keyword Search Traffic [Real Analytics Tracking]',
+    platform: 'traffic',
+    category: 'SEO Organic Traffic',
+    ratePer1kBDT: 95,
+    ratePer1kUSD: 0.78,
+    minQty: 1000,
+    maxQty: 5000000,
+    speed: '20k / Day',
+    refillDays: 0,
+    badges: ['high-retention', 'best-seller'],
+    description: 'Organic search visits entering via your specified target keywords. 100% visible in Google Analytics 4.'
+  },
+  {
+    id: 'tr-002',
+    providerServiceId: 27269,
+    name: 'USA High-Retention Website Visitors [60s+ Stay Duration]',
+    platform: 'traffic',
+    category: 'Geo-Targeted Traffic',
+    ratePer1kBDT: 120,
+    ratePer1kUSD: 0.98,
+    minQty: 1000,
+    maxQty: 2000000,
+    speed: '15k / Day',
+    refillDays: 0,
+    badges: ['high-retention', 'best-seller'],
+    description: 'Geo-targeted traffic from the United States with ultra-low bounce rate for blog AdSense & affiliate offers.'
+  },
+  {
+    id: 'tr-003',
+    providerServiceId: 27269,
+    name: 'Social Media Referral Traffic (Facebook / YouTube / Reddit Mix)',
+    platform: 'traffic',
+    category: 'Referral Traffic',
+    ratePer1kBDT: 85,
+    ratePer1kUSD: 0.70,
+    minQty: 1000,
+    maxQty: 5000000,
+    speed: '25k / Day',
+    refillDays: 0,
+    badges: ['instant', 'best-seller'],
+    description: 'Simulates genuine social media referral clicks on your articles and ecommerce products.'
+  },
+  {
+    id: 'tr-004',
+    providerServiceId: 27269,
+    name: 'Bangladesh Real Organic Web Visitors [Local SEO Signal]',
+    platform: 'traffic',
+    category: 'Geo-Targeted Traffic',
+    ratePer1kBDT: 75,
+    ratePer1kUSD: 0.62,
+    minQty: 1000,
+    maxQty: 1000000,
+    speed: '10k / Day',
+    refillDays: 0,
+    badges: ['bengali-target', 'instant'],
+    description: 'Bangladeshi IP web traffic to boost local ranking signals on Google Bangladesh.'
+  },
+  {
+    id: 'tr-005',
+    providerServiceId: 27269,
+    name: 'E-Commerce Product Page Deep Visits [3-Page Multi-Click Flow]',
+    platform: 'traffic',
+    category: 'E-Commerce Traffic',
+    ratePer1kBDT: 150,
+    ratePer1kUSD: 1.25,
+    minQty: 500,
+    maxQty: 500000,
+    speed: '5k / Day',
+    refillDays: 0,
+    badges: ['high-retention'],
+    description: 'Visitors browse 2 to 3 internal pages per session, slashing bounce rates under 30%.'
+  },
+  {
+    id: 'tr-006',
+    providerServiceId: 27269,
+    name: 'Global Direct Traffic [Lowest Wholesale Server Rate]',
+    platform: 'traffic',
+    category: 'Direct Traffic',
+    ratePer1kBDT: 45,
+    ratePer1kUSD: 0.38,
+    minQty: 2000,
+    maxQty: 50000000,
+    speed: '100k / Day',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'High volume raw web visits for testing server loads, page rank, and web counters.'
+  },
+  {
+    id: 'tr-007',
+    providerServiceId: 27269,
+    name: 'European Union (UK, Germany, France) Targeted Web Traffic',
+    platform: 'traffic',
+    category: 'Geo-Targeted Traffic',
+    ratePer1kBDT: 135,
+    ratePer1kUSD: 1.10,
+    minQty: 1000,
+    maxQty: 2000000,
+    speed: '10k / Day',
+    refillDays: 0,
+    badges: ['high-retention'],
+    description: 'High purchasing power European traffic for international dropshipping and SaaS sites.'
+  },
+  {
+    id: 'tr-008',
+    providerServiceId: 27269,
+    name: 'Desktop & Mobile Mixed Responsive Web Hits',
+    platform: 'traffic',
+    category: 'Referral Traffic',
+    ratePer1kBDT: 65,
+    ratePer1kUSD: 0.54,
+    minQty: 1000,
+    maxQty: 10000000,
+    speed: '50k / Day',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Balanced 60% Mobile / 40% Desktop user-agents for natural traffic distribution.'
+  },
+
+  // ============================================================
+  // DISCORD & STREAMING (8 Services)
+  // ============================================================
+  {
+    id: 'dc-001',
+    providerServiceId: 31702,
+    name: 'Discord Real Server Members [Online & Offline Natural Mix]',
+    platform: 'discord',
+    category: 'Discord Community',
+    ratePer1kBDT: 240,
+    ratePer1kUSD: 1.95,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '5k / Day',
+    refillDays: 30,
+    badges: ['non-drop', 'best-seller', 'auto-refill'],
+    description: 'High quality Discord accounts that join your server with custom avatars and natural online statuses.'
+  },
+  {
+    id: 'dc-002',
+    providerServiceId: 31702,
+    name: 'Discord Server Level 3 Nitro Boosts [14 Boosts Package - 1 Month]',
+    platform: 'discord',
+    category: 'Discord Server Perks',
+    ratePer1kBDT: 1250,
+    ratePer1kUSD: 10.20,
+    minQty: 1,
+    maxQty: 10,
+    speed: 'Instant Delivery',
+    refillDays: 30,
+    badges: ['instant', 'non-drop', 'best-seller'],
+    description: 'Instantly unlock 100+ server emoji slots, 384Kbps audio quality, custom invite banner, and Level 3 perks.'
+  },
+  {
+    id: 'dc-003',
+    providerServiceId: 27269,
+    name: 'Twitch Live Stream Concurrent Viewers [1-Hour Stay]',
+    platform: 'discord',
+    category: 'Twitch Live',
+    ratePer1kBDT: 480,
+    ratePer1kUSD: 3.90,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant', 'best-seller'],
+    description: 'Real-time Twitch viewers to rank higher in your game category and unlock Twitch Affiliate.'
+  },
+  {
+    id: 'dc-004',
+    providerServiceId: 36642,
+    name: 'Twitch Channel Followers [Affiliate Fast-Track]',
+    platform: 'discord',
+    category: 'Twitch Growth',
+    ratePer1kBDT: 95,
+    ratePer1kUSD: 0.78,
+    minQty: 100,
+    maxQty: 100000,
+    speed: '5k / Day',
+    refillDays: 30,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'Permanent Twitch channel followers to hit the 50 follower milestone for monetization.'
+  },
+  {
+    id: 'dc-005',
+    providerServiceId: 27269,
+    name: 'Twitch Live Chat Custom Messages & Emote Hype',
+    platform: 'discord',
+    category: 'Twitch Live',
+    ratePer1kBDT: 650,
+    ratePer1kUSD: 5.30,
+    minQty: 20,
+    maxQty: 500,
+    speed: 'Natural Stream Pace',
+    refillDays: 0,
+    badges: ['high-retention'],
+    description: 'Active chat activity during live stream sessions to create a lively community atmosphere.'
+  },
+  {
+    id: 'dc-006',
+    providerServiceId: 27269,
+    name: 'Kick Live Stream Concurrent Viewers [1-Hour Stay]',
+    platform: 'discord',
+    category: 'Kick Streaming',
+    ratePer1kBDT: 520,
+    ratePer1kUSD: 4.25,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Boost your Kick channel live placement and trigger the Explore homepage shelf.'
+  },
+  {
+    id: 'dc-007',
+    providerServiceId: 36642,
+    name: 'Kick Channel Followers [95/5 Revenue Fast-Track]',
+    platform: 'discord',
+    category: 'Kick Streaming',
+    ratePer1kBDT: 110,
+    ratePer1kUSD: 0.90,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '3k / Day',
+    refillDays: 30,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'Fast followers for Kick streamers looking to unlock the Creator Program.'
+  },
+  {
+    id: 'dc-008',
+    providerServiceId: 31702,
+    name: 'Discord Server Members [100% Guaranteed Online Status]',
+    platform: 'discord',
+    category: 'Discord Community',
+    ratePer1kBDT: 360,
+    ratePer1kUSD: 2.95,
+    minQty: 100,
+    maxQty: 25000,
+    speed: '3k / Day',
+    refillDays: 30,
+    badges: ['non-drop'],
+    description: 'Server members that maintain active online presence in member sidebar.'
   }
 ];
 

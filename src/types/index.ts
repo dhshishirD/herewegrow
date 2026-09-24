@@ -15,7 +15,9 @@ export type SocialPlatform =
   | 'telegram'
   | 'twitter'
   | 'spotify'
-  | 'linkedin';
+  | 'linkedin'
+  | 'traffic'
+  | 'discord';
 
 export type ServiceBadge = 
   | 'instant'

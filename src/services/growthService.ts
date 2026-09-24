@@ -84,6 +84,154 @@ export const saveLocalOrders = (orders: SmmOrder[]): void => {
 import { dispatchToProvider, getProviderConfig, triggerProviderRefill as triggerApiRefill, queryProviderOrderStatus } from './smmProviderService';
 import { ALL_SERVICES } from '../data/growthData';
 
+const FREE_TRIAL_TRACKER_KEY = 'hwg_free_trial_usage_count_v2';
+
+export interface FreeTrialOption {
+  id: string;
+  name: string;
+  platform: 'instagram' | 'tiktok' | 'twitter' | 'telegram';
+  quantity: number;
+  peakerrServiceId: number;
+  icon: string;
+  sampleBadge: string;
+  placeholder: string;
+}
+
+export const FREE_TRIAL_OPTIONS: FreeTrialOption[] = [
+  {
+    id: 'free-ig-views-100',
+    name: '100 Free Instagram Reels / Video Views',
+    platform: 'instagram',
+    quantity: 100,
+    peakerrServiceId: 32803,
+    icon: '📸',
+    sampleBadge: 'Instant 60s Start',
+    placeholder: 'https://www.instagram.com/reel/C... or /p/...'
+  },
+  {
+    id: 'free-tiktok-views-100',
+    name: '100 Free TikTok Viral Video Views',
+    platform: 'tiktok',
+    quantity: 100,
+    peakerrServiceId: 28690,
+    icon: '🎵',
+    sampleBadge: 'Algorithm Push',
+    placeholder: 'https://vt.tiktok.com/... or https://www.tiktok.com/@user/video/...'
+  },
+  {
+    id: 'free-ig-likes-20',
+    name: '20 Free Instagram Real Post Likes',
+    platform: 'instagram',
+    quantity: 20,
+    peakerrServiceId: 30112,
+    icon: '❤️',
+    sampleBadge: 'Real Accounts',
+    placeholder: 'https://www.instagram.com/p/C...'
+  },
+  {
+    id: 'free-twitter-views-100',
+    name: '100 Free Twitter / X Tweet Views',
+    platform: 'twitter',
+    quantity: 100,
+    peakerrServiceId: 33579,
+    icon: '🐦',
+    sampleBadge: 'High Velocity',
+    placeholder: 'https://x.com/username/status/...'
+  },
+  {
+    id: 'free-tg-views-50',
+    name: '50 Free Telegram Channel Post Views',
+    platform: 'telegram',
+    quantity: 50,
+    peakerrServiceId: 31146,
+    icon: '✈️',
+    sampleBadge: 'Instant Queue',
+    placeholder: 'https://t.me/channel_name/123'
+  }
+];
+
+export const getFreeTrialUsageCount = (): number => {
+  try {
+    const saved = localStorage.getItem(FREE_TRIAL_TRACKER_KEY);
+    return saved ? Number(saved) || 0 : 0;
+  } catch {
+    return 0;
+  }
+};
+
+export const claimFreeTrialBoost = async (
+  optionId: string,
+  link: string
+): Promise<{ success: boolean; message: string; remainingTries: number; order?: SmmOrder }> => {
+  const currentUsage = getFreeTrialUsageCount();
+  if (currentUsage >= 4) {
+    return {
+      success: false,
+      message: 'You have claimed all 4 free test samples on this device! Check our ৳2 micro-tester packages below to continue growing.',
+      remainingTries: 0
+    };
+  }
+
+  const option = FREE_TRIAL_OPTIONS.find(o => o.id === optionId) || FREE_TRIAL_OPTIONS[0];
+  const cleanLink = link.trim();
+  if (!cleanLink || cleanLink.length < 5) {
+    return {
+      success: false,
+      message: 'Please enter a valid link for your video or post.',
+      remainingTries: 4 - currentUsage
+    };
+  }
+
+  // Push directly to Peakerr API (0 admin approval needed)
+  let providerOrderId: string | undefined = undefined;
+  let orderStatus: SmmOrder['status'] = 'in_progress';
+
+  try {
+    const dispatchRes = await dispatchToProvider(option.peakerrServiceId, cleanLink, option.quantity);
+    if (dispatchRes && dispatchRes.success && dispatchRes.providerOrderId) {
+      providerOrderId = dispatchRes.providerOrderId;
+    }
+  } catch (err) {
+    console.warn('Free trial dispatch notice:', err);
+  }
+
+  // Record free trial order in local & cloud tracker
+  const newOrder: SmmOrder = {
+    id: 'FREE-' + Math.floor(100000 + Math.random() * 900000),
+    serviceId: option.id,
+    serviceName: `[FREE SAMPLE] ${option.name}`,
+    platform: option.platform,
+    link: cleanLink,
+    quantity: option.quantity,
+    chargeBDT: 0,
+    chargeUSD: 0,
+    currency: 'BDT',
+    status: orderStatus,
+    startCount: 0,
+    currentCount: 0,
+    remains: option.quantity,
+    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+    refillEligible: false,
+    providerOrderId
+  };
+
+  const allOrders = getLocalOrders();
+  saveLocalOrders([newOrder, ...allOrders]);
+
+  const newUsage = currentUsage + 1;
+  try {
+    localStorage.setItem(FREE_TRIAL_TRACKER_KEY, String(newUsage));
+  } catch {}
+
+  const remaining = Math.max(0, 4 - newUsage);
+  return {
+    success: true,
+    message: `✓ Success! Your ${option.name} is queued on server! Check your link in 60 seconds. (${remaining} free sample${remaining === 1 ? '' : 's'} remaining)`,
+    remainingTries: remaining,
+    order: newOrder
+  };
+};
+
 /**
  * Synchronizes active orders with live Peakerr API status
  */

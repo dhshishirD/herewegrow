@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { PLATFORMS_META, SMM_SERVICES_CATALOG } from '../data/growthData';
 import { QuickWholesaleTerminal } from './QuickWholesaleTerminal';
+import { FreeTrialBooster } from './FreeTrialBooster';
 import type { SmmService, SocialPlatform, ServiceBadge, UserWallet, SmmOrder } from '../types';
 
 interface GrowthCatalogSectionProps {
@@ -42,6 +43,7 @@ interface GrowthCatalogSectionProps {
 
 const CATEGORY_TABS = [
   { id: 'all', label: 'All Services', icon: Layers },
+  { id: 'micro-tester', label: '🔥 ৳2 - ৳5 Starters', icon: Flame },
   { id: 'followers', label: 'Followers & Members', icon: Users },
   { id: 'views', label: 'Views & Watch Time', icon: Play },
   { id: 'likes', label: 'Likes & Reactions', icon: Zap },
@@ -170,6 +172,8 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
         matchesCategory = service.category.toLowerCase().includes('live') ||
                           service.name.toLowerCase().includes('live') ||
                           service.name.toLowerCase().includes('spaces');
+      } else if (selectedCategoryTab === 'micro-tester') {
+        matchesCategory = service.category.includes('Micro-Tester') || service.id.startsWith('micro-') || service.ratePer1kBDT <= 100;
       } else if (selectedCategoryTab === 'comments') {
         matchesCategory = service.category.toLowerCase().includes('comment') ||
                           service.category.toLowerCase().includes('review') ||
@@ -263,6 +267,13 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
   return (
     <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300">
       
+      {/* 100% Free Live Speed Test & Trust Booster */}
+      <FreeTrialBooster
+        currency={currency}
+        onSelectServiceForOrder={onSelectServiceForOrder}
+        onOrderPlaced={onOrderPlaced}
+      />
+
       {/* View Switcher Pill Toggle */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200">
         <div>

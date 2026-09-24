@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Sparkles
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HeroSectionProps {
   onExploreTools: (prefilledUrl?: string) => void;
@@ -21,6 +22,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreBundles,
   onExploreStore,
 }) => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative overflow-hidden pt-12 sm:pt-20 pb-16 md:pb-24 bg-white border-b border-slate-200/80 ambient-hero-glow">
       
@@ -35,20 +38,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span>Verified Social Growth Infrastructure • 2026 Engine Active</span>
+          <span>{t('hero_badge')}</span>
         </div>
 
         {/* Hero Editorial Heading with Playfair Display Accent */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-950 tracking-tight leading-[1.12] max-w-4xl mx-auto">
-          Scale Your Social Authority with{' '}
+          {t('hero_title_1')}{' '}
           <span className="font-serif-title italic font-normal text-slate-900 block sm:inline">
-            Verified Growth & Free Creator Tools
+            {t('hero_title_2')}
           </span>
         </h1>
 
         {/* Refined Subtitle */}
         <p className="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed">
-          The all-in-one studio for digital creators and brands. Utilize our <strong className="text-slate-900 font-semibold">100% Free SEO & Creator Tools</strong> to optimize reach, or accelerate your audience with <strong className="text-slate-900 font-semibold">non-drop guaranteed social delivery</strong> with instant bKash, Nagad & Crypto.
+          {t('hero_subtitle')}
         </p>
 
         {/* Primary Pathway Action Buttons */}
@@ -58,7 +61,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             className="px-7 py-4 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2.5 cursor-pointer active:scale-98"
           >
             <TrendingUp className="w-4 h-4 text-indigo-400" />
-            <span>Explore Growth Catalog</span>
+            <span>{t('hero_cta_store')}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
@@ -67,7 +70,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             className="px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-900 border border-slate-300 shadow-xs hover:shadow-md text-sm font-bold transition-all flex items-center gap-2.5 cursor-pointer active:scale-98"
           >
             <Flame className="w-4 h-4 text-amber-500" />
-            <span>1-Click Monetization Packs</span>
+            <span>{t('hero_cta_bundles')}</span>
           </button>
 
           <button
@@ -75,7 +78,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             className="px-6 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-bold transition-all flex items-center gap-2.5 cursor-pointer active:scale-98 border border-slate-200"
           >
             <Wrench className="w-4 h-4 text-slate-700" />
-            <span>Free Creator Tools</span>
+            <span>{t('hero_cta_tools')}</span>
           </button>
         </div>
 
@@ -87,8 +90,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Zap className="w-5 h-5 text-amber-600" />
             </div>
             <div>
-              <div className="text-xs sm:text-sm font-extrabold text-slate-950">Instant 15-Min Start</div>
-              <div className="text-[11px] text-slate-500 font-medium">Automated queue API</div>
+              <div className="text-xs sm:text-sm font-extrabold text-slate-950">{t('hero_metric_1_title')}</div>
+              <div className="text-[11px] text-slate-500 font-medium">{t('hero_metric_1_sub')}</div>
             </div>
           </div>
 
@@ -97,8 +100,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <ShieldCheck className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <div className="text-xs sm:text-sm font-extrabold text-slate-950">Non-Drop Protected</div>
-              <div className="text-[11px] text-slate-500 font-medium">Auto refill guarantee</div>
+              <div className="text-xs sm:text-sm font-extrabold text-slate-950">{t('hero_metric_2_title')}</div>
+              <div className="text-[11px] text-slate-500 font-medium">{t('hero_metric_2_sub')}</div>
             </div>
           </div>
 
@@ -107,8 +110,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <CheckCircle2 className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <div className="text-xs sm:text-sm font-extrabold text-slate-950">bKash & Nagad Auto</div>
-              <div className="text-[11px] text-slate-500 font-medium">Instant BDT checkout</div>
+              <div className="text-xs sm:text-sm font-extrabold text-slate-950">{t('hero_metric_3_title')}</div>
+              <div className="text-[11px] text-slate-500 font-medium">{t('hero_metric_3_sub')}</div>
             </div>
           </div>
 
@@ -117,8 +120,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Sparkles className="w-5 h-5 text-pink-600" />
             </div>
             <div>
-              <div className="text-xs sm:text-sm font-extrabold text-slate-950">120,000+ Completed</div>
-              <div className="text-[11px] text-slate-500 font-medium">Verified creator orders</div>
+              <div className="text-xs sm:text-sm font-extrabold text-slate-950">{t('hero_metric_4_title')}</div>
+              <div className="text-[11px] text-slate-500 font-medium">{t('hero_metric_4_sub')}</div>
             </div>
           </div>
 

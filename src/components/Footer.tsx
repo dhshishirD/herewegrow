@@ -4,6 +4,7 @@ import {
   ArrowUpRight,
   Lock
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FooterProps {
   onNavigateTab: (tab: string) => void;
@@ -13,6 +14,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategory, onOpenAdmin }) => {
   const lastTapRef = useRef<number>(0);
+  const { language, t } = useLanguage();
 
   const handleSecretDoubleTap = () => {
     const now = Date.now();
@@ -29,6 +31,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategor
       onNavigateTab('store');
     }
   };
+
+  const isBn = language === 'bn';
 
   return (
     <footer className="border-t border-slate-200 bg-slate-50 pt-16 pb-10 text-slate-600 text-xs">
@@ -53,7 +57,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategor
             </div>
             
             <p className="text-xs text-slate-600 leading-relaxed max-w-sm">
-              The #1 All-in-One Social Creator Tools & Growth Studio in Bangladesh. Combining free viral utilities with high-velocity, non-drop SMM fulfillment.
+              {isBn 
+                ? 'বাংলাদেশের সেরা অল-ইন-ওয়ান সোশ্যাল ক্রিয়েটর টুলস ও গ্রোথ প্ল্যাটফর্ম। বিশ্বমানের অটোমেটেড সার্ভার কিউ ও নন-ড্রপ গ্যারান্টি।'
+                : 'The #1 All-in-One Social Creator Tools & Growth Studio. Combining free viral utilities with high-velocity, non-drop SMM fulfillment.'}
             </p>
 
             <div className="flex items-center gap-2 text-[11px] text-slate-500">
@@ -68,36 +74,36 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategor
 
           {/* Column 1: Growth Services */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Growth Store</h4>
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{t('nav_store')}</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => handleServiceCategoryClick('facebook')} className="hover:text-slate-900 transition-colors">
-                  Facebook Page Likes & Followers
+                  {isBn ? 'ফেসবুক পেজ লাইক ও ফলোয়ার' : 'Facebook Page Likes & Followers'}
                 </button>
               </li>
               <li>
                 <button onClick={() => handleServiceCategoryClick('youtube')} className="hover:text-slate-900 transition-colors">
-                  YouTube Monetization Watch Hours
+                  {isBn ? 'ইউটিউব মনিটাইজেশন ওয়াচ টাইম' : 'YouTube Monetization Watch Hours'}
                 </button>
               </li>
               <li>
                 <button onClick={() => handleServiceCategoryClick('instagram')} className="hover:text-slate-900 transition-colors">
-                  Instagram Real Followers
+                  {isBn ? 'ইনস্টাগ্রাম অর্গানিক ফলোয়ার' : 'Instagram Real Followers'}
                 </button>
               </li>
               <li>
                 <button onClick={() => handleServiceCategoryClick('tiktok')} className="hover:text-slate-900 transition-colors">
-                  TikTok Viral Views & Saves
+                  {isBn ? 'টিকটক ভাইরাল ভিউ ও সেভ' : 'TikTok Viral Views & Saves'}
                 </button>
               </li>
               <li>
                 <button onClick={() => handleServiceCategoryClick('telegram')} className="hover:text-slate-900 transition-colors">
-                  Telegram Channel Members
+                  {isBn ? 'টেলিগ্রাম চ্যানেল মেম্বার্স' : 'Telegram Channel Members'}
                 </button>
               </li>
               <li>
                 <button onClick={() => handleServiceCategoryClick('linkedin')} className="hover:text-slate-900 transition-colors">
-                  LinkedIn Company Growth
+                  {isBn ? 'লিঙ্কডইন কোম্পানি গ্রোথ' : 'LinkedIn Company Growth'}
                 </button>
               </li>
             </ul>
@@ -105,31 +111,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategor
 
           {/* Column 2: Free Tools */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Free Creator Tools</h4>
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{t('nav_tools')}</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => onNavigateTab('tools')} className="hover:text-slate-900 transition-colors">
-                  YouTube Earnings & AdSense Calculator
+                  {isBn ? 'ইউটিউব আর্নিংস ও অ্যাডসেন্স ক্যালকুলেটর' : 'YouTube Earnings & AdSense Calculator'}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('tools')} className="hover:text-slate-900 transition-colors">
-                  YouTube SEO Tag Extractor
+                  {isBn ? 'ইউটিউব এসইও ট্যাগ এক্সট্র্যাক্টর' : 'YouTube SEO Tag Extractor'}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('tools')} className="hover:text-slate-900 transition-colors">
-                  Engagement Rate Calculator
+                  {isBn ? 'এনগেজমেন্ট রেট ক্যালকুলেটর' : 'Engagement Rate Calculator'}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('tools')} className="hover:text-slate-900 transition-colors">
-                  AI Viral Hashtag Generator
+                  {isBn ? 'এআই ভাইরাল হ্যাশট্যাগ জেনারেটর' : 'AI Viral Hashtag Generator'}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('tools')} className="hover:text-slate-900 transition-colors">
-                  Fancy Bio Font Generator
+                  {isBn ? 'ফ্যান্সি বায়ো ফন্ট জেনারেটর' : 'Fancy Bio Font Generator'}
                 </button>
               </li>
             </ul>
@@ -137,28 +143,28 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategor
 
           {/* Column 3: Platform & Support */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Developers & Support</h4>
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{isBn ? 'ডেভেলপার ও সাপোর্ট' : 'Developers & Support'}</h4>
             <ul className="space-y-2">
               <li>
                 <button onClick={() => onNavigateTab('api')} className="hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold text-indigo-700">
-                  <span>Reseller API v2</span>
+                  <span>{isBn ? 'রিসেলার API v2' : 'Reseller API v2'}</span>
                   <ArrowUpRight className="w-3 h-3 text-indigo-600" />
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('orders')} className="hover:text-slate-900 transition-colors">
-                  Track Live Orders
+                  {t('nav_orders')}
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('affiliate')} className="hover:text-slate-900 transition-colors text-emerald-700 font-bold flex items-center gap-1">
-                  <span>🤝 Student Affiliate Program</span>
+                  <span>🤝 {isBn ? 'অ্যাফিলিয়েট ইনকাম প্রোগ্রাম' : 'Partner & Affiliate Program'}</span>
                   <span className="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-black">15-25%</span>
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigateTab('bundles')} className="hover:text-slate-900 transition-colors">
-                  1-Click Monetization Packs
+                  {t('nav_bundles')}
                 </button>
               </li>
               <li>
@@ -197,7 +203,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategor
             className="text-[11px] text-slate-500 cursor-pointer select-none transition-colors hover:text-slate-700"
             title="HereWeGrow Social Engine"
           >
-            © 2026 HereWeGrow.pro • All rights reserved.
+            © 2026 HereWeGrow.pro • {t('footer_rights')}
           </div>
 
         </div>

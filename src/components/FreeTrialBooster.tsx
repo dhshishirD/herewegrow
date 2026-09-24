@@ -22,6 +22,7 @@ import {
   type FreeTrialOption 
 } from '../services/growthService';
 import type { SmmService, SmmOrder, UserWallet } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FreeTrialBoosterProps {
   currency: 'BDT' | 'USD';
@@ -33,6 +34,7 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
   currency,
   onSelectServiceForOrder,
 }) => {
+  const { language, t } = useLanguage();
   const [selectedOptionId, setSelectedOptionId] = useState<string>(FREE_TRIAL_OPTIONS[0].id);
   const [targetLink, setTargetLink] = useState('');
   const [usageCount, setUsageCount] = useState<number>(() => getFreeTrialUsageCount());
@@ -50,7 +52,10 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
   const handleClaimFreeTrial = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!targetLink.trim()) {
-      setResultMsg({ type: 'error', text: 'Please paste your video or post link above.' });
+      setResultMsg({ 
+        type: 'error', 
+        text: language === 'bn' ? 'দয়া করে আপনার ভিডিও বা পোস্টের লিংক দিন।' : 'Please paste your video or post link above.' 
+      });
       return;
     }
 
@@ -75,11 +80,13 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
         }
       }
     } catch (err: any) {
-      setResultMsg({ type: 'error', text: err?.message || 'Error processing free sample.' });
+      setResultMsg({ type: 'error', text: err?.message || (language === 'bn' ? 'ফ্রি স্যাম্পল প্রসেস করতে সমস্যা হয়েছে।' : 'Error processing free sample.') });
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const isBn = language === 'bn';
 
   return (
     <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-6 sm:p-10 shadow-2xl border border-indigo-900/50 mb-10">
@@ -95,33 +102,43 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-bold uppercase tracking-wider">
               <Gift className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-              <span>100% Free Live Speed Test</span>
+              <span>{isBn ? '১০০% ফ্রি লাইভ স্পিড টেস্ট' : '100% Free Live Speed Test'}</span>
             </span>
             <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-white/10 text-slate-200 border border-white/10">
-              {remainingSamples} of 4 Free Samples Left
+              {isBn 
+                ? `৪টির মধ্যে ${remainingSamples}টি ফ্রি স্যাম্পল বাকি` 
+                : `${remainingSamples} of 4 Free Samples Left`}
             </span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-extrabold font-serif tracking-tight leading-snug">
-            Don’t Trust Words — <span className="bg-gradient-to-r from-amber-300 via-amber-200 to-indigo-200 bg-clip-text text-transparent">Test Our Live Speed for FREE!</span>
+            {isBn ? (
+              <>কথায় নয় কাজে বিশ্বাস — <span className="bg-gradient-to-r from-amber-300 via-amber-200 to-indigo-200 bg-clip-text text-transparent">ফ্রিতে স্পিড টেস্ট করে নিন!</span></>
+            ) : (
+              <>Don’t Trust Words — <span className="bg-gradient-to-r from-amber-300 via-amber-200 to-indigo-200 bg-clip-text text-transparent">Test Our Live Speed for FREE!</span></>
+            )}
           </h2>
 
           <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            বিশ্বাস করার আগে নিজে পরীক্ষা করে দেখুন! কোনো টাকা বা বিকাশ পেমেন্ট লাগবে না। আপনার যেকোনো পোস্ট বা ভিডিওর লিংক দিন এবং <strong className="text-amber-400">৬০ সেকেন্ডের মধ্যে ১০০ ভিউস বা ২০ লাইক</strong> সরাসরি আপনার একাউন্টে রিসিভ করুন।
+            {isBn ? (
+              <>বিশ্বাস করার আগে নিজে পরীক্ষা করে দেখুন! কোনো টাকা বা বিকাশ পেমেন্ট লাগবে না। আপনার যেকোনো পোস্ট বা ভিডিওর লিংক দিন এবং <strong className="text-amber-400">৬০ সেকেন্ডের মধ্যে ১০০ ভিউস বা ২০ লাইক</strong> সরাসরি আপনার একাউন্টে রিসিভ করুন।</>
+            ) : (
+              <>Witness real delivery before spending a single dollar! No credit card or registration needed. Enter your public link and receive <strong className="text-amber-400">100 Views or 20 Likes within 60 seconds</strong> directly to your profile.</>
+            )}
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
             <div className="flex items-center gap-2 text-[11px] text-slate-300 font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>0 ৳ Payment Needed</span>
+              <span>{isBn ? '০ ৳ কোনো পেমেন্ট লাগবে না' : '$0 Payment Needed'}</span>
             </div>
             <div className="flex items-center gap-2 text-[11px] text-slate-300 font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>No Password Required</span>
+              <span>{isBn ? 'পাসওয়ার্ডের প্রয়োজন নেই' : 'No Password Required'}</span>
             </div>
             <div className="flex items-center gap-2 text-[11px] text-slate-300 font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>Instant 60s Start</span>
+              <span>{isBn ? '৬০ সেকেন্ডে ইনস্ট্যান্ট শুরু' : 'Instant 60s Start'}</span>
             </div>
           </div>
         </div>
@@ -132,10 +149,10 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
           <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
             <span className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
               <Zap className="w-4 h-4 text-amber-500" />
-              <span>Select Your Free Sample</span>
+              <span>{isBn ? 'আপনার ফ্রি স্যাম্পল বেছে নিন' : 'Select Your Free Sample'}</span>
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-              Free Trial Active
+              {isBn ? 'ফ্রি ট্রায়াল সক্রিয়' : 'Free Trial Active'}
             </span>
           </div>
 
@@ -173,7 +190,9 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
             {/* Target Link Input */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Your {selectedOption.platform.toUpperCase()} Video / Post URL
+                {isBn 
+                  ? `আপনার ${selectedOption.platform.toUpperCase()} ভিডিও / পোস্টের লিংক` 
+                  : `Your ${selectedOption.platform.toUpperCase()} Video / Post URL`}
               </label>
               <input
                 type="url"
@@ -212,15 +231,15 @@ export const FreeTrialBooster: React.FC<FreeTrialBoosterProps> = ({
               {isSubmitting ? (
                 <>
                   <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                  <span>Queueing to Server...</span>
+                  <span>{isBn ? 'সার্ভারে পাঠানো হচ্ছে...' : 'Queueing to Server...'}</span>
                 </>
               ) : remainingSamples > 0 ? (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>Send My Free Sample (60s Delivery) ➔</span>
+                  <span>{isBn ? 'ফ্রি স্যাম্পল পাঠান (৬০ সে. ডেলিভারি) ➔' : 'Send My Free Sample (60s Delivery) ➔'}</span>
                 </>
               ) : (
-                <span>4/4 Samples Claimed • Try ৳2 Starters Below</span>
+                <span>{isBn ? '৪/৪ টি স্যাম্পল সম্পন্ন • নিচে ২ টাকার অফার দেখুন' : '4/4 Samples Claimed • Try Starter Packages Below'}</span>
               )}
             </button>
 

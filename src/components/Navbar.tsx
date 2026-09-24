@@ -10,9 +10,11 @@ import {
   X, 
   TrendingUp,
   Plus,
-  Users
+  Users,
+  Globe
 } from 'lucide-react';
 import type { UserWallet } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   activeTab: string;
@@ -35,14 +37,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const lastLogoTapRef = React.useRef<number>(0);
+  const { t, country, language, setIsGeoModalOpen } = useLanguage();
 
   const navItems = [
-    { id: 'store', label: 'Growth Store', icon: ShoppingBag },
-    { id: 'bundles', label: '1-Click Bundles', icon: Sparkles, badge: 'Popular' },
-    { id: 'affiliate', label: 'Earn Money', icon: Users, badge: '15-25%' },
-    { id: 'tools', label: 'Free Creator Tools', icon: Wrench },
-    { id: 'orders', label: 'Track Orders', icon: Activity },
-    { id: 'api', label: 'Reseller API', icon: Code2 },
+    { id: 'store', label: t('nav_store'), icon: ShoppingBag },
+    { id: 'bundles', label: t('nav_bundles'), icon: Sparkles, badge: t('nav_badge_popular') },
+    { id: 'affiliate', label: t('nav_affiliate'), icon: Users, badge: t('nav_badge_earn') },
+    { id: 'tools', label: t('nav_tools'), icon: Wrench },
+    { id: 'orders', label: t('nav_orders'), icon: Activity },
+    { id: 'api', label: t('nav_api'), icon: Code2 },
   ];
 
   const handleNavClick = (id: string) => {
@@ -117,14 +120,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right Controls: Currency & Clean Wallet */}
-          <div className="flex items-center gap-2.5">
+          {/* Right Controls: Geo/Language, Currency & Clean Wallet */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             
+            {/* Geo & Language Selector Trigger Button */}
+            <button
+              onClick={() => setIsGeoModalOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-800 transition-all cursor-pointer shadow-2xs"
+              title="Change Country, Language & Currency"
+            >
+              <span className="text-sm">{country.flag}</span>
+              <span className="hidden md:inline text-[11px]">
+                {language === 'bn' ? 'বাংলা' : 'EN'}
+              </span>
+              <Globe className="w-3 h-3 text-slate-500" />
+            </button>
+
             {/* Currency Pill Switcher */}
             <div className="flex items-center bg-slate-100 p-1 rounded-full border border-slate-200/90 text-xs font-bold">
               <button
                 onClick={() => setCurrency('BDT')}
-                className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 rounded-full transition-all cursor-pointer ${
                   currency === 'BDT'
                     ? 'bg-white text-emerald-950 shadow-2xs font-extrabold border border-slate-200/60'
                     : 'text-slate-500 hover:text-slate-900'
@@ -135,7 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
               <button
                 onClick={() => setCurrency('USD')}
-                className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
+                className={`px-2 sm:px-2.5 py-1 rounded-full transition-all cursor-pointer ${
                   currency === 'USD'
                     ? 'bg-white text-indigo-950 shadow-2xs font-extrabold border border-slate-200/60'
                     : 'text-slate-500 hover:text-slate-900'
@@ -147,8 +163,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* Clean Wallet Pill */}
-            <div className="flex items-center bg-white border border-slate-200 rounded-full p-1 pl-3 shadow-2xs">
-              <div className="flex items-center gap-1.5 mr-2">
+            <div className="flex items-center bg-white border border-slate-200 rounded-full p-1 pl-2.5 sm:pl-3 shadow-2xs">
+              <div className="flex items-center gap-1 sm:gap-1.5 mr-1.5 sm:mr-2">
                 <Wallet className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="text-xs font-mono font-bold text-slate-900">
                   {currency === 'BDT' ? `৳${wallet.balanceBDT.toFixed(2)}` : `$${wallet.balanceUSD.toFixed(2)}`}
@@ -156,17 +172,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <button
                 onClick={onOpenWallet}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-2xs cursor-pointer"
               >
                 <Plus className="w-3 h-3 text-emerald-400" />
-                <span className="hidden sm:inline">Deposit</span>
+                <span className="hidden sm:inline">{t('nav_deposit')}</span>
               </button>
             </div>
 
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer"
               aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -180,6 +196,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-slate-200 bg-white/95 backdrop-blur-xl px-4 py-4 space-y-2 animate-fadeIn">
+          {/* Quick Geo & Currency Selector inside mobile drawer */}
+          <div className="p-3 mb-2 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsGeoModalOpen(true);
+              }}
+              className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer"
+            >
+              <span className="text-lg">{country.flag}</span>
+              <span>{country.name} ({language === 'bn' ? 'বাংলা' : 'English'})</span>
+            </button>
+            <span className="text-[11px] font-mono font-bold text-indigo-600">
+              {currency === 'BDT' ? '৳ BDT' : '$ USD'}
+            </span>
+          </div>
+
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -187,7 +220,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors ${
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors cursor-pointer ${
                   isActive
                     ? 'bg-slate-950 text-white'
                     : 'text-slate-700 hover:bg-slate-100'

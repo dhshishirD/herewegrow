@@ -15,6 +15,8 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 import { LiveSupportWidget } from './components/LiveSupportWidget';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
 import { AffiliatePortal } from './components/AffiliatePortal';
+import { GeoSelectorModal } from './components/GeoSelectorModal';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import confetti from 'canvas-confetti';
 import { Footer } from './components/Footer';
 import { getLocalWallet, getLocalOrders, saveLocalWallet, createPaidGatewayOrder, depositFunds, verifyAndCreditPayment } from './services/growthService';
@@ -22,10 +24,10 @@ import { captureReferralCodeFromUrl, creditAffiliateOnOrder } from './services/a
 import { ALL_SERVICES } from './data/growthData';
 import type { UserWallet, SmmOrder, SmmService, GrowthBundle, SocialPlatform } from './types';
 
-export function App() {
+function MainAppContent() {
+  const { currency, setCurrency } = useLanguage();
   const [activeTab, setActiveTab] = useState<string>('store');
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
-  const [currency, setCurrency] = useState<'BDT' | 'USD'>('BDT');
   const [wallet, setWallet] = useState<UserWallet>(() => getLocalWallet());
   const [orders, setOrders] = useState<SmmOrder[]>(() => getLocalOrders());
   
@@ -251,54 +253,49 @@ export function App() {
         onOpenAdmin={() => setIsAdminModalOpen(true)}
       />
 
-      {/* Main Content View */}
+      {/* Main Content Area */}
       <main className="flex-1">
         
-        {/* Dedicated Programmatic SEO Category Landing Page */}
+        {/* Dedicated Organic SEO Category Landing Page */}
         {activeTab === 'category_landing' && activeCategorySlug && (
           <CategoryLandingPage
-            categoryKey={activeCategorySlug}
+            categorySlug={activeCategorySlug}
             currency={currency}
-            wallet={wallet}
             onSelectService={handleOpenServiceOrder}
             onOpenWallet={() => setIsWalletModalOpen(true)}
+            onNavigateHome={() => handleTabNavigate('store')}
+            onNavigateCategory={handleNavigateCategory}
           />
         )}
 
-        {/* Hero Section shown on primary landing tabs */}
-        {(activeTab === 'store' || activeTab === 'bundles') && (
-          <HeroSection
-            onExploreStore={(_query) => {
-              setActiveCategorySlug(null);
-              setActiveTab('store');
-              window.scrollTo({ top: 480, behavior: 'smooth' });
-            }}
-            onExploreBundles={() => {
-              setActiveCategorySlug(null);
-              setActiveTab('bundles');
-              window.scrollTo({ top: 480, behavior: 'smooth' });
-            }}
-            onExploreTools={(url) => {
-              if (url) {
-                setPrefilledToolUrl(url);
-              }
-              setActiveCategorySlug(null);
-              setActiveTab('tools');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-          />
-        )}
-
-        {/* Tab 1: Growth Services Store */}
+        {/* Tab 1: Hero & Main Growth Catalog Store */}
         {activeTab === 'store' && (
-          <GrowthCatalogSection
-            currency={currency}
-            onSelectServiceForOrder={handleOpenServiceOrder}
-            initialPlatform={selectedStorePlatform}
-            wallet={wallet}
-            onOrderPlaced={handleOrderPlaced}
-            onOpenWallet={() => setIsWalletModalOpen(true)}
-          />
+          <>
+            <HeroSection
+              onExploreTools={(url) => {
+                setPrefilledToolUrl(url);
+                handleTabNavigate('tools');
+              }}
+              onExploreBundles={() => handleTabNavigate('bundles')}
+              onExploreStore={(q) => {
+                const el = document.getElementById('catalog-search-input');
+                if (el) {
+                  el.focus();
+                  if (q) (el as HTMLInputElement).value = q;
+                }
+              }}
+            />
+
+            <GrowthCatalogSection
+              currency={currency}
+              initialPlatform={selectedStorePlatform}
+              onOrderService={handleOpenServiceOrder}
+              onExploreBundles={() => handleTabNavigate('bundles')}
+              onExploreTools={() => handleTabNavigate('tools')}
+              onOpenWallet={() => setIsWalletModalOpen(true)}
+              onOrderPlaced={handleOrderPlaced}
+            />
+          </>
         )}
 
         {/* Tab 2: 1-Click Bundles */}
@@ -365,6 +362,9 @@ export function App() {
         onOpenWallet={() => setIsWalletModalOpen(true)}
       />
 
+      {/* Geo / Location / Currency / Language Selector Modal */}
+      <GeoSelectorModal />
+
       {/* Wallet Deposit Modal */}
       <WalletModal
         isOpen={isWalletModalOpen}
@@ -421,4 +421,13 @@ export function App() {
     </div>
   );
 }
+
+export function App() {
+  return (
+    <LanguageProvider>
+      <MainAppContent />
+    </LanguageProvider>
+  );
+}
+
 export default App;

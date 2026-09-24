@@ -78,43 +78,7 @@ export const getDailyMotivationalQuote = (): MotivationalQuote => {
   return MOTIVATIONAL_QUOTES[dayOfYear % MOTIVATIONAL_QUOTES.length];
 };
 
-// Initial Seed Affiliates
-const SEED_AFFILIATES: AffiliateProfile[] = [
-  {
-    id: 'AFF-001',
-    code: 'GROW-DHAKA',
-    name: 'Tanvir Ahmed',
-    email: 'tanvir.student@gmail.com',
-    phoneOrBkash: '01712345678',
-    institution: 'Dhaka University',
-    tier: 'gold',
-    commissionRate: 0.20, // 20%
-    totalClicks: 342,
-    totalSales: 18,
-    grossSalesBDT: 4800,
-    totalEarningsBDT: 960,
-    pendingPayoutBDT: 360,
-    withdrawnBDT: 600,
-    createdAt: '2026-09-01'
-  },
-  {
-    id: 'AFF-002',
-    code: 'HUSTLE-CHITTAGONG',
-    name: 'Nusrat Jahan',
-    email: 'nusrat.cu@gmail.com',
-    phoneOrBkash: '01898765432',
-    institution: 'Chittagong University',
-    tier: 'silver',
-    commissionRate: 0.15, // 15%
-    totalClicks: 185,
-    totalSales: 9,
-    grossSalesBDT: 2400,
-    totalEarningsBDT: 360,
-    pendingPayoutBDT: 360,
-    withdrawnBDT: 0,
-    createdAt: '2026-09-10'
-  }
-];
+// Affiliates Storage
 
 export const getAllAffiliates = (): AffiliateProfile[] => {
   try {
@@ -126,7 +90,7 @@ export const getAllAffiliates = (): AffiliateProfile[] => {
   } catch (e) {
     console.error(e);
   }
-  return [...SEED_AFFILIATES];
+  return [];
 };
 
 export const saveAllAffiliates = (affiliates: AffiliateProfile[]): void => {
@@ -137,17 +101,62 @@ export const saveAllAffiliates = (affiliates: AffiliateProfile[]): void => {
   }
 };
 
-export const getCurrentAffiliateProfile = (): AffiliateProfile => {
+export const isAffiliateRegistered = (): boolean => {
   try {
     const saved = localStorage.getItem(AFFILIATE_PROFILE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (parsed && typeof parsed === 'object' && parsed.code) {
+      return Boolean(parsed && typeof parsed === 'object' && parsed.name && parsed.code && parsed.phoneOrBkash);
+    }
+  } catch {}
+  return false;
+};
+
+export const registerAffiliateAccount = (params: {
+  name: string;
+  phoneOrBkash: string;
+  institution?: string;
+  customCode?: string;
+  email?: string;
+}): AffiliateProfile => {
+  const cleanCode = (params.customCode && params.customCode.trim().length >= 3)
+    ? params.customCode.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '')
+    : 'HWG-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+
+  const newProfile: AffiliateProfile = {
+    id: 'AFF-' + Math.floor(1000 + Math.random() * 9000),
+    code: cleanCode,
+    name: params.name.trim(),
+    email: params.email?.trim() || '',
+    phoneOrBkash: params.phoneOrBkash.trim(),
+    institution: params.institution?.trim() || 'Student Ambassador',
+    tier: 'bronze',
+    commissionRate: 0.15, // 15% starting rate
+    totalClicks: 0,
+    totalSales: 0,
+    grossSalesBDT: 0,
+    totalEarningsBDT: 0,
+    pendingPayoutBDT: 0,
+    withdrawnBDT: 0,
+    createdAt: new Date().toISOString().split('T')[0]
+  };
+
+  saveCurrentAffiliateProfile(newProfile);
+  return newProfile;
+};
+
+export const getCurrentAffiliateProfile = (): AffiliateProfile | null => {
+  try {
+    const saved = localStorage.getItem(AFFILIATE_PROFILE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object' && parsed.code && parsed.phoneOrBkash) {
         return {
           id: parsed.id || 'AFF-USER',
           code: parsed.code || 'HWG-PARTNER',
-          name: parsed.name || 'Student Partner',
-          phoneOrBkash: parsed.phoneOrBkash || '01873216927',
+          name: parsed.name || 'Partner',
+          email: parsed.email || '',
+          phoneOrBkash: parsed.phoneOrBkash || '',
           institution: parsed.institution || 'Campus Ambassador',
           tier: parsed.tier || 'bronze',
           commissionRate: parsed.commissionRate || 0.15,
@@ -165,30 +174,7 @@ export const getCurrentAffiliateProfile = (): AffiliateProfile => {
     console.error(e);
   }
   
-  // Default fresh student affiliate
-  const randomCode = 'HWG-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-  const defaultProfile: AffiliateProfile = {
-    id: 'AFF-' + Math.floor(1000 + Math.random() * 9000),
-    code: randomCode,
-    name: 'Student Partner',
-    phoneOrBkash: '01873216927',
-    institution: 'Campus Ambassador',
-    tier: 'bronze',
-    commissionRate: 0.15, // 15% default starter
-    totalClicks: 24,
-    totalSales: 2,
-    grossSalesBDT: 450,
-    totalEarningsBDT: 67.5,
-    pendingPayoutBDT: 67.5,
-    withdrawnBDT: 0,
-    createdAt: new Date().toISOString().split('T')[0]
-  };
-
-  try {
-    localStorage.setItem(AFFILIATE_PROFILE_KEY, JSON.stringify(defaultProfile));
-  } catch {}
-
-  return defaultProfile;
+  return null;
 };
 
 export const saveCurrentAffiliateProfile = (profile: AffiliateProfile): void => {
@@ -311,20 +297,7 @@ export const getPayoutRequests = (): AffiliatePayoutRequest[] => {
   } catch (e) {
     console.error(e);
   }
-  return [
-    {
-      id: 'PAY-1001',
-      affiliateCode: 'GROW-DHAKA',
-      affiliateName: 'Tanvir Ahmed',
-      amountBDT: 600,
-      method: 'bkash',
-      accountNumber: '01712345678',
-      status: 'completed',
-      requestedAt: '2026-09-20 14:30',
-      processedAt: '2026-09-20 15:10',
-      adminTrxId: 'BK-99320145'
-    }
-  ];
+  return [];
 };
 
 export const savePayoutRequests = (reqs: AffiliatePayoutRequest[]): void => {
@@ -341,6 +314,9 @@ export const submitPayoutRequest = (
   accountNumber: string
 ): { success: boolean; message: string; request?: AffiliatePayoutRequest } => {
   const current = getCurrentAffiliateProfile();
+  if (!current) {
+    return { success: false, message: 'Please register your affiliate profile first.' };
+  }
 
   if (amountBDT < 100) {
     return { success: false, message: 'Minimum payout withdrawal is ৳100 BDT.' };
@@ -389,13 +365,13 @@ export const adminApprovePayout = (requestId: string, adminTrxId: string = 'BK-'
 
   // Update affiliate profile's withdrawn counter
   const all = getAllAffiliates();
-  const aff = all.find(a => a.code === req.affiliateCode);
+  const aff = all.find(a => a && a.code === req.affiliateCode);
   if (aff) {
-    aff.withdrawnBDT += req.amountBDT;
+    aff.withdrawnBDT = (aff.withdrawnBDT || 0) + req.amountBDT;
     saveAllAffiliates(all);
     const current = getCurrentAffiliateProfile();
-    if (current.code === aff.code) {
-      current.withdrawnBDT += req.amountBDT;
+    if (current && current.code === aff.code) {
+      current.withdrawnBDT = (current.withdrawnBDT || 0) + req.amountBDT;
       saveCurrentAffiliateProfile(current);
     }
   }

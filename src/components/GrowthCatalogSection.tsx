@@ -52,7 +52,8 @@ const CATEGORY_TABS = [
 
 const PRICE_TIERS = [
   { id: 'all', label: 'All Prices' },
-  { id: 'budget', label: '💰 Budget / Cheap (<৳100)', maxBDT: 100 },
+  { id: 'ultra-cheap', label: '🔥 Ultra Cheap (<৳50)', maxBDT: 50 },
+  { id: 'budget', label: '💰 Budget / Affordable (৳50 - ৳100)', minBDT: 50, maxBDT: 100 },
   { id: 'standard', label: '⚡ Standard (৳100 - ৳300)', minBDT: 100, maxBDT: 300 },
   { id: 'premium', label: '👑 High Quality (৳300 - ৳800)', minBDT: 300, maxBDT: 800 },
   { id: 'vip', label: '💎 VIP / Enterprise (৳800+)', minBDT: 800 },
@@ -179,10 +180,12 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
       // 3. Price Tier Filter
       let matchesPrice = true;
       const bdtRate = service.ratePer1kBDT;
-      if (selectedPriceTier === 'budget') {
-        matchesPrice = bdtRate < 100;
+      if (selectedPriceTier === 'ultra-cheap') {
+        matchesPrice = bdtRate < 50;
+      } else if (selectedPriceTier === 'budget') {
+        matchesPrice = bdtRate >= 50 && bdtRate <= 100;
       } else if (selectedPriceTier === 'standard') {
-        matchesPrice = bdtRate >= 100 && bdtRate <= 300;
+        matchesPrice = bdtRate > 100 && bdtRate <= 300;
       } else if (selectedPriceTier === 'premium') {
         matchesPrice = bdtRate > 300 && bdtRate <= 800;
       } else if (selectedPriceTier === 'vip') {
@@ -195,14 +198,21 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
         matchesQuality = service.badges.includes(selectedQualityBadge);
       }
 
-      // 5. Search keyword filter
+      // 5. Search keyword filter with Bengali synonym support
       const query = searchQuery.trim().toLowerCase();
-      const matchesSearch = !query || 
-        service.name.toLowerCase().includes(query) ||
-        service.category.toLowerCase().includes(query) ||
-        service.description.toLowerCase().includes(query) ||
-        service.id.toLowerCase().includes(query) ||
-        (service.providerServiceId && String(service.providerServiceId).includes(query));
+      let matchesSearch = true;
+      if (query) {
+        if (query === 'cheap' || query === 'chef' || query === 'cheapest' || query === 'sosta' || query === 'সস্তা' || query === 'কম দাম' || query === 'budget') {
+          matchesSearch = bdtRate <= 100 || service.name.toLowerCase().includes('cheap') || service.name.toLowerCase().includes('budget');
+        } else {
+          matchesSearch = 
+            service.name.toLowerCase().includes(query) ||
+            service.category.toLowerCase().includes(query) ||
+            service.description.toLowerCase().includes(query) ||
+            service.id.toLowerCase().includes(query) ||
+            (service.providerServiceId && String(service.providerServiceId).includes(query));
+        }
+      }
 
       return matchesPlatform && matchesCategory && matchesPrice && matchesQuality && matchesSearch;
     }).sort((a, b) => {

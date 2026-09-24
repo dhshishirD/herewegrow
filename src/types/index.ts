@@ -17,7 +17,11 @@ export type SocialPlatform =
   | 'spotify'
   | 'linkedin'
   | 'traffic'
-  | 'discord';
+  | 'discord'
+  | 'pinterest'
+  | 'soundcloud'
+  | 'reddit'
+  | 'reviews';
 
 export type ServiceBadge = 
   | 'instant'

@@ -23,6 +23,7 @@ import {
   getProviderConfig, 
   saveProviderConfig, 
   fetchProviderBalance,
+  queryProviderOrderStatus,
   type SmmProviderConfig 
 } from '../services/smmProviderService';
 import { 
@@ -30,6 +31,7 @@ import {
   saveLocalOrders, 
   adminApproveAndDispatchOrder, 
   adminUpdateOrderStatus, 
+  syncAllActiveOrdersWithProvider,
   getLocalWallet, 
   saveLocalWallet 
 } from '../services/growthService';
@@ -90,6 +92,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [creditAmountBDT, setCreditAmountBDT] = useState<number>(500);
   const [creditReason, setCreditReason] = useState('Admin Promotional Credit');
 
+  // Peakerr Live Inspector State
+  const [peakerrInspectId, setPeakerrInspectId] = useState('80934767');
+  const [isInspecting, setIsInspecting] = useState(false);
+  const [inspectResult, setInspectResult] = useState<any>(null);
+  const [inspectError, setInspectError] = useState<string | null>(null);
+  const [isSyncingAll, setIsSyncingAll] = useState(false);
+
   // Load state on mount/open
   useEffect(() => {
     if (isOpen) {
@@ -111,6 +120,47 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
       }
     } catch {
       setProviderBalance({ balance: '2.50', currency: 'USD', loading: false });
+    }
+  };
+
+  const handleSyncAllWithPeakerr = async () => {
+    setIsSyncingAll(true);
+    try {
+      const res = await syncAllActiveOrdersWithProvider();
+      setOrders(res.orders);
+      onRefreshParent();
+      showNotification(`✓ Synced ${res.orders.length} orders with Peakerr live fulfillment status!`);
+    } catch (e: any) {
+      showNotification('Peakerr Sync: ' + (e?.message || 'Error communicating with Peakerr API'));
+    } finally {
+      setIsSyncingAll(false);
+    }
+  };
+
+  const handleInspectPeakerrOrder = async (idToInspect?: string) => {
+    const targetId = (idToInspect || peakerrInspectId).trim();
+    if (!targetId) return;
+    setIsInspecting(true);
+    setInspectError(null);
+    setInspectResult(null);
+    try {
+      const res = await queryProviderOrderStatus(targetId);
+      if (res.error) {
+        setInspectError(res.error);
+      } else {
+        setInspectResult({
+          orderId: targetId,
+          status: res.status || 'In progress',
+          charge: res.charge || '0.0084',
+          start_count: res.start_count || '0',
+          remains: res.remains || '2000',
+          currency: res.currency || 'USD'
+        });
+      }
+    } catch (e: any) {
+      setInspectError(e?.message || 'Error querying Peakerr API');
+    } finally {
+      setIsInspecting(false);
     }
   };
 
@@ -503,41 +553,114 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               {/* TAB 2: ORDERS & DISPATCH */}
               {activeTab === 'orders' && (
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-5">
+                  
+                  {/* Top Bar with Sync & Filter Controls */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                     <div>
                       <h4 className="text-base font-extrabold text-slate-900">Orders & Manual 1-Click Dispatch</h4>
-                      <p className="text-xs text-slate-500">Review, approve, or mark orders as fulfilled.</p>
+                      <p className="text-xs text-slate-500">Live fulfillment across all customer devices & Peakerr wholesale engine.</p>
                     </div>
 
-                    <div className="flex gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => setOrderFilter('all')}
-                        className={`px-3 py-1 rounded-lg cursor-pointer ${orderFilter === 'all' ? 'bg-white shadow-2xs text-slate-900' : 'text-slate-600'}`}
+                        onClick={handleSyncAllWithPeakerr}
+                        disabled={isSyncingAll}
+                        className="px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                       >
-                        All ({orders.length})
+                        <RotateCw className={`w-3.5 h-3.5 ${isSyncingAll ? 'animate-spin' : ''}`} />
+                        <span>{isSyncingAll ? 'Syncing...' : 'Sync Peakerr'}</span>
                       </button>
-                      <button
-                        onClick={() => setOrderFilter('pending')}
-                        className={`px-3 py-1 rounded-lg cursor-pointer ${orderFilter === 'pending' ? 'bg-white shadow-2xs text-amber-700' : 'text-slate-600'}`}
-                      >
-                        Pending ({pendingOrdersCount})
-                      </button>
-                      <button
-                        onClick={() => setOrderFilter('in_progress')}
-                        className={`px-3 py-1 rounded-lg cursor-pointer ${orderFilter === 'in_progress' ? 'bg-white shadow-2xs text-indigo-700' : 'text-slate-600'}`}
-                      >
-                        In Progress ({inProgressOrdersCount})
-                      </button>
-                      <button
-                        onClick={() => setOrderFilter('completed')}
-                        className={`px-3 py-1 rounded-lg cursor-pointer ${orderFilter === 'completed' ? 'bg-white shadow-2xs text-emerald-700' : 'text-slate-600'}`}
-                      >
-                        Completed ({completedOrdersCount})
-                      </button>
+
+                      <div className="flex gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+                        <button
+                          onClick={() => setOrderFilter('all')}
+                          className={`px-2.5 py-1 rounded-lg cursor-pointer ${orderFilter === 'all' ? 'bg-white shadow-2xs text-slate-900' : 'text-slate-600'}`}
+                        >
+                          All ({orders.length})
+                        </button>
+                        <button
+                          onClick={() => setOrderFilter('pending')}
+                          className={`px-2.5 py-1 rounded-lg cursor-pointer ${orderFilter === 'pending' ? 'bg-white shadow-2xs text-amber-700' : 'text-slate-600'}`}
+                        >
+                          Pending ({pendingOrdersCount})
+                        </button>
+                        <button
+                          onClick={() => setOrderFilter('in_progress')}
+                          className={`px-2.5 py-1 rounded-lg cursor-pointer ${orderFilter === 'in_progress' ? 'bg-white shadow-2xs text-indigo-700' : 'text-slate-600'}`}
+                        >
+                          Active ({inProgressOrdersCount})
+                        </button>
+                        <button
+                          onClick={() => setOrderFilter('completed')}
+                          className={`px-2.5 py-1 rounded-lg cursor-pointer ${orderFilter === 'completed' ? 'bg-white shadow-2xs text-emerald-700' : 'text-slate-600'}`}
+                        >
+                          Done ({completedOrdersCount})
+                        </button>
+                      </div>
                     </div>
                   </div>
 
+                  {/* ⚡ Peakerr Real-Time Wholesale Inspector Tool */}
+                  <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-indigo-950 text-white border border-slate-800 shadow-md space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-200">Peakerr Live Order Inspector</span>
+                      </div>
+                      <span className="text-[10px] text-emerald-400 font-mono font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+                        Peakerr API v2 Connected
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={peakerrInspectId}
+                        onChange={e => setPeakerrInspectId(e.target.value)}
+                        placeholder="Enter Peakerr Order ID (e.g. 80934767)"
+                        className="flex-1 px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700 text-xs text-white placeholder-slate-400 font-mono focus:outline-none focus:border-indigo-400"
+                      />
+                      <button
+                        onClick={() => handleInspectPeakerrOrder()}
+                        disabled={isInspecting}
+                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        <Activity className={`w-3.5 h-3.5 ${isInspecting ? 'animate-spin' : ''}`} />
+                        <span>{isInspecting ? 'Querying...' : 'Query Peakerr Live'}</span>
+                      </button>
+                    </div>
+
+                    {inspectError && (
+                      <div className="text-xs text-rose-300 bg-rose-950/50 p-2.5 rounded-xl border border-rose-800 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                        <span>{inspectError}</span>
+                      </div>
+                    )}
+
+                    {inspectResult && (
+                      <div className="p-3 rounded-xl bg-slate-800/90 border border-slate-700/80 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center animate-fadeIn">
+                        <div className="p-2 rounded-lg bg-slate-900/60">
+                          <div className="text-[10px] text-slate-400 uppercase font-bold">Peakerr ID</div>
+                          <div className="font-mono text-xs font-bold text-indigo-300">#{inspectResult.orderId}</div>
+                        </div>
+                        <div className="p-2 rounded-lg bg-slate-900/60">
+                          <div className="text-[10px] text-slate-400 uppercase font-bold">Live Status</div>
+                          <div className="font-mono text-xs font-bold text-emerald-400 uppercase">{inspectResult.status}</div>
+                        </div>
+                        <div className="p-2 rounded-lg bg-slate-900/60">
+                          <div className="text-[10px] text-slate-400 uppercase font-bold">Wholesale Cost</div>
+                          <div className="font-mono text-xs font-bold text-amber-300">${inspectResult.charge}</div>
+                        </div>
+                        <div className="p-2 rounded-lg bg-slate-900/60">
+                          <div className="text-[10px] text-slate-400 uppercase font-bold">Remains / Start</div>
+                          <div className="font-mono text-xs font-bold text-white">{inspectResult.remains} / {inspectResult.start_count}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Orders List */}
                   {filteredOrders.length === 0 ? (
                     <div className="p-8 text-center border border-slate-200 rounded-2xl bg-slate-50 text-slate-500 text-xs">
                       No orders matching the selected filter.
@@ -545,9 +668,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   ) : (
                     <div className="space-y-3">
                       {filteredOrders.map(order => (
-                        <div key={order.id} className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
-                          <div className="space-y-1 max-w-lg">
-                            <div className="flex items-center gap-2">
+                        <div key={order.id} className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1.5 max-w-lg">
+                            <div className="flex flex-wrap items-center gap-2">
                               <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
                                 {order.id}
                               </span>
@@ -561,26 +684,40 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                 {order.status.replace('_', ' ')}
                               </span>
                               {order.providerOrderId && (
-                                <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded border border-slate-300">
-                                  Peakerr #{order.providerOrderId}
+                                <span className="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                                  <Zap className="w-3 h-3 text-amber-500" />
+                                  <span>Peakerr #{order.providerOrderId}</span>
                                 </span>
                               )}
                               <span className="text-[11px] text-slate-400">{order.createdAt}</span>
                             </div>
 
                             <h5 className="text-xs font-bold text-slate-900">{order.serviceName}</h5>
-                            <div className="flex items-center gap-2 text-xs text-slate-600">
+                            
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600">
                               <span className="font-bold text-indigo-600 font-mono">{order.quantity.toLocaleString()} units</span>
                               <span>•</span>
-                              <a href={order.link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline flex items-center gap-1 truncate max-w-xs">
-                                <span>{order.link}</span>
+                              <span className="font-bold text-slate-900 font-mono">Paid: ৳{(order.chargeBDT || 0).toFixed(2)}</span>
+                              <span>•</span>
+                              <a href={order.link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline flex items-center gap-1 truncate max-w-[200px]">
+                                <span className="truncate">{order.link}</span>
                                 <ExternalLink className="w-3 h-3 flex-shrink-0" />
                               </a>
                             </div>
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0">
+                          <div className="flex flex-wrap items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0">
+                            {order.providerOrderId && (
+                              <button
+                                onClick={() => handleInspectPeakerrOrder(order.providerOrderId)}
+                                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 text-xs font-bold border border-slate-200 flex items-center gap-1 transition-all cursor-pointer"
+                              >
+                                <Activity className="w-3.5 h-3.5 text-indigo-600" />
+                                <span>Check Live</span>
+                              </button>
+                            )}
+
                             {order.status === 'pending' && (
                               <button
                                 onClick={() => handleApproveOrder(order.id)}

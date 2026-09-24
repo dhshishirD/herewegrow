@@ -30,19 +30,28 @@ export const saveLocalWallet = (wallet: UserWallet): void => {
   }
 };
 
+import { getStoredMasterOrders, saveStoredMasterOrders, broadcastOrderToCloud } from './cloudOrderService';
+
 export const getLocalOrders = (): SmmOrder[] => {
   try {
     const saved = localStorage.getItem(ORDERS_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed: SmmOrder[] = JSON.parse(saved);
+      if (parsed.length > 0) return parsed;
+    }
   } catch (e) {
     console.error(e);
   }
-  return [];
+  return getStoredMasterOrders();
 };
 
 export const saveLocalOrders = (orders: SmmOrder[]): void => {
   try {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    saveStoredMasterOrders(orders);
+    if (orders[0]) {
+      broadcastOrderToCloud(orders[0]);
+    }
   } catch (e) {
     console.error(e);
   }

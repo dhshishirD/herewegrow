@@ -46,7 +46,24 @@ export const initiateAutomatedPayment = async (
       cancel_url: window.location.origin + '/?payment_status=cancel'
     };
 
-    // Try standard v2 endpoint first, then v1 checkout
+    // 1. Try our Edge Function proxy first (/api/payment)
+    try {
+      const edgeRes = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: 'checkout-v2', payload })
+      });
+      if (edgeRes.ok) {
+        const data = await edgeRes.json();
+        if (data.status && data.payment_url) {
+          return { success: true, paymentUrl: data.payment_url, message: 'Payment session created successfully!' };
+        }
+      }
+    } catch {
+      // Continue to direct fetch
+    }
+
+    // 2. Direct fetch to Paymently API
     let res = await fetch(`${PAYMENT_API_BASE}/checkout-v2`, {
       method: 'POST',
       headers: {
@@ -82,33 +99,6 @@ export const initiateAutomatedPayment = async (
     };
   } catch (err: any) {
     console.error('Payment initialization error:', err);
-    // Fallback proxy attempt if browser CORS intervenes
-    try {
-      const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`${PAYMENT_API_BASE}/checkout`)}`;
-      const res = await fetch(proxyUrl, {
-        method: 'POST',
-        headers: {
-          'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          full_name: fullName,
-          email: email,
-          amount: String(amount),
-          metadata: { platform: 'HereWeGrow', ...(metadata || {}) },
-          redirect_url: window.location.origin + '/?payment_status=success',
-          return_type: 'GET',
-          cancel_url: window.location.origin + '/?payment_status=cancel'
-        })
-      });
-      const data = await res.json();
-      if (data.status && data.payment_url) {
-        return { success: true, paymentUrl: data.payment_url, message: 'Payment session created!' };
-      }
-    } catch (proxyErr) {
-      console.error('Proxy payment error:', proxyErr);
-    }
-
     return {
       success: false,
       message: 'Could not connect to payment gateway. Please use Direct Merchant transfer.'
@@ -138,6 +128,33 @@ export const verifyAutomatedPayment = async (
   const cleanId = invoiceId.trim();
 
   try {
+    // 1. Try our Edge Function proxy first (/api/payment)
+    try {
+      const edgeRes = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: 'verify-payment', payload: { invoice_id: cleanId } })
+      });
+      if (edgeRes.ok) {
+        const data = await edgeRes.json();
+        if (data.status === 'COMPLETED' || data.status === 'SUCCESS' || data.status === true) {
+          return {
+            success: true,
+            status: 'COMPLETED',
+            amount: parseFloat(data.amount || data.charged_amount || '0'),
+            invoiceId: data.invoice_id || cleanId,
+            trxId: data.transaction_id || data.trx_id,
+            paymentMethod: data.payment_method || 'bkash',
+            metadata: data.metadata,
+            message: 'Payment verified successfully!'
+          };
+        }
+      }
+    } catch {
+      // Continue to direct fetch
+    }
+
+    // 2. Direct fetch
     const res = await fetch(`${PAYMENT_API_BASE}/verify-payment`, {
       method: 'POST',
       headers: {
@@ -168,39 +185,7 @@ export const verifyAutomatedPayment = async (
       message: data.message || 'Payment is not completed yet or invalid Invoice ID.'
     };
   } catch (err: any) {
-    console.error('Payment verification error, trying proxy:', err);
-    try {
-      const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`${PAYMENT_API_BASE}/verify-payment`)}`;
-      const res = await fetch(proxyUrl, {
-        method: 'POST',
-        headers: {
-          'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ invoice_id: cleanId })
-      });
-      const data = await res.json();
-      if (data.status === 'COMPLETED' || data.status === 'SUCCESS' || data.status === true) {
-        return {
-          success: true,
-          status: 'COMPLETED',
-          amount: parseFloat(data.amount || data.charged_amount || '0'),
-          invoiceId: data.invoice_id || cleanId,
-          trxId: data.transaction_id || data.trx_id,
-          paymentMethod: data.payment_method || 'bkash',
-          metadata: data.metadata,
-          message: 'Payment verified successfully!'
-        };
-      }
-      return {
-        success: false,
-        message: data.message || 'Payment verification failed.'
-      };
-    } catch (proxyErr) {
-      console.error('Proxy verification error:', proxyErr);
-    }
-
+    console.error('Payment verification error:', err);
     return {
       success: false,
       message: 'Could not connect to payment verification server.'

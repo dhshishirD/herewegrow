@@ -33,16 +33,23 @@ export const saveLocalWallet = (wallet: UserWallet): void => {
 import { getStoredMasterOrders, saveStoredMasterOrders, broadcastOrderToCloud } from './cloudOrderService';
 
 export const getLocalOrders = (): SmmOrder[] => {
+  const master = getStoredMasterOrders();
   try {
     const saved = localStorage.getItem(ORDERS_KEY);
     if (saved) {
       const parsed: SmmOrder[] = JSON.parse(saved);
-      if (parsed.length > 0) return parsed;
+      const combined = [...parsed];
+      for (const m of master) {
+        if (!combined.some(o => o.id === m.id || (m.providerOrderId && o.providerOrderId === m.providerOrderId))) {
+          combined.unshift(m);
+        }
+      }
+      return combined;
     }
   } catch (e) {
     console.error(e);
   }
-  return getStoredMasterOrders();
+  return master;
 };
 
 export const saveLocalOrders = (orders: SmmOrder[]): void => {

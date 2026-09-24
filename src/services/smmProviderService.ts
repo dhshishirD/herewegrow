@@ -122,7 +122,7 @@ export const fetchProviderBalance = async (): Promise<{ success: boolean; balanc
     return { success: false, message: data.error || 'Invalid API key or balance response from provider.' };
   } catch (error: any) {
     console.error('Provider balance error:', error);
-    return { success: false, message: 'Could not connect to JustAnotherPanel API endpoint.' };
+    return { success: false, message: 'Could not connect to Peakerr API endpoint.' };
   }
 };
 
@@ -139,11 +139,11 @@ export const dispatchToProvider = async (
 
   // If live provider is not configured, simulate order placement
   if (!config.apiKey || !config.isActive) {
-    const mockId = 'JAP-' + Math.floor(100000 + Math.random() * 900000);
+    const mockId = 'PKR-' + Math.floor(100000 + Math.random() * 900000);
     return {
       success: true,
       providerOrderId: mockId,
-      message: `Order queued (JAP Simulation #${mockId})`
+      message: `Order queued (Simulation #${mockId})`
     };
   }
 
@@ -160,7 +160,7 @@ export const dispatchToProvider = async (
       return {
         success: true,
         providerOrderId: String(data.order),
-        message: `Order #${data.order} successfully pushed to JustAnotherPanel!`
+        message: `Order #${data.order} successfully pushed to Peakerr!`
       };
     }
 
@@ -172,7 +172,7 @@ export const dispatchToProvider = async (
     console.error('Provider dispatch error:', error);
     return {
       success: false,
-      message: 'Network error connecting to JustAnotherPanel API.'
+      message: 'Network error connecting to Peakerr API.'
     };
   }
 };
@@ -237,7 +237,7 @@ export const triggerProviderRefill = async (
       return {
         success: true,
         refillId: String(data.refill),
-        message: `Refill #${data.refill} initiated on JustAnotherPanel!`
+        message: `Refill #${data.refill} initiated on Peakerr!`
       };
     }
     return { success: false, message: data.error || 'Provider rejected refill request.' };

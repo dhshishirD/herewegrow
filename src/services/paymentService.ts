@@ -100,9 +100,26 @@ export const initiateAutomatedPayment = async (
 };
 
 /**
- * Verify a transaction using invoice_id or transaction_id
+ * Verify a transaction using invoice_id or transaction_id with full status and amount extraction
  */
-export const verifyAutomatedPayment = async (invoiceId: string): Promise<boolean> => {
+export const verifyAutomatedPayment = async (
+  invoiceId: string
+): Promise<{ 
+  success: boolean; 
+  status?: string; 
+  amount?: number; 
+  invoiceId?: string; 
+  trxId?: string; 
+  paymentMethod?: string; 
+  metadata?: any; 
+  message?: string 
+}> => {
+  if (!invoiceId || !invoiceId.trim()) {
+    return { success: false, message: 'Please provide a valid Invoice ID or Transaction ID.' };
+  }
+
+  const cleanId = invoiceId.trim();
+
   try {
     const res = await fetch(`${PAYMENT_API_BASE}/verify-payment`, {
       method: 'POST',
@@ -110,12 +127,64 @@ export const verifyAutomatedPayment = async (invoiceId: string): Promise<boolean
         'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ invoice_id: invoiceId })
+      body: JSON.stringify({ invoice_id: cleanId })
     });
+    
     const data = await res.json();
-    return data.status === 'COMPLETED';
-  } catch (err) {
-    console.error('Payment verification error:', err);
-    return false;
+    if (data.status === 'COMPLETED' || data.status === 'SUCCESS' || data.status === true) {
+      return {
+        success: true,
+        status: 'COMPLETED',
+        amount: parseFloat(data.amount || data.charged_amount || '0'),
+        invoiceId: data.invoice_id || cleanId,
+        trxId: data.transaction_id || data.trx_id,
+        paymentMethod: data.payment_method || 'bkash',
+        metadata: data.metadata,
+        message: 'Payment verified successfully!'
+      };
+    }
+
+    return {
+      success: false,
+      status: data.status,
+      message: data.message || 'Payment is not completed yet or invalid Invoice ID.'
+    };
+  } catch (err: any) {
+    console.error('Payment verification error, trying proxy:', err);
+    try {
+      const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`${PAYMENT_API_BASE}/verify-payment`)}`;
+      const res = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: {
+          'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ invoice_id: cleanId })
+      });
+      const data = await res.json();
+      if (data.status === 'COMPLETED' || data.status === 'SUCCESS' || data.status === true) {
+        return {
+          success: true,
+          status: 'COMPLETED',
+          amount: parseFloat(data.amount || data.charged_amount || '0'),
+          invoiceId: data.invoice_id || cleanId,
+          trxId: data.transaction_id || data.trx_id,
+          paymentMethod: data.payment_method || 'bkash',
+          metadata: data.metadata,
+          message: 'Payment verified successfully!'
+        };
+      }
+      return {
+        success: false,
+        message: data.message || 'Payment verification failed.'
+      };
+    } catch (proxyErr) {
+      console.error('Proxy verification error:', proxyErr);
+    }
+
+    return {
+      success: false,
+      message: 'Could not connect to payment verification server.'
+    };
   }
 };

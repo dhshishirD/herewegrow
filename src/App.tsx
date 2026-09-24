@@ -15,7 +15,7 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
 import confetti from 'canvas-confetti';
 import { Footer } from './components/Footer';
-import { getLocalWallet, getLocalOrders, saveLocalWallet, createPaidGatewayOrder, depositFunds } from './services/growthService';
+import { getLocalWallet, getLocalOrders, saveLocalWallet, createPaidGatewayOrder, depositFunds, verifyAndCreditPayment } from './services/growthService';
 import { ALL_SERVICES } from './data/growthData';
 import type { UserWallet, SmmOrder, SmmService, GrowthBundle, SocialPlatform } from './types';
 
@@ -59,71 +59,96 @@ export function App() {
     // Check if returning from Paymently gateway (bKash/Nagad/Cards)
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment_status');
-    const invoiceId = urlParams.get('invoice_id');
+    const invoiceId = urlParams.get('invoice_id') || urlParams.get('invoiceId') || urlParams.get('transaction_id') || urlParams.get('trx_id');
     const statusParam = urlParams.get('status');
 
-    const isPaymentSuccess = paymentStatus === 'success' || statusParam === 'COMPLETED' || Boolean(invoiceId);
+    const isPaymentSuccess = 
+      paymentStatus === 'success' || 
+      paymentStatus === 'COMPLETED' || 
+      statusParam === 'COMPLETED' || 
+      statusParam === 'SUCCESS' || 
+      Boolean(invoiceId);
 
     if (isPaymentSuccess) {
       setIsWalletModalOpen(false);
 
-      // 1. Finalize Pending Direct Order from Gateway Checkout
-      const pendingOrderStr = localStorage.getItem('hwg_pending_order');
-      if (pendingOrderStr) {
-        try {
-          const pending = JSON.parse(pendingOrderStr);
-          const catalogService = ALL_SERVICES.find(s => s.id === pending.serviceId);
-          const targetService: SmmService = catalogService || {
-            id: pending.serviceId,
-            name: 'Direct Order Package',
-            platform: 'facebook',
-            category: 'Growth Package',
-            ratePer1kBDT: pending.cost,
-            ratePer1kUSD: pending.cost / 122,
-            minQty: pending.quantity,
-            maxQty: pending.quantity,
-            speed: 'Instant Server Queue',
-            refillDays: 30,
-            badges: ['non-drop', 'instant', 'best-seller'],
-            description: 'Direct Gateway Checkout Order'
-          };
-
-          createPaidGatewayOrder(targetService, pending.link, pending.quantity, pending.currency, pending.cost).then(res => {
-            localStorage.removeItem('hwg_pending_order');
-            if (res.order) {
-              setOrders(prev => [res.order!, ...prev]);
-              setConfirmedOrder(res.order);
-              setIsConfirmationModalOpen(true);
-              setActiveTab('orders');
-              try {
-                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-              } catch (e) {
-                console.error(e);
-              }
-            }
-          });
-        } catch (e) {
-          console.error('Error auto-finalizing pending order:', e);
-          localStorage.removeItem('hwg_pending_order');
-        }
-      }
-
-      // 2. Finalize Pending Wallet Deposit
-      const pendingDepositStr = localStorage.getItem('hwg_pending_deposit');
-      if (pendingDepositStr) {
-        try {
-          const pending = JSON.parse(pendingDepositStr);
-          const updated = depositFunds('bkash', pending.amount, pending.currency);
-          setWallet(updated);
-          localStorage.removeItem('hwg_pending_deposit');
+      if (invoiceId) {
+        // Query live verification from Paymently
+        verifyAndCreditPayment(invoiceId).then(res => {
+          if (res.wallet) {
+            setWallet(res.wallet);
+          }
+          if (res.order) {
+            setOrders(prev => [res.order!, ...prev]);
+            setConfirmedOrder(res.order);
+            setIsConfirmationModalOpen(true);
+            setActiveTab('orders');
+          }
           try {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
           } catch (e) {
             console.error(e);
           }
-        } catch (e) {
-          console.error('Error auto-finalizing deposit:', e);
-          localStorage.removeItem('hwg_pending_deposit');
+        });
+      } else {
+        // 1. Finalize Pending Direct Order from Gateway Checkout
+        const pendingOrderStr = localStorage.getItem('hwg_pending_order');
+        if (pendingOrderStr) {
+          try {
+            const pending = JSON.parse(pendingOrderStr);
+            const catalogService = ALL_SERVICES.find(s => s.id === pending.serviceId);
+            const targetService: SmmService = catalogService || {
+              id: pending.serviceId,
+              name: 'Direct Order Package',
+              platform: 'facebook',
+              category: 'Growth Package',
+              ratePer1kBDT: pending.cost,
+              ratePer1kUSD: pending.cost / 122,
+              minQty: pending.quantity,
+              maxQty: pending.quantity,
+              speed: 'Instant Server Queue',
+              refillDays: 30,
+              badges: ['non-drop', 'instant', 'best-seller'],
+              description: 'Direct Gateway Checkout Order'
+            };
+
+            createPaidGatewayOrder(targetService, pending.link, pending.quantity, pending.currency, pending.cost).then(res => {
+              localStorage.removeItem('hwg_pending_order');
+              if (res.order) {
+                setOrders(prev => [res.order!, ...prev]);
+                setConfirmedOrder(res.order);
+                setIsConfirmationModalOpen(true);
+                setActiveTab('orders');
+                try {
+                  confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                } catch (e) {
+                  console.error(e);
+                }
+              }
+            });
+          } catch (e) {
+            console.error('Error auto-finalizing pending order:', e);
+            localStorage.removeItem('hwg_pending_order');
+          }
+        }
+
+        // 2. Finalize Pending Wallet Deposit
+        const pendingDepositStr = localStorage.getItem('hwg_pending_deposit');
+        if (pendingDepositStr) {
+          try {
+            const pending = JSON.parse(pendingDepositStr);
+            const updated = depositFunds('bkash', pending.amount, pending.currency);
+            setWallet(updated);
+            localStorage.removeItem('hwg_pending_deposit');
+            try {
+              confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } catch (e) {
+              console.error(e);
+            }
+          } catch (e) {
+            console.error('Error auto-finalizing deposit:', e);
+            localStorage.removeItem('hwg_pending_deposit');
+          }
         }
       }
 

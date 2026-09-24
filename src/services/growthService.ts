@@ -322,6 +322,109 @@ export const depositFunds = (
   return wallet;
 };
 
+import { verifyAutomatedPayment } from './paymentService';
+
+const PROCESSED_INVOICES_KEY = 'hwg_processed_invoices_v1';
+
+export const getProcessedInvoices = (): string[] => {
+  try {
+    const saved = localStorage.getItem(PROCESSED_INVOICES_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch (e) {
+    console.error(e);
+  }
+  return [];
+};
+
+export const markInvoiceProcessed = (invoiceId: string) => {
+  try {
+    const list = getProcessedInvoices();
+    if (!list.includes(invoiceId)) {
+      list.push(invoiceId);
+      localStorage.setItem(PROCESSED_INVOICES_KEY, JSON.stringify(list));
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+/**
+ * Verifies any invoice ID or transaction ID with Paymently and instantly credits wallet or creates order
+ */
+export const verifyAndCreditPayment = async (
+  invoiceId: string
+): Promise<{ success: boolean; message: string; wallet?: UserWallet; order?: SmmOrder }> => {
+  if (!invoiceId || !invoiceId.trim()) {
+    return { success: false, message: 'Please provide a valid Invoice ID or Transaction ID.' };
+  }
+
+  const cleanId = invoiceId.trim();
+  const processed = getProcessedInvoices();
+  if (processed.includes(cleanId)) {
+    return {
+      success: true,
+      message: `Invoice #${cleanId} has already been verified and credited previously.`
+    };
+  }
+
+  const verRes = await verifyAutomatedPayment(cleanId);
+  if (!verRes.success || !verRes.amount) {
+    return {
+      success: false,
+      message: verRes.message || 'Payment verification failed. Please check your Invoice ID.'
+    };
+  }
+
+  markInvoiceProcessed(cleanId);
+
+  // Check if this payment was for a direct order
+  const pendingOrderStr = localStorage.getItem('hwg_pending_order');
+  if (pendingOrderStr) {
+    try {
+      const pending = JSON.parse(pendingOrderStr);
+      const catalogService = ALL_SERVICES.find(s => s.id === pending.serviceId);
+      const targetService: SmmService = catalogService || {
+        id: pending.serviceId || 'srv-custom',
+        name: pending.serviceName || 'Direct Growth Order',
+        platform: pending.platform || 'facebook',
+        category: 'Growth Package',
+        ratePer1kBDT: pending.cost || verRes.amount,
+        ratePer1kUSD: (pending.cost || verRes.amount) / 122,
+        minQty: pending.quantity || 1000,
+        maxQty: pending.quantity || 1000,
+        speed: 'Instant Server Queue',
+        refillDays: 30,
+        badges: ['non-drop', 'instant', 'best-seller'],
+        description: 'Direct Gateway Verified Order'
+      };
+
+      const orderRes = await createPaidGatewayOrder(
+        targetService, 
+        pending.link || 'https://facebook.com', 
+        pending.quantity || 1000, 
+        pending.currency || 'BDT', 
+        pending.cost || verRes.amount
+      );
+      localStorage.removeItem('hwg_pending_order');
+      return {
+        success: true,
+        message: `Payment Verified! Order #${orderRes.order?.id} created and queued.`,
+        order: orderRes.order
+      };
+    } catch (e) {
+      console.error('Error handling pending order during verification:', e);
+    }
+  }
+
+  // Otherwise, deposit directly into wallet balance
+  const updatedWallet = depositFunds('bkash', verRes.amount, 'BDT');
+  return {
+    success: true,
+    message: `Payment of ৳${verRes.amount.toFixed(2)} verified successfully! Your wallet balance has been updated.`,
+    wallet: updatedWallet
+  };
+};
+
 // ==========================================
 // REAL VIDEO DOWNLOAD RESOLVER API
 // ==========================================

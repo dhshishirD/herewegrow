@@ -13,7 +13,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { depositFunds } from '../services/growthService';
+import { depositFunds, verifyAndCreditPayment } from '../services/growthService';
 import { initiateAutomatedPayment } from '../services/paymentService';
 import type { UserWallet } from '../types';
 
@@ -34,10 +34,12 @@ export const WalletModal: React.FC<WalletModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const [paymentMode, setPaymentMode] = useState<'automated' | 'binance'>('automated');
+  const [paymentMode, setPaymentMode] = useState<'automated' | 'binance' | 'verify'>('automated');
   const [selectedAmount, setSelectedAmount] = useState<number>(currency === 'BDT' ? 500 : 10);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [trxId, setTrxId] = useState('');
+  const [manualInvoiceId, setManualInvoiceId] = useState('');
+  const [verifyMessage, setVerifyMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -124,6 +126,41 @@ export const WalletModal: React.FC<WalletModalProps> = ({
     }, 1200);
   };
 
+  const handleManualVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualInvoiceId.trim()) return;
+
+    setIsProcessing(true);
+    setVerifyMessage(null);
+
+    try {
+      const res = await verifyAndCreditPayment(manualInvoiceId.trim());
+      setIsProcessing(false);
+
+      if (res.success) {
+        if (res.wallet) {
+          onWalletUpdated(res.wallet);
+        }
+        setVerifyMessage({ type: 'success', text: res.message });
+        setDepositSuccess(true);
+        try {
+          confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+        } catch {
+          // fallback
+        }
+        setTimeout(() => {
+          setDepositSuccess(false);
+          onClose();
+        }, 2500);
+      } else {
+        setVerifyMessage({ type: 'error', text: res.message });
+      }
+    } catch (err: any) {
+      setIsProcessing(false);
+      setVerifyMessage({ type: 'error', text: err?.message || 'Verification failed.' });
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
@@ -156,7 +193,7 @@ export const WalletModal: React.FC<WalletModalProps> = ({
             </div>
             <h4 className="text-xl font-bold text-slate-950">Deposit Verified!</h4>
             <p className="text-xs text-slate-600">
-              Your wallet balance has been credited with <strong className="text-emerald-700 font-bold">{currency === 'BDT' ? `৳${customAmount || selectedAmount}` : `$${customAmount || selectedAmount}`}</strong>.
+              {verifyMessage?.text || `Your wallet balance has been credited with ${currency === 'BDT' ? `৳${customAmount || selectedAmount}` : `$${customAmount || selectedAmount}`}.`}
             </p>
           </div>
         ) : (
@@ -164,46 +201,57 @@ export const WalletModal: React.FC<WalletModalProps> = ({
             
             {/* Payment Method Selector Tabs */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-2">Select Payment Method</label>
-              <div className="grid grid-cols-2 gap-3">
+              <label className="block text-xs font-bold text-slate-700 mb-2">Select Action</label>
+              <div className="grid grid-cols-3 gap-2">
                 
                 {/* 1. Automated Gateway (Paymently / UddoktaPay) */}
                 <button
                   type="button"
                   onClick={() => setPaymentMode('automated')}
-                  className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
+                  className={`p-2.5 sm:p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
                     paymentMode === 'automated'
                       ? 'bg-indigo-50/80 border-indigo-600 text-indigo-950 shadow-xs font-bold'
                       : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                   }`}
                 >
-                  <span className="absolute -top-2 right-2 text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-indigo-600 text-white">
-                    Instant Auto
-                  </span>
-                  <div className="text-sm font-extrabold text-indigo-700 flex items-center justify-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-amber-500" />
+                  <div className="text-xs sm:text-sm font-extrabold text-indigo-700 flex items-center justify-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                     <span>Instant Pay</span>
                   </div>
-                  <div className="text-[10px] text-slate-500 font-medium mt-1">bKash • Nagad • Rocket • Cards</div>
+                  <div className="text-[9px] text-slate-500 font-medium mt-0.5">bKash/Nagad</div>
                 </button>
 
                 {/* 2. Binance Pay */}
                 <button
                   type="button"
                   onClick={() => setPaymentMode('binance')}
-                  className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
+                  className={`p-2.5 sm:p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
                     paymentMode === 'binance'
                       ? 'bg-yellow-50/80 border-yellow-500 text-yellow-950 shadow-xs font-bold'
                       : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                   }`}
                 >
-                  <span className="absolute -top-2 right-2 text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-600 text-white">
-                    0% Fee
-                  </span>
-                  <div className="text-sm font-extrabold text-[#D97706] flex items-center justify-center gap-1.5">
-                    <span>Binance Pay</span>
+                  <div className="text-xs sm:text-sm font-extrabold text-[#D97706] flex items-center justify-center gap-1">
+                    <span>Binance</span>
                   </div>
-                  <div className="text-[10px] text-slate-500 font-medium mt-1">Pay ID: 1280862245 (USDT)</div>
+                  <div className="text-[9px] text-slate-500 font-medium mt-0.5">USDT Pay ID</div>
+                </button>
+
+                {/* 3. Verify Invoice ID */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMode('verify')}
+                  className={`p-2.5 sm:p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
+                    paymentMode === 'verify'
+                      ? 'bg-emerald-50/80 border-emerald-600 text-emerald-950 shadow-xs font-bold'
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="text-xs sm:text-sm font-extrabold text-emerald-700 flex items-center justify-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Verify Trx</span>
+                  </div>
+                  <div className="text-[9px] text-slate-500 font-medium mt-0.5">Invoice ID</div>
                 </button>
               </div>
             </div>
@@ -361,6 +409,67 @@ export const WalletModal: React.FC<WalletModalProps> = ({
                   className="w-full py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-sm shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   {isProcessing ? <span>Verifying Binance Transfer...</span> : <span>Verify & Add ${customAmount || selectedAmount} Balance</span>}
+                </button>
+              </form>
+            )}
+
+            {/* ========================================================= */}
+            {/* VIEW 3: MANUAL INVOICE ID / PAYMENT VERIFICATION */}
+            {/* ========================================================= */}
+            {paymentMode === 'verify' && (
+              <form onSubmit={handleManualVerify} className="space-y-4">
+                <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-left space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-900 font-bold text-xs">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>Instant Payment Auto-Lookup</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    If your bKash/Nagad payment completed but you weren't redirected automatically, paste your <strong>Invoice ID (e.g. UP-XXXXX)</strong> or <strong>Transaction ID</strong> below to immediately credit your account.
+                  </p>
+                </div>
+
+                {verifyMessage && (
+                  <div className={`p-3 rounded-xl text-xs font-medium border ${
+                    verifyMessage.type === 'success'
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-rose-50 border-rose-200 text-rose-800'
+                  }`}>
+                    {verifyMessage.text}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Paymently / UddoktaPay Invoice ID or TrxID</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. UP-1234567890 or bKash TrxID"
+                    value={manualInvoiceId}
+                    onChange={(e) => setManualInvoiceId(e.target.value)}
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-3 text-xs text-slate-900 focus:outline-hidden focus:border-indigo-600 font-mono font-bold shadow-2xs"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isProcessing || !manualInvoiceId.trim()}
+                  className={`w-full py-3.5 rounded-2xl font-bold text-sm shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    manualInvoiceId.trim() && !isProcessing
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white active:scale-98'
+                      : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                  }`}
+                >
+                  {isProcessing ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                      <span>Checking Payment Server...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-4 h-4 text-white" />
+                      <span>Verify & Credit Balance Instantly</span>
+                    </>
+                  )}
                 </button>
               </form>
             )}

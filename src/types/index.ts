@@ -1,5 +1,4 @@
 export type ViralToolId = 
-  | 'tiktok-downloader'
   | 'youtube-tags'
   | 'engagement-calculator'
   | 'hashtag-generator'

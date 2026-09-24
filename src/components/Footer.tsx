@@ -79,7 +79,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab }) => {
             <ul className="space-y-2">
               <li>
                 <button onClick={() => onNavigateTab('tools')} className="hover:text-slate-900 transition-colors">
-                  TikTok & Reels Video Downloader
+                  YouTube Earnings & AdSense Calculator
                 </button>
               </li>
               <li>

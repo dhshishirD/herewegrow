@@ -14,14 +14,6 @@ export const PLATFORMS_META = [
 
 export const VIRAL_TOOLS_META = [
   {
-    id: 'tiktok-downloader',
-    title: 'TikTok & Reels Downloader',
-    badge: '100% Free & No Watermark',
-    description: 'Download clean HD TikTok videos & Instagram Reels without watermarks directly to your phone or PC.',
-    icon: 'Video',
-    category: 'Media Tools'
-  },
-  {
     id: 'youtube-tags',
     title: 'YouTube Tag & SEO Extractor',
     badge: 'Boost Video Rankings',

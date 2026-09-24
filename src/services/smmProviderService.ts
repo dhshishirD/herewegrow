@@ -30,9 +30,9 @@ export interface ProviderStatusResponse {
   error?: string;
 }
 
-const PROVIDER_STORAGE_KEY = 'herewegrow_smm_provider_config_v1';
+const PROVIDER_STORAGE_KEY = 'herewegrow_smm_provider_config_v2';
 
-// Default JAP Configuration
+// Default Peakerr Configuration
 export const getProviderConfig = (): SmmProviderConfig => {
   try {
     const saved = localStorage.getItem(PROVIDER_STORAGE_KEY);
@@ -41,10 +41,10 @@ export const getProviderConfig = (): SmmProviderConfig => {
     console.error('Error loading provider config:', e);
   }
   return {
-    apiUrl: 'https://justanotherpanel.com/api/v2',
-    apiKey: 'c36a3bb16f6dfe3b333b470cf939c4c7',
+    apiUrl: 'https://peakerr.com/api/v2',
+    apiKey: '837a74cb5bf48bb7a0b671b9234e8154',
     isActive: true,
-    name: 'JustAnotherPanel (JAP) - Main Node'
+    name: 'Peakerr - Primary Wholesale Engine'
   };
 };
 

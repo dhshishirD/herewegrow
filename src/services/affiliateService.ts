@@ -119,11 +119,14 @@ const SEED_AFFILIATES: AffiliateProfile[] = [
 export const getAllAffiliates = (): AffiliateProfile[] => {
   try {
     const saved = localStorage.getItem(ALL_AFFILIATES_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    }
   } catch (e) {
     console.error(e);
   }
-  return SEED_AFFILIATES;
+  return [...SEED_AFFILIATES];
 };
 
 export const saveAllAffiliates = (affiliates: AffiliateProfile[]): void => {
@@ -137,7 +140,27 @@ export const saveAllAffiliates = (affiliates: AffiliateProfile[]): void => {
 export const getCurrentAffiliateProfile = (): AffiliateProfile => {
   try {
     const saved = localStorage.getItem(AFFILIATE_PROFILE_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object' && parsed.code) {
+        return {
+          id: parsed.id || 'AFF-USER',
+          code: parsed.code || 'HWG-PARTNER',
+          name: parsed.name || 'Student Partner',
+          phoneOrBkash: parsed.phoneOrBkash || '01873216927',
+          institution: parsed.institution || 'Campus Ambassador',
+          tier: parsed.tier || 'bronze',
+          commissionRate: parsed.commissionRate || 0.15,
+          totalClicks: Number(parsed.totalClicks) || 0,
+          totalSales: Number(parsed.totalSales) || 0,
+          grossSalesBDT: Number(parsed.grossSalesBDT) || 0,
+          totalEarningsBDT: Number(parsed.totalEarningsBDT) || 0,
+          pendingPayoutBDT: Number(parsed.pendingPayoutBDT) || 0,
+          withdrawnBDT: Number(parsed.withdrawnBDT) || 0,
+          createdAt: parsed.createdAt || new Date().toISOString().split('T')[0]
+        };
+      }
+    }
   } catch (e) {
     console.error(e);
   }
@@ -161,7 +184,10 @@ export const getCurrentAffiliateProfile = (): AffiliateProfile => {
     createdAt: new Date().toISOString().split('T')[0]
   };
 
-  saveCurrentAffiliateProfile(defaultProfile);
+  try {
+    localStorage.setItem(AFFILIATE_PROFILE_KEY, JSON.stringify(defaultProfile));
+  } catch {}
+
   return defaultProfile;
 };
 
@@ -171,7 +197,7 @@ export const saveCurrentAffiliateProfile = (profile: AffiliateProfile): void => 
     
     // Also sync in master affiliates list
     const all = getAllAffiliates();
-    const index = all.findIndex(a => a.id === profile.id || a.code === profile.code);
+    const index = all.findIndex(a => a && (a.id === profile.id || a.code === profile.code));
     if (index !== -1) {
       all[index] = profile;
     } else {
@@ -278,7 +304,10 @@ export const creditAffiliateOnOrder = (amountBDT: number): { credited: boolean; 
 export const getPayoutRequests = (): AffiliatePayoutRequest[] => {
   try {
     const saved = localStorage.getItem(PAYOUT_REQUESTS_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    }
   } catch (e) {
     console.error(e);
   }

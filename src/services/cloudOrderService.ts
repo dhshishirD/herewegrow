@@ -34,20 +34,21 @@ export const getStoredMasterOrders = (): SmmOrder[] => {
   try {
     const saved = localStorage.getItem(MASTER_ORDERS_KEY);
     if (saved) {
-      const parsed: SmmOrder[] = JSON.parse(saved);
-      // Ensure initial order is included
-      const merged = [...parsed];
-      for (const initOrder of INITIAL_VERIFIED_ORDERS) {
-        if (!merged.some(o => o.id === initOrder.id || o.providerOrderId === initOrder.providerOrderId)) {
-          merged.unshift(initOrder);
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) {
+        const merged: SmmOrder[] = parsed.filter(Boolean);
+        for (const initOrder of INITIAL_VERIFIED_ORDERS) {
+          if (!merged.some(o => o && (o.id === initOrder.id || (initOrder.providerOrderId && o.providerOrderId === initOrder.providerOrderId)))) {
+            merged.unshift(initOrder);
+          }
         }
+        return merged;
       }
-      return merged;
     }
   } catch (e) {
     console.error('Error reading master orders:', e);
   }
-  return INITIAL_VERIFIED_ORDERS;
+  return [...INITIAL_VERIFIED_ORDERS];
 };
 
 export const saveStoredMasterOrders = (orders: SmmOrder[]): void => {

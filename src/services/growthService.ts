@@ -128,6 +128,57 @@ export const createOrder = async (
 };
 
 /**
+ * Creates an order directly after successful gateway payment (bKash/Nagad via Paymently)
+ */
+export const createPaidGatewayOrder = async (
+  service: SmmService,
+  link: string,
+  quantity: number,
+  currency: 'BDT' | 'USD',
+  cost: number
+): Promise<{ success: boolean; message: string; order?: SmmOrder }> => {
+  const providerConfig = getProviderConfig();
+  let providerOrderId: string | undefined = undefined;
+  let status: 'pending' | 'in_progress' = 'pending';
+  let statusMessage = 'Gateway payment verified! Order queued for 1-Click admin dispatch.';
+
+  if (providerConfig.autoDispatch) {
+    const dispatchRes = await dispatchToProvider(service.providerServiceId || service.id, link, quantity);
+    providerOrderId = dispatchRes.providerOrderId;
+    status = 'in_progress';
+    statusMessage = dispatchRes.message;
+  }
+
+  const newOrder: SmmOrder = {
+    id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+    serviceId: service.id,
+    serviceName: service.name,
+    platform: service.platform,
+    link,
+    quantity,
+    chargeBDT: currency === 'BDT' ? cost : cost * 122,
+    chargeUSD: currency === 'USD' ? cost : cost / 122,
+    currency,
+    status,
+    startCount: 0,
+    currentCount: 0,
+    remains: quantity,
+    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+    refillEligible: service.refillDays > 0,
+    providerOrderId
+  };
+
+  const currentOrders = getLocalOrders();
+  saveLocalOrders([newOrder, ...currentOrders]);
+
+  return {
+    success: true,
+    message: `Payment Verified! Order #${newOrder.id} successfully created. ${statusMessage}`,
+    order: newOrder
+  };
+};
+
+/**
  * Admin Manual 1-Click Approval: Dispatches a pending order to Peakerr on demand
  */
 export const adminApproveAndDispatchOrder = async (

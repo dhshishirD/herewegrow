@@ -72,6 +72,13 @@ export const WalletModal: React.FC<WalletModalProps> = ({
       setIsProcessing(false);
 
       if (res.success && res.paymentUrl) {
+        // Save pending deposit metadata before redirect
+        localStorage.setItem('hwg_pending_deposit', JSON.stringify({
+          amount: finalAmount,
+          currency,
+          time: new Date().toISOString()
+        }));
+
         // Redirect to secure payment gateway
         window.location.href = res.paymentUrl;
       } else {

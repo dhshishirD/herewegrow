@@ -214,6 +214,13 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigateCategory = (slug: string) => {
+    setActiveCategorySlug(slug);
+    setActiveTab('category_landing');
+    window.history.pushState({}, '', `/services/${slug}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const refreshOrders = () => {
     setOrders(getLocalOrders());
   };
@@ -343,7 +350,11 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <Footer onNavigate={handleTabNavigate} onOpenAdmin={() => setIsAdminModalOpen(true)} />
+      <Footer 
+        onNavigateTab={handleTabNavigate} 
+        onNavigateCategory={handleNavigateCategory}
+        onOpenAdmin={() => setIsAdminModalOpen(true)} 
+      />
 
       {/* Mobile Sticky Quick Navigation Bar */}
       <MobileBottomNav

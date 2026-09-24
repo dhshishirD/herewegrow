@@ -7,10 +7,11 @@ import {
 
 interface FooterProps {
   onNavigateTab: (tab: string) => void;
+  onNavigateCategory?: (categorySlug: string) => void;
   onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onNavigateCategory, onOpenAdmin }) => {
   const lastTapRef = useRef<number>(0);
 
   const handleSecretDoubleTap = () => {
@@ -19,6 +20,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) =>
       if (onOpenAdmin) onOpenAdmin();
     }
     lastTapRef.current = now;
+  };
+
+  const handleServiceCategoryClick = (slug: string) => {
+    if (onNavigateCategory) {
+      onNavigateCategory(slug);
+    } else {
+      onNavigateTab('store');
+    }
   };
 
   return (
@@ -62,28 +71,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) =>
             <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Growth Store</h4>
             <ul className="space-y-2">
               <li>
-                <button onClick={() => onNavigateTab('store')} className="hover:text-slate-900 transition-colors">
+                <button onClick={() => handleServiceCategoryClick('facebook')} className="hover:text-slate-900 transition-colors">
                   Facebook Page Likes & Followers
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('store')} className="hover:text-slate-900 transition-colors">
+                <button onClick={() => handleServiceCategoryClick('youtube')} className="hover:text-slate-900 transition-colors">
                   YouTube Monetization Watch Hours
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('store')} className="hover:text-slate-900 transition-colors">
+                <button onClick={() => handleServiceCategoryClick('instagram')} className="hover:text-slate-900 transition-colors">
                   Instagram Real Followers
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('store')} className="hover:text-slate-900 transition-colors">
+                <button onClick={() => handleServiceCategoryClick('tiktok')} className="hover:text-slate-900 transition-colors">
                   TikTok Viral Views & Saves
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigateTab('store')} className="hover:text-slate-900 transition-colors">
+                <button onClick={() => handleServiceCategoryClick('telegram')} className="hover:text-slate-900 transition-colors">
                   Telegram Channel Members
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleServiceCategoryClick('linkedin')} className="hover:text-slate-900 transition-colors">
+                  LinkedIn Company Growth
                 </button>
               </li>
             </ul>

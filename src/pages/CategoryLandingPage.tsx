@@ -227,8 +227,39 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
         a: 'Yes, streams meet minimum duration thresholds for stream count registration.'
       }
     ]
+  },
+  'twitter-growth': {
+    slug: 'twitter-growth',
+    platformId: 'twitter',
+    title: 'Buy Twitter Followers, Retweets & Impressions | HereWeGrow',
+    h1: 'Buy Twitter / X Followers, Retweets & Viral Views',
+    tagline: 'Boost your crypto project, brand handle, or creator account with high-velocity Twitter impressions, active followers, and instant retweets.',
+    heroBadge: 'Algorithm Impressions Trigger • Instant 60s Start',
+    targetKeywords: ['buy twitter followers', 'twitter retweets', 'buy x impressions bangladesh'],
+    metaDescription: 'Scale your Twitter / X profile with real followers, high impressions, and retweets. Instant bKash & crypto checkout.',
+    introText: 'Twitter/X algorithms prioritize tweets with rapid early engagement and quote retweets. High view velocity puts your post in the "For You" timeline.',
+    whyChooseUs: [
+      { title: 'Instant 60s Start', desc: 'Tweet views and impressions queue within seconds of ordering.' },
+      { title: 'Crypto & Founder Ready', desc: 'Great for Web3 projects, founders, and political commentators.' }
+    ],
+    faqs: [
+      {
+        q: 'Do tweet impressions count for monetization?',
+        a: 'Yes! High impressions help reach the 5M impressions threshold needed for X Ads Revenue Sharing.'
+      }
+    ]
   }
 };
+
+// Aliases for clean URL paths: /services/facebook, /services/instagram, etc.
+CATEGORY_CONFIGS['facebook'] = CATEGORY_CONFIGS['facebook-growth'];
+CATEGORY_CONFIGS['instagram'] = CATEGORY_CONFIGS['instagram-growth'];
+CATEGORY_CONFIGS['youtube'] = CATEGORY_CONFIGS['youtube-monetization'];
+CATEGORY_CONFIGS['tiktok'] = CATEGORY_CONFIGS['tiktok-growth'];
+CATEGORY_CONFIGS['telegram'] = CATEGORY_CONFIGS['telegram-growth'];
+CATEGORY_CONFIGS['linkedin'] = CATEGORY_CONFIGS['linkedin-growth'];
+CATEGORY_CONFIGS['twitter'] = CATEGORY_CONFIGS['twitter-growth'];
+CATEGORY_CONFIGS['spotify'] = CATEGORY_CONFIGS['spotify-streams'];
 
 interface CategoryLandingPageProps {
   categoryKey: string;

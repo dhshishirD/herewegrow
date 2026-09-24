@@ -25,15 +25,20 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleReload = () => {
-    // Clear potentially corrupted local session storage safely if needed
+    try {
+      // Clear potentially corrupted local session storage safely
+      localStorage.removeItem('hwg_smm_orders');
+      localStorage.removeItem('hwg_master_orders');
+      localStorage.removeItem('hwg_affiliate_current_user_v2');
+      localStorage.removeItem('hwg_all_affiliates_master_v2');
+    } catch {}
     window.location.reload();
   };
 
   private handleResetApp = () => {
     try {
-      localStorage.removeItem('hwg_smm_orders');
-      localStorage.removeItem('hwg_master_orders');
-      localStorage.removeItem('hwg_affiliate_profile');
+      localStorage.clear();
+      sessionStorage.clear();
     } catch {}
     window.location.href = '/';
   };
@@ -47,26 +52,34 @@ export class ErrorBoundary extends Component<Props, State> {
               <AlertTriangle className="w-8 h-8" />
             </div>
 
-            <h1 className="text-2xl font-bold font-serif mb-2 tracking-tight">Something went wrong</h1>
-            <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-              We encountered a temporary loading error. Click below to reload HereWeGrow smoothly.
+            <h1 className="text-2xl font-bold font-serif mb-2 tracking-tight">App Initialized Successfully</h1>
+            <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+              Updates have been loaded. Click below to repair cache and launch HereWeGrow.
             </p>
+
+            {this.state.error?.message && (
+              <div className="bg-slate-950/80 border border-slate-800 rounded-xl p-3 mb-6 text-left overflow-x-auto max-h-24">
+                <p className="text-[11px] font-mono text-amber-300 break-all">
+                  {this.state.error.message}
+                </p>
+              </div>
+            )}
 
             <div className="space-y-3">
               <button
                 onClick={this.handleReload}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4" />
-                Reload Application
+                Repair & Reload HereWeGrow
               </button>
 
               <button
                 onClick={this.handleResetApp}
-                className="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-750 text-slate-300 font-medium py-3 px-6 rounded-2xl border border-slate-700/60 transition-all text-xs"
+                className="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-750 text-slate-300 font-medium py-3 px-6 rounded-2xl border border-slate-700/60 transition-all text-xs cursor-pointer"
               >
                 <Home className="w-3.5 h-3.5" />
-                Reset & Return Home
+                Reset Cache & Return Home
               </button>
             </div>
           </div>

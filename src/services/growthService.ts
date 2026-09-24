@@ -4,13 +4,7 @@ const WALLET_KEY = 'herewegrow_user_wallet_v2';
 const ORDERS_KEY = 'herewegrow_user_orders_v2';
 
 export const getLocalWallet = (): UserWallet => {
-  try {
-    const saved = localStorage.getItem(WALLET_KEY);
-    if (saved) return JSON.parse(saved);
-  } catch (e) {
-    console.error(e);
-  }
-  return {
+  const fallback: UserWallet = {
     balanceBDT: 0,
     balanceUSD: 0,
     totalSpentBDT: 0,
@@ -20,6 +14,27 @@ export const getLocalWallet = (): UserWallet => {
     affiliateEarningsBDT: 0,
     referralsCount: 0
   };
+  try {
+    const saved = localStorage.getItem(WALLET_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        return {
+          balanceBDT: Number(parsed.balanceBDT) || 0,
+          balanceUSD: Number(parsed.balanceUSD) || 0,
+          totalSpentBDT: Number(parsed.totalSpentBDT) || 0,
+          totalSpentUSD: Number(parsed.totalSpentUSD) || 0,
+          currencyPreference: parsed.currencyPreference === 'USD' ? 'USD' : 'BDT',
+          affiliateCode: parsed.affiliateCode || fallback.affiliateCode,
+          affiliateEarningsBDT: Number(parsed.affiliateEarningsBDT) || 0,
+          referralsCount: Number(parsed.referralsCount) || 0
+        };
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return fallback;
 };
 
 export const saveLocalWallet = (wallet: UserWallet): void => {

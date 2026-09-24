@@ -222,14 +222,14 @@ export const captureReferralCodeFromUrl = (): string | null => {
       
       // Increment clicks on affiliate profile
       const all = getAllAffiliates();
-      const aff = all.find(a => a.code.toUpperCase() === cleanRef);
+      const aff = all.find(a => a && a.code && a.code.toUpperCase() === cleanRef);
       if (aff) {
-        aff.totalClicks += 1;
+        aff.totalClicks = (aff.totalClicks || 0) + 1;
         saveAllAffiliates(all);
         
         const current = getCurrentAffiliateProfile();
-        if (current.code.toUpperCase() === cleanRef) {
-          current.totalClicks += 1;
+        if (current && current.code && current.code.toUpperCase() === cleanRef) {
+          current.totalClicks = (current.totalClicks || 0) + 1;
           saveCurrentAffiliateProfile(current);
         }
       }
@@ -259,7 +259,7 @@ export const creditAffiliateOnOrder = (amountBDT: number): { credited: boolean; 
   }
 
   const all = getAllAffiliates();
-  const aff = all.find(a => a.code.toUpperCase() === refCode.toUpperCase());
+  const aff = all.find(a => a && a.code && a.code.toUpperCase() === refCode.toUpperCase());
   if (!aff) {
     return { credited: false, commissionBDT: 0 };
   }
@@ -267,10 +267,10 @@ export const creditAffiliateOnOrder = (amountBDT: number): { credited: boolean; 
   const commissionRate = aff.commissionRate || 0.15;
   const commissionBDT = Math.round(amountBDT * commissionRate * 100) / 100;
 
-  aff.totalSales += 1;
-  aff.grossSalesBDT += amountBDT;
-  aff.totalEarningsBDT += commissionBDT;
-  aff.pendingPayoutBDT += commissionBDT;
+  aff.totalSales = (aff.totalSales || 0) + 1;
+  aff.grossSalesBDT = (aff.grossSalesBDT || 0) + amountBDT;
+  aff.totalEarningsBDT = (aff.totalEarningsBDT || 0) + commissionBDT;
+  aff.pendingPayoutBDT = (aff.pendingPayoutBDT || 0) + commissionBDT;
 
   // Tier Auto-Progression
   if (aff.totalSales >= 50) {
@@ -287,7 +287,7 @@ export const creditAffiliateOnOrder = (amountBDT: number): { credited: boolean; 
   saveAllAffiliates(all);
 
   const current = getCurrentAffiliateProfile();
-  if (current.code.toUpperCase() === aff.code.toUpperCase()) {
+  if (current && current.code && aff.code && current.code.toUpperCase() === aff.code.toUpperCase()) {
     saveCurrentAffiliateProfile(aff);
   }
 
@@ -411,18 +411,18 @@ export const adminApprovePayout = (requestId: string, adminTrxId: string = 'BK-'
  */
 export const adminSendBonusReward = (affiliateCode: string, bonusAmountBDT: number, note: string = 'Top Performer Bonus'): { success: boolean; message: string } => {
   const all = getAllAffiliates();
-  const aff = all.find(a => a.code.toUpperCase() === affiliateCode.toUpperCase());
+  const aff = all.find(a => a && a.code && a.code.toUpperCase() === affiliateCode.toUpperCase());
   if (!aff) return { success: false, message: 'Affiliate not found.' };
 
-  aff.totalEarningsBDT += bonusAmountBDT;
-  aff.pendingPayoutBDT += bonusAmountBDT;
+  aff.totalEarningsBDT = (aff.totalEarningsBDT || 0) + bonusAmountBDT;
+  aff.pendingPayoutBDT = (aff.pendingPayoutBDT || 0) + bonusAmountBDT;
   aff.customNotes = (aff.customNotes ? aff.customNotes + ' | ' : '') + `Bonus +৳${bonusAmountBDT} (${note})`;
   saveAllAffiliates(all);
 
   const current = getCurrentAffiliateProfile();
-  if (current.code.toUpperCase() === aff.code.toUpperCase()) {
-    current.totalEarningsBDT += bonusAmountBDT;
-    current.pendingPayoutBDT += bonusAmountBDT;
+  if (current && current.code && aff.code && current.code.toUpperCase() === aff.code.toUpperCase()) {
+    current.totalEarningsBDT = (current.totalEarningsBDT || 0) + bonusAmountBDT;
+    current.pendingPayoutBDT = (current.pendingPayoutBDT || 0) + bonusAmountBDT;
     saveCurrentAffiliateProfile(current);
   }
 
@@ -437,7 +437,7 @@ export const adminSendBonusReward = (affiliateCode: string, bonusAmountBDT: numb
  */
 export const adminUpdateAffiliateTier = (affiliateCode: string, tier: AffiliateTier, rate: number): { success: boolean; message: string } => {
   const all = getAllAffiliates();
-  const aff = all.find(a => a.code.toUpperCase() === affiliateCode.toUpperCase());
+  const aff = all.find(a => a && a.code && a.code.toUpperCase() === affiliateCode.toUpperCase());
   if (!aff) return { success: false, message: 'Affiliate not found.' };
 
   aff.tier = tier;
@@ -445,7 +445,7 @@ export const adminUpdateAffiliateTier = (affiliateCode: string, tier: AffiliateT
   saveAllAffiliates(all);
 
   const current = getCurrentAffiliateProfile();
-  if (current.code.toUpperCase() === aff.code.toUpperCase()) {
+  if (current && current.code && aff.code && current.code.toUpperCase() === aff.code.toUpperCase()) {
     current.tier = tier;
     current.commissionRate = rate;
     saveCurrentAffiliateProfile(current);

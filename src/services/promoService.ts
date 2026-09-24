@@ -85,7 +85,7 @@ export const validateAndApplyPromo = (
   }
 
   const allPromos = getPromoCodes();
-  const promo = allPromos.find(p => p.code.toUpperCase() === cleanCode);
+  const promo = allPromos.find(p => p && p.code && p.code.toUpperCase() === cleanCode);
 
   if (!promo) {
     return {

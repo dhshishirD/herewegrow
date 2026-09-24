@@ -23,11 +23,13 @@ const PAYMENT_API_KEY = 'RDJmQ6RiAwFSaZGevSVoH6TqJ11gal3EulBnKszW';
 
 /**
  * Creates an automated instant checkout session for bKash, Nagad, Rocket, Cards
+ * Follows official UddoktaPay / Paymently API specification (https://uddoktapay.readme.io/reference/create-charge)
  */
 export const initiateAutomatedPayment = async (
   amount: number,
   fullName: string = 'HereWeGrow Customer',
-  email: string = 'customer@herewegrow.pro'
+  email: string = 'customer@herewegrow.pro',
+  metadata?: Record<string, any>
 ): Promise<{ success: boolean; paymentUrl?: string; message: string }> => {
   try {
     const payload = {
@@ -36,13 +38,16 @@ export const initiateAutomatedPayment = async (
       amount: String(amount),
       metadata: {
         platform: 'HereWeGrow',
-        time: new Date().toISOString()
+        time: new Date().toISOString(),
+        ...(metadata || {})
       },
       redirect_url: window.location.origin + '/?payment_status=success',
+      return_type: 'GET', // Guarantees standard GET browser redirect with ?invoice_id=UP-...
       cancel_url: window.location.origin + '/?payment_status=cancel'
     };
 
-    const res = await fetch(`${PAYMENT_API_BASE}/checkout`, {
+    // Try standard v2 endpoint first, then v1 checkout
+    let res = await fetch(`${PAYMENT_API_BASE}/checkout-v2`, {
       method: 'POST',
       headers: {
         'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
@@ -50,6 +55,17 @@ export const initiateAutomatedPayment = async (
       },
       body: JSON.stringify(payload)
     });
+
+    if (!res.ok) {
+      res = await fetch(`${PAYMENT_API_BASE}/checkout`, {
+        method: 'POST',
+        headers: {
+          'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    }
 
     const data: PaymentCheckoutResponse = await res.json();
     if (data.status && data.payment_url) {
@@ -79,8 +95,9 @@ export const initiateAutomatedPayment = async (
           full_name: fullName,
           email: email,
           amount: String(amount),
-          metadata: { platform: 'HereWeGrow' },
+          metadata: { platform: 'HereWeGrow', ...(metadata || {}) },
           redirect_url: window.location.origin + '/?payment_status=success',
+          return_type: 'GET',
           cancel_url: window.location.origin + '/?payment_status=cancel'
         })
       });
@@ -125,6 +142,7 @@ export const verifyAutomatedPayment = async (
       method: 'POST',
       headers: {
         'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ invoice_id: cleanId })
@@ -157,6 +175,7 @@ export const verifyAutomatedPayment = async (
         method: 'POST',
         headers: {
           'RT-UDDOKTAPAY-API-KEY': PAYMENT_API_KEY,
+          'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ invoice_id: cleanId })

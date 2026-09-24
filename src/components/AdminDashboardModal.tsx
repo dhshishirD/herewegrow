@@ -200,6 +200,22 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setBonusSubmitting(true);
 
     try {
+      const targetServiceId = service.providerServiceId || service.id;
+      let providerOrderId: string | undefined = undefined;
+      let orderStatus: SmmOrder['status'] = 'pending';
+      let dispatchMessage = 'Queued as pending manual dispatch.';
+
+      if (bonusDispatchDirect) {
+        const dispatchRes = await dispatchToProvider(targetServiceId, bonusLink.trim(), bonusQty);
+        if (dispatchRes.success && dispatchRes.providerOrderId) {
+          providerOrderId = dispatchRes.providerOrderId;
+          orderStatus = 'in_progress';
+          dispatchMessage = `Pushed live to Peakerr! (Peakerr Order #${dispatchRes.providerOrderId})`;
+        } else {
+          dispatchMessage = `Peakerr notice: ${dispatchRes.message}. Queued in pending.`;
+        }
+      }
+
       const newBonusOrder: SmmOrder = {
         id: 'BONUS-' + Math.floor(100000 + Math.random() * 900000),
         serviceId: service.id,
@@ -210,25 +226,22 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
         chargeBDT: 0,
         chargeUSD: 0,
         currency: 'BDT',
-        status: bonusDispatchDirect ? 'in_progress' : 'pending',
+        status: orderStatus,
         startCount: 0,
         currentCount: 0,
         remains: bonusQty,
         createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
-        refillEligible: true
+        refillEligible: true,
+        providerOrderId
       };
-
-      if (bonusDispatchDirect) {
-        const dispatchRes = await adminApproveAndDispatchOrder(newBonusOrder.id);
-        newBonusOrder.providerOrderId = dispatchRes.order?.providerOrderId;
-      }
 
       const all = getLocalOrders();
       saveLocalOrders([newBonusOrder, ...all]);
       setOrders(getLocalOrders());
       onRefreshParent();
       setBonusLink('');
-      showNotification(`✓ Free Bonus #${newBonusOrder.id} successfully queued for ${service.name}!`);
+      loadBalance();
+      showNotification(`✓ Free Bonus #${newBonusOrder.id} created! ${dispatchMessage}`);
     } catch (err: any) {
       showNotification(err.message || 'Error generating bonus order.');
     } finally {

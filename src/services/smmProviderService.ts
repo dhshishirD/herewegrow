@@ -33,7 +33,7 @@ export interface ProviderStatusResponse {
 
 const PROVIDER_STORAGE_KEY = 'herewegrow_smm_provider_config_v2';
 
-// Default Peakerr Configuration (Safe Manual Approval Mode Enabled)
+// Default Peakerr Configuration (Instant Live Auto-Dispatch Enabled)
 export const getProviderConfig = (): SmmProviderConfig => {
   try {
     const saved = localStorage.getItem(PROVIDER_STORAGE_KEY);
@@ -46,7 +46,7 @@ export const getProviderConfig = (): SmmProviderConfig => {
     apiKey: '837a74cb5bf48bb7a0b671b9234e8154',
     isActive: true,
     name: 'Peakerr - Primary Wholesale Engine',
-    autoDispatch: false // Default to safe manual approval mode to protect balance
+    autoDispatch: true // Instant Automated Dispatch to Peakerr enabled
   };
 };
 

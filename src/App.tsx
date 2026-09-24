@@ -12,6 +12,7 @@ import { ProviderSettingsModal } from './components/ProviderSettingsModal';
 import { AdminDashboardModal } from './components/AdminDashboardModal';
 import { OrderConfirmationModal } from './components/OrderConfirmationModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { LiveSupportWidget } from './components/LiveSupportWidget';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
 import confetti from 'canvas-confetti';
 import { Footer } from './components/Footer';
@@ -373,6 +374,9 @@ export function App() {
         onClose={() => setIsAdminModalOpen(false)}
         onRefreshParent={refreshOrders}
       />
+
+      {/* Floating 24/7 Live Support & Instant WhatsApp Assistant */}
+      <LiveSupportWidget />
 
     </div>
   );

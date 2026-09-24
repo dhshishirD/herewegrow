@@ -241,6 +241,9 @@ export function App() {
             currency={currency}
             onSelectServiceForOrder={handleOpenServiceOrder}
             initialPlatform={selectedStorePlatform}
+            wallet={wallet}
+            onOrderPlaced={handleOrderPlaced}
+            onOpenWallet={() => setIsWalletModalOpen(true)}
           />
         )}
 

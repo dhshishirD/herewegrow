@@ -28,12 +28,16 @@ import {
   Filter
 } from 'lucide-react';
 import { PLATFORMS_META, SMM_SERVICES_CATALOG } from '../data/growthData';
-import type { SmmService, SocialPlatform, ServiceBadge } from '../types';
+import { QuickWholesaleTerminal } from './QuickWholesaleTerminal';
+import type { SmmService, SocialPlatform, ServiceBadge, UserWallet, SmmOrder } from '../types';
 
 interface GrowthCatalogSectionProps {
   currency: 'BDT' | 'USD';
   onSelectServiceForOrder: (service: SmmService) => void;
   initialPlatform?: SocialPlatform;
+  wallet?: UserWallet;
+  onOrderPlaced?: (order: SmmOrder, updatedWallet: UserWallet) => void;
+  onOpenWallet?: () => void;
 }
 
 const CATEGORY_TABS = [
@@ -67,7 +71,20 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
   currency,
   onSelectServiceForOrder,
   initialPlatform = 'all',
+  wallet = {
+    balanceBDT: 0,
+    balanceUSD: 0,
+    totalSpentBDT: 0,
+    totalSpentUSD: 0,
+    currencyPreference: 'BDT',
+    affiliateCode: 'HWG-DIRECT',
+    affiliateEarningsBDT: 0,
+    referralsCount: 0
+  },
+  onOrderPlaced = () => {},
+  onOpenWallet = () => {},
 }) => {
+  const [viewMode, setViewMode] = useState<'visual' | 'terminal'>('visual');
   const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform>(initialPlatform);
   const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('all');
   const [selectedPriceTier, setSelectedPriceTier] = useState<string>('all');
@@ -234,22 +251,74 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
   };
 
   return (
-    <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300">
+    <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300">
       
-      {/* Section Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+      {/* View Switcher Pill Toggle */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-3 border border-indigo-200/60 shadow-xs">
-            <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>High-Velocity Wholesale SMM Marketplace</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight font-serif">
-            Verified Growth Services
-          </h2>
-          <p className="mt-1 text-slate-600 text-sm max-w-2xl">
-            Choose from <strong className="text-slate-900 font-bold">{SMM_SERVICES_CATALOG.length}+</strong> wholesale services with granular filtering across price tiers (budget to VIP), guarantees, delivery speeds, and audience targeting.
+          <span className="text-[11px] font-bold tracking-wider uppercase text-slate-500 block mb-1">
+            Catalog Experience Mode
+          </span>
+          <p className="text-xs text-slate-600 font-normal">
+            Switch between the visual showcase and high-speed wholesale terminal.
           </p>
         </div>
+
+        <div className="inline-flex p-1.5 rounded-2xl bg-slate-100 border border-slate-200 shadow-inner self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setViewMode('visual')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+              viewMode === 'visual'
+                ? 'bg-white text-slate-950 shadow-md ring-1 ring-slate-200/50'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+            }`}
+          >
+            <Layers className="w-4 h-4 text-indigo-600" />
+            <span>🎨 Visual Explorer</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setViewMode('terminal')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+              viewMode === 'terminal'
+                ? 'bg-slate-950 text-white shadow-md'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+            }`}
+          >
+            <Zap className="w-4 h-4 text-amber-400" />
+            <span>⚡ Quick Wholesale Terminal</span>
+          </button>
+        </div>
+      </div>
+
+      {/* RENDER TERMINAL VIEW */}
+      {viewMode === 'terminal' ? (
+        <QuickWholesaleTerminal
+          currency={currency}
+          wallet={wallet}
+          onOrderPlaced={onOrderPlaced}
+          onOpenWallet={onOpenWallet}
+          defaultPlatform={selectedPlatform}
+        />
+      ) : (
+        /* RENDER VISUAL EXPLORER VIEW */
+        <>
+          {/* Section Header */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-3 border border-indigo-200/60 shadow-xs">
+                <Zap className="w-3.5 h-3.5 text-indigo-600" />
+                <span>High-Velocity Wholesale SMM Marketplace</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight font-serif">
+                Verified Growth Services
+              </h2>
+              <p className="mt-1 text-slate-600 text-sm max-w-2xl">
+                Choose from <strong className="text-slate-900 font-bold">{SMM_SERVICES_CATALOG.length}+</strong> wholesale services with granular filtering across price tiers (budget to VIP), guarantees, delivery speeds, and audience targeting.
+              </p>
+            </div>
 
         {/* Search & Sort Controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
@@ -598,6 +667,8 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
             <ChevronDown className="w-4 h-4 text-slate-500" />
           </button>
         </div>
+      )}
+        </>
       )}
 
     </section>

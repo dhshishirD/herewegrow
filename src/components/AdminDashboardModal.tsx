@@ -352,10 +352,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
           <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
             
             {/* Sidebar Navigation */}
-            <div className="w-full md:w-60 bg-slate-50 border-r border-slate-200 p-3 space-y-1 flex md:flex-col overflow-x-auto">
+            <div className="w-full md:w-60 bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 p-2 md:p-3 flex md:flex-col gap-1.5 overflow-x-auto no-scrollbar flex-shrink-0">
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-shrink-0 md:w-full flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === 'overview' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
                 }`}
               >
@@ -365,11 +365,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               <button
                 onClick={() => setActiveTab('orders')}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-shrink-0 md:w-full flex items-center justify-between gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === 'orders' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <Activity className="w-4 h-4" />
                   <span>Orders & Dispatch</span>
                 </div>
@@ -382,7 +382,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               <button
                 onClick={() => setActiveTab('promos')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-shrink-0 md:w-full flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === 'promos' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
                 }`}
               >
@@ -392,7 +392,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               <button
                 onClick={() => setActiveTab('bonus')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-shrink-0 md:w-full flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === 'bonus' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
                 }`}
               >
@@ -402,7 +402,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               <button
                 onClick={() => setActiveTab('wallet')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-shrink-0 md:w-full flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === 'wallet' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
                 }`}
               >
@@ -412,7 +412,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               <button
                 onClick={() => setActiveTab('provider')}
-                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                className={`flex-shrink-0 md:w-full flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   activeTab === 'provider' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
                 }`}
               >

@@ -185,7 +185,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased pb-16 lg:pb-0">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased pb-28 lg:pb-0">
       
       {/* Top Navigation */}
       <Navbar

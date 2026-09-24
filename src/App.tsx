@@ -218,6 +218,18 @@ export function App() {
     setOrders(getLocalOrders());
   };
 
+  // Secret Admin Shortcut: Ctrl + Shift + A or Cmd + Shift + A
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        setIsAdminModalOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased pb-28 lg:pb-0">
       
@@ -229,6 +241,7 @@ export function App() {
         setCurrency={handleCurrencyChange}
         wallet={wallet}
         onOpenWallet={() => setIsWalletModalOpen(true)}
+        onOpenAdmin={() => setIsAdminModalOpen(true)}
       />
 
       {/* Main Content View */}

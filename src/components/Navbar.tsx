@@ -21,6 +21,7 @@ interface NavbarProps {
   setCurrency: (c: 'BDT' | 'USD') => void;
   wallet: UserWallet;
   onOpenWallet: () => void;
+  onOpenAdmin?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -30,8 +31,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   setCurrency,
   wallet,
   onOpenWallet,
+  onOpenAdmin,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const lastLogoTapRef = React.useRef<number>(0);
 
   const navItems = [
     { id: 'store', label: 'Growth Store', icon: ShoppingBag },
@@ -48,6 +51,16 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleLogoClick = () => {
+    const now = Date.now();
+    if (now - lastLogoTapRef.current < 500) {
+      if (onOpenAdmin) onOpenAdmin();
+    } else {
+      handleNavClick('store');
+    }
+    lastLogoTapRef.current = now;
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full glass-nav transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,7 +68,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Brand Monogram & Title */}
           <div 
-            onClick={() => handleNavClick('store')}
+            onClick={handleLogoClick}
+            onDoubleClick={onOpenAdmin}
             className="flex items-center gap-3 cursor-pointer group select-none"
           >
             <div className="w-10 h-10 rounded-xl bg-slate-950 text-white flex items-center justify-center shadow-xs group-hover:bg-indigo-950 transition-all">

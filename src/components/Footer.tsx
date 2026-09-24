@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { 
   TrendingUp, 
   ArrowUpRight,
@@ -11,6 +11,16 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) => {
+  const lastTapRef = useRef<number>(0);
+
+  const handleSecretDoubleTap = () => {
+    const now = Date.now();
+    if (now - lastTapRef.current < 500) {
+      if (onOpenAdmin) onOpenAdmin();
+    }
+    lastTapRef.current = now;
+  };
+
   return (
     <footer className="border-t border-slate-200 bg-slate-50 pt-16 pb-10 text-slate-600 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -19,7 +29,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) =>
           
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
+            <div 
+              onClick={handleSecretDoubleTap}
+              onDoubleClick={onOpenAdmin}
+              className="flex items-center gap-2.5 cursor-pointer select-none"
+              title="HereWeGrow.pro"
+            >
               <div className="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-indigo-400" />
               </div>
@@ -138,16 +153,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) =>
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               </li>
-              {onOpenAdmin && (
-                <li className="pt-1">
-                  <button 
-                    onClick={onOpenAdmin} 
-                    className="text-[11px] font-bold text-slate-800 hover:text-indigo-600 flex items-center gap-1 cursor-pointer bg-slate-200/70 hover:bg-slate-200 px-2 py-1 rounded-md transition-colors"
-                  >
-                    <span>🛡️ Admin Command Center</span>
-                  </button>
-                </li>
-              )}
             </ul>
           </div>
 
@@ -172,7 +177,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) =>
             </span>
           </div>
 
-          <div className="text-[11px] text-slate-500">
+          <div 
+            onClick={handleSecretDoubleTap}
+            onDoubleClick={onOpenAdmin}
+            className="text-[11px] text-slate-500 cursor-pointer select-none transition-colors hover:text-slate-700"
+            title="HereWeGrow Social Engine"
+          >
             © 2026 HereWeGrow.pro • All rights reserved.
           </div>
 

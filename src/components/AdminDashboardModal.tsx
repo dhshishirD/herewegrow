@@ -434,11 +434,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   maxLength={6}
                   value={pinInput}
                   onChange={(e) => setPinInput(e.target.value)}
-                  placeholder="Enter PIN (Default: 2026)"
-                  className="w-full text-center text-xl font-mono font-bold tracking-widest px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:border-indigo-600"
+                  placeholder="Enter Security PIN"
+                  className="w-full text-center text-xl font-mono font-bold tracking-widest px-4 py-3 rounded-xl border border-slate-300 focus:outline-hidden focus:border-indigo-600 bg-slate-50 focus:bg-white transition-all"
                 />
                 {pinError && (
-                  <span className="text-xs font-bold text-rose-600 mt-1 block">Incorrect PIN. Try 2026.</span>
+                  <span className="text-xs font-bold text-rose-600 mt-1.5 block">Access Denied: Invalid Security Key</span>
                 )}
               </div>
 

@@ -48,8 +48,55 @@ export const saveLocalOrders = (orders: SmmOrder[]): void => {
   }
 };
 
-import { dispatchToProvider, getProviderConfig, triggerProviderRefill as triggerApiRefill } from './smmProviderService';
+import { dispatchToProvider, getProviderConfig, triggerProviderRefill as triggerApiRefill, queryProviderOrderStatus } from './smmProviderService';
 import { ALL_SERVICES } from '../data/growthData';
+
+/**
+ * Synchronizes active orders with live Peakerr API status
+ */
+export const syncAllActiveOrdersWithProvider = async (): Promise<{ updatedCount: number; orders: SmmOrder[] }> => {
+  const orders = getLocalOrders();
+  let updatedCount = 0;
+
+  for (let i = 0; i < orders.length; i++) {
+    const order = orders[i];
+    // Only query orders that have been dispatched to Peakerr and are not yet finalized
+    if (order.providerOrderId && order.status !== 'completed' && order.status !== 'cancelled') {
+      try {
+        const statusRes = await queryProviderOrderStatus(order.providerOrderId);
+        if (statusRes && !statusRes.error && statusRes.status) {
+          const rawStatus = statusRes.status.toLowerCase();
+          if (rawStatus.includes('completed')) {
+            order.status = 'completed';
+            order.remains = 0;
+            updatedCount++;
+          } else if (rawStatus.includes('progress') || rawStatus.includes('processing')) {
+            order.status = 'in_progress';
+            if (statusRes.remains !== undefined) {
+              order.remains = Number(statusRes.remains);
+            }
+            if (statusRes.start_count !== undefined) {
+              order.startCount = Number(statusRes.start_count);
+            }
+            updatedCount++;
+          } else if (rawStatus.includes('cancel')) {
+            order.status = 'cancelled';
+            updatedCount++;
+          }
+          orders[i] = order;
+        }
+      } catch (err) {
+        console.warn(`Could not sync status for Peakerr order #${order.providerOrderId}:`, err);
+      }
+    }
+  }
+
+  if (updatedCount > 0) {
+    saveLocalOrders(orders);
+  }
+
+  return { updatedCount, orders };
+};
 
 export const createOrder = async (
   service: SmmService,

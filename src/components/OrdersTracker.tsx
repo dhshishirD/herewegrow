@@ -9,7 +9,7 @@ import {
   Check, 
   Gift
 } from 'lucide-react';
-import { triggerRefill, adminApproveAndDispatchOrder, adminUpdateOrderStatus } from '../services/growthService';
+import { triggerRefill, adminApproveAndDispatchOrder, adminUpdateOrderStatus, syncAllActiveOrdersWithProvider } from '../services/growthService';
 import type { SmmOrder, UserWallet } from '../types';
 
 interface OrdersTrackerProps {
@@ -32,7 +32,26 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
 }) => {
   const [refillStatusMessage, setRefillStatusMessage] = useState<string | null>(null);
   const [dispatchingId, setDispatchingId] = useState<string | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [copiedAffiliate, setCopiedAffiliate] = useState(false);
+
+  const handleSyncWithProvider = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await syncAllActiveOrdersWithProvider();
+      onRefreshOrders();
+      if (res.updatedCount > 0) {
+        setRefillStatusMessage(`✓ Synced with Peakerr: ${res.updatedCount} order status update(s) applied!`);
+      } else {
+        setRefillStatusMessage('✓ All orders are up to date with server status.');
+      }
+    } catch (err: any) {
+      onRefreshOrders();
+    } finally {
+      setIsSyncing(false);
+      setTimeout(() => setRefillStatusMessage(null), 3500);
+    }
+  };
 
   const handleRefill = async (orderId: string) => {
     const res = await triggerRefill(orderId);
@@ -95,11 +114,12 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
           )}
 
           <button
-            onClick={onRefreshOrders}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all shadow-xs cursor-pointer"
+            onClick={handleSyncWithProvider}
+            disabled={isSyncing}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-60"
           >
-            <RotateCw className="w-3.5 h-3.5" />
-            <span>Refresh Live Status</span>
+            <RotateCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-indigo-600' : ''}`} />
+            <span>{isSyncing ? 'Syncing with Peakerr...' : 'Sync Live Status'}</span>
           </button>
         </div>
       </div>

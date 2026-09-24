@@ -171,12 +171,12 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
 
 export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
-  // FACEBOOK SERVICES (Exact 100% Profit Margin - Target Keywords: fb auto likes, facebook page followers, fb followers)
+  // FACEBOOK SERVICES (14 Services - F-Commerce & Creator Monetization)
   // ============================================================
   {
     id: 'fb-001',
     providerServiceId: 29351,
-    name: 'Facebook Page Likes & Followers [100% BD Bengali Real Targeted]',
+    name: 'Facebook Page Likes & Followers [100% Real Bangladeshi Targeted]',
     platform: 'facebook',
     category: 'Facebook Page Growth',
     ratePer1kBDT: 280,
@@ -186,13 +186,13 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '2k - 5k / Day',
     refillDays: 60,
     badges: ['bengali-target', 'non-drop', 'best-seller', 'auto-refill'],
-    description: 'High-quality real Bangladeshi user profiles with authentic profile photos. Ideal for local F-commerce pages, brands, and public figures.',
-    guaranteeText: '60 Days Non-Drop Refill Guarantee'
+    description: 'Authentic Bangladeshi profiles with active photos. Built specifically for local online shops, agency pages, and public creators.',
+    guaranteeText: '60 Days 100% Non-Drop Refill Guarantee'
   },
   {
     id: 'fb-002',
     providerServiceId: 29359,
-    name: 'Facebook Profile Followers [Real Bangladesh Profiles]',
+    name: 'Facebook Profile Followers [Personal Profiles & Influencers]',
     platform: 'facebook',
     category: 'Facebook Profile Growth',
     ratePer1kBDT: 240,
@@ -202,12 +202,12 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '3k / Day',
     refillDays: 30,
     badges: ['bengali-target', 'non-drop', 'best-seller'],
-    description: 'Real personal profile followers from Bangladesh. Great for influencers, public figures, and creators.'
+    description: 'High-authority personal followers from Bangladesh. Great for building personal branding and creator credibility.'
   },
   {
     id: 'fb-003',
     providerServiceId: 29351,
-    name: 'Facebook Post Reactions [Like + Love + Care Mix] - Instant Auto',
+    name: 'Facebook Post Reactions [Like + Love + Care Mix] - Instant 60s',
     platform: 'facebook',
     category: 'Facebook Engagement',
     ratePer1kBDT: 70,
@@ -217,7 +217,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Instant (10k/Hour)',
     refillDays: 30,
     badges: ['instant', 'non-drop', 'best-seller'],
-    description: 'Natural blend of Facebook post reactions. Instant delivery within 60 seconds on public photos, videos, and statuses.'
+    description: 'Organic mix of Facebook post reactions. Instant start within 60 seconds on photos, video updates, and status posts.'
   },
   {
     id: 'fb-004',
@@ -232,7 +232,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Instant',
     refillDays: 30,
     badges: ['instant'],
-    description: 'Pure Love (❤️) reactions for personal posts, brand announcements, and creative photos.'
+    description: 'Pure Love (❤️) reactions for personal photos, engagement posts, and promotional announcements.'
   },
   {
     id: 'fb-005',
@@ -247,7 +247,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '50k / Day',
     refillDays: 30,
     badges: ['instant', 'high-retention'],
-    description: 'Monetization-safe video views with 60-second+ watch duration. Helps boost Facebook in-stream ad eligibility.'
+    description: 'Monetization-safe video views with 60-second+ watch duration. Helps trigger Facebook algorithmic recommendations.'
   },
   {
     id: 'fb-006',
@@ -262,7 +262,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '2 - 3 Days',
     refillDays: 60,
     badges: ['best-seller', 'high-retention', 'auto-refill'],
-    description: 'Complete 60k minutes video watch time eligible for Facebook In-Stream Ads monetization checklist.'
+    description: 'Complete 60k minutes video watch time package fully compliant with Facebook In-Stream Ads monetization checklist.'
   },
   {
     id: 'fb-007',
@@ -277,12 +277,12 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '2k / Day',
     refillDays: 30,
     badges: ['non-drop', 'bengali-target'],
-    description: 'Grow your Facebook group authority with active Bangladeshi member profiles.'
+    description: 'Grow your Facebook group community authority with real Bangladeshi user profiles.'
   },
   {
     id: 'fb-008',
     providerServiceId: 36573,
-    name: 'Facebook Custom Bengali Comments [5-Star F-Commerce Reviews]',
+    name: 'Facebook Custom Bengali Comments [5-Star F-Commerce Customer Reviews]',
     platform: 'facebook',
     category: 'Facebook Engagement',
     ratePer1kBDT: 850,
@@ -292,11 +292,101 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Gradual Drip',
     refillDays: 30,
     badges: ['bengali-target', 'high-retention'],
-    description: 'Custom positive feedback and comments in Bengali written specifically for your business or product posts.'
+    description: 'Custom positive feedback and comments in authentic Bengali written specifically for your products or business.'
+  },
+  {
+    id: 'fb-009',
+    providerServiceId: 29351,
+    name: 'Facebook Post Shares [Real BD Profiles Viral Distribution]',
+    platform: 'facebook',
+    category: 'Facebook Engagement',
+    ratePer1kBDT: 110,
+    ratePer1kUSD: 0.90,
+    minQty: 50,
+    maxQty: 50000,
+    speed: 'Instant (5k/Day)',
+    refillDays: 30,
+    badges: ['instant', 'bengali-target'],
+    description: 'Bangladeshi user shares to increase organic reach, feed distribution, and viral potential.'
+  },
+  {
+    id: 'fb-010',
+    providerServiceId: 27269,
+    name: 'Facebook Live Stream Concurrent Viewers [60-Minute Retention]',
+    platform: 'facebook',
+    category: 'Facebook Live',
+    ratePer1kBDT: 590,
+    ratePer1kUSD: 4.80,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect (0-5 Mins)',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: 'Maintains active concurrent viewers during your live sales, webinars, or gaming streams.'
+  },
+  {
+    id: 'fb-011',
+    providerServiceId: 29351,
+    name: 'Facebook Page 5-Star Reviews & Recommendation Ratings',
+    platform: 'facebook',
+    category: 'Facebook Page Growth',
+    ratePer1kBDT: 950,
+    ratePer1kUSD: 7.80,
+    minQty: 10,
+    maxQty: 500,
+    speed: '10 - 20 / Day Drip',
+    refillDays: 60,
+    badges: ['non-drop', 'bengali-target', 'auto-refill'],
+    description: '5-Star recommendations and verified review feedback to maximize conversion rates on business pages.'
+  },
+  {
+    id: 'fb-012',
+    providerServiceId: 29351,
+    name: 'Facebook Haha / Wow / Care Custom Reaction Filter',
+    platform: 'facebook',
+    category: 'Facebook Engagement',
+    ratePer1kBDT: 75,
+    ratePer1kUSD: 0.62,
+    minQty: 50,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant'],
+    description: 'Pick specific reaction types (Haha, Wow, or Care) for tailored engagement strategies.'
+  },
+  {
+    id: 'fb-013',
+    providerServiceId: 27269,
+    name: 'Facebook Reels Viral Reach & Impressions Pack',
+    platform: 'facebook',
+    category: 'Facebook Video',
+    ratePer1kBDT: 25,
+    ratePer1kUSD: 0.20,
+    minQty: 1000,
+    maxQty: 10000000,
+    speed: '100k / Day',
+    refillDays: 0,
+    badges: ['instant', 'best-seller'],
+    description: 'Ultra-fast delivery for viral Facebook Reels to trigger the Explore recommendation feed.'
+  },
+  {
+    id: 'fb-014',
+    providerServiceId: 29359,
+    name: 'Facebook Event Attendees & Interested Responses',
+    platform: 'facebook',
+    category: 'Facebook Community',
+    ratePer1kBDT: 210,
+    ratePer1kUSD: 1.70,
+    minQty: 100,
+    maxQty: 20000,
+    speed: '2k / Day',
+    refillDays: 30,
+    badges: ['non-drop'],
+    description: 'Boost event credibility and social proof for concerts, webinars, conferences, and launches.'
   },
 
   // ============================================================
-  // YOUTUBE SERVICES (Target Keywords: 4000 watch hours, youtube monetization, 1000 subscribers)
+  // YOUTUBE SERVICES (14 Services - Monetization, Watch Time & SEO)
   // ============================================================
   {
     id: 'yt-001',
@@ -387,7 +477,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Natural Drip',
     refillDays: 30,
     badges: ['high-retention'],
-    description: 'Custom relevant comments to boost audience interaction and video authority.'
+    description: 'Custom relevant comments to boost audience interaction and channel authority.'
   },
   {
     id: 'yt-007',
@@ -404,9 +494,114 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant'],
     description: 'Real-time live stream viewers to push gaming, podcasts, or webinars to YouTube Live Trending.'
   },
+  {
+    id: 'yt-008',
+    providerServiceId: 27269,
+    name: 'YouTube Live Stream Concurrent Viewers [2 Hours Duration]',
+    platform: 'youtube',
+    category: 'YouTube Live',
+    ratePer1kBDT: 1100,
+    ratePer1kUSD: 9.00,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: 'Extended 2-hour live stream concurrent retention for tournament streams, esports, and concerts.'
+  },
+  {
+    id: 'yt-009',
+    providerServiceId: 36643,
+    name: 'YouTube Shorts Likes & Social Re-shares',
+    platform: 'youtube',
+    category: 'YouTube Shorts',
+    ratePer1kBDT: 90,
+    ratePer1kUSD: 0.74,
+    minQty: 50,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant', 'non-drop'],
+    description: 'Immediate Shorts interactions to boost click-through rate and shelf retention.'
+  },
+  {
+    id: 'yt-010',
+    providerServiceId: 27269,
+    name: 'YouTube Community Post Likes & Poll Votes',
+    platform: 'youtube',
+    category: 'YouTube Engagement',
+    ratePer1kBDT: 120,
+    ratePer1kUSD: 0.98,
+    minQty: 50,
+    maxQty: 25000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant'],
+    description: 'Drives engagement on YouTube Community Tab polls, announcements, and image posts.'
+  },
+  {
+    id: 'yt-011',
+    providerServiceId: 31705,
+    name: 'YouTube USA / Tier 1 High-CPM AdSense Views',
+    platform: 'youtube',
+    category: 'YouTube Video Views',
+    ratePer1kBDT: 260,
+    ratePer1kUSD: 2.10,
+    minQty: 500,
+    maxQty: 1000000,
+    speed: '10k / Day',
+    refillDays: 30,
+    badges: ['high-retention', 'non-drop'],
+    description: 'Geo-targeted viewers from the United States, UK, Canada, and Australia to boost AdSense revenue.'
+  },
+  {
+    id: 'yt-012',
+    providerServiceId: 27269,
+    name: 'YouTube Premiere Live Waiting Room Viewers',
+    platform: 'youtube',
+    category: 'YouTube Live',
+    ratePer1kBDT: 480,
+    ratePer1kUSD: 3.90,
+    minQty: 100,
+    maxQty: 5000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Build anticipation and instant audience size before a new video premiere drops.'
+  },
+  {
+    id: 'yt-013',
+    providerServiceId: 36643,
+    name: 'YouTube Video Comment Upvotes & Top Ranking',
+    platform: 'youtube',
+    category: 'YouTube Engagement',
+    ratePer1kBDT: 180,
+    ratePer1kUSD: 1.45,
+    minQty: 25,
+    maxQty: 5000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant'],
+    description: 'Push your pinned comment or promotional link to the very top of any YouTube video comment section.'
+  },
+  {
+    id: 'yt-014',
+    providerServiceId: 27269,
+    name: 'YouTube Video Direct Shares (WhatsApp / FB / Twitter)',
+    platform: 'youtube',
+    category: 'YouTube Engagement',
+    ratePer1kBDT: 65,
+    ratePer1kUSD: 0.53,
+    minQty: 100,
+    maxQty: 100000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant', 'best-seller'],
+    description: 'Boost external referral traffic signals on YouTube Studio analytics.'
+  },
 
   // ============================================================
-  // INSTAGRAM SERVICES (Target Keywords: buy ig likes instant, instagram likes instant delivery, buy ig followers)
+  // INSTAGRAM SERVICES (14 Services - Real Followers, Likes, Reels)
   // ============================================================
   {
     id: 'ig-001',
@@ -421,7 +616,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '10k / Day',
     refillDays: 30,
     badges: ['instant', 'non-drop', 'best-seller', 'auto-refill'],
-    description: 'High-quality Instagram followers with bio and posts. 1-Click auto-refill enabled.'
+    description: 'High-quality Instagram followers with active bios, stories, and posts. 1-Click auto-refill enabled.'
   },
   {
     id: 'ig-002',
@@ -436,7 +631,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Instant (20k/Hour)',
     refillDays: 30,
     badges: ['instant', 'best-seller', 'non-drop'],
-    description: 'Lightning-fast like delivery. Helps push posts into user feed recommendations.'
+    description: 'Lightning-fast like delivery. Helps push posts directly into user Explore feeds.'
   },
   {
     id: 'ig-003',
@@ -481,12 +676,12 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Natural Drip',
     refillDays: 30,
     badges: ['high-retention'],
-    description: 'High-quality comments matching your post niche.'
+    description: 'High-quality relevant comments matching your post niche and brand voice.'
   },
   {
     id: 'ig-006',
     providerServiceId: 27269,
-    name: 'Instagram Story Views [All Active Stories]',
+    name: 'Instagram Story Views [All Active 24h Stories]',
     platform: 'instagram',
     category: 'Instagram Stories',
     ratePer1kBDT: 25,
@@ -496,11 +691,131 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: 'Instant',
     refillDays: 0,
     badges: ['instant'],
-    description: 'Instant story views for all active 24h stories.'
+    description: 'Instant story views across all active 24h stories on public profiles.'
+  },
+  {
+    id: 'ig-007',
+    providerServiceId: 36642,
+    name: 'Instagram Bangladesh Targeted Followers [Active Local Profiles]',
+    platform: 'instagram',
+    category: 'Instagram Followers',
+    ratePer1kBDT: 290,
+    ratePer1kUSD: 2.40,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '2k / Day',
+    refillDays: 30,
+    badges: ['bengali-target', 'non-drop'],
+    description: 'Real Bangladeshi Instagram accounts for local boutiques, creators, and brands.'
+  },
+  {
+    id: 'ig-008',
+    providerServiceId: 27269,
+    name: 'Instagram Profile Visits & Impression Reach',
+    platform: 'instagram',
+    category: 'Instagram Analytics',
+    ratePer1kBDT: 35,
+    ratePer1kUSD: 0.28,
+    minQty: 500,
+    maxQty: 500000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Elevates Instagram Professional Dashboard reach metrics for sponsorship media kits.'
+  },
+  {
+    id: 'ig-009',
+    providerServiceId: 27269,
+    name: 'Instagram Live Stream Viewers [30-Minute Retention]',
+    platform: 'instagram',
+    category: 'Instagram Live',
+    ratePer1kBDT: 520,
+    ratePer1kUSD: 4.25,
+    minQty: 50,
+    maxQty: 2000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Keeps live viewer numbers consistently high during product unboxings and brand sessions.'
+  },
+  {
+    id: 'ig-010',
+    providerServiceId: 36643,
+    name: 'Instagram Auto-Likes [Next 10 New Posts Automatically]',
+    platform: 'instagram',
+    category: 'Instagram Likes',
+    ratePer1kBDT: 85,
+    ratePer1kUSD: 0.70,
+    minQty: 100,
+    maxQty: 10000,
+    speed: 'Instant on Post',
+    refillDays: 30,
+    badges: ['instant', 'auto-refill'],
+    description: 'System automatically detects your newest 10 posts and sends likes within 2 minutes.'
+  },
+  {
+    id: 'ig-011',
+    providerServiceId: 27269,
+    name: 'Instagram Highlights Views [All Highlight Bubbles]',
+    platform: 'instagram',
+    category: 'Instagram Stories',
+    ratePer1kBDT: 30,
+    ratePer1kUSD: 0.25,
+    minQty: 100,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Adds views across all your pinned profile highlight folders.'
+  },
+  {
+    id: 'ig-012',
+    providerServiceId: 31702,
+    name: 'Instagram Broadcast Channel Members',
+    platform: 'instagram',
+    category: 'Instagram Growth',
+    ratePer1kBDT: 240,
+    ratePer1kUSD: 1.95,
+    minQty: 100,
+    maxQty: 20000,
+    speed: '3k / Day',
+    refillDays: 30,
+    badges: ['non-drop'],
+    description: 'Grow your exclusive Instagram creator broadcast channel subscriber base.'
+  },
+  {
+    id: 'ig-013',
+    providerServiceId: 36642,
+    name: 'Threads by Instagram Real Followers [Non-Drop]',
+    platform: 'instagram',
+    category: 'Threads Growth',
+    ratePer1kBDT: 190,
+    ratePer1kUSD: 1.55,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '3k / Day',
+    refillDays: 30,
+    badges: ['non-drop', 'best-seller'],
+    description: 'High authority followers for Meta’s Threads social network profiles.'
+  },
+  {
+    id: 'ig-014',
+    providerServiceId: 36643,
+    name: 'Threads Post Likes & Reposts Mix',
+    platform: 'instagram',
+    category: 'Threads Engagement',
+    ratePer1kBDT: 65,
+    ratePer1kUSD: 0.52,
+    minQty: 50,
+    maxQty: 25000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant'],
+    description: 'Instant engagement for Threads posts to gain traction on algorithmic feeds.'
   },
 
   // ============================================================
-  // TIKTOK SERVICES (Target Keywords: buy tiktok followers, tiktok fyp views, tiktok auto likes)
+  // TIKTOK SERVICES (12 Services - FYP Algorithm, Views & Live)
   // ============================================================
   {
     id: 'tt-001',
@@ -515,7 +830,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '500k / Hour',
     refillDays: 0,
     badges: ['instant', 'best-seller'],
-    description: 'Instant delivery for TikTok videos. High volume at the lowest wholesale rate.'
+    description: 'Instant delivery for TikTok videos. High volume at the absolute lowest wholesale rate.'
   },
   {
     id: 'tt-002',
@@ -562,9 +877,129 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant'],
     description: 'Triggers the TikTok algorithm to serve your video to wider global audiences.'
   },
+  {
+    id: 'tt-005',
+    providerServiceId: 27269,
+    name: 'TikTok Live Stream Concurrent Viewers [30 Mins]',
+    platform: 'tiktok',
+    category: 'TikTok Live',
+    ratePer1kBDT: 420,
+    ratePer1kUSD: 3.40,
+    minQty: 50,
+    maxQty: 5000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Maintains live viewer count during TikTok battles and product sales.'
+  },
+  {
+    id: 'tt-006',
+    providerServiceId: 27269,
+    name: 'TikTok Live Stream Likes & Screen Taps [50,000 Taps]',
+    platform: 'tiktok',
+    category: 'TikTok Live',
+    ratePer1kBDT: 15,
+    ratePer1kUSD: 0.12,
+    minQty: 1000,
+    maxQty: 1000000,
+    speed: 'Instant Taps',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Simulates rapid screen tapping to win TikTok PK battles and boost stream rank.'
+  },
+  {
+    id: 'tt-007',
+    providerServiceId: 36573,
+    name: 'TikTok Custom English & Bengali Comments',
+    platform: 'tiktok',
+    category: 'TikTok Engagement',
+    ratePer1kBDT: 800,
+    ratePer1kUSD: 6.50,
+    minQty: 10,
+    maxQty: 1000,
+    speed: 'Natural Drip',
+    refillDays: 30,
+    badges: ['high-retention'],
+    description: 'Realistic positive comments tailored for your dance, comedy, or eCommerce videos.'
+  },
+  {
+    id: 'tt-008',
+    providerServiceId: 27269,
+    name: 'TikTok High-Retention 100% Full Watch Views',
+    platform: 'tiktok',
+    category: 'TikTok Views',
+    ratePer1kBDT: 35,
+    ratePer1kUSD: 0.28,
+    minQty: 500,
+    maxQty: 10000000,
+    speed: '50k / Day',
+    refillDays: 30,
+    badges: ['high-retention', 'best-seller'],
+    description: '100% completion rate views for videos up to 60 seconds to satisfy TikTok watch time quotient.'
+  },
+  {
+    id: 'tt-009',
+    providerServiceId: 31874,
+    name: 'TikTok USA Targeted Followers [Creator Rewards Program]',
+    platform: 'tiktok',
+    category: 'TikTok Followers',
+    ratePer1kBDT: 490,
+    ratePer1kUSD: 4.00,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '2k / Day',
+    refillDays: 30,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'United States targeted follower accounts for US Creator Rewards program eligibility.'
+  },
+  {
+    id: 'tt-010',
+    providerServiceId: 27269,
+    name: 'TikTok Sound / Original Audio Video Count Boost',
+    platform: 'tiktok',
+    category: 'TikTok Growth',
+    ratePer1kBDT: 380,
+    ratePer1kUSD: 3.10,
+    minQty: 50,
+    maxQty: 5000,
+    speed: '500 / Day',
+    refillDays: 30,
+    badges: ['non-drop'],
+    description: 'Increases the number of videos using your original audio track to make it trend.'
+  },
+  {
+    id: 'tt-011',
+    providerServiceId: 27269,
+    name: 'TikTok Story Views [Active 24-Hour Stories]',
+    platform: 'tiktok',
+    category: 'TikTok Views',
+    ratePer1kBDT: 20,
+    ratePer1kUSD: 0.16,
+    minQty: 500,
+    maxQty: 100000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Instant story views for TikTok profile stories.'
+  },
+  {
+    id: 'tt-012',
+    providerServiceId: 27269,
+    name: 'TikTok Video Downloads & Offline Saves',
+    platform: 'tiktok',
+    category: 'TikTok Engagement',
+    ratePer1kBDT: 40,
+    ratePer1kUSD: 0.32,
+    minQty: 100,
+    maxQty: 100000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Signals viral value to the algorithm through recorded video download counts.'
+  },
 
   // ============================================================
-  // TELEGRAM SERVICES (Target Keywords: buy telegram channel members, telegram post views)
+  // TELEGRAM SERVICES (8 Services - Channels, Groups, Boosts & Views)
   // ============================================================
   {
     id: 'tg-001',
@@ -579,7 +1014,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     speed: '20k / Day',
     refillDays: 90,
     badges: ['non-drop', 'auto-refill', 'best-seller'],
-    description: 'Permanent Telegram channel members with genuine usernames.'
+    description: 'Permanent Telegram channel members with genuine usernames and profile pictures.'
   },
   {
     id: 'tg-002',
@@ -611,9 +1046,84 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant'],
     description: 'Simultaneously adds equal views across your last 20 channel posts for authentic activity.'
   },
+  {
+    id: 'tg-004',
+    providerServiceId: 27269,
+    name: 'Telegram Positive Reactions (👍, ❤️, 🔥, 🚀 Mix)',
+    platform: 'telegram',
+    category: 'Telegram Engagement',
+    ratePer1kBDT: 35,
+    ratePer1kUSD: 0.28,
+    minQty: 100,
+    maxQty: 100000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Instant positive emoji reactions on any public Telegram post or announcement.'
+  },
+  {
+    id: 'tg-005',
+    providerServiceId: 31702,
+    name: 'Telegram Bangladesh Targeted Channel Members',
+    platform: 'telegram',
+    category: 'Telegram Growth',
+    ratePer1kBDT: 240,
+    ratePer1kUSD: 1.95,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '5k / Day',
+    refillDays: 30,
+    badges: ['bengali-target', 'non-drop'],
+    description: 'Targeted Bangladeshi users for local shopping, tutoring, or investment groups.'
+  },
+  {
+    id: 'tg-006',
+    providerServiceId: 31702,
+    name: 'Telegram Channel Level Boosts [Unlock Stories & Custom Perks]',
+    platform: 'telegram',
+    category: 'Telegram Growth',
+    ratePer1kBDT: 650,
+    ratePer1kUSD: 5.30,
+    minQty: 5,
+    maxQty: 100,
+    speed: 'Instant Boosts',
+    refillDays: 30,
+    badges: ['instant', 'non-drop'],
+    description: 'Telegram Premium boosts to level up your channel and publish channel stories.'
+  },
+  {
+    id: 'tg-007',
+    providerServiceId: 27269,
+    name: 'Telegram Poll Votes & Survey Click Responses',
+    platform: 'telegram',
+    category: 'Telegram Engagement',
+    ratePer1kBDT: 85,
+    ratePer1kUSD: 0.70,
+    minQty: 50,
+    maxQty: 25000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Win public Telegram polls or stimulate interactive voting on your channels.'
+  },
+  {
+    id: 'tg-008',
+    providerServiceId: 36573,
+    name: 'Telegram Channel Custom Comments & Discussion Messages',
+    platform: 'telegram',
+    category: 'Telegram Engagement',
+    ratePer1kBDT: 750,
+    ratePer1kUSD: 6.10,
+    minQty: 10,
+    maxQty: 500,
+    speed: 'Gradual Drip',
+    refillDays: 30,
+    badges: ['high-retention'],
+    description: 'Custom organic discussion chatter for linked discussion groups.'
+  },
 
   // ============================================================
-  // TWITTER / X SERVICES
+  // TWITTER / X SERVICES (7 Services - Followers, Retweets, Space)
   // ============================================================
   {
     id: 'tw-001',
@@ -645,9 +1155,84 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['instant', 'non-drop'],
     description: 'Instant retweets and likes to trend crypto, tech, and startup announcements.'
   },
+  {
+    id: 'tw-003',
+    providerServiceId: 27269,
+    name: 'Twitter / X Tweet Views & Impression Impressions (100k Pack)',
+    platform: 'twitter',
+    category: 'Twitter Engagement',
+    ratePer1kBDT: 12,
+    ratePer1kUSD: 0.10,
+    minQty: 1000,
+    maxQty: 50000000,
+    speed: '1M / Day',
+    refillDays: 0,
+    badges: ['instant', 'best-seller'],
+    description: 'Skyrocket tweet view metrics on public posts for creator monetization threshold.'
+  },
+  {
+    id: 'tw-004',
+    providerServiceId: 27269,
+    name: 'Twitter / X Spaces Live Listeners [30-Minute Stay]',
+    platform: 'twitter',
+    category: 'Twitter Live',
+    ratePer1kBDT: 490,
+    ratePer1kUSD: 4.00,
+    minQty: 50,
+    maxQty: 2000,
+    speed: 'Instant Connect',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'High concurrent listener retention during live Twitter Spaces sessions.'
+  },
+  {
+    id: 'tw-005',
+    providerServiceId: 27269,
+    name: 'Twitter / X Poll Votes [Fast Algorithm Delivery]',
+    platform: 'twitter',
+    category: 'Twitter Engagement',
+    ratePer1kBDT: 90,
+    ratePer1kUSD: 0.74,
+    minQty: 50,
+    maxQty: 20000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Win public Twitter poll competitions with selected vote choices.'
+  },
+  {
+    id: 'tw-006',
+    providerServiceId: 36573,
+    name: 'Twitter / X Custom Quote Tweets & Replies',
+    platform: 'twitter',
+    category: 'Twitter Engagement',
+    ratePer1kBDT: 850,
+    ratePer1kUSD: 6.90,
+    minQty: 10,
+    maxQty: 500,
+    speed: 'Natural Drip',
+    refillDays: 30,
+    badges: ['high-retention'],
+    description: 'Relevant quote retweets with custom bullish or informative text.'
+  },
+  {
+    id: 'tw-007',
+    providerServiceId: 27269,
+    name: 'Twitter / X Tweet Bookmarks & Share Clicks',
+    platform: 'twitter',
+    category: 'Twitter Engagement',
+    ratePer1kBDT: 35,
+    ratePer1kUSD: 0.28,
+    minQty: 100,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Bookmarks are heavily weighted by the X algorithm for For You recommendations.'
+  },
 
   // ============================================================
-  // SPOTIFY SERVICES (Target Keywords: buy spotify plays, spotify monthly listeners)
+  // SPOTIFY SERVICES (6 Services - Royalty Eligible Streams & Followers)
   // ============================================================
   {
     id: 'sp-001',
@@ -694,9 +1279,54 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     badges: ['non-drop'],
     description: 'Permanent followers for artist and curator profiles.'
   },
+  {
+    id: 'sp-004',
+    providerServiceId: 36642,
+    name: 'Spotify Playlist Followers & Curated Saves',
+    platform: 'spotify',
+    category: 'Spotify Followers',
+    ratePer1kBDT: 85,
+    ratePer1kUSD: 0.70,
+    minQty: 100,
+    maxQty: 50000,
+    speed: '2k / Day',
+    refillDays: 30,
+    badges: ['non-drop'],
+    description: 'Boost public playlist authority and search placement on Spotify.'
+  },
+  {
+    id: 'sp-005',
+    providerServiceId: 27269,
+    name: 'Spotify USA / UK Premium Streams [High Royalty Yield]',
+    platform: 'spotify',
+    category: 'Spotify Music',
+    ratePer1kBDT: 240,
+    ratePer1kUSD: 1.95,
+    minQty: 500,
+    maxQty: 500000,
+    speed: '5k / Day',
+    refillDays: 30,
+    badges: ['high-retention', 'non-drop'],
+    description: 'Geo-targeted streams from Tier-1 Western listeners with highest payout rates.'
+  },
+  {
+    id: 'sp-006',
+    providerServiceId: 27269,
+    name: 'Spotify Track Saves & User Library Adds',
+    platform: 'spotify',
+    category: 'Spotify Music',
+    ratePer1kBDT: 75,
+    ratePer1kUSD: 0.62,
+    minQty: 100,
+    maxQty: 50000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant', 'high-retention'],
+    description: 'Signals strong listener loyalty to Spotify Release Radar algorithms.'
+  },
 
   // ============================================================
-  // LINKEDIN SERVICES (Target Keywords: buy linkedin connections, linkedin followers)
+  // LINKEDIN SERVICES (6 Services - Corporate, Connections & B2B)
   // ============================================================
   {
     id: 'li-001',
@@ -715,7 +1345,8 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'li-002',
-    name: 'LinkedIn Post Likes & Celebrates Mix',
+    providerServiceId: 36643,
+    name: 'LinkedIn Post Likes & Celebrates Mix [Executive Boost]',
     platform: 'linkedin',
     category: 'LinkedIn Engagement',
     ratePer1kBDT: 450,
@@ -726,6 +1357,66 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
     refillDays: 30,
     badges: ['instant', 'non-drop'],
     description: 'Boost executive and company posts into the LinkedIn algorithmic feed.'
+  },
+  {
+    id: 'li-003',
+    providerServiceId: 31702,
+    name: 'LinkedIn Personal Profile Connections & Followers',
+    platform: 'linkedin',
+    category: 'LinkedIn Growth',
+    ratePer1kBDT: 650,
+    ratePer1kUSD: 5.30,
+    minQty: 100,
+    maxQty: 25000,
+    speed: '500 / Day (Safe)',
+    refillDays: 30,
+    badges: ['non-drop', 'auto-refill'],
+    description: 'Build 500+ connection status and personal brand authority on LinkedIn.'
+  },
+  {
+    id: 'li-004',
+    providerServiceId: 36643,
+    name: 'LinkedIn Post Shares & Reposts (Business Network Feeds)',
+    platform: 'linkedin',
+    category: 'LinkedIn Engagement',
+    ratePer1kBDT: 550,
+    ratePer1kUSD: 4.50,
+    minQty: 25,
+    maxQty: 5000,
+    speed: 'Instant',
+    refillDays: 30,
+    badges: ['instant', 'non-drop'],
+    description: 'Widespread reposts to reach venture capitalists, HR executives, and corporate clients.'
+  },
+  {
+    id: 'li-005',
+    providerServiceId: 36573,
+    name: 'LinkedIn Custom Professional Comments [Insightful & B2B]',
+    platform: 'linkedin',
+    category: 'LinkedIn Engagement',
+    ratePer1kBDT: 950,
+    ratePer1kUSD: 7.80,
+    minQty: 10,
+    maxQty: 500,
+    speed: 'Natural Drip',
+    refillDays: 30,
+    badges: ['high-retention'],
+    description: 'Thoughtful industry comments that spark high-value discussions.'
+  },
+  {
+    id: 'li-006',
+    providerServiceId: 27269,
+    name: 'LinkedIn Article & Newsletter Reads / Views',
+    platform: 'linkedin',
+    category: 'LinkedIn Engagement',
+    ratePer1kBDT: 180,
+    ratePer1kUSD: 1.45,
+    minQty: 500,
+    maxQty: 50000,
+    speed: '5k / Day',
+    refillDays: 0,
+    badges: ['instant', 'high-retention'],
+    description: 'Elevate subscriber counts and read statistics on LinkedIn company newsletters.'
   }
 ];
 

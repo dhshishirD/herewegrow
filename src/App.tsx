@@ -10,6 +10,7 @@ import { WalletModal } from './components/WalletModal';
 import { OrderModal } from './components/OrderModal';
 import { ProviderSettingsModal } from './components/ProviderSettingsModal';
 import { AdminDashboardModal } from './components/AdminDashboardModal';
+import { OrderConfirmationModal } from './components/OrderConfirmationModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
 import confetti from 'canvas-confetti';
@@ -29,6 +30,8 @@ export function App() {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isProviderModalOpen, setIsProviderModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [confirmedOrder, setConfirmedOrder] = useState<SmmOrder | null>(null);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [orderModalState, setOrderModalState] = useState<{
     isOpen: boolean;
     service: SmmService | null;
@@ -89,6 +92,8 @@ export function App() {
             localStorage.removeItem('hwg_pending_order');
             if (res.order) {
               setOrders(prev => [res.order!, ...prev]);
+              setConfirmedOrder(res.order);
+              setIsConfirmationModalOpen(true);
               setActiveTab('orders');
               try {
                 confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
@@ -153,6 +158,8 @@ export function App() {
   const handleOrderPlaced = (newOrder: SmmOrder, updatedWallet: UserWallet) => {
     setOrders((prev) => [newOrder, ...prev]);
     setWallet(updatedWallet);
+    setConfirmedOrder(newOrder);
+    setIsConfirmationModalOpen(true);
   };
 
   const handleSelectServiceTabFromTool = (platformId?: string) => {
@@ -317,6 +324,19 @@ export function App() {
       <ProviderSettingsModal
         isOpen={isProviderModalOpen}
         onClose={() => setIsProviderModalOpen(false)}
+      />
+
+      {/* Digital Receipt & Order Confirmation Modal */}
+      <OrderConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onClose={() => setIsConfirmationModalOpen(false)}
+        order={confirmedOrder}
+        onNavigateToTracker={() => {
+          setIsConfirmationModalOpen(false);
+          setActiveCategorySlug(null);
+          setActiveTab('orders');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
 
       {/* Comprehensive Executive Admin Center */}

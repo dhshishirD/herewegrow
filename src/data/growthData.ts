@@ -175,6 +175,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'fb-001',
+    providerServiceId: 8999,
     name: 'Facebook Page Likes & Followers [100% BD Bengali Real Targeted]',
     platform: 'facebook',
     category: 'Facebook Page Growth',
@@ -190,6 +191,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-002',
+    providerServiceId: 1097,
     name: 'Facebook Profile Followers [Real Bangladesh Profiles]',
     platform: 'facebook',
     category: 'Facebook Profile Growth',
@@ -204,6 +206,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-003',
+    providerServiceId: 8730,
     name: 'Facebook Post Reactions [Like + Love + Care Mix] - Instant Auto',
     platform: 'facebook',
     category: 'Facebook Engagement',
@@ -218,6 +221,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-004',
+    providerServiceId: 8730,
     name: 'Facebook Love Reactions ❤️ [Instant Delivery 0-5 Mins]',
     platform: 'facebook',
     category: 'Facebook Engagement',
@@ -232,6 +236,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-005',
+    providerServiceId: 20,
     name: 'Facebook Video Views / Reels Views [High Watch Time Monetization]',
     platform: 'facebook',
     category: 'Facebook Video',
@@ -246,6 +251,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-006',
+    providerServiceId: 20,
     name: 'Facebook In-Stream Ads 60,000 Minutes Watch Time Package',
     platform: 'facebook',
     category: 'Facebook Monetization',
@@ -260,6 +266,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-007',
+    providerServiceId: 1097,
     name: 'Facebook Group Members [Real Public & Private Groups]',
     platform: 'facebook',
     category: 'Facebook Community',
@@ -274,6 +281,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'fb-008',
+    providerServiceId: 8730,
     name: 'Facebook Custom Bengali Comments [5-Star F-Commerce Reviews]',
     platform: 'facebook',
     category: 'Facebook Engagement',
@@ -292,6 +300,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'yt-001',
+    providerServiceId: 3389,
     name: 'YouTube 4,000 Hours Monetization Watch Time [YPP AdSense Safe]',
     platform: 'youtube',
     category: 'YouTube Monetization',
@@ -307,6 +316,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'yt-002',
+    providerServiceId: 3389,
     name: 'YouTube Permanent Subscribers [Non-Drop & Real Channel Profiles]',
     platform: 'youtube',
     category: 'YouTube Growth',
@@ -321,6 +331,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'yt-003',
+    providerServiceId: 5944,
     name: 'YouTube High-Retention Organic Views [Suggested Video Algorithm]',
     platform: 'youtube',
     category: 'YouTube Video Views',
@@ -335,6 +346,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'yt-004',
+    providerServiceId: 5944,
     name: 'YouTube Shorts Views [Viral Algorithm Shelf Booster]',
     platform: 'youtube',
     category: 'YouTube Shorts',
@@ -349,6 +361,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'yt-005',
+    providerServiceId: 3588,
     name: 'YouTube Video Likes [Instant Delivery & Non-Drop]',
     platform: 'youtube',
     category: 'YouTube Engagement',
@@ -363,6 +376,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'yt-006',
+    providerServiceId: 3389,
     name: 'YouTube Custom Positive Comments [English & Bengali]',
     platform: 'youtube',
     category: 'YouTube Engagement',
@@ -377,6 +391,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'yt-007',
+    providerServiceId: 5944,
     name: 'YouTube Live Stream Concurrent Viewers [1 Hour Duration]',
     platform: 'youtube',
     category: 'YouTube Live',
@@ -395,6 +410,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'ig-001',
+    providerServiceId: 10349,
     name: 'Instagram Premium Followers [Guaranteed Non-Drop with Auto-Refill]',
     platform: 'instagram',
     category: 'Instagram Followers',
@@ -409,6 +425,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'ig-002',
+    providerServiceId: 3588,
     name: 'Instagram Post Likes [Instant Delivery within 60 Seconds]',
     platform: 'instagram',
     category: 'Instagram Likes',
@@ -423,6 +440,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'ig-003',
+    providerServiceId: 8526,
     name: 'Instagram Reels Views + Reach & Impressions Boost',
     platform: 'instagram',
     category: 'Instagram Reels',
@@ -437,6 +455,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'ig-004',
+    providerServiceId: 8526,
     name: 'Instagram Saves & Shares Mix [Explore Page Trigger]',
     platform: 'instagram',
     category: 'Instagram Engagement',
@@ -451,6 +470,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'ig-005',
+    providerServiceId: 3588,
     name: 'Instagram Custom Comments [Real Looking Verified Style]',
     platform: 'instagram',
     category: 'Instagram Engagement',
@@ -465,6 +485,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'ig-006',
+    providerServiceId: 8526,
     name: 'Instagram Story Views [All Active Stories]',
     platform: 'instagram',
     category: 'Instagram Stories',
@@ -483,6 +504,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'tt-001',
+    providerServiceId: 8526,
     name: 'TikTok Video Views [Ultra-Speed Instant Server]',
     platform: 'tiktok',
     category: 'TikTok Views',
@@ -497,6 +519,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tt-002',
+    providerServiceId: 10338,
     name: 'TikTok Real Followers [Live Stream & Creator Fund Eligible]',
     platform: 'tiktok',
     category: 'TikTok Followers',
@@ -511,6 +534,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tt-003',
+    providerServiceId: 8101,
     name: 'TikTok Likes + Shares + Saves [Viral FYP Booster]',
     platform: 'tiktok',
     category: 'TikTok Engagement',
@@ -525,6 +549,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tt-004',
+    providerServiceId: 8526,
     name: 'TikTok Video Shares & Bookmarks [Key Viral Signal]',
     platform: 'tiktok',
     category: 'TikTok Engagement',
@@ -543,6 +568,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'tg-001',
+    providerServiceId: 7102,
     name: 'Telegram Channel / Group Members [0% Drop Guaranteed]',
     platform: 'telegram',
     category: 'Telegram Growth',
@@ -557,6 +583,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tg-002',
+    providerServiceId: 7102,
     name: 'Telegram Post Views [Instant Auto-Delivery on 1 Post]',
     platform: 'telegram',
     category: 'Telegram Views',
@@ -571,6 +598,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tg-003',
+    providerServiceId: 7102,
     name: 'Telegram Auto-Views [Last 20 Posts Multi-View]',
     platform: 'telegram',
     category: 'Telegram Views',
@@ -589,6 +617,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'tw-001',
+    providerServiceId: 10176,
     name: 'Twitter / X Real Followers [Crypto & Tech Niche Profiles]',
     platform: 'twitter',
     category: 'Twitter Followers',
@@ -603,6 +632,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'tw-002',
+    providerServiceId: 10176,
     name: 'Twitter / X Retweets & Likes [Instant Algorithm Boost]',
     platform: 'twitter',
     category: 'Twitter Engagement',
@@ -621,6 +651,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'sp-001',
+    providerServiceId: 1687,
     name: 'Spotify Track Plays [Royalty Eligible & High Retention]',
     platform: 'spotify',
     category: 'Spotify Music',
@@ -635,6 +666,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'sp-002',
+    providerServiceId: 1687,
     name: 'Spotify Monthly Listeners [Global Algorithm Distribution]',
     platform: 'spotify',
     category: 'Spotify Music',
@@ -649,6 +681,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
   {
     id: 'sp-003',
+    providerServiceId: 1687,
     name: 'Spotify Artist Followers [Permanent Non-Drop]',
     platform: 'spotify',
     category: 'Spotify Followers',
@@ -667,6 +700,7 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
   {
     id: 'li-001',
+    providerServiceId: 10176,
     name: 'LinkedIn Company Page Followers [B2B High Authority]',
     platform: 'linkedin',
     category: 'LinkedIn Growth',

@@ -22,10 +22,13 @@ import {
   Copy,
   Check,
   Flame,
-  CheckCircle2
+  CheckCircle2,
+  DollarSign,
+  Tag,
+  Filter
 } from 'lucide-react';
 import { PLATFORMS_META, SMM_SERVICES_CATALOG } from '../data/growthData';
-import type { SmmService, SocialPlatform } from '../types';
+import type { SmmService, SocialPlatform, ServiceBadge } from '../types';
 
 interface GrowthCatalogSectionProps {
   currency: 'BDT' | 'USD';
@@ -34,14 +37,31 @@ interface GrowthCatalogSectionProps {
 }
 
 const CATEGORY_TABS = [
-  { id: 'all', label: 'All Categories' },
-  { id: 'followers', label: 'Followers & Members' },
-  { id: 'views', label: 'Views & Watch Time' },
-  { id: 'likes', label: 'Likes & Reactions' },
-  { id: 'monetization', label: 'Monetization & YPP' },
-  { id: 'live', label: 'Live Stream Viewers' },
-  { id: 'comments', label: 'Custom Comments & Reviews' },
+  { id: 'all', label: 'All Services', icon: Layers },
+  { id: 'followers', label: 'Followers & Members', icon: Users },
+  { id: 'views', label: 'Views & Watch Time', icon: Play },
+  { id: 'likes', label: 'Likes & Reactions', icon: Zap },
+  { id: 'monetization', label: 'Monetization & YPP', icon: Flame },
+  { id: 'live', label: 'Live Stream Viewers', icon: Radio },
+  { id: 'comments', label: 'Comments & Reviews', icon: Sparkles },
 ] as const;
+
+const PRICE_TIERS = [
+  { id: 'all', label: 'All Prices' },
+  { id: 'budget', label: '💰 Budget / Cheap (<৳100)', maxBDT: 100 },
+  { id: 'standard', label: '⚡ Standard (৳100 - ৳300)', minBDT: 100, maxBDT: 300 },
+  { id: 'premium', label: '👑 High Quality (৳300 - ৳800)', minBDT: 300, maxBDT: 800 },
+  { id: 'vip', label: '💎 VIP / Enterprise (৳800+)', minBDT: 800 },
+] as const;
+
+const QUALITY_BADGES: { id: ServiceBadge | 'all'; label: string; icon?: string }[] = [
+  { id: 'all', label: 'All Qualities' },
+  { id: 'bengali-target', label: '🇧🇩 BD Targeted' },
+  { id: 'non-drop', label: '🛡️ Non-Drop' },
+  { id: 'auto-refill', label: '🔄 Auto-Refill' },
+  { id: 'instant', label: '⚡ Instant 60s' },
+  { id: 'best-seller', label: '⭐ Best Seller' },
+];
 
 export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
   currency,
@@ -50,10 +70,13 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
 }) => {
   const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform>(initialPlatform);
   const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('all');
+  const [selectedPriceTier, setSelectedPriceTier] = useState<string>('all');
+  const [selectedQualityBadge, setSelectedQualityBadge] = useState<ServiceBadge | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'popular' | 'price-asc' | 'price-desc' | 'speed'>('popular');
+  const [sortBy, setSortBy] = useState<'popular' | 'price-asc' | 'price-desc' | 'speed' | 'refill'>('popular');
   const [visibleCount, setVisibleCount] = useState<number>(24);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
   const platformIcons: Record<string, React.ElementType> = {
     all: Sparkles,
@@ -76,40 +99,59 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
     setTimeout(() => setCopiedId(null), 1800);
   };
 
+  // Count services per platform
+  const platformCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: SMM_SERVICES_CATALOG.length };
+    SMM_SERVICES_CATALOG.forEach(s => {
+      counts[s.platform] = (counts[s.platform] || 0) + 1;
+    });
+    return counts;
+  }, []);
+
   const filteredServices = useMemo(() => {
     return SMM_SERVICES_CATALOG.filter((service) => {
-      // Platform filter
+      // 1. Platform filter
       const matchesPlatform = selectedPlatform === 'all' || service.platform === selectedPlatform;
       
-      // Category sub-filter
+      // 2. Category sub-filter
       let matchesCategory = true;
       if (selectedCategoryTab === 'followers') {
         matchesCategory = service.category.toLowerCase().includes('follower') || 
                           service.category.toLowerCase().includes('growth') ||
                           service.category.toLowerCase().includes('member') ||
+                          service.category.toLowerCase().includes('connection') ||
                           service.name.toLowerCase().includes('follower') ||
+                          service.name.toLowerCase().includes('subscriber') ||
                           service.name.toLowerCase().includes('member');
       } else if (selectedCategoryTab === 'views') {
         matchesCategory = service.category.toLowerCase().includes('view') || 
                           service.category.toLowerCase().includes('watch') ||
                           service.category.toLowerCase().includes('video') ||
+                          service.category.toLowerCase().includes('traffic') ||
+                          service.category.toLowerCase().includes('music') ||
                           service.name.toLowerCase().includes('view') ||
+                          service.name.toLowerCase().includes('play') ||
+                          service.name.toLowerCase().includes('stream') ||
                           service.name.toLowerCase().includes('watch');
       } else if (selectedCategoryTab === 'likes') {
         matchesCategory = service.category.toLowerCase().includes('like') || 
                           service.category.toLowerCase().includes('reaction') ||
                           service.category.toLowerCase().includes('engagement') ||
                           service.name.toLowerCase().includes('like') ||
-                          service.name.toLowerCase().includes('reaction');
+                          service.name.toLowerCase().includes('reaction') ||
+                          service.name.toLowerCase().includes('retweet') ||
+                          service.name.toLowerCase().includes('upvote');
       } else if (selectedCategoryTab === 'monetization') {
         matchesCategory = service.category.toLowerCase().includes('monetization') ||
                           service.name.toLowerCase().includes('monetization') ||
                           service.name.toLowerCase().includes('4,000 hours') ||
                           service.name.toLowerCase().includes('60,000 minutes') ||
-                          service.name.toLowerCase().includes('in-stream');
+                          service.name.toLowerCase().includes('in-stream') ||
+                          service.name.toLowerCase().includes('ypp');
       } else if (selectedCategoryTab === 'live') {
         matchesCategory = service.category.toLowerCase().includes('live') ||
-                          service.name.toLowerCase().includes('live');
+                          service.name.toLowerCase().includes('live') ||
+                          service.name.toLowerCase().includes('spaces');
       } else if (selectedCategoryTab === 'comments') {
         matchesCategory = service.category.toLowerCase().includes('comment') ||
                           service.category.toLowerCase().includes('review') ||
@@ -117,7 +159,26 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
                           service.name.toLowerCase().includes('review');
       }
 
-      // Search keyword filter
+      // 3. Price Tier Filter
+      let matchesPrice = true;
+      const bdtRate = service.ratePer1kBDT;
+      if (selectedPriceTier === 'budget') {
+        matchesPrice = bdtRate < 100;
+      } else if (selectedPriceTier === 'standard') {
+        matchesPrice = bdtRate >= 100 && bdtRate <= 300;
+      } else if (selectedPriceTier === 'premium') {
+        matchesPrice = bdtRate > 300 && bdtRate <= 800;
+      } else if (selectedPriceTier === 'vip') {
+        matchesPrice = bdtRate > 800;
+      }
+
+      // 4. Quality Badge Filter
+      let matchesQuality = true;
+      if (selectedQualityBadge !== 'all') {
+        matchesQuality = service.badges.includes(selectedQualityBadge);
+      }
+
+      // 5. Search keyword filter
       const query = searchQuery.trim().toLowerCase();
       const matchesSearch = !query || 
         service.name.toLowerCase().includes(query) ||
@@ -126,7 +187,7 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
         service.id.toLowerCase().includes(query) ||
         (service.providerServiceId && String(service.providerServiceId).includes(query));
 
-      return matchesPlatform && matchesCategory && matchesSearch;
+      return matchesPlatform && matchesCategory && matchesPrice && matchesQuality && matchesSearch;
     }).sort((a, b) => {
       if (sortBy === 'price-asc') {
         const rateA = currency === 'BDT' ? a.ratePer1kBDT : a.ratePer1kUSD;
@@ -143,14 +204,34 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
         const bInstant = b.badges.includes('instant') ? 1 : 0;
         return bInstant - aInstant;
       }
+      if (sortBy === 'refill') {
+        return b.refillDays - a.refillDays;
+      }
       // Default: popular / best seller first
-      const aScore = (a.badges.includes('best-seller') ? 2 : 0) + (a.badges.includes('bengali-target') ? 1 : 0);
-      const bScore = (b.badges.includes('best-seller') ? 2 : 0) + (b.badges.includes('bengali-target') ? 1 : 0);
+      const aScore = (a.badges.includes('best-seller') ? 3 : 0) + (a.badges.includes('bengali-target') ? 2 : 0) + (a.badges.includes('auto-refill') ? 1 : 0);
+      const bScore = (b.badges.includes('best-seller') ? 3 : 0) + (b.badges.includes('bengali-target') ? 2 : 0) + (b.badges.includes('auto-refill') ? 1 : 0);
       return bScore - aScore;
     });
-  }, [selectedPlatform, selectedCategoryTab, searchQuery, sortBy, currency]);
+  }, [selectedPlatform, selectedCategoryTab, selectedPriceTier, selectedQualityBadge, searchQuery, sortBy, currency]);
 
   const visibleServices = filteredServices.slice(0, visibleCount);
+
+  const hasActiveFilters = 
+    selectedPlatform !== 'all' || 
+    selectedCategoryTab !== 'all' || 
+    selectedPriceTier !== 'all' || 
+    selectedQualityBadge !== 'all' || 
+    Boolean(searchQuery.trim());
+
+  const resetAllFilters = () => {
+    setSelectedPlatform('all');
+    setSelectedCategoryTab('all');
+    setSelectedPriceTier('all');
+    setSelectedQualityBadge('all');
+    setSearchQuery('');
+    setSortBy('popular');
+    setVisibleCount(24);
+  };
 
   return (
     <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300">
@@ -160,35 +241,36 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-3 border border-indigo-200/60 shadow-xs">
             <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>High-Velocity Wholesale SMM Fulfillment Engine</span>
+            <span>High-Velocity Wholesale SMM Marketplace</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight font-serif">
             Verified Growth Services
           </h2>
           <p className="mt-1 text-slate-600 text-sm max-w-2xl">
-            Over 110+ enterprise-grade wholesale servers with guaranteed non-drop protection, real audience targeting, and automated queue delivery.
+            Choose from <strong className="text-slate-900 font-bold">{SMM_SERVICES_CATALOG.length}+</strong> wholesale services with granular filtering across price tiers (budget to VIP), guarantees, delivery speeds, and audience targeting.
           </p>
         </div>
 
         {/* Search & Sort Controls */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          
           {/* Search Input */}
-          <div className="relative flex-1 sm:w-80">
+          <div className="relative flex-1 sm:w-72">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search services, likes, views, BD..."
+              placeholder="Search followers, cheap, views, BD..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
                 setVisibleCount(24);
               }}
-              className="w-full bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 focus:border-indigo-500 rounded-2xl pl-10 pr-9 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-xs"
+              className="w-full bg-slate-50 hover:bg-slate-100/70 focus:bg-white border border-slate-200 focus:border-indigo-500 rounded-2xl pl-10 pr-9 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-xs"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -200,23 +282,38 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full appearance-none bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold rounded-2xl pl-3.5 pr-8 py-2.5 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-xs"
+              className="w-full appearance-none bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold rounded-2xl pl-3.5 pr-8 py-2.5 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-xs"
             >
-              <option value="popular">⭐ Most Popular / Best Sellers</option>
-              <option value="price-asc">💰 Price: Low to High</option>
-              <option value="price-desc">💎 Price: High to Low</option>
+              <option value="popular">⭐ Most Popular</option>
+              <option value="price-asc">💰 Price: Low to High (Cheapest)</option>
+              <option value="price-desc">💎 Price: High to Low (Premium)</option>
               <option value="speed">⚡ Fastest Instant Start</option>
+              <option value="refill">🛡️ Longest Refill Guarantee</option>
             </select>
             <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
+
+          {/* Toggle More Filters Button (Mobile) */}
+          <button
+            onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
+            className={`sm:hidden flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-2xl text-xs font-bold border transition-all cursor-pointer ${
+              isFilterPanelOpen || selectedPriceTier !== 'all' || selectedQualityBadge !== 'all'
+                ? 'bg-indigo-50 border-indigo-200 text-indigo-900'
+                : 'bg-white border-slate-200 text-slate-700'
+            }`}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span>Filter Tiers</span>
+          </button>
         </div>
       </div>
 
-      {/* Platform Filter Buttons */}
+      {/* Primary Platform Horizontal Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4 no-scrollbar">
         {PLATFORMS_META.map((plat) => {
           const Icon = platformIcons[plat.id] || Layers;
           const isSelected = selectedPlatform === plat.id;
+          const count = platformCounts[plat.id] || 0;
           return (
             <button
               key={plat.id}
@@ -232,51 +329,125 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
             >
               <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-indigo-400' : 'text-slate-500'}`} />
               <span>{plat.name}</span>
+              <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                isSelected ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-500'
+              }`}>
+                {count}
+              </span>
             </button>
           );
         })}
       </div>
 
-      {/* Category Sub-Tabs & Active Results Counter */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-6 mb-6 border-b border-slate-100">
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-          {CATEGORY_TABS.map((tab) => {
-            const isActive = selectedCategoryTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setSelectedCategoryTab(tab.id);
-                  setVisibleCount(24);
-                }}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold transition-all whitespace-nowrap cursor-pointer ${
-                  isActive
-                    ? 'bg-indigo-100 text-indigo-900 font-bold border border-indigo-200'
-                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/60'
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
+      {/* Category Sub-Tabs Row */}
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 mb-4">
+        {CATEGORY_TABS.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = selectedCategoryTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setSelectedCategoryTab(tab.id);
+                setVisibleCount(24);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                isActive
+                  ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/60'
+              }`}
+            >
+              <Icon className={`w-3 h-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Multi-Tier Filter Bar: Price Bracket + Quality Badge */}
+      <div className={`p-4 rounded-2xl bg-slate-50/90 border border-slate-200 mb-6 space-y-3 ${isFilterPanelOpen ? 'block' : 'hidden sm:block'}`}>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          {/* Price Range Filters */}
+          <div className="space-y-1.5">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <DollarSign className="w-3 h-3 text-emerald-600" />
+              <span>Price Bracket:</span>
+            </span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {PRICE_TIERS.map((tier) => {
+                const isSelected = selectedPriceTier === tier.id;
+                return (
+                  <button
+                    key={tier.id}
+                    onClick={() => {
+                      setSelectedPriceTier(tier.id);
+                      setVisibleCount(24);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-emerald-600 text-white shadow-2xs'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    }`}
+                  >
+                    {tier.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Quality Badges */}
+          <div className="space-y-1.5">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-indigo-600" />
+              <span>Guarantee & Quality:</span>
+            </span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {QUALITY_BADGES.map((badge) => {
+                const isSelected = selectedQualityBadge === badge.id;
+                return (
+                  <button
+                    key={badge.id}
+                    onClick={() => {
+                      setSelectedQualityBadge(badge.id);
+                      setVisibleCount(24);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      isSelected
+                        ? 'bg-slate-900 text-white shadow-2xs'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80'
+                    }`}
+                  >
+                    {badge.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Active Results & Quick Filter Chips */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-6 border-b border-slate-100 text-xs">
+        <div className="flex items-center gap-2 text-slate-600 font-medium">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+          <span>Showing <strong className="text-slate-950 font-bold">{filteredServices.length}</strong> matching growth services</span>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-          <span>Showing <strong className="text-slate-900 font-bold">{filteredServices.length}</strong> verified services</span>
-          {(searchQuery || selectedPlatform !== 'all' || selectedCategoryTab !== 'all') && (
+        {hasActiveFilters && (
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-slate-400">Filters active:</span>
             <button
-              onClick={() => {
-                setSelectedPlatform('all');
-                setSelectedCategoryTab('all');
-                setSearchQuery('');
-              }}
-              className="text-xs text-indigo-600 hover:underline font-bold ml-1 cursor-pointer"
+              onClick={resetAllFilters}
+              className="text-xs text-indigo-600 hover:text-indigo-800 font-bold hover:underline flex items-center gap-1 cursor-pointer bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200"
             >
-              Reset Filters
+              <X className="w-3 h-3" />
+              <span>Reset All Filters</span>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Services Grid */}
@@ -285,19 +456,15 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
           <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mx-auto mb-3 shadow-xs">
             <Search className="w-6 h-6 text-slate-400" />
           </div>
-          <h3 className="text-base font-bold text-slate-900">No matching services found</h3>
+          <h3 className="text-base font-bold text-slate-900 font-serif">No services match your active filters</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Try adjusting your search keyword, resetting category filters, or selecting a different platform.
+            Try adjusting your price bracket, picking a different category, or resetting all filters.
           </p>
           <button
-            onClick={() => {
-              setSelectedPlatform('all');
-              setSelectedCategoryTab('all');
-              setSearchQuery('');
-            }}
-            className="mt-4 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all cursor-pointer"
+            onClick={resetAllFilters}
+            className="mt-4 px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all cursor-pointer shadow-xs"
           >
-            Clear All Filters
+            Reset Filters & Show All {SMM_SERVICES_CATALOG.length} Services
           </button>
         </div>
       ) : (
@@ -305,18 +472,26 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
           {visibleServices.map((service) => {
             const price = currency === 'BDT' ? `৳${service.ratePer1kBDT.toLocaleString()}` : `$${service.ratePer1kUSD.toFixed(2)}`;
             const isCopied = copiedId === service.id;
+            const isBudget = service.ratePer1kBDT < 100;
 
             return (
               <div
                 key={service.id}
-                className="group relative bg-white border border-slate-200/90 hover:border-indigo-300/80 rounded-3xl p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="group relative bg-white border border-slate-200/90 hover:border-indigo-300 rounded-3xl p-6 flex flex-col justify-between shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div>
                   {/* Top Bar: Category Pill & Service ID */}
                   <div className="flex items-center justify-between gap-2 mb-3.5">
-                    <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200/80">
-                      {service.category}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200/80">
+                        {service.category}
+                      </span>
+                      {isBudget && (
+                        <span className="text-[9px] uppercase font-black px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300 font-mono">
+                          ⚡ Budget Tier
+                        </span>
+                      )}
+                    </div>
                     
                     <button
                       onClick={(e) => handleCopyId(service.id, e)}

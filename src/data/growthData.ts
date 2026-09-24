@@ -173,8 +173,23 @@ export const CURATED_GROWTH_BUNDLES: GrowthBundle[] = [
 
 export const SMM_SERVICES_CATALOG: SmmService[] = [
   // ============================================================
-  // FACEBOOK SERVICES (16 Services)
+  // FACEBOOK SERVICES (Budget to VIP Tiers)
   // ============================================================
+  {
+    id: 'fb-000',
+    providerServiceId: 29359,
+    name: 'Facebook Profile Followers [Ultra-Budget Fast Server - Lowest Rate]',
+    platform: 'facebook',
+    category: 'Facebook Profile Growth',
+    ratePer1kBDT: 95,
+    ratePer1kUSD: 0.78,
+    minQty: 100,
+    maxQty: 500000,
+    speed: '10k / Day',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Cheapest economy profile followers for high volume count at the lowest wholesale rate.'
+  },
   {
     id: 'fb-001',
     providerServiceId: 29351,
@@ -418,8 +433,23 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
 
   // ============================================================
-  // YOUTUBE SERVICES (16 Services)
+  // YOUTUBE SERVICES (Budget to VIP Tiers)
   // ============================================================
+  {
+    id: 'yt-000',
+    providerServiceId: 27905,
+    name: 'YouTube Subscribers [Economy Server - Lowest Price]',
+    platform: 'youtube',
+    category: 'YouTube Growth',
+    ratePer1kBDT: 550,
+    ratePer1kUSD: 4.50,
+    minQty: 50,
+    maxQty: 25000,
+    speed: '100 - 300 / Day',
+    refillDays: 30,
+    badges: ['instant'],
+    description: 'Budget-friendly subscriber growth server for new channels and kickstarter creators.'
+  },
   {
     id: 'yt-001',
     providerServiceId: 31705,
@@ -663,8 +693,23 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
 
   // ============================================================
-  // INSTAGRAM SERVICES (16 Services)
+  // INSTAGRAM SERVICES (Budget to VIP Tiers)
   // ============================================================
+  {
+    id: 'ig-000',
+    providerServiceId: 36642,
+    name: 'Instagram Followers [Ultra-Budget Economy Tier - Lowest Rate]',
+    platform: 'instagram',
+    category: 'Instagram Followers',
+    ratePer1kBDT: 65,
+    ratePer1kUSD: 0.54,
+    minQty: 100,
+    maxQty: 500000,
+    speed: '20k / Day',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Absolute cheapest wholesale rate for high volume follower count on a budget.'
+  },
   {
     id: 'ig-001',
     providerServiceId: 36642,
@@ -907,8 +952,23 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   },
 
   // ============================================================
-  // TIKTOK SERVICES (15 Services)
+  // TIKTOK SERVICES (Budget to VIP Tiers)
   // ============================================================
+  {
+    id: 'tt-000',
+    providerServiceId: 31874,
+    name: 'TikTok Followers [Ultra-Budget Fast Server - Lowest Rate]',
+    platform: 'tiktok',
+    category: 'TikTok Followers',
+    ratePer1kBDT: 110,
+    ratePer1kUSD: 0.90,
+    minQty: 100,
+    maxQty: 100000,
+    speed: '10k / Day',
+    refillDays: 0,
+    badges: ['instant'],
+    description: 'Cheapest economy followers to quickly raise account count on TikTok.'
+  },
   {
     id: 'tt-001',
     providerServiceId: 27269,

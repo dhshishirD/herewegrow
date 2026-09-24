@@ -130,6 +130,16 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
   const erResult = calculateEngagementRate(erFollowers, erLikes, erComments, erShares);
   const ytEarnings = calculateYouTubeEarnings(ytDailyViews, ytCpm);
 
+  const toolIcons: Record<string, React.ElementType> = {
+    'tiktok-downloader': Video,
+    'youtube-tags': Tag,
+    'engagement-calculator': BarChart2,
+    'hashtag-generator': Hash,
+    'youtube-earnings': DollarSign,
+    'bio-fonts': Type,
+    'post-preview': Eye
+  };
+
   return (
     <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
@@ -139,7 +149,7 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
           <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
           <span>100% Free Creator Suite • Zero Sign-Up Required</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight font-serif">
           Viral Social Media Creator Tools
         </h2>
         <p className="mt-3 text-slate-600 text-sm sm:text-base font-normal">
@@ -150,6 +160,7 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
       {/* Sleek Tool Navigation Tabs */}
       <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar">
         {VIRAL_TOOLS_META.map((tool) => {
+          const Icon = toolIcons[tool.id] || Sparkles;
           const isActive = activeTool === tool.id;
           return (
             <button
@@ -158,11 +169,11 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
               className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                 isActive
                   ? 'bg-slate-950 text-white shadow-xs'
-                  : 'bg-white text-slate-600 hover:text-slate-950 hover:bg-slate-100 border border-slate-200/80 shadow-2xs'
+                  : 'bg-white text-slate-700 hover:text-slate-950 hover:bg-slate-100 border border-slate-200/80 shadow-2xs'
               }`}
             >
-              <span>{tool.icon}</span>
-              <span>{tool.name}</span>
+              <Icon className="w-3.5 h-3.5" />
+              <span>{tool.title}</span>
             </button>
           );
         })}
@@ -517,7 +528,7 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
         {/* ============================================================ */}
         {/* TOOL 5: YOUTUBE EARNINGS & ADSENSE CALCULATOR */}
         {/* ============================================================ */}
-        {activeTool === 'earnings-calculator' && (
+        {activeTool === 'youtube-earnings' && (
           <div className="max-w-3xl mx-auto space-y-8">
             <div className="text-center space-y-1">
               <h3 className="text-2xl font-extrabold text-slate-950">YouTube Creator AdSense & Revenue Projector</h3>
@@ -614,7 +625,7 @@ export const FreeToolsSection: React.FC<FreeToolsSectionProps> = ({
         {/* ============================================================ */}
         {/* TOOL 7: POST PREVIEWER */}
         {/* ============================================================ */}
-        {activeTool === 'post-previewer' && (
+        {activeTool === 'post-preview' && (
           <div className="max-w-xl mx-auto space-y-6 text-left">
             <div className="text-center space-y-1">
               <h3 className="text-2xl font-extrabold text-slate-950">Visual Post & Feed Mockup</h3>

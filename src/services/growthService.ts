@@ -1,7 +1,7 @@
 import type { SmmOrder, UserWallet, SmmService } from '../types';
 
-const WALLET_KEY = 'herewegrow_user_wallet_v1';
-const ORDERS_KEY = 'herewegrow_user_orders_v1';
+const WALLET_KEY = 'herewegrow_user_wallet_v2';
+const ORDERS_KEY = 'herewegrow_user_orders_v2';
 
 export const getLocalWallet = (): UserWallet => {
   try {
@@ -11,8 +11,8 @@ export const getLocalWallet = (): UserWallet => {
     console.error(e);
   }
   return {
-    balanceBDT: 100, // Demo trial balance for instant testing (min order 100)
-    balanceUSD: 0.85,
+    balanceBDT: 0,
+    balanceUSD: 0,
     totalSpentBDT: 0,
     totalSpentUSD: 0,
     currencyPreference: 'BDT',
@@ -37,42 +37,7 @@ export const getLocalOrders = (): SmmOrder[] => {
   } catch (e) {
     console.error(e);
   }
-  return [
-    {
-      id: 'ORD-98241',
-      serviceId: 'fb-001',
-      serviceName: 'Facebook Page Likes & Followers [100% BD Bengali Real Targeted]',
-      platform: 'facebook',
-      link: 'https://facebook.com/bd.fashion.store',
-      quantity: 1000,
-      chargeBDT: 320,
-      chargeUSD: 2.65,
-      currency: 'BDT',
-      status: 'completed',
-      startCount: 1420,
-      currentCount: 2420,
-      remains: 0,
-      createdAt: '2026-09-22 14:30',
-      refillEligible: true
-    },
-    {
-      id: 'ORD-98295',
-      serviceId: 'yt-001',
-      serviceName: 'YouTube Monetization Watch Hours [4000 Hours Package or Custom]',
-      platform: 'youtube',
-      link: 'https://youtube.com/watch?v=sample_video',
-      quantity: 500,
-      chargeBDT: 775,
-      chargeUSD: 6.40,
-      currency: 'BDT',
-      status: 'in_progress',
-      startCount: 85,
-      currentCount: 380,
-      remains: 205,
-      createdAt: '2026-09-23 09:15',
-      refillEligible: true
-    }
-  ];
+  return [];
 };
 
 export const saveLocalOrders = (orders: SmmOrder[]): void => {

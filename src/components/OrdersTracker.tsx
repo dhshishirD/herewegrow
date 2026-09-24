@@ -92,18 +92,22 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
 
       {/* Orders Table & Cards */}
       {orders.length === 0 ? (
-        <div className="white-card p-12 rounded-3xl text-center border border-slate-200">
-          <Activity className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-slate-900">No active orders yet</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Place your first order from our Growth Store or 1-Click Bundles to track real-time delivery progress.
+        <div className="luxury-card p-12 sm:p-16 rounded-3xl text-center border border-slate-200/90 max-w-2xl mx-auto shadow-2xs">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4 text-slate-500">
+            <Activity className="w-7 h-7 text-indigo-600" />
+          </div>
+          <h3 className="text-xl font-extrabold text-slate-950 font-serif">No Active Orders Yet</h3>
+          <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-md mx-auto leading-relaxed">
+            Your real-time order history, start counts, and automated server fulfillment will appear here immediately after checkout with bKash, Nagad, or Crypto.
           </p>
-          <button
-            onClick={onExploreServices}
-            className="mt-6 px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition-all"
-          >
-            Explore Services
-          </button>
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <button
+              onClick={onExploreServices}
+              className="px-6 py-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer"
+            >
+              Explore Growth Services ➔
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">

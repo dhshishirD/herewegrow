@@ -35,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'store', label: 'Growth Store', icon: ShoppingBag },
     { id: 'bundles', label: '1-Click Bundles', icon: Sparkles, badge: 'Popular' },
-    { id: 'tools', label: 'Free Creator Tools', icon: Wrench, badge: '7 Free' },
+    { id: 'tools', label: 'Free Creator Tools', icon: Wrench },
     { id: 'orders', label: 'Track Orders', icon: Activity },
     { id: 'api', label: 'Reseller API', icon: Code2 },
   ];

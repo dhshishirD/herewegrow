@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   ShieldCheck, 
   Zap, 
@@ -6,11 +6,8 @@ import {
   TrendingUp, 
   ArrowRight,
   Flame,
-  Search,
-  Download,
   CheckCircle2,
-  Sparkles,
-  Play
+  Sparkles
 } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -24,25 +21,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreBundles,
   onExploreStore,
 }) => {
-  const [heroInput, setHeroInput] = useState('');
-
-  const handleOmniSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!heroInput.trim()) {
-      onExploreStore();
-      return;
-    }
-
-    const val = heroInput.trim().toLowerCase();
-    // If it's a URL, open the Free Tools downloader tab
-    if (val.startsWith('http') || val.includes('.com') || val.includes('tiktok') || val.includes('instagram') || val.includes('youtu')) {
-      onExploreTools(heroInput.trim());
-    } else {
-      // If it's a text search term (e.g. "followers", "monetization", "facebook"), search in the Growth Store
-      onExploreStore(heroInput.trim());
-    }
-  };
-
   return (
     <section className="relative overflow-hidden pt-12 sm:pt-20 pb-16 md:pb-24 bg-white border-b border-slate-200/80 ambient-hero-glow">
       
@@ -70,43 +48,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* Refined Subtitle */}
         <p className="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed">
-          The all-in-one studio for digital creators and brands. Utilize our <strong className="text-slate-900 font-semibold">100% Free SEO & Video Tools</strong> to craft viral content, or accelerate your reach with <strong className="text-slate-900 font-semibold">non-drop guaranteed social delivery</strong> with instant bKash, Nagad & Crypto.
+          The all-in-one studio for digital creators and brands. Utilize our <strong className="text-slate-900 font-semibold">100% Free SEO & Creator Tools</strong> to optimize reach, or accelerate your audience with <strong className="text-slate-900 font-semibold">non-drop guaranteed social delivery</strong> with instant bKash, Nagad & Crypto.
         </p>
 
-        {/* Hero Omni-Action Bar (Interactive Link Resolver & Service Search) */}
-        <div className="mt-8 max-w-2xl mx-auto">
-          <form 
-            onSubmit={handleOmniSubmit}
-            className="flex flex-col sm:flex-row items-center gap-2 p-1.5 bg-white rounded-2xl border border-slate-300 shadow-[0_4px_25px_rgba(15,23,42,0.06)] hover:border-slate-400 transition-all focus-within:ring-2 focus-within:ring-slate-900/10"
-          >
-            <div className="flex items-center gap-2.5 px-3 w-full sm:w-auto flex-1">
-              <Search className="w-4 h-4 text-slate-400 flex-shrink-0" />
-              <input
-                type="text"
-                value={heroInput}
-                onChange={(e) => setHeroInput(e.target.value)}
-                placeholder="Paste video link (TikTok / IG / FB) or search services..."
-                className="w-full text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 bg-transparent outline-hidden font-medium py-2"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer flex-shrink-0"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Instant Launch</span>
-            </button>
-          </form>
-          <p className="text-[11px] text-slate-400 mt-2">
-            Tip: Paste a TikTok/Reels link to download in HD, or type any keyword (e.g. <em>"monetization"</em>, <em>"facebook likes"</em>).
-          </p>
-        </div>
-
-        {/* Primary Pathway Buttons */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {/* Primary Pathway Action Buttons */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3.5">
           <button
             onClick={() => onExploreStore()}
-            className="px-6 py-3.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-2 cursor-pointer"
+            className="px-7 py-4 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2.5 cursor-pointer active:scale-98"
           >
             <TrendingUp className="w-4 h-4 text-indigo-400" />
             <span>Explore Growth Catalog</span>
@@ -115,7 +64,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           <button
             onClick={onExploreBundles}
-            className="px-5 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 shadow-2xs text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+            className="px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-900 border border-slate-300 shadow-xs hover:shadow-md text-sm font-bold transition-all flex items-center gap-2.5 cursor-pointer active:scale-98"
           >
             <Flame className="w-4 h-4 text-amber-500" />
             <span>1-Click Monetization Packs</span>
@@ -123,10 +72,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           <button
             onClick={() => onExploreTools()}
-            className="px-5 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+            className="px-6 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-sm font-bold transition-all flex items-center gap-2.5 cursor-pointer active:scale-98 border border-slate-200"
           >
             <Wrench className="w-4 h-4 text-slate-700" />
-            <span>7 Free Creator Tools</span>
+            <span>Free Creator Tools</span>
           </button>
         </div>
 

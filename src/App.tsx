@@ -192,6 +192,10 @@ export function App() {
             onRefreshOrders={refreshOrders}
             wallet={wallet}
             currency={currency}
+            onExploreServices={() => {
+              setActiveTab('store');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             onTopUpClick={() => setIsWalletModalOpen(true)}
             onOpenProviderSettings={() => setIsProviderModalOpen(true)}
           />

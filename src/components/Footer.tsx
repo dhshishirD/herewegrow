@@ -122,6 +122,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) =>
                 </button>
               </li>
               <li>
+                <button onClick={() => onNavigateTab('affiliate')} className="hover:text-slate-900 transition-colors text-emerald-700 font-bold flex items-center gap-1">
+                  <span>🤝 Student Affiliate Program</span>
+                  <span className="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-black">15-25%</span>
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onNavigateTab('bundles')} className="hover:text-slate-900 transition-colors">
                   1-Click Monetization Packs
                 </button>

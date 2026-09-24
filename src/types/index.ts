@@ -120,3 +120,45 @@ export interface UserWallet {
   affiliateEarningsBDT: number;
   referralsCount: number;
 }
+
+export type AffiliateTier = 'bronze' | 'silver' | 'gold' | 'diamond';
+
+export interface AffiliateProfile {
+  id: string;
+  code: string;
+  name: string;
+  email?: string;
+  phoneOrBkash: string;
+  institution?: string; // Student campus / university
+  tier: AffiliateTier;
+  commissionRate: number; // e.g. 0.15 = 15%
+  totalClicks: number;
+  totalSales: number;
+  grossSalesBDT: number;
+  totalEarningsBDT: number;
+  pendingPayoutBDT: number;
+  withdrawnBDT: number;
+  createdAt: string;
+  customNotes?: string;
+}
+
+export interface AffiliatePayoutRequest {
+  id: string;
+  affiliateCode: string;
+  affiliateName: string;
+  amountBDT: number;
+  method: 'bkash' | 'nagad' | 'rocket' | 'binance';
+  accountNumber: string;
+  status: 'pending' | 'completed' | 'rejected';
+  requestedAt: string;
+  processedAt?: string;
+  adminTrxId?: string;
+}
+
+export interface MotivationalQuote {
+  id: string;
+  quoteEn: string;
+  quoteBn: string;
+  author: string;
+  category: 'hustle' | 'mindset' | 'growth' | 'consistency';
+}

@@ -9,7 +9,8 @@ import {
   Menu, 
   X, 
   TrendingUp,
-  Plus
+  Plus,
+  Users
 } from 'lucide-react';
 import type { UserWallet } from '../types';
 
@@ -35,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'store', label: 'Growth Store', icon: ShoppingBag },
     { id: 'bundles', label: '1-Click Bundles', icon: Sparkles, badge: 'Popular' },
+    { id: 'affiliate', label: 'Earn Money', icon: Users, badge: '15-25%' },
     { id: 'tools', label: 'Free Creator Tools', icon: Wrench },
     { id: 'orders', label: 'Track Orders', icon: Activity },
     { id: 'api', label: 'Reseller API', icon: Code2 },

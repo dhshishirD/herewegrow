@@ -4,7 +4,8 @@ import {
   Sparkles, 
   Activity, 
   Wallet,
-  Wrench
+  Wrench,
+  Users
 } from 'lucide-react';
 import type { UserWallet } from '../types';
 
@@ -28,8 +29,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   const navItems = [
     { id: 'store', label: 'Store', icon: ShoppingBag },
     { id: 'bundles', label: 'Bundles', icon: Sparkles, badge: 'Popular' },
+    { id: 'affiliate', label: 'Earn', icon: Users, badge: '15%' },
     { id: 'tools', label: 'Tools', icon: Wrench, badge: 'Free' },
-    { id: 'orders', label: 'Track', icon: Activity },
   ];
 
   const handleTabClick = (tabId: string) => {

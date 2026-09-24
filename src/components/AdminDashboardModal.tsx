@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Lock, 
@@ -17,7 +16,10 @@ import {
   ExternalLink,
   Zap,
   DollarSign,
-  Sparkles
+  Sparkles,
+  Users,
+  Award,
+  Send
 } from 'lucide-react';
 import { 
   getProviderConfig, 
@@ -41,8 +43,15 @@ import {
   adminDeletePromoCode, 
   adminTogglePromoActive 
 } from '../services/promoService';
+import { 
+  getAllAffiliates, 
+  getPayoutRequests, 
+  adminApprovePayout, 
+  adminSendBonusReward, 
+  adminUpdateAffiliateTier 
+} from '../services/affiliateService';
 import { ALL_SERVICES } from '../data/growthData';
-import type { SmmOrder, PromoCode, UserWallet, SocialPlatform } from '../types';
+import type { SmmOrder, PromoCode, UserWallet, SocialPlatform, AffiliateProfile, AffiliatePayoutRequest, AffiliateTier } from '../types';
 
 interface AdminDashboardModalProps {
   isOpen: boolean;
@@ -58,7 +67,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'promos' | 'bonus' | 'wallet' | 'provider'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'affiliates' | 'promos' | 'bonus' | 'wallet' | 'provider'>('overview');
 
   // Provider config & balance state
   const [providerConfig, setProviderConfig] = useState<SmmProviderConfig>(() => getProviderConfig());
@@ -99,11 +108,20 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [inspectError, setInspectError] = useState<string | null>(null);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
 
+  // Affiliates & Payouts State
+  const [affiliates, setAffiliates] = useState<AffiliateProfile[]>([]);
+  const [payoutRequests, setPayoutRequests] = useState<AffiliatePayoutRequest[]>([]);
+  const [rewardAffCode, setRewardAffCode] = useState('');
+  const [rewardAmount, setRewardAmount] = useState<number>(100);
+  const [rewardNote, setRewardNote] = useState('Top Hustler Weekly Bonus');
+
   // Load state on mount/open
   useEffect(() => {
     if (isOpen) {
       setOrders(getLocalOrders());
       setPromos(getPromoCodes());
+      setAffiliates(getAllAffiliates());
+      setPayoutRequests(getPayoutRequests());
       setProviderConfig(getProviderConfig());
       loadBalance();
     }
@@ -238,6 +256,35 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setPromos(getPromoCodes());
   };
 
+  // Affiliate Handlers
+  const handleApprovePayout = (reqId: string) => {
+    const res = adminApprovePayout(reqId);
+    showNotification(res.message);
+    setPayoutRequests(getPayoutRequests());
+    setAffiliates(getAllAffiliates());
+    onRefreshParent();
+  };
+
+  const handleSendAffiliateReward = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rewardAffCode) {
+      showNotification('Please select a student affiliate.');
+      return;
+    }
+    const res = adminSendBonusReward(rewardAffCode, Number(rewardAmount), rewardNote);
+    showNotification(res.message);
+    setAffiliates(getAllAffiliates());
+    setRewardAmount(100);
+    onRefreshParent();
+  };
+
+  const handleChangeAffiliateTier = (code: string, tier: AffiliateTier, rate: number) => {
+    const res = adminUpdateAffiliateTier(code, tier, rate);
+    showNotification(res.message);
+    setAffiliates(getAllAffiliates());
+    onRefreshParent();
+  };
+
   // Send Free Bonus Boost to Link
   const handleSendBonusOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -326,6 +373,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const inProgressOrdersCount = orders.filter(o => o.status === 'in_progress').length;
   const completedOrdersCount = orders.filter(o => o.status === 'completed').length;
 
+  const totalAffiliateSalesBDT = affiliates.reduce((sum, a) => sum + a.grossSalesBDT, 0);
+  const totalAffiliateCommissionsBDT = affiliates.reduce((sum, a) => sum + a.totalEarningsBDT, 0);
+  const pendingPayoutsCount = payoutRequests.filter(p => p.status === 'pending').length;
+
   const filteredOrders = orders.filter(o => {
     if (orderFilter === 'pending') return o.status === 'pending';
     if (orderFilter === 'in_progress') return o.status === 'in_progress';
@@ -350,7 +401,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   v2.5 PRO
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">Manage Orders, Promo Codes, Free Boosts & Wholesale Wholesale Balance</p>
+              <p className="text-[11px] text-slate-400">Manage Orders, Promo Codes, Affiliates, Free Boosts & Wholesale Balance</p>
             </div>
           </div>
 
@@ -426,6 +477,23 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 {pendingOrdersCount > 0 && (
                   <span className="px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-mono">
                     {pendingOrdersCount}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={() => setActiveTab('affiliates')}
+                className={`flex-shrink-0 md:w-full flex items-center justify-between gap-2 px-3 py-2 md:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  activeTab === 'affiliates' ? 'bg-slate-900 text-white shadow-xs' : 'text-slate-700 hover:bg-slate-200/60'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-emerald-500" />
+                  <span>Affiliates & Rewards</span>
+                </div>
+                {pendingPayoutsCount > 0 && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-mono">
+                    {pendingPayoutsCount}
                   </span>
                 )}
               </button>
@@ -752,6 +820,237 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       ))}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* TAB: AFFILIATES & REWARDS */}
+              {activeTab === 'affiliates' && (
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-base font-extrabold text-slate-900">Student Affiliates & Partner Rewards</h4>
+                    <p className="text-xs text-slate-500">Manage student brand ambassadors, approve bKash payouts, and reward top hustlers with bonuses.</p>
+                  </div>
+
+                  {/* KPI Overview Cards */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200">
+                      <div className="text-xs font-bold text-indigo-900">Total Partners</div>
+                      <div className="text-xl font-black text-indigo-950 font-mono mt-1">{affiliates.length}</div>
+                      <span className="text-[10px] text-indigo-700">Campus ambassadors</span>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200">
+                      <div className="text-xs font-bold text-emerald-900">Affiliate Sales</div>
+                      <div className="text-xl font-black text-emerald-950 font-mono mt-1">৳{totalAffiliateSalesBDT.toFixed(0)}</div>
+                      <span className="text-[10px] text-emerald-700 font-mono">${(totalAffiliateSalesBDT / 122).toFixed(1)} USD gross</span>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200">
+                      <div className="text-xs font-bold text-amber-900">Commissions Paid</div>
+                      <div className="text-xl font-black text-amber-950 font-mono mt-1">৳{totalAffiliateCommissionsBDT.toFixed(0)}</div>
+                      <span className="text-[10px] text-amber-700">Lifetime rewards</span>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-slate-900 text-white">
+                      <div className="text-xs font-bold text-slate-300">Pending Payouts</div>
+                      <div className="text-xl font-black text-emerald-400 font-mono mt-1">{pendingPayoutsCount}</div>
+                      <span className="text-[10px] text-slate-400">Withdrawals queue</span>
+                    </div>
+                  </div>
+
+                  {/* 1. Pending Payout Requests Approval Queue */}
+                  <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-emerald-600" />
+                        <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">bKash / Nagad Payout Requests</h5>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                        {pendingPayoutsCount} Pending Approval
+                      </span>
+                    </div>
+
+                    {payoutRequests.filter(p => p.status === 'pending').length === 0 ? (
+                      <div className="p-6 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-slate-200">
+                        No pending withdrawal requests at the moment.
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {payoutRequests.filter(p => p.status === 'pending').map(req => (
+                          <div key={req.id} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                            <div className="space-y-0.5">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-slate-900">{req.affiliateName}</span>
+                                <span className="font-mono text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded">
+                                  {req.affiliateCode}
+                                </span>
+                                <span className="uppercase font-bold text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                                  {req.method}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-slate-600 font-mono">
+                                Account: <strong>{req.accountNumber}</strong> • Requested: {req.requestedAt}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-black text-emerald-700 font-mono">
+                                ৳{req.amountBDT.toFixed(2)}
+                              </span>
+                              <button
+                                onClick={() => handleApprovePayout(req.id)}
+                                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 shadow-xs cursor-pointer transition-all"
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>1-Click Approve & Mark Paid</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 2. Super Admin Performance Bonus Reward Injector */}
+                  <form onSubmit={handleSendAffiliateReward} className="p-5 rounded-2xl bg-gradient-to-br from-indigo-950 to-slate-900 text-white shadow-md space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Award className="w-5 h-5 text-amber-400" />
+                      <div>
+                        <h5 className="text-xs font-bold uppercase tracking-wider text-white">Send Performance Cash Reward / Bonus</h5>
+                        <p className="text-[11px] text-slate-300">Reward top student hustlers with cash bonuses to their withdrawable wallet balance.</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1">Select Student Ambassador</label>
+                        <select
+                          value={rewardAffCode}
+                          onChange={e => setRewardAffCode(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white focus:outline-hidden focus:border-indigo-400"
+                          required
+                        >
+                          <option value="">-- Choose Affiliate --</option>
+                          {affiliates.map(a => (
+                            <option key={a.id} value={a.code}>
+                              {a.name} ({a.code}) - {a.institution || 'Ambassador'}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1">Bonus Reward Amount (BDT)</label>
+                        <input
+                          type="number"
+                          min="10"
+                          value={rewardAmount}
+                          onChange={e => setRewardAmount(Number(e.target.value))}
+                          className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono font-bold text-white focus:outline-hidden focus:border-indigo-400"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1">Recognition Note</label>
+                        <input
+                          type="text"
+                          value={rewardNote}
+                          onChange={e => setRewardNote(e.target.value)}
+                          placeholder="e.g. Top Hustler of the Week"
+                          className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-hidden focus:border-indigo-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex gap-2">
+                        {[50, 100, 200, 500].map(amt => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => setRewardAmount(amt)}
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-amber-300 hover:bg-slate-700 cursor-pointer"
+                          >
+                            +৳{amt}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>Inject Cash Bonus (৳{rewardAmount})</span>
+                      </button>
+                    </div>
+                  </form>
+
+                  {/* 3. Student Affiliates Master Directory & Tier Management */}
+                  <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
+                    <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Registered Affiliates & Commission Rates</h5>
+                    
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-200 text-slate-400 font-bold text-[11px]">
+                            <th className="pb-2">Partner Details</th>
+                            <th className="pb-2">Code</th>
+                            <th className="pb-2">Tier & Rate</th>
+                            <th className="pb-2">Clicks / Sales</th>
+                            <th className="pb-2">Gross Revenue</th>
+                            <th className="pb-2">Earned (BDT)</th>
+                            <th className="pb-2">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {affiliates.map(aff => (
+                            <tr key={aff.id} className="hover:bg-slate-50 transition-colors">
+                              <td className="py-2.5">
+                                <div className="font-bold text-slate-900">{aff.name}</div>
+                                <div className="text-[10px] text-slate-500">{aff.institution || 'Campus Ambassador'} • {aff.phoneOrBkash}</div>
+                              </td>
+                              <td className="py-2.5 font-mono font-bold text-indigo-700">{aff.code}</td>
+                              <td className="py-2.5">
+                                <select
+                                  value={aff.tier}
+                                  onChange={e => {
+                                    const newTier = e.target.value as AffiliateTier;
+                                    const rate = newTier === 'diamond' ? 0.25 : newTier === 'gold' ? 0.20 : newTier === 'silver' ? 0.15 : 0.10;
+                                    handleChangeAffiliateTier(aff.code, newTier, rate);
+                                  }}
+                                  className="text-[11px] font-bold px-2 py-1 rounded-lg border border-slate-300 bg-white"
+                                >
+                                  <option value="bronze">Bronze (10%)</option>
+                                  <option value="silver">Silver (15%)</option>
+                                  <option value="gold">Gold (20%)</option>
+                                  <option value="diamond">Diamond (25%)</option>
+                                </select>
+                              </td>
+                              <td className="py-2.5 font-mono">
+                                <span className="text-slate-600">{aff.totalClicks} clicks</span> / <strong className="text-emerald-700">{aff.totalSales} sales</strong>
+                              </td>
+                              <td className="py-2.5 font-mono font-bold text-slate-900">৳{aff.grossSalesBDT.toFixed(0)}</td>
+                              <td className="py-2.5 font-mono font-bold text-amber-600">৳{aff.totalEarningsBDT.toFixed(2)}</td>
+                              <td className="py-2.5">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setRewardAffCode(aff.code);
+                                    setRewardAmount(100);
+                                  }}
+                                  className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[10px] font-bold border border-indigo-200 cursor-pointer"
+                                >
+                                  + Reward Bonus
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               )}
 

@@ -14,9 +14,11 @@ import { OrderConfirmationModal } from './components/OrderConfirmationModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { LiveSupportWidget } from './components/LiveSupportWidget';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
+import { AffiliatePortal } from './components/AffiliatePortal';
 import confetti from 'canvas-confetti';
 import { Footer } from './components/Footer';
 import { getLocalWallet, getLocalOrders, saveLocalWallet, createPaidGatewayOrder, depositFunds, verifyAndCreditPayment } from './services/growthService';
+import { captureReferralCodeFromUrl, creditAffiliateOnOrder } from './services/affiliateService';
 import { ALL_SERVICES } from './data/growthData';
 import type { UserWallet, SmmOrder, SmmService, GrowthBundle, SocialPlatform } from './types';
 
@@ -48,6 +50,9 @@ export function App() {
 
   // URL Routing & Payment Gateway Callback Auto-Verification
   useEffect(() => {
+    // Capture referral code if present (?ref=CODE)
+    captureReferralCodeFromUrl();
+
     const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
     if (path.startsWith('services/')) {
       const slug = path.replace('services/', '');
@@ -186,6 +191,9 @@ export function App() {
     setWallet(updatedWallet);
     setConfirmedOrder(newOrder);
     setIsConfirmationModalOpen(true);
+    
+    // Credit affiliate commission if this order came from a referral link
+    creditAffiliateOnOrder(newOrder.chargeBDT || 0);
   };
 
   const handleSelectServiceTabFromTool = (platformId?: string) => {
@@ -309,6 +317,14 @@ export function App() {
         {/* Tab 5: Reseller API Documentation */}
         {activeTab === 'api' && (
           <ApiDocsSection currency={currency} />
+        )}
+
+        {/* Tab 6: Dedicated Student Affiliate & Partner Portal */}
+        {activeTab === 'affiliate' && (
+          <AffiliatePortal 
+            currency={currency} 
+            onNavigateStore={() => handleTabNavigate('store')} 
+          />
         )}
 
       </main>

@@ -14,7 +14,8 @@ import {
 import confetti from 'canvas-confetti';
 import { createOrder } from '../services/growthService';
 import { initiateAutomatedPayment } from '../services/paymentService';
-import type { SmmService, GrowthBundle, UserWallet, SmmOrder } from '../types';
+import { validateAndApplyPromo, recordPromoUsage } from '../services/promoService';
+import type { SmmService, GrowthBundle, UserWallet, SmmOrder, PromoDiscountResult } from '../types';
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -43,21 +44,43 @@ export const OrderModal: React.FC<OrderModalProps> = ({
   const [quantity, setQuantity] = useState<number>(service ? service.minQty : 1000);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [promoResult, setPromoResult] = useState<PromoDiscountResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGatewayLoading, setIsGatewayLoading] = useState(false);
 
   // Compute pricing
-  let totalCost = 0;
+  let rawCost = 0;
   if (bundle) {
-    totalCost = currency === 'BDT' ? bundle.priceBDT : bundle.priceUSD;
+    rawCost = currency === 'BDT' ? bundle.priceBDT : bundle.priceUSD;
   } else if (service) {
     const rate = currency === 'BDT' ? service.ratePer1kBDT : service.ratePer1kUSD;
-    totalCost = Number(((quantity / 1000) * rate).toFixed(2));
+    rawCost = Number(((quantity / 1000) * rate).toFixed(2));
   }
+
+  // Calculate discounted cost if promo code is active
+  const discountAmount = promoResult && promoResult.valid 
+    ? (currency === 'BDT' ? promoResult.discountBDT : promoResult.discountUSD) 
+    : 0;
+
+  const totalCost = Number(Math.max(0, rawCost - discountAmount).toFixed(2));
 
   const currentBalance = currency === 'BDT' ? wallet.balanceBDT : wallet.balanceUSD;
   const hasSufficientBalance = currentBalance >= totalCost;
+  const isFreeOrder = totalCost === 0 && Boolean(promoResult?.valid);
+
+  const handleApplyPromo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!promoCodeInput.trim()) return;
+    const res = validateAndApplyPromo(promoCodeInput, rawCost, currency);
+    setPromoResult(res);
+    if (!res.valid) {
+      setErrorMessage(res.message);
+    } else {
+      setErrorMessage('');
+    }
+  };
 
   // Direct 1-Click Pay with bKash / Nagad / Gateway
   const handleDirectGatewayCheckout = async () => {
@@ -143,6 +166,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({
       setIsSubmitting(false);
 
       if (result.success && result.order) {
+        if (promoResult?.valid && promoResult.promo) {
+          recordPromoUsage(promoResult.promo.id);
+        }
+
         try {
           confetti({
             particleCount: 100,
@@ -257,70 +284,156 @@ export const OrderModal: React.FC<OrderModalProps> = ({
             </div>
           )}
 
+          {/* Promo / Coupon / Bonus Code Box */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>Have a Promo Code or Gift Voucher?</span>
+              </label>
+              {promoResult?.valid && (
+                <button
+                  type="button"
+                  onClick={() => { setPromoResult(null); setPromoCodeInput(''); }}
+                  className="text-[10px] text-rose-600 font-bold hover:underline cursor-pointer"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={promoCodeInput}
+                onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
+                placeholder="e.g. WELCOME50, GROW10, FREETEST"
+                className="flex-1 px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-mono font-bold text-slate-900 uppercase focus:outline-hidden focus:border-slate-900"
+              />
+              <button
+                type="button"
+                onClick={handleApplyPromo}
+                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all cursor-pointer"
+              >
+                Apply
+              </button>
+            </div>
+
+            {promoResult?.valid && (
+              <div className="text-[11px] text-emerald-700 font-bold flex items-center gap-1 bg-emerald-50 p-2 rounded-lg border border-emerald-200">
+                <span>{promoResult.message}</span>
+              </div>
+            )}
+          </div>
+
           {/* Cost Summary Box */}
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-600 font-bold">Total Order Charge:</span>
-              <span className="text-xl font-black text-slate-950 font-mono">
-                {currency === 'BDT' ? `৳ ${totalCost.toFixed(2)}` : `$ ${totalCost.toFixed(2)}`}
+              <span className="text-slate-600 font-bold">Package Price:</span>
+              <span className={`font-black font-mono ${promoResult?.valid ? 'line-through text-slate-400 text-xs' : 'text-slate-900 text-sm'}`}>
+                {currency === 'BDT' ? `৳ ${rawCost.toFixed(2)}` : `$ ${rawCost.toFixed(2)}`}
               </span>
             </div>
 
-            <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200">
-              <span className="text-slate-600 font-medium">Your Wallet Balance:</span>
-              <div className="flex items-center gap-2">
-                <span className={`font-bold font-mono ${hasSufficientBalance ? 'text-emerald-700' : 'text-rose-600'}`}>
-                  {currency === 'BDT' ? `৳ ${currentBalance.toFixed(2)}` : `$ ${currentBalance.toFixed(2)}`}
+            {promoResult?.valid && discountAmount > 0 && (
+              <div className="flex items-center justify-between text-xs text-emerald-700 font-bold">
+                <span>Promo Discount ({promoResult.promo?.code}):</span>
+                <span className="font-mono">
+                  - {currency === 'BDT' ? `৳ ${discountAmount.toFixed(2)}` : `$ ${discountAmount.toFixed(2)}`}
                 </span>
-                {!hasSufficientBalance && (
-                  <span className="text-[10px] font-bold text-rose-700 px-1.5 py-0.5 rounded bg-rose-50 border border-rose-200">
-                    Low Balance
-                  </span>
-                )}
               </div>
+            )}
+
+            <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200">
+              <span className="text-slate-900 font-black text-sm">Final Amount Due:</span>
+              <span className="text-xl font-black text-slate-950 font-mono">
+                {isFreeOrder ? (
+                  <span className="text-emerald-600 font-black">FREE (৳ 0)</span>
+                ) : currency === 'BDT' ? (
+                  `৳ ${totalCost.toFixed(2)}`
+                ) : (
+                  `$ ${totalCost.toFixed(2)}`
+                )}
+              </span>
             </div>
+
+            {!isFreeOrder && (
+              <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200">
+                <span className="text-slate-600 font-medium">Your Wallet Balance:</span>
+                <div className="flex items-center gap-2">
+                  <span className={`font-bold font-mono ${hasSufficientBalance ? 'text-emerald-700' : 'text-rose-600'}`}>
+                    {currency === 'BDT' ? `৳ ${currentBalance.toFixed(2)}` : `$ ${currentBalance.toFixed(2)}`}
+                  </span>
+                  {!hasSufficientBalance && (
+                    <span className="text-[10px] font-bold text-rose-700 px-1.5 py-0.5 rounded bg-rose-50 border border-rose-200">
+                      Low Balance
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Direct Payment Action Buttons (High-Converting 1-Click Gateway) */}
+          {/* Action Buttons: 100% Free Order OR Gateway OR Wallet */}
           <div className="space-y-2 pt-1">
             
-            {/* OPTION 1: Direct 1-Click Pay with bKash/Nagad/Cards */}
-            <button
-              type="button"
-              onClick={handleDirectGatewayCheckout}
-              disabled={isGatewayLoading || isSubmitting}
-              className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99]"
-            >
-              {isGatewayLoading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Opening Instant Paymently Gateway...</span>
-                </>
-              ) : (
-                <>
-                  <Zap className="w-4 h-4 text-amber-300" />
-                  <span>1-Click Pay with bKash / Nagad / Cards (৳{currency === 'BDT' ? totalCost : Math.ceil(totalCost * 122)})</span>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-80 ml-0.5" />
-                </>
-              )}
-            </button>
-
-            {/* OPTION 2: Pay from Wallet (if balance is sufficient) */}
-            {hasSufficientBalance && (
+            {/* 100% FREE ORDER VIA PROMO */}
+            {isFreeOrder ? (
               <button
                 type="submit"
-                disabled={isSubmitting || isGatewayLoading}
-                className="w-full py-3 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99]"
               >
                 {isSubmitting ? (
-                  <span>Queueing Order to Server...</span>
+                  <span>Claiming Free Boost...</span>
                 ) : (
                   <>
-                    <ShoppingBag className="w-4 h-4 text-emerald-400" />
-                    <span>Deduct from Wallet Balance & Place Order</span>
+                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <span>🎁 Claim 100% Free Promo Order</span>
                   </>
                 )}
               </button>
+            ) : (
+              <>
+                {/* OPTION 1: Direct 1-Click Pay with bKash/Nagad/Cards */}
+                <button
+                  type="button"
+                  onClick={handleDirectGatewayCheckout}
+                  disabled={isGatewayLoading || isSubmitting}
+                  className="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99]"
+                >
+                  {isGatewayLoading ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Opening Instant Paymently Gateway...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="w-4 h-4 text-amber-300" />
+                      <span>1-Click Pay with bKash / Nagad / Cards (৳{currency === 'BDT' ? totalCost : Math.ceil(totalCost * 122)})</span>
+                      <ExternalLink className="w-3.5 h-3.5 opacity-80 ml-0.5" />
+                    </>
+                  )}
+                </button>
+
+                {/* OPTION 2: Pay from Wallet (if balance is sufficient) */}
+                {hasSufficientBalance && (
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || isGatewayLoading}
+                    className="w-full py-3 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  >
+                    {isSubmitting ? (
+                      <span>Queueing Order to Server...</span>
+                    ) : (
+                      <>
+                        <ShoppingBag className="w-4 h-4 text-emerald-400" />
+                        <span>Deduct from Wallet Balance & Place Order</span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </>
             )}
 
           </div>

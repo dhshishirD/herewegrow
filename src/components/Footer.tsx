@@ -7,9 +7,10 @@ import {
 
 interface FooterProps {
   onNavigateTab: (tab: string) => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigateTab }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenAdmin }) => {
   return (
     <footer className="border-t border-slate-200 bg-slate-50 pt-16 pb-10 text-slate-600 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -131,6 +132,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTab }) => {
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               </li>
+              {onOpenAdmin && (
+                <li className="pt-1">
+                  <button 
+                    onClick={onOpenAdmin} 
+                    className="text-[11px] font-bold text-slate-800 hover:text-indigo-600 flex items-center gap-1 cursor-pointer bg-slate-200/70 hover:bg-slate-200 px-2 py-1 rounded-md transition-colors"
+                  >
+                    <span>🛡️ Admin Command Center</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

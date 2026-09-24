@@ -9,6 +9,7 @@ import { ApiDocsSection } from './components/ApiDocsSection';
 import { WalletModal } from './components/WalletModal';
 import { OrderModal } from './components/OrderModal';
 import { ProviderSettingsModal } from './components/ProviderSettingsModal';
+import { AdminDashboardModal } from './components/AdminDashboardModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
 import { Footer } from './components/Footer';
@@ -25,6 +26,7 @@ export function App() {
   // Modals state
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isProviderModalOpen, setIsProviderModalOpen] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [orderModalState, setOrderModalState] = useState<{
     isOpen: boolean;
     service: SmmService | null;
@@ -197,7 +199,7 @@ export function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             onTopUpClick={() => setIsWalletModalOpen(true)}
-            onOpenProviderSettings={() => setIsProviderModalOpen(true)}
+            onOpenProviderSettings={() => setIsAdminModalOpen(true)}
           />
         )}
 
@@ -209,7 +211,7 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <Footer onNavigate={handleTabNavigate} />
+      <Footer onNavigate={handleTabNavigate} onOpenAdmin={() => setIsAdminModalOpen(true)} />
 
       {/* Mobile Sticky Quick Navigation Bar */}
       <MobileBottomNav
@@ -248,6 +250,13 @@ export function App() {
       <ProviderSettingsModal
         isOpen={isProviderModalOpen}
         onClose={() => setIsProviderModalOpen(false)}
+      />
+
+      {/* Comprehensive Executive Admin Center */}
+      <AdminDashboardModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
+        onRefreshParent={refreshOrders}
       />
 
     </div>

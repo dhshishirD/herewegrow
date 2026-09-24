@@ -88,9 +88,9 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
           {onOpenProviderSettings && (
             <button
               onClick={onOpenProviderSettings}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-2xs cursor-pointer"
             >
-              <span>⚙️ Provider API Settings</span>
+              <span>🛡️ Admin Command Center & Promos</span>
             </button>
           )}
 

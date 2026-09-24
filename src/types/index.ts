@@ -80,6 +80,30 @@ export interface SmmOrder {
   providerOrderId?: string;
 }
 
+export interface PromoCode {
+  id: string;
+  code: string; // e.g. "WELCOME50", "GROW10"
+  type: 'percentage' | 'fixed_bdt' | 'fixed_usd';
+  value: number; // e.g. 10 for 10%, or 50 for ৳50
+  minOrderBDT?: number;
+  maxDiscountBDT?: number;
+  usageLimit?: number;
+  usedCount: number;
+  isActive: boolean;
+  expiryDate?: string;
+  description?: string;
+}
+
+export interface PromoDiscountResult {
+  valid: boolean;
+  message: string;
+  discountBDT: number;
+  discountUSD: number;
+  finalCostBDT: number;
+  finalCostUSD: number;
+  promo?: PromoCode;
+}
+
 export interface UserWallet {
   balanceBDT: number;
   balanceUSD: number;

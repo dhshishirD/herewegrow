@@ -9,7 +9,7 @@ import {
   Check, 
   Gift
 } from 'lucide-react';
-import { triggerRefill } from '../services/growthService';
+import { triggerRefill, adminApproveAndDispatchOrder, adminUpdateOrderStatus } from '../services/growthService';
 import type { SmmOrder, UserWallet } from '../types';
 
 interface OrdersTrackerProps {
@@ -31,6 +31,7 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
   onOpenProviderSettings,
 }) => {
   const [refillStatusMessage, setRefillStatusMessage] = useState<string | null>(null);
+  const [dispatchingId, setDispatchingId] = useState<string | null>(null);
   const [copiedAffiliate, setCopiedAffiliate] = useState(false);
 
   const handleRefill = async (orderId: string) => {
@@ -38,6 +39,27 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
     setRefillStatusMessage(res.message);
     onRefreshOrders();
     setTimeout(() => setRefillStatusMessage(null), 4000);
+  };
+
+  const handleApproveAndDispatch = async (orderId: string) => {
+    setDispatchingId(orderId);
+    try {
+      const res = await adminApproveAndDispatchOrder(orderId);
+      setRefillStatusMessage(res.message);
+      onRefreshOrders();
+    } catch (e: any) {
+      setRefillStatusMessage(e.message || 'Error dispatching order to Peakerr.');
+    } finally {
+      setDispatchingId(null);
+      setTimeout(() => setRefillStatusMessage(null), 5000);
+    }
+  };
+
+  const handleMarkCompleted = (orderId: string) => {
+    adminUpdateOrderStatus(orderId, 'completed');
+    onRefreshOrders();
+    setRefillStatusMessage(`Order #${orderId} marked as completed.`);
+    setTimeout(() => setRefillStatusMessage(null), 3000);
   };
 
   const handleCopyAffiliate = () => {
@@ -130,10 +152,17 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
                     <span className={`text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full ${
                       isCompleted
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse'
+                        : order.status === 'pending'
+                        ? 'bg-amber-50 text-amber-800 border border-amber-300 font-bold'
+                        : 'bg-indigo-50 text-indigo-700 border border-indigo-200 animate-pulse'
                     }`}>
-                      {order.status.replace('_', ' ')}
+                      {order.status === 'pending' ? '⏳ Awaiting Admin Dispatch' : order.status.replace('_', ' ')}
                     </span>
+                    {order.providerOrderId && (
+                      <span className="text-[10px] font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-300">
+                        Peakerr #{order.providerOrderId}
+                      </span>
+                    )}
                     <span className="text-[11px] text-slate-400 font-medium">{order.createdAt}</span>
                   </div>
 
@@ -173,19 +202,42 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
                   </div>
                 </div>
 
-                {/* Refill Button & Charge */}
-                <div className="flex items-center justify-between lg:justify-end gap-4 border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100">
+                {/* Action Column: Dispatch / Refill & Charge */}
+                <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3 border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100">
                   <div>
-                    <span className="text-[10px] text-slate-500 block leading-none font-medium">Charge</span>
+                    <span className="text-[10px] text-slate-500 block leading-none font-medium">Customer Paid</span>
                     <span className="text-sm font-black text-slate-900">
                       {currency === 'BDT' ? `৳${order.chargeBDT.toFixed(2)}` : `$${order.chargeUSD.toFixed(2)}`}
                     </span>
                   </div>
 
-                  {order.refillEligible && (
+                  {/* 1-Click Approve & Dispatch to Peakerr Button */}
+                  {order.status === 'pending' && !order.providerOrderId && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleApproveAndDispatch(order.id)}
+                        disabled={dispatchingId === order.id}
+                        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                        title="Deducts wholesale cost from Peakerr ($2.50 balance) and fulfills order"
+                      >
+                        <RotateCw className={`w-3.5 h-3.5 ${dispatchingId === order.id ? 'animate-spin' : ''}`} />
+                        <span>{dispatchingId === order.id ? 'Dispatching...' : '⚡ Approve & Dispatch to Peakerr'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleMarkCompleted(order.id)}
+                        className="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                        title="Mark as fulfilled without calling Peakerr API"
+                      >
+                        ✓ Done
+                      </button>
+                    </div>
+                  )}
+
+                  {order.refillEligible && order.status !== 'pending' && (
                     <button
                       onClick={() => handleRefill(order.id)}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 text-xs font-bold border border-slate-200 hover:border-emerald-300 transition-all"
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 text-xs font-bold border border-slate-200 hover:border-emerald-300 transition-all cursor-pointer"
                       title="Request Automated Refill if count drops"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />

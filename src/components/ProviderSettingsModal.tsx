@@ -160,11 +160,69 @@ export const ProviderSettingsModal: React.FC<ProviderSettingsModalProps> = ({
             </div>
           </div>
 
+          {/* Order Routing Mode Selection */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-800 flex items-center justify-between">
+              <span>Order Dispatch & Balance Safety Mode</span>
+              <span className="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">Protected</span>
+            </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Option 1: Safe Mode (Manual Approval) */}
+              <div 
+                onClick={() => setConfig({ ...config, autoDispatch: false })}
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  !config.autoDispatch 
+                    ? 'border-indigo-600 bg-indigo-50/50 shadow-xs' 
+                    : 'border-slate-200 bg-white hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <input
+                    type="radio"
+                    name="routingMode"
+                    checked={!config.autoDispatch}
+                    onChange={() => setConfig({ ...config, autoDispatch: false })}
+                    className="text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-xs font-bold text-slate-900">🛡️ Safe Manual Mode</span>
+                </div>
+                <p className="text-[11px] text-slate-500 leading-tight">
+                  Recommended. Customer pays ➔ order waits in dashboard ➔ you click <strong>Approve & Dispatch</strong>. Balance is never spent automatically.
+                </p>
+              </div>
+
+              {/* Option 2: Auto-Dispatch Mode */}
+              <div 
+                onClick={() => setConfig({ ...config, autoDispatch: true })}
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                  config.autoDispatch 
+                    ? 'border-indigo-600 bg-indigo-50/50 shadow-xs' 
+                    : 'border-slate-200 bg-white hover:border-slate-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <input
+                    type="radio"
+                    name="routingMode"
+                    checked={Boolean(config.autoDispatch)}
+                    onChange={() => setConfig({ ...config, autoDispatch: true })}
+                    className="text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-xs font-bold text-slate-900">⚡ Auto-Dispatch</span>
+                </div>
+                <p className="text-[11px] text-slate-500 leading-tight">
+                  Instant. Every customer order is immediately routed to Peakerr API and deducted from your balance automatically.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Active Switch */}
           <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200">
             <div>
-              <span className="text-xs font-bold text-slate-900 block">Enable Automated Order Dispatch</span>
-              <span className="text-[11px] text-slate-500">Route all live orders directly to this provider API</span>
+              <span className="text-xs font-bold text-slate-900 block">Enable Provider Engine</span>
+              <span className="text-[11px] text-slate-500">Enable live connection to Peakerr / SMM provider API</span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input

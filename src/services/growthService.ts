@@ -48,7 +48,8 @@ export const saveLocalOrders = (orders: SmmOrder[]): void => {
   }
 };
 
-import { dispatchToProvider, triggerProviderRefill as triggerApiRefill } from './smmProviderService';
+import { dispatchToProvider, getProviderConfig, triggerProviderRefill as triggerApiRefill } from './smmProviderService';
+import { ALL_SERVICES } from '../data/growthData';
 
 export const createOrder = async (
   service: SmmService,
@@ -84,8 +85,18 @@ export const createOrder = async (
   }
   saveLocalWallet(wallet);
 
-  // Dispatch to wholesale SMM Provider API v2
-  const dispatchRes = await dispatchToProvider(service.providerServiceId || service.id, link, quantity);
+  const providerConfig = getProviderConfig();
+  let providerOrderId: string | undefined = undefined;
+  let status: 'pending' | 'in_progress' = 'pending';
+  let statusMessage = 'Payment verified! Order is queued and awaiting admin 1-click dispatch.';
+
+  // If autoDispatch is enabled, automatically push to wholesale provider
+  if (providerConfig.autoDispatch) {
+    const dispatchRes = await dispatchToProvider(service.providerServiceId || service.id, link, quantity);
+    providerOrderId = dispatchRes.providerOrderId;
+    status = 'in_progress';
+    statusMessage = dispatchRes.message;
+  }
 
   const newOrder: SmmOrder = {
     id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
@@ -97,13 +108,13 @@ export const createOrder = async (
     chargeBDT: currency === 'BDT' ? totalCost : totalCost * 122,
     chargeUSD: currency === 'USD' ? totalCost : totalCost / 122,
     currency,
-    status: 'in_progress',
+    status,
     startCount: Math.floor(100 + Math.random() * 1500),
     currentCount: Math.floor(100 + Math.random() * 1500),
     remains: quantity,
     createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
     refillEligible: service.refillDays > 0,
-    providerOrderId: dispatchRes.providerOrderId
+    providerOrderId
   };
 
   const currentOrders = getLocalOrders();
@@ -111,9 +122,67 @@ export const createOrder = async (
 
   return {
     success: true,
-    message: `Order #${newOrder.id} successfully placed! ${dispatchRes.message}`,
+    message: `Order #${newOrder.id} placed! ${statusMessage}`,
     order: newOrder
   };
+};
+
+/**
+ * Admin Manual 1-Click Approval: Dispatches a pending order to Peakerr on demand
+ */
+export const adminApproveAndDispatchOrder = async (
+  orderId: string
+): Promise<{ success: boolean; message: string; order?: SmmOrder }> => {
+  const orders = getLocalOrders();
+  const orderIndex = orders.findIndex(o => o.id === orderId);
+  if (orderIndex === -1) {
+    return { success: false, message: `Order #${orderId} not found.` };
+  }
+
+  const order = orders[orderIndex];
+
+  // Lookup numerical provider service ID from growth catalog
+  const catalogService = ALL_SERVICES.find(s => s.id === order.serviceId);
+  const targetServiceId = catalogService?.providerServiceId || order.serviceId;
+
+  const dispatchRes = await dispatchToProvider(targetServiceId, order.link, order.quantity);
+
+  if (dispatchRes.success) {
+    order.status = 'in_progress';
+    order.providerOrderId = dispatchRes.providerOrderId;
+    orders[orderIndex] = order;
+    saveLocalOrders(orders);
+
+    return {
+      success: true,
+      message: `✓ Order #${order.id} approved & dispatched to Peakerr! (Peakerr ID: #${dispatchRes.providerOrderId})`,
+      order
+    };
+  } else {
+    return {
+      success: false,
+      message: `Peakerr dispatch error: ${dispatchRes.message}`
+    };
+  }
+};
+
+/**
+ * Admin Manual Status Override (Mark Completed / Cancel)
+ */
+export const adminUpdateOrderStatus = (
+  orderId: string,
+  newStatus: SmmOrder['status']
+): boolean => {
+  const orders = getLocalOrders();
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return false;
+
+  order.status = newStatus;
+  if (newStatus === 'completed') {
+    order.remains = 0;
+  }
+  saveLocalOrders(orders);
+  return true;
 };
 
 export const triggerRefill = async (orderId: string): Promise<{ success: boolean; message: string }> => {

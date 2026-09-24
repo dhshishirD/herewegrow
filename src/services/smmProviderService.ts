@@ -8,6 +8,7 @@ export interface SmmProviderConfig {
   apiKey: string;
   isActive: boolean;
   name: string;
+  autoDispatch?: boolean; // Default false: requires manual admin approval before spending Peakerr balance
 }
 
 export interface ProviderBalanceResponse {
@@ -32,7 +33,7 @@ export interface ProviderStatusResponse {
 
 const PROVIDER_STORAGE_KEY = 'herewegrow_smm_provider_config_v2';
 
-// Default Peakerr Configuration
+// Default Peakerr Configuration (Safe Manual Approval Mode Enabled)
 export const getProviderConfig = (): SmmProviderConfig => {
   try {
     const saved = localStorage.getItem(PROVIDER_STORAGE_KEY);
@@ -44,7 +45,8 @@ export const getProviderConfig = (): SmmProviderConfig => {
     apiUrl: 'https://peakerr.com/api/v2',
     apiKey: '837a74cb5bf48bb7a0b671b9234e8154',
     isActive: true,
-    name: 'Peakerr - Primary Wholesale Engine'
+    name: 'Peakerr - Primary Wholesale Engine',
+    autoDispatch: false // Default to safe manual approval mode to protect balance
   };
 };
 

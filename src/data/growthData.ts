@@ -729,3 +729,4 @@ export const SMM_SERVICES_CATALOG: SmmService[] = [
   }
 ];
 
+export const ALL_SERVICES = SMM_SERVICES_CATALOG;

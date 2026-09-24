@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { FreeToolsSection } from './components/FreeToolsSection';
@@ -9,12 +9,15 @@ import { ApiDocsSection } from './components/ApiDocsSection';
 import { WalletModal } from './components/WalletModal';
 import { OrderModal } from './components/OrderModal';
 import { ProviderSettingsModal } from './components/ProviderSettingsModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
+import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
 import { Footer } from './components/Footer';
 import { getLocalWallet, getLocalOrders, saveLocalWallet } from './services/growthService';
 import type { UserWallet, SmmOrder, SmmService, GrowthBundle, SocialPlatform } from './types';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<string>('store');
+  const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
   const [currency, setCurrency] = useState<'BDT' | 'USD'>('BDT');
   const [wallet, setWallet] = useState<UserWallet>(() => getLocalWallet());
   const [orders, setOrders] = useState<SmmOrder[]>(() => getLocalOrders());
@@ -34,6 +37,26 @@ export function App() {
 
   const [selectedStorePlatform, setSelectedStorePlatform] = useState<SocialPlatform>('all');
   const [prefilledToolUrl, setPrefilledToolUrl] = useState<string | undefined>(undefined);
+
+  // URL Routing & Category Landing Page detection
+  useEffect(() => {
+    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+    if (path.startsWith('services/')) {
+      const slug = path.replace('services/', '');
+      if (CATEGORY_CONFIGS[slug]) {
+        setActiveCategorySlug(slug);
+        setActiveTab('category_landing');
+      }
+    }
+
+    // Check if returning from successful Paymently checkout
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment_status') === 'success') {
+      setIsWalletModalOpen(false);
+      // Clean query params
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const handleCurrencyChange = (newCurr: 'BDT' | 'USD') => {
     setCurrency(newCurr);
@@ -67,8 +90,18 @@ export function App() {
     if (platformId) {
       setSelectedStorePlatform(platformId as SocialPlatform);
     }
+    setActiveCategorySlug(null);
     setActiveTab('store');
     window.scrollTo({ top: 400, behavior: 'smooth' });
+  };
+
+  const handleTabNavigate = (tabId: string) => {
+    setActiveCategorySlug(null);
+    setActiveTab(tabId);
+    if (window.location.pathname !== '/') {
+      window.history.pushState({}, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const refreshOrders = () => {
@@ -76,12 +109,12 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 antialiased pb-16 lg:pb-0">
       
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabNavigate}
         currency={currency}
         setCurrency={handleCurrencyChange}
         wallet={wallet}
@@ -91,14 +124,27 @@ export function App() {
       {/* Main Content View */}
       <main className="flex-1">
         
+        {/* Dedicated Programmatic SEO Category Landing Page */}
+        {activeTab === 'category_landing' && activeCategorySlug && (
+          <CategoryLandingPage
+            categoryKey={activeCategorySlug}
+            currency={currency}
+            wallet={wallet}
+            onSelectService={handleOpenServiceOrder}
+            onOpenWallet={() => setIsWalletModalOpen(true)}
+          />
+        )}
+
         {/* Hero Section shown on primary landing tabs */}
         {(activeTab === 'store' || activeTab === 'bundles') && (
           <HeroSection
             onExploreStore={(_query) => {
+              setActiveCategorySlug(null);
               setActiveTab('store');
               window.scrollTo({ top: 480, behavior: 'smooth' });
             }}
             onExploreBundles={() => {
+              setActiveCategorySlug(null);
               setActiveTab('bundles');
               window.scrollTo({ top: 480, behavior: 'smooth' });
             }}
@@ -106,6 +152,7 @@ export function App() {
               if (url) {
                 setPrefilledToolUrl(url);
               }
+              setActiveCategorySlug(null);
               setActiveTab('tools');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
@@ -158,7 +205,16 @@ export function App() {
       </main>
 
       {/* Footer */}
-      <Footer onNavigate={setActiveTab} />
+      <Footer onNavigate={handleTabNavigate} />
+
+      {/* Mobile Sticky Quick Navigation Bar */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={handleTabNavigate}
+        wallet={wallet}
+        currency={currency}
+        onOpenWallet={() => setIsWalletModalOpen(true)}
+      />
 
       {/* Wallet Deposit Modal */}
       <WalletModal
@@ -169,7 +225,7 @@ export function App() {
         onWalletUpdated={(updated) => setWallet(updated)}
       />
 
-      {/* Place Order Modal */}
+      {/* Place Order Modal (Equipped with Direct 1-Click Gateway Checkout) */}
       <OrderModal
         isOpen={orderModalState.isOpen}
         onClose={() => setOrderModalState({ isOpen: false, service: null, bundle: null })}

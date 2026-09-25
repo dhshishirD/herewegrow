@@ -272,6 +272,17 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
       description: config.metaDescription,
       keywords: config.keywords,
       canonicalUrl: `https://herewegrow.pro/tools/${config.slug}`,
+      faqs: config.faqs,
+      howTo: {
+        name: `How to Use ${config.h1}`,
+        description: config.tagline,
+        steps: config.howToSteps.map(s => ({ title: s.title, desc: s.desc }))
+      },
+      breadcrumbs: [
+        { name: 'Home', url: 'https://herewegrow.pro/' },
+        { name: 'Free Creator Tools', url: 'https://herewegrow.pro/#tools' },
+        { name: config.h1, url: `https://herewegrow.pro/tools/${config.slug}` }
+      ],
       schema: {
         '@type': 'SoftwareApplication',
         name: config.h1,

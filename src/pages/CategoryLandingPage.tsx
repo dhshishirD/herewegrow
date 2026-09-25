@@ -378,13 +378,28 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
   const totalMinutesNeeded = targetHours * 60;
   const estimatedViewsNeeded = Math.ceil(totalMinutesNeeded / Math.max(videoMinutes * 0.75, 1));
 
-  // Structured Data Schema Injection for Google Rich Snippets
+  // Structured Data Schema Injection for Google Rich Snippets & Featured Snippets
   useEffect(() => {
     updatePageSEO({
       title: config.title,
       description: config.metaDescription,
       keywords: config.targetKeywords,
       canonicalUrl: `https://herewegrow.pro/services/${config.slug}`,
+      faqs: config.faqs,
+      breadcrumbs: [
+        { name: 'Home', url: 'https://herewegrow.pro/' },
+        { name: 'Growth Services', url: 'https://herewegrow.pro/#store' },
+        { name: config.h1, url: `https://herewegrow.pro/services/${config.slug}` }
+      ],
+      howTo: {
+        name: `How to Order ${config.h1}`,
+        description: `Step-by-step guide to ordering ${config.h1} with instant automated delivery.`,
+        steps: [
+          { title: 'Select Service Package', desc: 'Browse verified high-retention packages with non-drop auto refill guarantee.' },
+          { title: 'Enter Public URL', desc: 'Provide your public profile, post, or channel link. No passwords required.' },
+          { title: 'Instant 60s Start', desc: 'Pay with bKash, Nagad, Crypto, or account balance. Orders queue immediately.' }
+        ]
+      },
       schema: {
         '@type': 'Product',
         name: config.h1,

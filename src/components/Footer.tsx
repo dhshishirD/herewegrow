@@ -128,6 +128,11 @@ export const Footer: React.FC<FooterProps> = ({
             <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{t('nav_tools')}</h4>
             <ul className="space-y-2">
               <li>
+                <button onClick={() => handleToolClick('facebook-video-downloader')} className="hover:text-slate-900 transition-colors text-left cursor-pointer font-bold text-slate-900">
+                  {isBn ? 'ফেসবুক ভিডিও ও রিলস ডাউনলোডার' : 'Facebook Video Downloader HD'}
+                </button>
+              </li>
+              <li>
                 <button onClick={() => handleToolClick('tiktok-downloader')} className="hover:text-slate-900 transition-colors text-left cursor-pointer">
                   {isBn ? 'টিকটক নো-ওয়াটারমার্ক ডাউনলোডার' : 'TikTok Video Downloader HD'}
                 </button>

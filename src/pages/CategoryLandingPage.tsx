@@ -442,10 +442,10 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
   }, [config, currency, filteredServices.length]);
 
   const handleCopyApi = () => {
-    const apiCode = `curl -X POST "https://peakerr.com/api/v2" \\
-  -d "key=YOUR_API_KEY" \\
+    const apiCode = `curl -X POST "https://herewegrow.pro/api/v2" \\
+  -d "key=YOUR_HEREWEGROW_API_KEY" \\
   -d "action=add" \\
-  -d "service=102" \\
+  -d "service=fb-001" \\
   -d "link=https://facebook.com/your-page" \\
   -d "quantity=1000"`;
     navigator.clipboard.writeText(apiCode);

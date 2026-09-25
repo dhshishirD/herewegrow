@@ -15,11 +15,18 @@ import {
   ExternalLink,
   Flame,
   Award,
-  Users
+  Users,
+  Code2,
+  Copy,
+  Check,
+  Smartphone,
+  Coins,
+  X
 } from 'lucide-react';
 import type { SmmService, UserWallet } from '../types';
 import { SMM_SERVICES_CATALOG } from '../data/growthData';
 import { updatePageSEO } from '../services/seoService';
+import { FreeTrialBooster } from '../components/FreeTrialBooster';
 
 interface CategorySEOConfig {
   slug: string;
@@ -40,15 +47,16 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
   'smm-panel': {
     slug: 'smm-panel',
     platformId: 'all',
-    title: 'Best & Cheapest SMM Panel (2026) — Fast Social Growth & Reseller API | HereWeGrow',
-    h1: 'Best & Cheapest SMM Panel for Social Media Growth',
-    tagline: 'The #1 wholesale SMM reseller panel for Facebook, Instagram, YouTube, TikTok & Telegram. Automated instant delivery with bKash, Nagad, Crypto & Cards.',
-    heroBadge: 'Wholesale Direct API • Starting at ৳2 / $0.02',
+    title: 'Best & Cheapest SMM Panel in Bangladesh (2026) — 100% Non-Drop bKash & Nagad | HereWeGrow',
+    h1: 'Best & Cheapest SMM Panel in Bangladesh (2026)',
+    tagline: 'The #1 wholesale SMM reseller panel in Bangladesh for Facebook, Instagram, YouTube, TikTok & Telegram. Automated instant delivery with bKash, Nagad, Crypto & Cards.',
+    heroBadge: 'Wholesale Direct Engine • Starting at ৳2 / $0.02',
     targetKeywords: [
       'smm panel',
       'best smm panel',
       'cheapest smm panel',
       'free smm panel',
+      'smm panel bangladesh',
       'smm panel instagram',
       'smm panel tiktok',
       'smm panel youtube',
@@ -59,8 +67,8 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
       'smm panel bkash',
       'smm panel nagad'
     ],
-    metaDescription: 'Access the best and cheapest SMM panel for Facebook, Instagram, TikTok, YouTube & Telegram. 100% Non-drop guaranteed with instant bKash, Nagad & Crypto.',
-    introText: 'HereWeGrow is a next-generation SMM reseller panel engineered for digital creators, marketing agencies, and reseller businesses. Directly integrated with high-capacity wholesale servers, our system delivers high-retention followers, viral video views, auto likes, and channel monetization watch hours with automated instant delivery.',
+    metaDescription: 'Access the best and cheapest SMM panel in Bangladesh for Facebook, Instagram, TikTok, YouTube & Telegram. 100% Non-drop guaranteed with instant bKash, Nagad & Crypto.',
+    introText: 'HereWeGrow is Bangladesh’s most reliable, next-generation SMM reseller panel engineered for digital creators, marketing agencies, and reseller businesses. Directly integrated with high-capacity wholesale servers, our system delivers high-retention followers, viral video views, auto reactions, and channel monetization watch hours with automated instant delivery and 0% gateway fee.',
     whyChooseUs: [
       { title: 'Cheapest Wholesale Rates', desc: 'Direct provider connection ensures the lowest prices on the market starting at just ৳2 / $0.02.' },
       { title: 'Zero Password Required', desc: 'We only need your public post or profile link. Your account security is 100% protected.' },
@@ -69,16 +77,20 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
     ],
     faqs: [
       {
-        q: 'What is an SMM panel and how does it work?',
-        a: 'An SMM (Social Media Marketing) panel is an automated online platform where creators, brands, and resellers purchase social media services like followers, likes, video views, and watch hours to kick-start organic algorithm reach.'
+        q: 'What is an SMM panel and how does it work in Bangladesh?',
+        a: 'An SMM (Social Media Marketing) panel is an automated online platform where creators, brands, and resellers purchase social media services like followers, likes, video views, and watch hours to kick-start organic algorithm reach. HereWeGrow connects directly with wholesale server APIs and accepts bKash, Nagad, and Crypto.'
       },
       {
-        q: 'Is HereWeGrow the best SMM panel for YouTube watch time and Facebook?',
+        q: 'Is HereWeGrow the best SMM panel for YouTube watch time and Facebook followers?',
         a: 'Yes! HereWeGrow specializes in policy-compliant YouTube 4,000 watch hours (YPP monetization safe) and authentic Bangladeshi Facebook page followers with 365-day refill protection.'
       },
       {
-        q: 'Can I resell HereWeGrow services using API?',
+        q: 'Can I resell HereWeGrow services to my clients using API?',
         a: 'Yes! We provide a free REST API v2 that seamlessly connects with any SMM website or custom software for automated order fulfillment.'
+      },
+      {
+        q: 'What is the minimum deposit and order amount on HereWeGrow?',
+        a: 'Unlike foreign panels that require $10 to $25 minimum deposits, HereWeGrow allows micro-orders starting as low as ৳2 / $0.02 with zero deposit minimums.'
       }
     ]
   },
@@ -367,9 +379,12 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
   onNavigateCategory
 }) => {
   const config = CATEGORY_CONFIGS[categorySlug] || CATEGORY_CONFIGS['smm-panel'];
-  const services = config.platformId === 'all' 
-    ? SMM_SERVICES_CATALOG.slice(0, 15)
-    : SMM_SERVICES_CATALOG.filter(s => s.platform === config.platformId);
+  const [activePlatformFilter, setActivePlatformFilter] = useState<string>(config.platformId === 'all' ? 'all' : config.platformId);
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const filteredServices = activePlatformFilter === 'all' 
+    ? SMM_SERVICES_CATALOG.slice(0, 20)
+    : SMM_SERVICES_CATALOG.filter(s => s.platform === activePlatformFilter);
 
   // YouTube Calculator State
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
@@ -392,7 +407,7 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
         { name: config.h1, url: `https://herewegrow.pro/services/${config.slug}` }
       ],
       howTo: {
-        name: `How to Order ${config.h1}`,
+        name: `How to Order on ${config.h1}`,
         description: `Step-by-step guide to ordering ${config.h1} with instant automated delivery.`,
         steps: [
           { title: 'Select Service Package', desc: 'Browse verified high-retention packages with non-drop auto refill guarantee.' },
@@ -413,7 +428,7 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
           priceCurrency: currency,
           lowPrice: currency === 'BDT' ? '2.00' : '0.02',
           highPrice: currency === 'BDT' ? '4500.00' : '38.00',
-          offerCount: String(services.length || 10)
+          offerCount: String(filteredServices.length || 10)
         },
         aggregateRating: {
           '@type': 'AggregateRating',
@@ -424,7 +439,21 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
         }
       }
     });
-  }, [config, currency, services.length]);
+  }, [config, currency, filteredServices.length]);
+
+  const handleCopyApi = () => {
+    const apiCode = `curl -X POST "https://peakerr.com/api/v2" \\
+  -d "key=YOUR_API_KEY" \\
+  -d "action=add" \\
+  -d "service=102" \\
+  -d "link=https://facebook.com/your-page" \\
+  -d "quantity=1000"`;
+    navigator.clipboard.writeText(apiCode);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  const isSmmPanel = config.slug === 'smm-panel';
 
   return (
     <div className="py-12 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fadeIn">
@@ -443,96 +472,147 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
       </nav>
 
       {/* Hero Header */}
-      <div className="text-center max-w-3xl mx-auto mb-14">
+      <div className="text-center max-w-4xl mx-auto mb-14">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-900 text-xs font-bold mb-4 border border-slate-200 shadow-2xs">
           <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
           <span>{config.heroBadge}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-950 tracking-tight leading-tight">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-950 tracking-tight leading-tight">
           {config.h1}
         </h1>
 
-        <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed">
+        <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
           {config.tagline}
         </p>
 
-        {/* Quick Keyword Pills for Organic Context */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-          {config.targetKeywords.slice(0, 6).map((kw, i) => (
-            <span key={i} className="px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-semibold text-slate-600">
-              #{kw}
-            </span>
-          ))}
+        {/* 4 Live System Metric Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-3xl mx-auto mt-8">
+          <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs text-left">
+            <div className="text-[10px] font-bold text-slate-400 uppercase">Avg Start</div>
+            <div className="text-base font-black text-slate-950 font-mono mt-0.5">⚡ 45 Seconds</div>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs text-left">
+            <div className="text-[10px] font-bold text-slate-400 uppercase">Auto Refill</div>
+            <div className="text-base font-black text-emerald-600 font-mono mt-0.5">🛡️ 365 Days</div>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs text-left">
+            <div className="text-[10px] font-bold text-slate-400 uppercase">Payment</div>
+            <div className="text-base font-black text-indigo-600 font-mono mt-0.5">🇧🇩 bKash 0%</div>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs text-left">
+            <div className="text-[10px] font-bold text-slate-400 uppercase">Completed</div>
+            <div className="text-base font-black text-slate-950 font-mono mt-0.5">📦 124,800+</div>
+          </div>
         </div>
       </div>
 
-      {/* Intro Editorial Box */}
-      <div className="max-w-4xl mx-auto p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200 mb-14 text-xs sm:text-sm text-slate-700 leading-relaxed">
-        <div className="font-bold text-slate-950 text-base mb-2 flex items-center gap-2">
-          <Award className="w-4 h-4 text-indigo-600" />
-          <span>Why Organic Authority Matters</span>
-        </div>
-        <p>{config.introText}</p>
+      {/* Embedded 1-Click Free Trial Speed Tester */}
+      <div className="max-w-5xl mx-auto mb-16">
+        <FreeTrialBooster currency={currency} onSelectServiceForOrder={onSelectService} />
       </div>
 
-      {/* Interactive YouTube Watch Hours Calculator if applicable */}
-      {config.showCalculator === 'youtube' && (
-        <div className="max-w-3xl mx-auto mb-16 p-6 sm:p-8 rounded-3xl bg-indigo-50/70 border border-indigo-200">
-          <div className="flex items-center gap-2 text-indigo-950 font-extrabold text-sm mb-4">
-            <Calculator className="w-4 h-4 text-indigo-600" />
-            <span>Interactive 4,000 Watch Hours Duration Calculator</span>
+      {/* SMM-Panel Exclusive: Data-Backed Comparison Table (Position #0 Target) */}
+      {isSmmPanel && (
+        <div className="max-w-5xl mx-auto mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Why We Beat The Market</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
+              HereWeGrow vs. Foreign Panels vs. Local Middlemen
+            </h2>
+            <p className="text-xs text-slate-500 mt-2">
+              See why over 12,000+ creators and agencies in Bangladesh switched to HereWeGrow.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Your Video Length (Minutes)</label>
-              <input
-                type="number"
-                min="1"
-                max="120"
-                value={videoMinutes}
-                onChange={(e) => setVideoMinutes(Math.max(1, Number(e.target.value)))}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Target Watch Hours</label>
-              <input
-                type="number"
-                value={targetHours}
-                onChange={(e) => setTargetHours(Math.max(100, Number(e.target.value)))}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white"
-              />
-            </div>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-white border border-indigo-100 flex items-center justify-between">
-            <div>
-              <div className="text-xs text-slate-500 font-medium">Estimated High-Retention Views Needed:</div>
-              <div className="text-2xl font-black text-indigo-950 font-mono mt-0.5">~{estimatedViewsNeeded.toLocaleString()} Views</div>
-            </div>
-            <div className="text-right">
-              <div className="text-xs text-slate-500 font-medium">Total Minutes:</div>
-              <div className="text-base font-bold text-emerald-700 font-mono">{totalMinutesNeeded.toLocaleString()} Mins</div>
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-950 text-white font-bold border-b border-slate-800">
+                    <th className="p-4 sm:p-5">Feature & Capabilities</th>
+                    <th className="p-4 sm:p-5 text-slate-400">Foreign SMM Panels</th>
+                    <th className="p-4 sm:p-5 text-slate-400">Facebook Page Middlemen</th>
+                    <th className="p-4 sm:p-5 bg-indigo-900/90 text-white font-black">💎 HereWeGrow.pro</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 sm:p-5 font-bold text-slate-900">Payment Methods</td>
+                    <td className="p-4 sm:p-5 text-slate-600">Crypto / PerfectMoney Only</td>
+                    <td className="p-4 sm:p-5 text-slate-600">Manual Send-Money (Scam Risk)</td>
+                    <td className="p-4 sm:p-5 bg-indigo-50/50 font-bold text-emerald-700">✅ Instant bKash, Nagad, Crypto & Cards</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 sm:p-5 font-bold text-slate-900">Minimum Order Size</td>
+                    <td className="p-4 sm:p-5 text-slate-600">$10 – $25 Minimum Deposit</td>
+                    <td className="p-4 sm:p-5 text-slate-600">৳500 – ৳1,000</td>
+                    <td className="p-4 sm:p-5 bg-indigo-50/50 font-bold text-slate-950">✅ ৳2 / $0.02 (Zero Risk Micro-Orders)</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 sm:p-5 font-bold text-slate-900">Free Live Speed Test</td>
+                    <td className="p-4 sm:p-5 text-rose-600">❌ No Free Trial</td>
+                    <td className="p-4 sm:p-5 text-rose-600">❌ No Free Trial</td>
+                    <td className="p-4 sm:p-5 bg-indigo-50/50 font-bold text-emerald-700">✅ 100 Free Views in 60 Seconds</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 sm:p-5 font-bold text-slate-900">Delivery Velocity</td>
+                    <td className="p-4 sm:p-5 text-slate-600">2 – 24 Hours Wait</td>
+                    <td className="p-4 sm:p-5 text-slate-600">Unpredictable (Manual)</td>
+                    <td className="p-4 sm:p-5 bg-indigo-50/50 font-bold text-slate-950">⚡ Automated Instant 45s Server Queue</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 sm:p-5 font-bold text-slate-900">Refill Warranty</td>
+                    <td className="p-4 sm:p-5 text-slate-600">0 – 7 Days</td>
+                    <td className="p-4 sm:p-5 text-slate-600">No Guarantee</td>
+                    <td className="p-4 sm:p-5 bg-indigo-50/50 font-bold text-emerald-700">🛡️ 30 to 365 Days Auto-Refill Guarantee</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 sm:p-5 font-bold text-slate-900">Built-in Creator Tools</td>
+                    <td className="p-4 sm:p-5 text-rose-600">❌ None</td>
+                    <td className="p-4 sm:p-5 text-rose-600">❌ None</td>
+                    <td className="p-4 sm:p-5 bg-indigo-50/50 font-bold text-slate-950">✅ 6+ Free Tools (Downloader, Tags, ER%)</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       )}
 
-      {/* Services List Table / Cards */}
-      <div className="max-w-5xl mx-auto mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950">
-            Available Verified Packages
-          </h2>
-          <span className="text-xs font-bold text-slate-500">
-            {services.length} services ready
-          </span>
+      {/* Platform Filter Tabs (For SMM Panel & All Views) */}
+      <div className="max-w-5xl mx-auto mb-8">
+        <div className="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 pb-4">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950">
+              {isSmmPanel ? 'Wholesale SMM Services Catalog' : 'Available Verified Packages'}
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Live server connection • Filter by platform to inspect rates
+            </p>
+          </div>
+
+          {/* Filter Pills */}
+          <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200">
+            {['all', 'facebook', 'instagram', 'youtube', 'tiktok', 'telegram', 'twitter'].map((p) => (
+              <button
+                key={p}
+                onClick={() => setActivePlatformFilter(p)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activePlatformFilter === p
+                    ? 'bg-slate-950 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-white'
+                }`}
+              >
+                {p.charAt(0).toUpperCase() + p.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="space-y-3">
-          {services.map((s) => (
+        {/* Services List Cards */}
+        <div className="space-y-3 mt-6">
+          {filteredServices.map((s) => (
             <div 
               key={s.id}
               className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-indigo-400 hover:shadow-sm transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
@@ -544,6 +624,9 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
                   </span>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
                     Non-Drop Refill
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200 uppercase">
+                    {s.platform}
                   </span>
                 </div>
                 <div className="font-extrabold text-sm text-slate-900">{s.name}</div>
@@ -576,6 +659,69 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
           ))}
         </div>
       </div>
+
+      {/* 3-Step Ordering Walkthrough Guide (`HowTo` Schema) */}
+      <div className="max-w-5xl mx-auto mb-16">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950 text-center mb-8">
+          How to Place an Order in 60 Seconds
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2">
+            <span className="text-2xl font-black text-indigo-600 font-mono">01</span>
+            <h3 className="text-sm font-bold text-slate-900">Select Service Package</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Choose your targeted social platform and review guaranteed non-drop pricing.
+            </p>
+          </div>
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2">
+            <span className="text-2xl font-black text-indigo-600 font-mono">02</span>
+            <h3 className="text-sm font-bold text-slate-900">Enter Public Link</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Paste your public post, video, or channel link. Zero passwords or account access required.
+            </p>
+          </div>
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2">
+            <span className="text-2xl font-black text-indigo-600 font-mono">03</span>
+            <h3 className="text-sm font-bold text-slate-900">Instant 60s Start</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Pay via bKash, Nagad, Crypto, or Wallet. Your order queues into automated servers immediately.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Reseller REST API v2 Integration Code Box */}
+      {isSmmPanel && (
+        <div className="max-w-5xl mx-auto mb-16 p-6 sm:p-8 rounded-3xl bg-slate-950 text-white shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Code2 className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-extrabold text-base sm:text-lg">Reseller REST API v2 (Standard SMM Format)</h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                Compatible with RentAPanel, SmartPanel, PerfectPanel, and custom applications.
+              </p>
+            </div>
+            <button
+              onClick={handleCopyApi}
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              {copiedCode ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              <span>{copiedCode ? 'Copied to Clipboard!' : 'Copy cURL Snippet'}</span>
+            </button>
+          </div>
+
+          <pre className="p-4 rounded-2xl bg-slate-900 border border-slate-800 font-mono text-xs text-emerald-400 overflow-x-auto">
+{`curl -X POST "https://peakerr.com/api/v2" \\
+  -d "key=YOUR_API_KEY" \\
+  -d "action=add" \\
+  -d "service=102" \\
+  -d "link=https://facebook.com/your-page" \\
+  -d "quantity=1000"`}
+          </pre>
+        </div>
+      )}
 
       {/* Why Choose Us 4 Pillars */}
       <div className="max-w-5xl mx-auto mb-16">

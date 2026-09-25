@@ -14,9 +14,11 @@ import { OrderConfirmationModal } from './components/OrderConfirmationModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { LiveSupportWidget } from './components/LiveSupportWidget';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
+import { ToolLandingPage, TOOL_CONFIGS } from './pages/ToolLandingPage';
 import { AffiliatePortal } from './components/AffiliatePortal';
 import { GeoSelectorModal } from './components/GeoSelectorModal';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { updatePageSEO } from './services/seoService';
 import confetti from 'canvas-confetti';
 import { Footer } from './components/Footer';
 import { getLocalWallet, getLocalOrders, saveLocalWallet, createPaidGatewayOrder, depositFunds, verifyAndCreditPayment } from './services/growthService';
@@ -25,9 +27,10 @@ import { ALL_SERVICES } from './data/growthData';
 import type { UserWallet, SmmOrder, SmmService, GrowthBundle, SocialPlatform } from './types';
 
 function MainAppContent() {
-  const { currency, setCurrency } = useLanguage();
+  const { currency, setCurrency, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<string>('store');
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
+  const [activeToolSlug, setActiveToolSlug] = useState<string | null>(null);
   const [wallet, setWallet] = useState<UserWallet>(() => getLocalWallet());
   const [orders, setOrders] = useState<SmmOrder[]>(() => getLocalOrders());
   
@@ -60,8 +63,39 @@ function MainAppContent() {
       const slug = path.replace('services/', '');
       if (CATEGORY_CONFIGS[slug]) {
         setActiveCategorySlug(slug);
+        setActiveToolSlug(null);
         setActiveTab('category_landing');
       }
+    } else if (path.startsWith('tools/')) {
+      const slug = path.replace('tools/', '');
+      if (TOOL_CONFIGS[slug]) {
+        setActiveToolSlug(slug);
+        setActiveCategorySlug(null);
+        setActiveTab('tool_landing');
+      }
+    } else if (path === 'affiliate') {
+      setActiveTab('affiliate');
+      setActiveCategorySlug(null);
+      setActiveToolSlug(null);
+    } else {
+      // Default homepage SEO
+      updatePageSEO({
+        title: language === 'bn'
+          ? 'HereWeGrow — বাংলাদেশের সেরা সোশ্যাল ক্রিয়েটর টুলস ও গ্রোথ ইঞ্জিন'
+          : 'HereWeGrow — All-in-One Social Creator Tools & Verified Growth Studio',
+        description: language === 'bn'
+          ? 'ফ্রি ক্রিয়েটর টুলস (টিকটক ডাউনলোডার, ইউটিউব ট্যাগ এক্সট্র্যাক্টর, ইআর% ক্যালকুলেটর) এবং নন-ড্রপ গ্যারান্টিযুক্ত গ্রোথ সার্ভিস। বিকাশ, নগদ ও বাইনান্স পে।'
+          : 'Supercharge your social reach with 100% Free Creator Tools (TikTok Downloader, YouTube Tag Extractor, ER% Calculator, Bio Fonts) and verified reliable growth services with bKash, Nagad, Crypto & Cards.',
+        canonicalUrl: 'https://herewegrow.pro/',
+        keywords: [
+          'smm panel bangladesh',
+          'buy facebook followers bkash',
+          'youtube 4000 watch hours',
+          'free tiktok downloader hd',
+          'instagram engagement calculator',
+          'HereWeGrow'
+        ]
+      });
     }
 
     // Check if returning from Paymently gateway (bKash/Nagad/Cards)
@@ -81,7 +115,6 @@ function MainAppContent() {
       setIsWalletModalOpen(false);
 
       if (invoiceId) {
-        // Query live verification from Paymently
         verifyAndCreditPayment(invoiceId).then(res => {
           if (res.wallet) {
             setWallet(res.wallet);
@@ -99,7 +132,6 @@ function MainAppContent() {
           }
         });
       } else {
-        // 1. Finalize Pending Direct Order from Gateway Checkout
         const pendingOrderStr = localStorage.getItem('hwg_pending_order');
         if (pendingOrderStr) {
           try {
@@ -140,7 +172,6 @@ function MainAppContent() {
           }
         }
 
-        // 2. Finalize Pending Wallet Deposit
         const pendingDepositStr = localStorage.getItem('hwg_pending_deposit');
         if (pendingDepositStr) {
           try {
@@ -160,10 +191,9 @@ function MainAppContent() {
         }
       }
 
-      // Clean query params from address bar
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
+  }, [language]);
 
   const handleCurrencyChange = (newCurr: 'BDT' | 'USD') => {
     setCurrency(newCurr);
@@ -193,8 +223,6 @@ function MainAppContent() {
     setWallet(updatedWallet);
     setConfirmedOrder(newOrder);
     setIsConfirmationModalOpen(true);
-    
-    // Credit affiliate commission if this order came from a referral link
     creditAffiliateOnOrder(newOrder.chargeBDT || 0);
   };
 
@@ -203,14 +231,18 @@ function MainAppContent() {
       setSelectedStorePlatform(platformId as SocialPlatform);
     }
     setActiveCategorySlug(null);
+    setActiveToolSlug(null);
     setActiveTab('store');
     window.scrollTo({ top: 400, behavior: 'smooth' });
   };
 
   const handleTabNavigate = (tabId: string) => {
     setActiveCategorySlug(null);
+    setActiveToolSlug(null);
     setActiveTab(tabId);
-    if (window.location.pathname !== '/') {
+    if (tabId === 'affiliate') {
+      window.history.pushState({}, '', '/affiliate');
+    } else if (window.location.pathname !== '/') {
       window.history.pushState({}, '', '/');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -218,8 +250,17 @@ function MainAppContent() {
 
   const handleNavigateCategory = (slug: string) => {
     setActiveCategorySlug(slug);
+    setActiveToolSlug(null);
     setActiveTab('category_landing');
     window.history.pushState({}, '', `/services/${slug}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigateTool = (slug: string) => {
+    setActiveToolSlug(slug);
+    setActiveCategorySlug(null);
+    setActiveTab('tool_landing');
+    window.history.pushState({}, '', `/tools/${slug}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -263,6 +304,16 @@ function MainAppContent() {
             currency={currency}
             onSelectService={handleOpenServiceOrder}
             onOpenWallet={() => setIsWalletModalOpen(true)}
+            onNavigateHome={() => handleTabNavigate('store')}
+            onNavigateCategory={handleNavigateCategory}
+          />
+        )}
+
+        {/* Dedicated High-Intent Free Tool Landing Page */}
+        {activeTab === 'tool_landing' && activeToolSlug && (
+          <ToolLandingPage
+            toolSlug={activeToolSlug}
+            currency={currency}
             onNavigateHome={() => handleTabNavigate('store')}
             onNavigateCategory={handleNavigateCategory}
           />
@@ -350,6 +401,7 @@ function MainAppContent() {
       <Footer 
         onNavigateTab={handleTabNavigate} 
         onNavigateCategory={handleNavigateCategory}
+        onNavigateTool={handleNavigateTool}
         onOpenAdmin={() => setIsAdminModalOpen(true)} 
       />
 
@@ -403,6 +455,7 @@ function MainAppContent() {
         onNavigateToTracker={() => {
           setIsConfirmationModalOpen(false);
           setActiveCategorySlug(null);
+          setActiveToolSlug(null);
           setActiveTab('orders');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}

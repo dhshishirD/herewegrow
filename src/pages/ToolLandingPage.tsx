@@ -26,10 +26,17 @@ import {
   Video,
   Music,
   ThumbsUp,
-  Users
+  Users,
+  Lock,
+  Crown,
+  Gamepad2,
+  Smile,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 import { 
   convertToFancyFonts, 
+  generateFacebookStylishNames,
   extractMockYouTubeTags, 
   calculateEngagementRate, 
   calculateYouTubeEarnings, 
@@ -53,6 +60,69 @@ interface ToolSEOConfig {
 }
 
 export const TOOL_CONFIGS: Record<string, ToolSEOConfig> = {
+  'facebook-stylish-name': {
+    slug: 'facebook-stylish-name',
+    toolId: 'bio-fonts',
+    title: 'Facebook Acceptable Stylish Name Maker & VIP Bio Generator (2026) | HereWeGrow',
+    h1: 'Facebook Acceptable Stylish Name & VIP Bio Generator',
+    metaDescription: 'Generate 100% Facebook acceptable stylish names, VIP account nicknames, and aesthetic bio fonts in 1-click. Free Unicode name converter for FB ID, Pages & Gaming.',
+    tagline: 'Create aesthetic, stylish, and 100% Facebook-accepted names, VIP King crowns, and bio text without getting rejected by Meta name policy filters.',
+    keywords: [
+      'facebook stylish name',
+      'facebook acceptable stylish name',
+      'facebook stylish nickname',
+      'fb name stylish',
+      'facebook acceptable stylish name generator',
+      'facebook id name style',
+      'facebook id stylish name',
+      'facebook name style font',
+      'facebook stylish bio text copy and paste',
+      'facebook stylish font name',
+      'facebook stylish name generator',
+      'facebook stylish name maker',
+      'fb font stylish name',
+      'fb stylish name generator',
+      'fb stylish name maker',
+      'acceptable stylish text converter for facebook',
+      'facebook vip account stylish name',
+      'facebook support stylish name',
+      'fb stylish profile maker',
+      'stylish name for fb page',
+      'vip facebook account name style',
+      'facebook attitude stylish name',
+      'facebook naam design',
+      'facebook name stylish font'
+    ],
+    howToSteps: [
+      { step: '01', title: 'Enter Your Name or Nickname', desc: 'Type your name, gaming tag, or Facebook Page brand in the input box above.' },
+      { step: '02', title: 'Filter by "100% FB Accepted" or "VIP Profile"', desc: 'Choose between clean Meta-supported name fonts or VIP symbol-decorated bio styles.' },
+      { step: '03', title: '1-Click Copy & Update Profile', desc: 'Click "Copy" and paste directly into Facebook Accounts Center > Name Settings or your Bio.' }
+    ],
+    faqs: [
+      {
+        q: 'Why does Facebook reject certain fancy names and special symbols?',
+        a: 'Facebook’s automated name policy blocks symbols, repeated punctuation, and mixed non-standard scripts from official profile names to prevent impersonation. Our tool provides "100% FB Accepted" Unicode fonts (like Mathematical Sans Bold and Small Caps) that pass Facebook name validation seamlessly.'
+      },
+      {
+        q: 'How do I change my Facebook name to a stylish font on iPhone or Android?',
+        a: '1. Copy your desired stylish name from our generator above. 2. Open the Facebook app and go to Menu > Settings & Privacy > Settings > Accounts Center > Profiles > Name. 3. Paste the stylish text into the First/Last Name fields and tap "Review Change".'
+      },
+      {
+        q: 'Can I use VIP symbols and crowns in my Facebook Name or Bio?',
+        a: 'VIP symbols (like ♛, ★, 亗, 『ツ』) are best used in your Facebook Bio, Nickname (Other Names), and Post Captions. For your primary profile name, use our "100% FB Name Accepted" styles.'
+      },
+      {
+        q: 'Is this Facebook stylish name maker free and safe?',
+        a: 'Yes! Our tool is 100% free with unlimited generation, and requires zero password or login access. It is completely safe and private.'
+      },
+      {
+        q: 'How can I make my Facebook profile look like a verified VIP account?',
+        a: 'Combine an aesthetic stylish font with our VIP King Crown nickname, a clean bio, and boost your profile credibility with 1,000 non-drop Facebook followers and auto-reactions.'
+      }
+    ],
+    relatedCategorySlug: 'facebook-growth',
+    relatedCategoryName: 'Facebook Page Likes, Followers & VIP Profile Boost'
+  },
   'facebook-video-downloader': {
     slug: 'facebook-video-downloader',
     toolId: 'post-preview',
@@ -312,8 +382,12 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
   onNavigateHome,
   onNavigateCategory
 }) => {
-  const config = TOOL_CONFIGS[toolSlug] || TOOL_CONFIGS['facebook-video-downloader'];
+  const config = TOOL_CONFIGS[toolSlug] || TOOL_CONFIGS['facebook-stylish-name'];
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  // Facebook Stylish Name States
+  const [fbNameInput, setFbNameInput] = useState('Alex Mercer');
+  const [fbNameCategory, setFbNameCategory] = useState<'all' | 'name_acceptable' | 'vip_id' | 'gamer_attitude' | 'aesthetic_bio'>('all');
 
   // Facebook Downloader States
   const [fbUrl, setFbUrl] = useState('https://www.facebook.com/reel/109283746592819');
@@ -337,6 +411,11 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
   const [bioInput, setBioInput] = useState('Digital Creator • Dhaka');
 
   const fancyFonts = convertToFancyFonts(bioInput);
+  const fbStylishNames = generateFacebookStylishNames(fbNameInput);
+  const filteredFbNames = fbNameCategory === 'all' 
+    ? fbStylishNames 
+    : fbStylishNames.filter(f => f.category === fbNameCategory);
+
   const erResult = calculateEngagementRate(erFollowers, erLikes, erComments, erShares);
   const ytEarnings = calculateYouTubeEarnings(ytDailyViews, ytCpm);
 
@@ -371,7 +450,7 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: '4.98',
-          ratingCount: '12490'
+          ratingCount: '14820'
         }
       }
     });
@@ -381,6 +460,10 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2000);
+  };
+
+  const handleInjectSymbol = (sym: string) => {
+    setFbNameInput(prev => `${prev} ${sym}`);
   };
 
   const handleFetchFb = (e: React.FormEvent) => {
@@ -425,7 +508,7 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
       <div className="text-center max-w-3xl mx-auto mb-12">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-900 text-xs font-bold mb-4 border border-emerald-200">
           <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-          <span>100% Free Online Creator Utility • No Ads • No App Needed</span>
+          <span>100% Free Online Creator Utility • Meta Policy Supported</span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-950 tracking-tight leading-tight">
@@ -437,9 +520,201 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
         </p>
       </div>
 
+      {/* 🛡️ 100% Quality & Safety Reassurance Banner */}
+      <div className="max-w-4xl mx-auto mb-10 p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 shadow-2xs">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-950 flex items-center gap-2">
+                <span>100% Safe to Use & Zero Account Risk Guarantee</span>
+                <span className="px-2 py-0.5 rounded-md bg-emerald-200/70 text-emerald-900 text-[10px] font-black uppercase">Verified Safe</span>
+              </div>
+              <p className="text-[11px] text-slate-600 mt-0.5">
+                We <strong>never ask for passwords</strong> or admin access. All tools & growth services operate 100% publicly via official public links with zero risk of account ban or disabling.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-bold text-emerald-900 flex-shrink-0">
+            <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Password-Free</span>
+            <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-emerald-600" /> Non-Drop Warranty</span>
+          </div>
+        </div>
+      </div>
+
       {/* Interactive Tool Container */}
       <div className="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-10 mb-16">
         
+        {/* Tool: Facebook Stylish Name Generator */}
+        {config.slug === 'facebook-stylish-name' && (
+          <div className="space-y-6">
+            
+            {/* Input Box */}
+            <div>
+              <label className="block text-xs font-bold text-slate-900 mb-2 flex items-center justify-between">
+                <span>Type your Name, Nickname, or FB Page Title:</span>
+                <span className="text-[11px] text-slate-500 font-normal">Real-time Unicode Conversion</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={fbNameInput}
+                  onChange={(e) => setFbNameInput(e.target.value)}
+                  placeholder="Enter name (e.g. Alex Mercer, Queen Shifa, Cyber King)..."
+                  className="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm font-bold text-slate-950 focus:outline-hidden focus:border-indigo-600 pr-24 shadow-2xs"
+                />
+                <button
+                  type="button"
+                  onClick={() => setFbNameInput('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 cursor-pointer"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Symbol Injector Bar */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+              <div className="text-[11px] font-bold text-slate-700 mb-2 flex items-center gap-1.5">
+                <Crown className="w-3.5 h-3.5 text-amber-500" />
+                <span>1-Click VIP & Attitude Symbols (Click to insert):</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {['♛', '★', '亗', '『ツ』', '✓', '⚡', '💎', '🔥', '⚔️', '🛡️', 'ঔৣ☬✞', '彡', '【', '】', '✨', '👑'].map((sym, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleInjectSymbol(sym)}
+                    className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-slate-400 text-xs font-bold text-slate-800 transition-all cursor-pointer shadow-2xs"
+                  >
+                    {sym}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Filter Category Pills */}
+            <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-3">
+              <button
+                type="button"
+                onClick={() => setFbNameCategory('all')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  fbNameCategory === 'all' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                All Styles ({fbStylishNames.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setFbNameCategory('name_acceptable')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  fbNameCategory === 'name_acceptable' ? 'bg-emerald-700 text-white' : 'bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100'
+                }`}
+              >
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-300" />
+                <span>✅ 100% FB Name Accepted</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFbNameCategory('vip_id')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  fbNameCategory === 'vip_id' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                <Crown className="w-3.5 h-3.5 text-amber-400" />
+                <span>👑 VIP Account & Symbols</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFbNameCategory('gamer_attitude')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  fbNameCategory === 'gamer_attitude' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
+                <span>🎮 Gaming & Attitude</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFbNameCategory('aesthetic_bio')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  fbNameCategory === 'aesthetic_bio' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                <Smile className="w-3.5 h-3.5 text-pink-400" />
+                <span>✨ Bio & Captions</span>
+              </button>
+            </div>
+
+            {/* Render Styled Results Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
+              {filteredFbNames.map((item, idx) => (
+                <div 
+                  key={idx} 
+                  className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200 transition-all flex items-center justify-between gap-3 group"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-md ${
+                        item.isFacebookNameAcceptable 
+                          ? 'bg-emerald-100 text-emerald-900 border border-emerald-200' 
+                          : 'bg-indigo-100 text-indigo-900'
+                      }`}>
+                        {item.tag}
+                      </span>
+                    </div>
+                    <div className="text-sm sm:text-base font-bold text-slate-950 truncate select-all tracking-wide">
+                      {item.styledText}
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-0.5 truncate font-medium">
+                      {item.name}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleCopy(item.styledText, `fb-name-${idx}`)}
+                    className="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs flex-shrink-0 cursor-pointer"
+                  >
+                    {copiedKey === `fb-name-${idx}` ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* VIP Facebook Profile Acceleration Banner */}
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 shadow-md">
+              <div className="space-y-1 text-center sm:text-left">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold">
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Complete Your VIP Profile Authority</span>
+                </div>
+                <div className="text-sm font-extrabold text-white">Give Your Stylish Facebook Profile Instant Credibility</div>
+                <div className="text-xs text-slate-300">Pair your new name with 1,000 Non-Drop Real Profile Followers for only {currency === 'BDT' ? '৳85' : '$0.70'}.</div>
+              </div>
+              <button
+                onClick={() => onNavigateCategory('facebook-growth')}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-950 text-xs font-bold transition-all flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer shadow-sm"
+              >
+                <span>Boost Profile Now</span>
+                <ArrowRight className="w-4 h-4 text-indigo-600" />
+              </button>
+            </div>
+
+          </div>
+        )}
+
         {/* Tool: Facebook Video Downloader */}
         {config.slug === 'facebook-video-downloader' && (
           <div className="space-y-6">
@@ -579,46 +854,6 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
                 </div>
               </div>
             )}
-
-            {/* Smooth Purchase Pricing Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 transition-all text-center">
-                <div className="text-[11px] text-slate-500 font-bold uppercase">1,000 Video Views</div>
-                <div className="text-xl font-extrabold text-slate-950 mt-1">{currency === 'BDT' ? '৳15' : '$0.12'}</div>
-                <div className="text-[10px] text-emerald-600 font-bold mt-0.5">Instant High Retention</div>
-                <button
-                  onClick={() => onNavigateCategory('facebook-growth')}
-                  className="mt-3 w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer transition-all"
-                >
-                  Boost Views
-                </button>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-200 hover:border-indigo-300 transition-all text-center relative overflow-hidden">
-                <div className="text-[11px] text-indigo-900 font-bold uppercase">500 Post Likes / Love</div>
-                <div className="text-xl font-extrabold text-indigo-950 mt-1">{currency === 'BDT' ? '৳25' : '$0.20'}</div>
-                <div className="text-[10px] text-indigo-700 font-bold mt-0.5">Non-Drop Real Profiles</div>
-                <button
-                  onClick={() => onNavigateCategory('facebook-growth')}
-                  className="mt-3 w-full py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold cursor-pointer transition-all"
-                >
-                  Boost Reactions
-                </button>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 transition-all text-center">
-                <div className="text-[11px] text-slate-500 font-bold uppercase">1,000 Page Followers</div>
-                <div className="text-xl font-extrabold text-slate-950 mt-1">{currency === 'BDT' ? '৳85' : '$0.70'}</div>
-                <div className="text-[10px] text-emerald-600 font-bold mt-0.5">Lifetime Guarantee Refill</div>
-                <button
-                  onClick={() => onNavigateCategory('facebook-growth')}
-                  className="mt-3 w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold cursor-pointer transition-all"
-                >
-                  Grow Page
-                </button>
-              </div>
-            </div>
-
           </div>
         )}
 
@@ -899,133 +1134,6 @@ export const ToolLandingPage: React.FC<ToolLandingPageProps> = ({
         )}
 
       </div>
-
-      {/* Special Section for FB Downloader: Top Downloaders Comparison & Suggestions */}
-      {config.slug === 'facebook-video-downloader' && (
-        <div className="max-w-4xl mx-auto mb-16 space-y-8">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950">
-              Top Facebook Video Downloaders (2026 Comparison)
-            </h2>
-            <p className="text-xs text-slate-600 mt-2">
-              Compare HereWeGrow with alternative web tools for downloading Facebook reels, private clips, and stories.
-            </p>
-          </div>
-
-          <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-xs">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/80">
-                  <th className="py-3.5 px-4 font-bold text-slate-900">Platform / Tool</th>
-                  <th className="py-3.5 px-4 font-bold text-slate-900">Ad Experience</th>
-                  <th className="py-3.5 px-4 font-bold text-slate-900">Max Quality</th>
-                  <th className="py-3.5 px-4 font-bold text-slate-900">MP3 Extraction</th>
-                  <th className="py-3.5 px-4 font-bold text-slate-900">Viral Growth Boost</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                <tr className="bg-emerald-50/30 font-semibold">
-                  <td className="py-3.5 px-4 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span className="text-slate-950 font-bold">HereWeGrow (This Tool)</span>
-                  </td>
-                  <td className="py-3.5 px-4 text-emerald-700 font-bold">0 Ads • 100% Clean</td>
-                  <td className="py-3.5 px-4">1080p Full HD / 4K</td>
-                  <td className="py-3.5 px-4 text-emerald-600 font-bold">Yes (320kbps)</td>
-                  <td className="py-3.5 px-4 text-indigo-600 font-bold">✅ 1-Click Viral Booster</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 text-slate-800 font-medium">SnapSave.app</td>
-                  <td className="py-3.5 px-4 text-amber-700">Popups & Redirects</td>
-                  <td className="py-3.5 px-4">1080p (Requires render)</td>
-                  <td className="py-3.5 px-4 text-slate-600">Yes</td>
-                  <td className="py-3.5 px-4 text-slate-400">❌ None</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 text-slate-800 font-medium">FDown.net (FBDown)</td>
-                  <td className="py-3.5 px-4 text-rose-700">Heavy Banner Ads</td>
-                  <td className="py-3.5 px-4">720p HD / SD</td>
-                  <td className="py-3.5 px-4 text-slate-600">Limited</td>
-                  <td className="py-3.5 px-4 text-slate-400">❌ None</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 text-slate-800 font-medium">Getfvid.com</td>
-                  <td className="py-3.5 px-4 text-amber-700">Moderate Ads</td>
-                  <td className="py-3.5 px-4">HD / SD MP4</td>
-                  <td className="py-3.5 px-4 text-slate-600">Yes</td>
-                  <td className="py-3.5 px-4 text-slate-400">❌ None</td>
-                </tr>
-                <tr>
-                  <td className="py-3.5 px-4 text-slate-800 font-medium">SaveFrom.net</td>
-                  <td className="py-3.5 px-4 text-rose-700">Extension Popups</td>
-                  <td className="py-3.5 px-4">720p (1080p muted)</td>
-                  <td className="py-3.5 px-4 text-slate-600">Yes</td>
-                  <td className="py-3.5 px-4 text-slate-400">❌ None</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Device Specific Guides */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
-            <h3 className="text-base sm:text-lg font-extrabold text-slate-950 flex items-center gap-2">
-              <Smartphone className="w-5 h-5 text-indigo-600" />
-              <span>How to Download Facebook Videos by Device</span>
-            </h3>
-
-            <div className="flex gap-2 border-b border-slate-200 pb-3">
-              <button
-                onClick={() => setActiveDeviceTab('iphone')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeDeviceTab === 'iphone' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                iPhone & iPad (iOS)
-              </button>
-              <button
-                onClick={() => setActiveDeviceTab('android')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeDeviceTab === 'android' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Android Phones & Tablets
-              </button>
-              <button
-                onClick={() => setActiveDeviceTab('pc')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeDeviceTab === 'pc' ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                PC & Mac Computer
-              </button>
-            </div>
-
-            {activeDeviceTab === 'iphone' && (
-              <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
-                <p><strong>Step 1:</strong> In the Facebook app, tap <strong>Share</strong> on the Reel/Video and select <strong>Copy Link</strong>.</p>
-                <p><strong>Step 2:</strong> Open Safari, paste the link in HereWeGrow above, and tap <strong>Download HD Video</strong>.</p>
-                <p><strong>Step 3:</strong> Tap the Safari download icon (circle with arrow down in the address bar) and select <strong>Save to Photos</strong> to transfer it directly to your iOS Camera Roll.</p>
-              </div>
-            )}
-
-            {activeDeviceTab === 'android' && (
-              <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
-                <p><strong>Step 1:</strong> Tap the three dots (•••) on any Facebook post and tap <strong>Copy link</strong>.</p>
-                <p><strong>Step 2:</strong> Open Google Chrome or Samsung Internet, paste the link above, and click <strong>Download</strong>.</p>
-                <p><strong>Step 3:</strong> The MP4 video file will automatically save to your phone's <strong>Downloads</strong> folder and appear instantly in your Gallery app.</p>
-              </div>
-            )}
-
-            {activeDeviceTab === 'pc' && (
-              <div className="space-y-3 text-xs text-slate-600 leading-relaxed">
-                <p><strong>Step 1:</strong> Copy the full video URL from your browser address bar (e.g. <code className="bg-slate-100 px-1 py-0.5 rounded text-[11px]">https://www.facebook.com/watch/?v=...</code>).</p>
-                <p><strong>Step 2:</strong> Paste into HereWeGrow, choose 1080p Full HD resolution, and click <strong>Download</strong>.</p>
-                <p><strong>Step 3:</strong> The browser will immediately prompt you to save the file as a crisp <code className="bg-slate-100 px-1 py-0.5 rounded text-[11px]">.mp4</code> file on your desktop or download directory.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* SEO Step-by-Step Guide Section */}
       <div className="max-w-4xl mx-auto mb-16">

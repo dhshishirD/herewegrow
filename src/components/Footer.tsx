@@ -133,6 +133,11 @@ export const Footer: React.FC<FooterProps> = ({
                 </button>
               </li>
               <li>
+                <button onClick={() => handleToolClick('facebook-stylish-name')} className="hover:text-slate-900 transition-colors text-left cursor-pointer font-bold text-slate-900">
+                  {isBn ? 'ফেসবুক স্টাইলিশ নাম ও ভিআইপি বায়ো' : 'Facebook Stylish Name Maker'}
+                </button>
+              </li>
+              <li>
                 <button onClick={() => handleToolClick('tiktok-downloader')} className="hover:text-slate-900 transition-colors text-left cursor-pointer">
                   {isBn ? 'টিকটক নো-ওয়াটারমার্ক ডাউনলোডার' : 'TikTok Video Downloader HD'}
                 </button>

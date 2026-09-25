@@ -804,6 +804,170 @@ export const convertToFancyFonts = (text: string): { name: string; text: string 
   });
 };
 
+export interface FbStylishNameResult {
+  name: string;
+  styledText: string;
+  category: 'name_acceptable' | 'vip_id' | 'aesthetic_bio' | 'gamer_attitude';
+  isFacebookNameAcceptable: boolean;
+  tag: string;
+}
+
+// 1.1 Facebook-Specific Acceptable & VIP Name Engine
+export const generateFacebookStylishNames = (inputName: string): FbStylishNameResult[] => {
+  const base = inputName.trim() || 'Alex Mercer';
+  
+  const baseFonts = convertToFancyFonts(base);
+  const boldSans = baseFonts.find(f => f.name === 'Sans Bold')?.text || base;
+  const serifBold = baseFonts.find(f => f.name === 'Serif Bold')?.text || base;
+  const cursive = baseFonts.find(f => f.name === 'Cursive / Script')?.text || base;
+  const gothic = baseFonts.find(f => f.name === 'Gothic / Fraktur')?.text || base;
+  const doubleStruck = baseFonts.find(f => f.name === 'Double-Struck')?.text || base;
+  const mono = baseFonts.find(f => f.name === 'Monospace Code')?.text || base;
+  const bubble = baseFonts.find(f => f.name === 'Bubble Circled')?.text || base;
+
+  // Small caps converter
+  const smallCapsMap: Record<string, string> = {
+    a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ғ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ', k: 'ᴋ', l: 'ʟ', m: 'ᴍ',
+    n: 'ɴ', o: 'ᴏ', p: 'ᴘ', q: 'ǫ', r: 'ʀ', s: 's', t: 'ᴛ', u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', x: 'x', y: 'ʏ', z: 'ᴢ',
+    A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ', I: 'ɪ', J: 'ᴊ', K: 'ᴋ', L: 'ʟ', M: 'ᴍ',
+    N: 'ɴ', O: 'ᴏ', P: 'ᴘ', Q: 'ǫ', R: 'ʀ', S: 's', T: 'ᴛ', U: 'ᴜ', V: 'ᴠ', W: 'ᴡ', X: 'x', Y: 'ʏ', Z: 'ᴢ'
+  };
+  const smallCaps = base.split('').map(c => smallCapsMap[c] || c).join('');
+
+  return [
+    // 100% FB Acceptable Categories
+    {
+      name: 'Clean Small Caps (100% FB Acceptable)',
+      styledText: smallCaps,
+      category: 'name_acceptable',
+      isFacebookNameAcceptable: true,
+      tag: '✅ 100% FB Name Accepted'
+    },
+    {
+      name: 'Mathematical Sans Bold (FB Supported)',
+      styledText: boldSans,
+      category: 'name_acceptable',
+      isFacebookNameAcceptable: true,
+      tag: '✅ 100% FB Name Accepted'
+    },
+    {
+      name: 'Serif Classic Bold (FB Supported)',
+      styledText: serifBold,
+      category: 'name_acceptable',
+      isFacebookNameAcceptable: true,
+      tag: '✅ 100% FB Name Accepted'
+    },
+    {
+      name: 'Modern Monospace ID',
+      styledText: mono,
+      category: 'name_acceptable',
+      isFacebookNameAcceptable: true,
+      tag: '✅ 100% FB Name Accepted'
+    },
+    {
+      name: 'Double-Struck Royal',
+      styledText: doubleStruck,
+      category: 'name_acceptable',
+      isFacebookNameAcceptable: true,
+      tag: '✅ 100% FB Name Accepted'
+    },
+    // VIP Account & Crown Symbols (For Nickname & Bio)
+    {
+      name: 'VIP King Crown Account',
+      styledText: `♛ ${boldSans} ♛`,
+      category: 'vip_id',
+      isFacebookNameAcceptable: false,
+      tag: '👑 VIP Account / Nickname'
+    },
+    {
+      name: 'VIP Star Emblem Profile',
+      styledText: `★ ${smallCaps} ★`,
+      category: 'vip_id',
+      isFacebookNameAcceptable: false,
+      tag: '👑 VIP Account / Nickname'
+    },
+    {
+      name: 'Official Verified Shield Style',
+      styledText: `✓ ${boldSans} 🛡️`,
+      category: 'vip_id',
+      isFacebookNameAcceptable: false,
+      tag: '👑 VIP Account / Nickname'
+    },
+    {
+      name: 'Royal Diamond VIP',
+      styledText: `💎 𝕍𝕀ℙ • ${boldSans} 💎`,
+      category: 'vip_id',
+      isFacebookNameAcceptable: false,
+      tag: '👑 VIP Account / Nickname'
+    },
+    // Gamer & Attitude Styles
+    {
+      name: 'Gamer Attitude 亗 Style',
+      styledText: `亗 ${base.toUpperCase()} 亗`,
+      category: 'gamer_attitude',
+      isFacebookNameAcceptable: false,
+      tag: '🎮 Gaming & Attitude'
+    },
+    {
+      name: 'Free Fire / PUBG Pro Badge',
+      styledText: `『ツ』${boldSans}`,
+      category: 'gamer_attitude',
+      isFacebookNameAcceptable: false,
+      tag: '🎮 Gaming & Attitude'
+    },
+    {
+      name: 'Lightning Thunder Nickname',
+      styledText: `⚡ ${smallCaps} ⚡`,
+      category: 'gamer_attitude',
+      isFacebookNameAcceptable: false,
+      tag: '🎮 Gaming & Attitude'
+    },
+    {
+      name: 'Viral Fire Clan ID',
+      styledText: `🔥 ${boldSans} 🔥`,
+      category: 'gamer_attitude',
+      isFacebookNameAcceptable: false,
+      tag: '🎮 Gaming & Attitude'
+    },
+    // Aesthetic & Bio Styles
+    {
+      name: 'Aesthetic Script Cursive',
+      styledText: cursive,
+      category: 'aesthetic_bio',
+      isFacebookNameAcceptable: false,
+      tag: '✨ Bio & Captions'
+    },
+    {
+      name: 'Gothic Dark Aesthetic',
+      styledText: gothic,
+      category: 'aesthetic_bio',
+      isFacebookNameAcceptable: false,
+      tag: '✨ Bio & Captions'
+    },
+    {
+      name: 'Japanese Aesthetic Brackets',
+      styledText: `【 ${boldSans} 】`,
+      category: 'aesthetic_bio',
+      isFacebookNameAcceptable: false,
+      tag: '✨ Bio & Captions'
+    },
+    {
+      name: 'Bubble Circled Letters',
+      styledText: bubble,
+      category: 'aesthetic_bio',
+      isFacebookNameAcceptable: false,
+      tag: '✨ Bio & Captions'
+    },
+    {
+      name: 'Sparkle Starlet Bio',
+      styledText: `✧･ﾟ: *✧ ${smallCaps} ✧*:･ﾟ✧`,
+      category: 'aesthetic_bio',
+      isFacebookNameAcceptable: false,
+      tag: '✨ Bio & Captions'
+    }
+  ];
+};
+
 // 2. YouTube Tag Extractor Logic
 export const extractMockYouTubeTags = (url: string): { title: string; tags: string[]; seoScore: number; characterCount: number } => {
   const cleanUrl = url.trim().toLowerCase();

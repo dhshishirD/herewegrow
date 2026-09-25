@@ -12,10 +12,14 @@ import {
   Lock,
   TrendingUp,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Flame,
+  Award,
+  Users
 } from 'lucide-react';
 import type { SmmService, UserWallet } from '../types';
 import { SMM_SERVICES_CATALOG } from '../data/growthData';
+import { updatePageSEO } from '../services/seoService';
 
 interface CategorySEOConfig {
   slug: string;
@@ -33,6 +37,51 @@ interface CategorySEOConfig {
 }
 
 export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
+  'smm-panel': {
+    slug: 'smm-panel',
+    platformId: 'all',
+    title: 'Best & Cheapest SMM Panel (2026) — Fast Social Growth & Reseller API | HereWeGrow',
+    h1: 'Best & Cheapest SMM Panel for Social Media Growth',
+    tagline: 'The #1 wholesale SMM reseller panel for Facebook, Instagram, YouTube, TikTok & Telegram. Automated instant delivery with bKash, Nagad, Crypto & Cards.',
+    heroBadge: 'Wholesale Direct API • Starting at ৳2 / $0.02',
+    targetKeywords: [
+      'smm panel',
+      'best smm panel',
+      'cheapest smm panel',
+      'free smm panel',
+      'smm panel instagram',
+      'smm panel tiktok',
+      'smm panel youtube',
+      'smm reseller panel',
+      'best smm panel for youtube watch time',
+      'best smm panel for facebook',
+      'telegram smm panel',
+      'smm panel bkash',
+      'smm panel nagad'
+    ],
+    metaDescription: 'Access the best and cheapest SMM panel for Facebook, Instagram, TikTok, YouTube & Telegram. 100% Non-drop guaranteed with instant bKash, Nagad & Crypto.',
+    introText: 'HereWeGrow is a next-generation SMM reseller panel engineered for digital creators, marketing agencies, and reseller businesses. Directly integrated with high-capacity wholesale servers, our system delivers high-retention followers, viral video views, auto likes, and channel monetization watch hours with automated instant delivery.',
+    whyChooseUs: [
+      { title: 'Cheapest Wholesale Rates', desc: 'Direct provider connection ensures the lowest prices on the market starting at just ৳2 / $0.02.' },
+      { title: 'Zero Password Required', desc: 'We only need your public post or profile link. Your account security is 100% protected.' },
+      { title: 'Instant Automated Delivery', desc: 'Orders dispatch to automated server queues within 30 to 60 seconds.' },
+      { title: 'bKash & Nagad Auto Gateway', desc: 'Seamless 1-click BDT payment and global Binance Pay / Crypto processing.' }
+    ],
+    faqs: [
+      {
+        q: 'What is an SMM panel and how does it work?',
+        a: 'An SMM (Social Media Marketing) panel is an automated online platform where creators, brands, and resellers purchase social media services like followers, likes, video views, and watch hours to kick-start organic algorithm reach.'
+      },
+      {
+        q: 'Is HereWeGrow the best SMM panel for YouTube watch time and Facebook?',
+        a: 'Yes! HereWeGrow specializes in policy-compliant YouTube 4,000 watch hours (YPP monetization safe) and authentic Bangladeshi Facebook page followers with 365-day refill protection.'
+      },
+      {
+        q: 'Can I resell HereWeGrow services using API?',
+        a: 'Yes! We provide a free REST API v2 that seamlessly connects with any SMM website or custom software for automated order fulfillment.'
+      }
+    ]
+  },
   'youtube-monetization': {
     slug: 'youtube-monetization',
     platformId: 'youtube',
@@ -44,9 +93,12 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
       '4000 watch hours on youtube',
       'buy 4000 watch hours on youtube cheap',
       'youtube watch hours for monetization',
-      '4000 watch hours in minutes',
-      'buy 1000 subscribers and 4000 watch hours',
-      'youtube monetization watch hours'
+      'youtube views increase',
+      'boost youtube views',
+      'free youtube subscribers',
+      'free youtube views',
+      '1 million views on youtube money',
+      'tool seo youtube'
     ],
     metaDescription: 'Buy 4000 watch hours and 1000 subscribers for YouTube monetization. 100% compliant with YouTube Partner Program (YPP). Instant bKash & Crypto payment.',
     introText: 'Unlocking the YouTube Partner Program requires 4,000 valid public watch hours (240,000 minutes) and 1,000 subscribers within the last 12 months. HereWeGrow provides high-retention, steady drip-feed watch duration from authentic user sessions that stick permanently in your YouTube Studio analytics.',
@@ -59,7 +111,7 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
     faqs: [
       {
         q: 'How many minutes is 4,000 watch hours on YouTube?',
-        a: '4,000 watch hours is exactly 240,000 minutes (4,000 × 60 = 240,000 minutes). If your average video length is 10 minutes, you need 24,000 full views to achieve monetization.'
+        a: '4,000 watch hours is exactly 240,000 minutes (4,000 × 60 = 240,000 minutes). If your average video length is 15 minutes, you need 16,000 full views to achieve monetization.'
       },
       {
         q: 'Will my channel get monetized and approved for AdSense?',
@@ -74,20 +126,24 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
   'facebook-growth': {
     slug: 'facebook-growth',
     platformId: 'facebook',
-    title: 'Buy Facebook Followers, Page Likes & Auto Reactions BD | HereWeGrow',
-    h1: 'Buy Facebook Followers, Page Likes & Auto Reactions',
+    title: 'Increase Facebook Followers & Boost Page Likes (bKash/Nagad) | HereWeGrow',
+    h1: 'How to Increase Facebook Followers & Page Growth Fast',
     tagline: 'Boost your F-Commerce page credibility, increase post reach with instant auto reactions, and qualify for Facebook In-Stream Ads monetization.',
     heroBadge: '100% Real Bangladeshi Profiles • Instant Delivery',
     targetKeywords: [
-      'fb auto likes',
+      'increase facebook followers',
+      'facebook followers booster',
+      'increase fb followers',
+      'how to get more followers on facebook',
+      'how to grow facebook page',
+      'facebook page followers increase',
       'facebook followers free',
-      'facebook page followers',
+      'fb auto likes',
       'buy fb followers',
       'facebook likes purchase',
-      'facebook followers booster',
       'facebook monetization 60k minutes'
     ],
-    metaDescription: 'Buy real Bangladeshi Facebook page likes, profile followers, and post reactions with instant bKash & crypto checkout. 100% Non-Drop guarantee.',
+    metaDescription: 'Increase Facebook followers and page likes with instant bKash, Nagad & Crypto checkout. Real Bangladeshi profiles, 100% Non-Drop guarantee.',
     introText: 'Social proof is the ultimate conversion trigger for Bangladeshi online shops and content creators. With over 60M active Facebook users in Bangladesh, building instant page authority with active followers and high post engagement directly increases sales and unlocks Facebook monetization.',
     showCalculator: 'facebook',
     whyChooseUs: [
@@ -97,35 +153,41 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
     ],
     faqs: [
       {
+        q: 'How to increase Facebook page followers quickly?',
+        a: 'You can increase followers organically by posting reels, or accelerate your authority instantly with HereWeGrow’s non-drop Bangladeshi followers package starting at only ৳45.'
+      },
+      {
         q: 'Are these Facebook followers real and permanent?',
         a: 'Yes! We deliver high-retention profiles backed by a 60-day auto-refill guarantee so your follower count never drops.'
       },
       {
         q: 'Can I pay with bKash, Nagad, and Crypto?',
         a: 'Yes! We support automated instant checkout via bKash, Nagad, Rocket, Bank Cards, and Binance Pay with 0% fee.'
-      },
-      {
-        q: 'How fast do Facebook post reactions start?',
-        a: 'Reactions (Like, Love, Care mix) begin delivering within 30 to 60 seconds of submitting your public post URL.'
       }
     ]
   },
   'instagram-growth': {
     slug: 'instagram-growth',
     platformId: 'instagram',
-    title: 'Buy Instagram Followers & Instant Likes BD | HereWeGrow',
-    h1: 'Buy Instagram Followers & Instant Likes Delivery',
+    title: 'Increase Instagram Followers & Real Engagement Booster | HereWeGrow',
+    h1: 'Increase Instagram Followers & Boost Real Engagement',
     tagline: 'Trigger the Instagram Explore and Reels algorithms with premium non-drop followers, instant likes within 60 seconds, and high-retention views.',
     heroBadge: 'Instant 60s Start • Non-Drop Auto-Refill',
     targetKeywords: [
-      'buy ig likes instant',
-      'instagram likes instant delivery',
-      'buy instagram comments instant delivery',
-      'cheap instagram likes instant delivery',
-      'free instagram followers instant delivery',
-      'buy ig followers bangladesh'
+      'increase instagram followers',
+      'get instagram followers',
+      'boost instagram followers',
+      'gain instagram followers',
+      'increase ig followers',
+      'get insta followers',
+      'instagram free followers increase',
+      'grow instagram followers',
+      'get real followers on instagram',
+      'gain real followers instagram',
+      'best way to grow instagram followers',
+      'high quality instagram followers'
     ],
-    metaDescription: 'Buy high-quality Instagram followers, instant reels views, and post likes starting at ৳36. Fast delivery, 100% safe, no password needed.',
+    metaDescription: 'Boost and increase Instagram followers, instant reels views, and post likes starting at ৳36. Fast delivery, 100% safe, no password needed.',
     introText: 'Instagram algorithms prioritize posts and reels with rapid early engagement velocity. Getting instant likes and high-retention followers signals the Explore page to feature your content to thousands of new viewers.',
     showCalculator: 'instagram',
     whyChooseUs: [
@@ -135,12 +197,12 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
     ],
     faqs: [
       {
-        q: 'How fast do Instagram likes arrive?',
-        a: 'Likes start delivering within 30 to 60 seconds after payment confirmation.'
+        q: 'What is the fastest way to increase Instagram followers?',
+        a: 'Combining aesthetic reels with HereWeGrow’s high-retention followers establishes instant social proof and boosts your profile ranking in Instagram search.'
       },
       {
-        q: 'Does buying reels views help trigger the Explore page?',
-        a: 'Yes! High initial view volume and watch duration signal high relevance to Instagram’s recommendation engine.'
+        q: 'How fast do Instagram likes arrive?',
+        a: 'Likes start delivering within 30 to 60 seconds after payment confirmation.'
       }
     ]
   },
@@ -151,7 +213,14 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
     h1: 'Buy TikTok Followers & Viral FYP Views',
     tagline: 'Kick-start your TikTok videos into the For You Page (FYP) with ultra-speed video views, real followers, and engagement bundles.',
     heroBadge: 'FYP Algorithm Accelerator • 500k/Hour Speed',
-    targetKeywords: ['buy tiktok followers', 'tiktok fyp views', 'tiktok auto likes', 'buy tiktok views bangladesh'],
+    targetKeywords: [
+      'buy tiktok followers',
+      'tiktok fyp views',
+      'tiktok auto likes',
+      'buy tiktok views bangladesh',
+      'tiktok smm panel',
+      'tiktok followers panel'
+    ],
     metaDescription: 'Boost your TikTok presence with instant FYP views, authentic followers to unlock Live streaming, and engagement packs. bKash accepted.',
     introText: 'TikTok’s algorithm is 100% velocity-driven. When a newly published video gets quick views, shares, and likes in its first hour, TikTok tests it on larger audiences across the FYP.',
     whyChooseUs: [
@@ -172,7 +241,12 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
     h1: 'Buy Telegram Channel Members & Auto Views',
     tagline: 'Build immediate social proof for your crypto, trading, news, and business Telegram channels with permanent non-drop members.',
     heroBadge: '0% Drop Guaranteed • Auto-Views Included',
-    targetKeywords: ['buy telegram channel members', 'telegram post views', 'telegram group members bd'],
+    targetKeywords: [
+      'buy telegram channel members',
+      'telegram post views',
+      'telegram group members bd',
+      'telegram smm panel'
+    ],
     metaDescription: 'Scale your Telegram channel or group with permanent members and instant post views. 0% drop guaranteed with bKash and crypto payment.',
     introText: 'Telegram channels with thousands of members command instant authority for cryptocurrency traders, signal groups, and digital entrepreneurs.',
     whyChooseUs: [
@@ -183,6 +257,36 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
       {
         q: 'Will channel members drop after a few days?',
         a: 'No, we provide premium non-drop members backed by a 90-day replacement warranty.'
+      }
+    ]
+  },
+  'twitter-growth': {
+    slug: 'twitter-growth',
+    platformId: 'twitter',
+    title: 'Buy Twitter Followers, Retweets & X Impressions (2026) | HereWeGrow',
+    h1: 'Buy Twitter / X Followers, Retweets & Viral Views',
+    tagline: 'Boost your crypto project, brand handle, or creator account with high-velocity Twitter impressions, active followers, and instant retweets.',
+    heroBadge: 'Algorithm Impressions Trigger • Instant 60s Start',
+    targetKeywords: [
+      'twitter followers',
+      'buy twitter followers',
+      'grow twitter followers',
+      'increase twitter followers',
+      'twitter growth service',
+      'free twitter followers',
+      'boost twitter followers',
+      'twitter auto follower'
+    ],
+    metaDescription: 'Scale your Twitter / X profile with real followers, high impressions, and retweets. Instant bKash & crypto checkout.',
+    introText: 'Twitter/X algorithms prioritize tweets with rapid early engagement and quote retweets. High view velocity puts your post in the "For You" timeline.',
+    whyChooseUs: [
+      { title: 'Instant 60s Start', desc: 'Tweet views and impressions queue within seconds of ordering.' },
+      { title: 'Crypto & Founder Ready', desc: 'Great for Web3 projects, founders, and political commentators.' }
+    ],
+    faqs: [
+      {
+        q: 'Do tweet impressions count for monetization?',
+        a: 'Yes! High impressions help reach the 5M impressions threshold needed for X Ads Revenue Sharing.'
       }
     ]
   },
@@ -227,353 +331,277 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
         a: 'Yes, streams meet minimum duration thresholds for stream count registration.'
       }
     ]
-  },
-  'twitter-growth': {
-    slug: 'twitter-growth',
-    platformId: 'twitter',
-    title: 'Buy Twitter Followers, Retweets & Impressions | HereWeGrow',
-    h1: 'Buy Twitter / X Followers, Retweets & Viral Views',
-    tagline: 'Boost your crypto project, brand handle, or creator account with high-velocity Twitter impressions, active followers, and instant retweets.',
-    heroBadge: 'Algorithm Impressions Trigger • Instant 60s Start',
-    targetKeywords: ['buy twitter followers', 'twitter retweets', 'buy x impressions bangladesh'],
-    metaDescription: 'Scale your Twitter / X profile with real followers, high impressions, and retweets. Instant bKash & crypto checkout.',
-    introText: 'Twitter/X algorithms prioritize tweets with rapid early engagement and quote retweets. High view velocity puts your post in the "For You" timeline.',
-    whyChooseUs: [
-      { title: 'Instant 60s Start', desc: 'Tweet views and impressions queue within seconds of ordering.' },
-      { title: 'Crypto & Founder Ready', desc: 'Great for Web3 projects, founders, and political commentators.' }
-    ],
-    faqs: [
-      {
-        q: 'Do tweet impressions count for monetization?',
-        a: 'Yes! High impressions help reach the 5M impressions threshold needed for X Ads Revenue Sharing.'
-      }
-    ]
   }
 };
 
-// Aliases for clean URL paths: /services/facebook, /services/instagram, etc.
+// Aliases for clean URL paths & keywords
 CATEGORY_CONFIGS['facebook'] = CATEGORY_CONFIGS['facebook-growth'];
+CATEGORY_CONFIGS['facebook-followers'] = CATEGORY_CONFIGS['facebook-growth'];
 CATEGORY_CONFIGS['instagram'] = CATEGORY_CONFIGS['instagram-growth'];
+CATEGORY_CONFIGS['instagram-followers'] = CATEGORY_CONFIGS['instagram-growth'];
 CATEGORY_CONFIGS['youtube'] = CATEGORY_CONFIGS['youtube-monetization'];
+CATEGORY_CONFIGS['youtube-views'] = CATEGORY_CONFIGS['youtube-monetization'];
 CATEGORY_CONFIGS['tiktok'] = CATEGORY_CONFIGS['tiktok-growth'];
+CATEGORY_CONFIGS['tiktok-views'] = CATEGORY_CONFIGS['tiktok-growth'];
 CATEGORY_CONFIGS['telegram'] = CATEGORY_CONFIGS['telegram-growth'];
 CATEGORY_CONFIGS['linkedin'] = CATEGORY_CONFIGS['linkedin-growth'];
 CATEGORY_CONFIGS['twitter'] = CATEGORY_CONFIGS['twitter-growth'];
+CATEGORY_CONFIGS['twitter-followers'] = CATEGORY_CONFIGS['twitter-growth'];
 CATEGORY_CONFIGS['spotify'] = CATEGORY_CONFIGS['spotify-streams'];
 
 interface CategoryLandingPageProps {
-  categoryKey: string;
+  categorySlug: string;
   currency: 'BDT' | 'USD';
-  wallet: UserWallet;
   onSelectService: (service: SmmService) => void;
   onOpenWallet: () => void;
+  onNavigateHome: () => void;
+  onNavigateCategory: (slug: string) => void;
 }
 
 export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
-  categoryKey,
+  categorySlug,
   currency,
   onSelectService,
   onOpenWallet,
+  onNavigateHome,
+  onNavigateCategory
 }) => {
-  const config = CATEGORY_CONFIGS[categoryKey] || CATEGORY_CONFIGS['youtube-monetization'];
-  const services = SMM_SERVICES_CATALOG.filter(s => s.platform === config.platformId);
+  const config = CATEGORY_CONFIGS[categorySlug] || CATEGORY_CONFIGS['smm-panel'];
+  const services = config.platformId === 'all' 
+    ? SMM_SERVICES_CATALOG.slice(0, 15)
+    : SMM_SERVICES_CATALOG.filter(s => s.platform === config.platformId);
 
   // YouTube Calculator State
   const [videoMinutes, setVideoMinutes] = useState<number>(15);
   const [targetHours, setTargetHours] = useState<number>(4000);
 
-  // Calculate views & minutes needed
   const totalMinutesNeeded = targetHours * 60;
   const estimatedViewsNeeded = Math.ceil(totalMinutesNeeded / Math.max(videoMinutes * 0.75, 1));
 
   // Structured Data Schema Injection for Google Rich Snippets
   useEffect(() => {
-    document.title = config.title;
-    
-    // Inject Schema.org JSON-LD for Product & FAQ
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Product",
-          "name": config.h1,
-          "description": config.metaDescription,
-          "brand": { "@type": "Brand", "name": "HereWeGrow" },
-          "offers": {
-            "@type": "AggregateOffer",
-            "priceCurrency": currency === 'BDT' ? 'BDT' : 'USD',
-            "lowPrice": currency === 'BDT' ? "36.00" : "0.30",
-            "highPrice": currency === 'BDT' ? "6400.00" : "52.00",
-            "offerCount": services.length
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.98",
-            "reviewCount": "1280",
-            "bestRating": "5"
-          }
+    updatePageSEO({
+      title: config.title,
+      description: config.metaDescription,
+      keywords: config.targetKeywords,
+      canonicalUrl: `https://herewegrow.pro/services/${config.slug}`,
+      schema: {
+        '@type': 'Product',
+        name: config.h1,
+        description: config.metaDescription,
+        brand: {
+          '@type': 'Brand',
+          name: 'HereWeGrow'
         },
-        {
-          "@type": "FAQPage",
-          "mainEntity": config.faqs.map(faq => ({
-            "@type": "Question",
-            "name": faq.q,
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": faq.a
-            }
-          }))
+        offers: {
+          '@type': 'AggregateOffer',
+          priceCurrency: currency,
+          lowPrice: currency === 'BDT' ? '2.00' : '0.02',
+          highPrice: currency === 'BDT' ? '4500.00' : '38.00',
+          offerCount: String(services.length || 10)
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.98',
+          reviewCount: '12450',
+          bestRating: '5',
+          worstRating: '1'
         }
-      ]
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schemaData);
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, [config, currency, services]);
+      }
+    });
+  }, [config, currency, services.length]);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 pb-20">
+    <div className="py-12 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fadeIn">
       
-      {/* Breadcrumbs Header */}
-      <div className="border-b border-slate-100 bg-slate-50/50 py-3">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-2 text-xs text-slate-500">
-          <a href="/" className="hover:text-slate-900 font-medium">Home</a>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <a href="/#growth-catalog" className="hover:text-slate-900 font-medium">Services</a>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-slate-950 font-bold capitalize">{config.platformId} Growth</span>
+      {/* Breadcrumb Navigation */}
+      <nav className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-8">
+        <button onClick={onNavigateHome} className="hover:text-slate-900 transition-colors cursor-pointer">
+          Home
+        </button>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <button onClick={onNavigateHome} className="hover:text-slate-900 transition-colors cursor-pointer">
+          Growth Services
+        </button>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <span className="text-slate-900 font-bold">{config.h1}</span>
+      </nav>
+
+      {/* Hero Header */}
+      <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-900 text-xs font-bold mb-4 border border-slate-200 shadow-2xs">
+          <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+          <span>{config.heroBadge}</span>
+        </div>
+
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-950 tracking-tight leading-tight">
+          {config.h1}
+        </h1>
+
+        <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed">
+          {config.tagline}
+        </p>
+
+        {/* Quick Keyword Pills for Organic Context */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+          {config.targetKeywords.slice(0, 6).map((kw, i) => (
+            <span key={i} className="px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-semibold text-slate-600">
+              #{kw}
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="py-14 sm:py-20 border-b border-slate-100 bg-gradient-to-b from-slate-50/80 to-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
-          
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-xs font-semibold shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>{config.heroBadge}</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-950 font-serif leading-tight">
-            {config.h1}
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            {config.tagline}
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <a
-              href="#service-pricing-table"
-              className="px-6 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-800 text-white text-sm font-bold shadow-md flex items-center gap-2 transition-all cursor-pointer"
-            >
-              <span>View Packages & Pricing</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <button
-              onClick={onOpenWallet}
-              className="px-6 py-3.5 rounded-2xl bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 text-sm font-bold transition-all cursor-pointer flex items-center gap-2"
-            >
-              <Zap className="w-4 h-4 text-indigo-600" />
-              <span>Instant bKash & Crypto Top-up</span>
-            </button>
-          </div>
-
-          {/* Social Proof Badges */}
-          <div className="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-medium">
-            <div className="flex items-center gap-1.5 text-slate-700">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>No Password Needed</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-slate-700">
-              <Clock className="w-4 h-4 text-indigo-600" />
-              <span>Fast Automated Delivery</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-slate-700">
-              <div className="flex text-amber-500">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                ))}
-              </div>
-              <span className="font-bold text-slate-900">4.98 / 5</span> (1,280+ Creators)
-            </div>
-          </div>
-
+      {/* Intro Editorial Box */}
+      <div className="max-w-4xl mx-auto p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200 mb-14 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <div className="font-bold text-slate-950 text-base mb-2 flex items-center gap-2">
+          <Award className="w-4 h-4 text-indigo-600" />
+          <span>Why Organic Authority Matters</span>
         </div>
-      </section>
+        <p>{config.introText}</p>
+      </div>
 
-      {/* Main Content & Interactive Calculator */}
-      <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 space-y-16">
-        
-        {/* YouTube Watch Time Calculator Widget */}
-        {config.showCalculator === 'youtube' && (
-          <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 text-white shadow-xl space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-600/20 text-red-400 flex items-center justify-center">
-                <Calculator className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold">YouTube Watch Time & Minutes Calculator</h3>
-                <p className="text-xs text-slate-400">Calculate exact views and minutes needed to pass the 4,000 hours YPP milestone</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-                <div className="text-xs text-slate-400">Target Hours</div>
-                <div className="text-2xl font-black text-white font-mono">{targetHours} Hours</div>
-                <div className="text-[11px] text-emerald-400 font-bold">= {totalMinutesNeeded.toLocaleString()} Minutes</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-                <div className="text-xs text-slate-400">Your Video Duration</div>
-                <select 
-                  value={videoMinutes} 
-                  onChange={(e) => setVideoMinutes(Number(e.target.value))}
-                  className="w-full bg-slate-900 border border-white/20 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-hidden"
-                >
-                  <option value={10}>10 Minutes Video</option>
-                  <option value={15}>15 Minutes (Recommended)</option>
-                  <option value={30}>30 Minutes Video</option>
-                  <option value={60}>60 Minutes Video (Fastest)</option>
-                </select>
-                <div className="text-[11px] text-slate-400">Longer video = fewer views needed</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-                <div className="text-xs text-slate-400">Estimated Views Required</div>
-                <div className="text-2xl font-black text-amber-400 font-mono">~{estimatedViewsNeeded.toLocaleString()} Views</div>
-                <div className="text-[11px] text-emerald-400 font-bold">100% YPP Compliant</div>
-              </div>
-            </div>
+      {/* Interactive YouTube Watch Hours Calculator if applicable */}
+      {config.showCalculator === 'youtube' && (
+        <div className="max-w-3xl mx-auto mb-16 p-6 sm:p-8 rounded-3xl bg-indigo-50/70 border border-indigo-200">
+          <div className="flex items-center gap-2 text-indigo-950 font-extrabold text-sm mb-4">
+            <Calculator className="w-4 h-4 text-indigo-600" />
+            <span>Interactive 4,000 Watch Hours Duration Calculator</span>
           </div>
-        )}
 
-        {/* Live Service Pricing Grid */}
-        <div id="service-pricing-table" className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-950 font-serif">
-                Available {config.h1} Packages
-              </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Instant delivery • 100% Non-Drop guarantee with automated refill
-              </p>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Your Video Length (Minutes)</label>
+              <input
+                type="number"
+                min="1"
+                max="120"
+                value={videoMinutes}
+                onChange={(e) => setVideoMinutes(Math.max(1, Number(e.target.value)))}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Target Watch Hours</label>
+              <input
+                type="number"
+                value={targetHours}
+                onChange={(e) => setTargetHours(Math.max(100, Number(e.target.value)))}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white"
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((service) => {
-              const rate = currency === 'BDT' ? `৳${service.ratePer1kBDT}` : `$${service.ratePer1kUSD.toFixed(2)}`;
-              return (
-                <div
-                  key={service.id}
-                  className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs hover:shadow-xl hover:border-slate-300 transition-all flex flex-col justify-between space-y-4"
+          <div className="p-4 rounded-2xl bg-white border border-indigo-100 flex items-center justify-between">
+            <div>
+              <div className="text-xs text-slate-500 font-medium">Estimated High-Retention Views Needed:</div>
+              <div className="text-2xl font-black text-indigo-950 font-mono mt-0.5">~{estimatedViewsNeeded.toLocaleString()} Views</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-slate-500 font-medium">Total Minutes:</div>
+              <div className="text-base font-bold text-emerald-700 font-mono">{totalMinutesNeeded.toLocaleString()} Mins</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Services List Table / Cards */}
+      <div className="max-w-5xl mx-auto mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950">
+            Available Verified Packages
+          </h2>
+          <span className="text-xs font-bold text-slate-500">
+            {services.length} services ready
+          </span>
+        </div>
+
+        <div className="space-y-3">
+          {services.map((s) => (
+            <div 
+              key={s.id}
+              className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs hover:border-indigo-400 hover:shadow-sm transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                    ID: {s.id}
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Non-Drop Refill
+                  </span>
+                </div>
+                <div className="font-extrabold text-sm text-slate-900">{s.name}</div>
+                <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{s.description || 'High-retention social signal service with automated dispatch.'}</p>
+                <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-2">
+                  <span>⚡ Speed: <strong>{s.speed}</strong></span>
+                  <span>•</span>
+                  <span>Min: <strong>{s.minQty.toLocaleString()}</strong></span>
+                  <span>•</span>
+                  <span>Max: <strong>{s.maxQty.toLocaleString()}</strong></span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
+                <div className="text-right">
+                  <div className="text-xs text-slate-400 font-medium">Per 1,000</div>
+                  <div className="text-base font-black text-slate-950 font-mono">
+                    {currency === 'BDT' ? `৳${s.ratePer1kBDT.toFixed(2)}` : `$${s.ratePer1kUSD.toFixed(3)}`}
+                  </div>
+                </div>
+                <button
+                  onClick={() => onSelectService(s)}
+                  className="px-5 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
-                        {service.category}
-                      </span>
-                      {service.badges?.includes('best-seller') && (
-                        <span className="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 flex items-center gap-1">
-                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                          <span>Popular</span>
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="text-sm font-bold text-slate-950 leading-snug">
-                      {service.name}
-                    </h3>
-
-                    <p className="text-xs text-slate-600 line-clamp-2">
-                      {service.description}
-                    </p>
-
-                    <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px] text-slate-600">
-                      <div className="flex justify-between">
-                        <span>Speed:</span>
-                        <strong className="text-slate-900">{service.speed}</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Refill Guarantee:</span>
-                        <strong className="text-emerald-700">{service.refillDays > 0 ? `${service.refillDays} Days Auto-Refill` : 'Lifetime Non-Drop'}</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Min / Max Quantity:</span>
-                        <strong className="text-slate-900">{service.minQty.toLocaleString()} - {service.maxQty.toLocaleString()}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                    <div>
-                      <div className="text-[10px] text-slate-400 font-medium">Rate per 1,000:</div>
-                      <div className="text-lg font-extrabold text-slate-950 font-mono">{rate}</div>
-                    </div>
-                    <button
-                      onClick={() => onSelectService(service)}
-                      className="px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
-                    >
-                      <span>Order Now</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Detailed Editorial & Why Choose Us (Eliminates Thin Content) */}
-        <div className="space-y-8 pt-8 border-t border-slate-100">
-          <div className="max-w-3xl space-y-4">
-            <h2 className="text-2xl font-extrabold text-slate-950 font-serif">
-              Why Creators Trust HereWeGrow for {config.platformId.toUpperCase()} Growth
-            </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {config.introText}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {config.whyChooseUs.map((item, idx) => (
-              <div key={idx} className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-                <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-emerald-600 flex items-center justify-center font-bold">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-                <h4 className="text-sm font-bold text-slate-950">{item.title}</h4>
-                <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                  <span>Order Now</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
+      </div>
 
-        {/* FAQ Schema Section */}
-        <div className="space-y-6 pt-8 border-t border-slate-100 max-w-4xl">
-          <div className="flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-xl font-bold text-slate-950">Frequently Asked Questions</h2>
-          </div>
+      {/* Why Choose Us 4 Pillars */}
+      <div className="max-w-5xl mx-auto mb-16">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950 text-center mb-8">
+          Why Top Creators Choose HereWeGrow
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {config.whyChooseUs.map((w, idx) => (
+            <div key={idx} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
+              <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <h3 className="font-bold text-xs text-slate-900">{w.title}</h3>
+              <p className="text-[11px] text-slate-600 leading-relaxed">{w.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
-          <div className="space-y-4">
+      {/* FAQ Accordion */}
+      {config.faqs && config.faqs.length > 0 && (
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950 text-center mb-6">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-3">
             {config.faqs.map((faq, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2">
-                <h3 className="text-sm font-bold text-slate-950">{faq.q}</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">{faq.a}</p>
-              </div>
+              <details key={idx} className="group p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs cursor-pointer">
+                <summary className="font-bold text-xs sm:text-sm text-slate-900 list-none flex items-center justify-between">
+                  <span>{faq.q}</span>
+                  <span className="text-indigo-600 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-3 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                  {faq.a}
+                </p>
+              </details>
             ))}
           </div>
         </div>
+      )}
 
-      </section>
     </div>
   );
 };

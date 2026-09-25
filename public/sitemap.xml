@@ -8,6 +8,44 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- High-Volume Core Keywords -->
+  <url>
+    <loc>https://herewegrow.pro/services/smm-panel</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
+    <loc>https://herewegrow.pro/services/facebook-followers</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
+    <loc>https://herewegrow.pro/services/instagram-followers</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
+    <loc>https://herewegrow.pro/services/youtube-views</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
+    <loc>https://herewegrow.pro/services/twitter-followers</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://herewegrow.pro/services/tiktok-views</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
   <!-- Free Creator Tools (High Organic Search Intent) -->
   <url>
     <loc>https://herewegrow.pro/tools/youtube-tags</loc>
@@ -46,7 +84,7 @@
     <priority>0.90</priority>
   </url>
 
-  <!-- High-Intent Platform & Growth Landing Pages -->
+  <!-- High-Intent Platform Landing Pages -->
   <url>
     <loc>https://herewegrow.pro/services/facebook</loc>
     <lastmod>2026-09-26</lastmod>
@@ -96,7 +134,7 @@
     <priority>0.85</priority>
   </url>
 
-  <!-- Keyword Specific Monetization & Target Routes -->
+  <!-- Monetization & Specific Hub Routes -->
   <url>
     <loc>https://herewegrow.pro/services/youtube-monetization</loc>
     <lastmod>2026-09-26</lastmod>
@@ -146,7 +184,7 @@
     <priority>0.80</priority>
   </url>
 
-  <!-- Affiliate & Reseller Portal -->
+  <!-- Affiliate & Partner Portal -->
   <url>
     <loc>https://herewegrow.pro/affiliate</loc>
     <lastmod>2026-09-26</lastmod>

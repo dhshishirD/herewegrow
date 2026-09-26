@@ -340,11 +340,13 @@ function MainAppContent() {
             <GrowthCatalogSection
               currency={currency}
               initialPlatform={selectedStorePlatform}
+              onSelectServiceForOrder={handleOpenServiceOrder}
               onOrderService={handleOpenServiceOrder}
               onExploreBundles={() => handleTabNavigate('bundles')}
               onExploreTools={() => handleTabNavigate('tools')}
               onOpenWallet={() => setIsWalletModalOpen(true)}
               onOrderPlaced={handleOrderPlaced}
+              wallet={wallet}
             />
           </>
         )}

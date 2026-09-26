@@ -34,7 +34,10 @@ import type { SmmService, SocialPlatform, ServiceBadge, UserWallet, SmmOrder } f
 
 interface GrowthCatalogSectionProps {
   currency: 'BDT' | 'USD';
-  onSelectServiceForOrder: (service: SmmService) => void;
+  onSelectServiceForOrder?: (service: SmmService) => void;
+  onOrderService?: (service: SmmService) => void;
+  onExploreBundles?: () => void;
+  onExploreTools?: () => void;
   initialPlatform?: SocialPlatform;
   wallet?: UserWallet;
   onOrderPlaced?: (order: SmmOrder, updatedWallet: UserWallet) => void;
@@ -73,6 +76,9 @@ const QUALITY_BADGES: { id: ServiceBadge | 'all'; label: string; icon?: string }
 export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
   currency,
   onSelectServiceForOrder,
+  onOrderService,
+  onExploreBundles,
+  onExploreTools,
   initialPlatform = 'all',
   wallet = {
     balanceBDT: 0,
@@ -87,6 +93,14 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
   onOrderPlaced = () => {},
   onOpenWallet = () => {},
 }) => {
+  const triggerOrder = (service: SmmService) => {
+    if (onSelectServiceForOrder) {
+      onSelectServiceForOrder(service);
+    } else if (onOrderService) {
+      onOrderService(service);
+    }
+  };
+
   const [viewMode, setViewMode] = useState<'visual' | 'terminal'>('visual');
   const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform>(initialPlatform);
   const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('all');
@@ -270,7 +284,7 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
       {/* 100% Free Live Speed Test & Trust Booster */}
       <FreeTrialBooster
         currency={currency}
-        onSelectServiceForOrder={onSelectServiceForOrder}
+        onSelectServiceForOrder={triggerOrder}
         onOrderPlaced={onOrderPlaced}
       />
 
@@ -664,7 +678,7 @@ export const GrowthCatalogSection: React.FC<GrowthCatalogSectionProps> = ({
                   </div>
 
                   <button
-                    onClick={() => onSelectServiceForOrder(service)}
+                    onClick={() => triggerOrder(service)}
                     className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-950 hover:bg-indigo-600 text-white text-xs font-bold shadow-md hover:shadow-indigo-500/20 transition-all duration-200 hover:scale-[1.03] active:scale-95 cursor-pointer"
                   >
                     <span>Order Now</span>

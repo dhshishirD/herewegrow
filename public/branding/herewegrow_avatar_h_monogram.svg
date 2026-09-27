@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#6EE7B7" />
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="60%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#A5B4FC" />
+    </linearGradient>
+    <linearGradient id="goldSpark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="avatarGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#10B981" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background Base Canvas -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  <rect x="3" y="3" width="506" height="506" rx="125" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="3" />
+
+  <!-- Ambient Glow Ring -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="url(#leafGrad)" stroke-width="1.5" opacity="0.15" />
+
+  <!-- Logo Group -->
+  <g transform="translate(100, 85)" filter="url(#avatarGlow)">
+    <!-- Left Sprout Leaf / Pillar -->
+    <path d="M 50 280 L 50 140 C 50 90 85 65 125 65 C 125 120 95 165 95 200 L 95 280 C 95 292 84 300 72.5 300 C 61 300 50 292 50 280 Z" fill="url(#leafGrad)" />
+
+    <!-- Interlocking Growth Bridge -->
+    <path d="M 80 200 L 220 165 C 230 162.5 240 170 240 180 C 240 190 230 198 220 200 L 80 235 C 70 237.5 60 230 60 220 C 60 210 70 202 80 200 Z" fill="url(#leafGrad)" opacity="0.95" />
+
+    <!-- Right Pillar with Upward Rocket Arrow -->
+    <path d="M 205 300 C 193 300 185 292 185 280 L 185 160 C 185 150 193 140 205 140 C 217 140 225 150 225 160 L 225 280 C 225 292 217 300 205 300 Z" fill="url(#arrowGrad)" />
+    
+    <!-- Dynamic Rocket / Arrow Point -->
+    <polygon points="205,50 265,130 225,130 225,160 185,160 185,130 145,130" fill="url(#arrowGrad)" />
+
+    <!-- Verified Gold Star / Accents -->
+    <circle cx="265" cy="65" r="14" fill="url(#goldSpark)" />
+  </g>
+
+  <!-- Bottom Brand Sub-Signature -->
+  <text x="256" y="445" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="34" fill="#FFFFFF" letter-spacing="4" text-anchor="middle">
+    HERE<tspan fill="#10B981">WE</tspan>GROW
+  </text>
+  <text x="256" y="475" font-family="sans-serif" font-size="14" font-weight="700" fill="#94A3B8" letter-spacing="3" text-anchor="middle">
+    VERIFIED CREATOR HUB
+  </text>
+</svg>

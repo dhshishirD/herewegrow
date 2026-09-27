@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="emeraldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="60%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#34D399" />
+    </linearGradient>
+    <linearGradient id="indigoGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4338CA" />
+      <stop offset="60%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#818CF8" />
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#10B981" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- ICON CONTAINER -->
+  <g transform="translate(40, 20)" filter="url(#subtleGlow)">
+    <!-- Rounded Background Squircle -->
+    <rect x="0" y="0" width="200" height="200" rx="44" fill="#0F172A" />
+    <rect x="1.5" y="1.5" width="197" height="197" rx="42.5" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+
+    <!-- Left Pillar of 'H' (Organic Sprout / Seedling Leaf) -->
+    <path d="M 55 155 L 55 75 C 55 52 72 40 92 40 C 92 68 76 92 76 110 L 76 155 C 76 160.5 71.5 165 65.5 165 C 59.5 165 55 160.5 55 155 Z" fill="url(#emeraldGrad)" />
+    
+    <!-- Crossbar of 'H' (Dynamic Bridge) -->
+    <path d="M 68 112 L 132 94 C 137.5 92.5 143 96.5 143 102.5 C 143 108.5 137.5 113.5 132 115 L 68 133 C 62.5 134.5 57 130.5 57 124.5 C 57 118.5 62.5 113.5 68 112 Z" fill="url(#emeraldGrad)" opacity="0.9" />
+
+    <!-- Right Pillar of 'H' with Upward Trending Growth Arrow -->
+    <path d="M 124 165 C 118 165 113.5 160.5 113.5 155 L 113.5 88 C 113.5 82.5 118 78 123.5 78 C 129 78 134.5 82.5 134.5 88 L 134.5 155 C 134.5 160.5 130 165 124 165 Z" fill="url(#indigoGrad)" />
+    
+    <!-- Upward Rocket / Arrow Head on Right Pillar -->
+    <polygon points="124,35 155,75 135,75 135,92 113,92 113,75 93,75" fill="url(#indigoGrad)" />
+    
+    <!-- Spark / Verification Dot -->
+    <circle cx="156" cy="42" r="7" fill="url(#amberGrad)" />
+  </g>
+
+  <!-- BRAND TYPOGRAPHY -->
+  <g transform="translate(275, 45)">
+    <!-- Primary Brand Wordmark -->
+    <text x="0" y="82" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif" font-weight="900" font-size="64" fill="#0F172A" letter-spacing="-1.5">
+      HereWe<tspan fill="#10B981">Grow</tspan>
+    </text>
+
+    <!-- Verified Badge Icon in Text -->
+    <g transform="translate(435, 38)">
+      <circle cx="14" cy="14" r="14" fill="#10B981" />
+      <path d="M 8 14.5 L 12 18.5 L 20 10.5" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+
+    <!-- Subtitle / Brand Mission Tagline -->
+    <text x="2" y="128" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif" font-weight="700" font-size="16" fill="#64748B" letter-spacing="3.5">
+      VERIFIED CREATOR ECOSYSTEM &amp; SaaS TOOLS
+    </text>
+
+    <!-- Feature Pills -->
+    <g transform="translate(0, 148)">
+      <!-- Pill 1: 0% Password -->
+      <rect x="0" y="0" width="112" height="26" rx="13" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1" />
+      <text x="56" y="17" font-family="sans-serif" font-size="11" font-weight="700" fill="#059669" text-anchor="middle">🔒 Zero Password</text>
+
+      <!-- Pill 2: Direct / Verified -->
+      <rect x="120" y="0" width="128" height="26" rx="13" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1" />
+      <text x="184" y="17" font-family="sans-serif" font-size="11" font-weight="700" fill="#4F46E5" text-anchor="middle">⚡ Verified Providers</text>
+
+      <!-- Pill 3: 24/7 WhatsApp -->
+      <rect x="256" y="0" width="110" height="26" rx="13" fill="#FEF3C7" stroke="#FDE68A" stroke-width="1" />
+      <text x="311" y="17" font-family="sans-serif" font-size="11" font-weight="700" fill="#D97706" text-anchor="middle">💬 Live WhatsApp</text>
+    </g>
+  </g>
+</svg>

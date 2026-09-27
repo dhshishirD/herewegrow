@@ -51,6 +51,11 @@ import {
   adminSendBonusReward, 
   adminUpdateAffiliateTier 
 } from '../services/affiliateService';
+import { 
+  getAdminNotificationEmail, 
+  setAdminNotificationEmail, 
+  dispatchOrderEmailAlert 
+} from '../services/notificationService';
 import { ALL_SERVICES } from '../data/growthData';
 import type { SmmOrder, PromoCode, UserWallet, SocialPlatform, AffiliateProfile, AffiliatePayoutRequest, AffiliateTier } from '../types';
 
@@ -115,6 +120,43 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [rewardAffCode, setRewardAffCode] = useState('');
   const [rewardAmount, setRewardAmount] = useState<number>(100);
   const [rewardNote, setRewardNote] = useState('Top Hustler Weekly Bonus');
+
+  // Email Alerts State
+  const [adminEmailInput, setAdminEmailInput] = useState(() => getAdminNotificationEmail());
+  const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
+
+  const handleSendTestEmailAlert = async () => {
+    setIsSendingTestEmail(true);
+    try {
+      const testOrder: SmmOrder = {
+        id: 'TEST-' + Math.floor(100000 + Math.random() * 900000),
+        serviceId: 'fb-001',
+        serviceName: 'Facebook - Video Views (High Retention Instant)',
+        platform: 'facebook',
+        link: 'https://facebook.com/your-test-post',
+        quantity: 1000,
+        chargeBDT: 15.00,
+        chargeUSD: 0.12,
+        currency: 'BDT',
+        status: 'in_progress',
+        startCount: 0,
+        currentCount: 0,
+        remains: 1000,
+        createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        refillEligible: true,
+        providerOrderId: '88997766'
+      };
+      await dispatchOrderEmailAlert(testOrder, {
+        providerBalance: providerBalance.balance || '2.50',
+        profitMargin: '৳8.50 ($0.07 Net Profit)'
+      });
+      showNotification(`✓ Test order alert email successfully dispatched to ${adminEmailInput}!`);
+    } catch (e: any) {
+      showNotification('Email dispatch error: ' + (e?.message || 'Check network connection'));
+    } finally {
+      setIsSendingTestEmail(false);
+    }
+  };
 
   // Load state on mount/open
   useEffect(() => {
@@ -590,6 +632,71 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         <span className="text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">{pendingOrdersCount} Pending</span>
                         <span className="text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">{completedOrdersCount} Done</span>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Low Wholesale Balance Alert Banner */}
+                  {Number(providerBalance.balance || 0) < 5.00 && (
+                    <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-300 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
+                          <AlertCircle className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-extrabold text-amber-950">
+                            ⚠️ Low Wholesale Provider Balance: ${providerBalance.balance || '2.50'} USD Remaining
+                          </div>
+                          <p className="text-[11px] text-amber-800 mt-0.5">
+                            Your Peakerr API wallet balance is under $5.00. Top up your Peakerr balance to ensure incoming customer orders never get delayed.
+                          </p>
+                        </div>
+                      </div>
+                      <a
+                        href="https://peakerr.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all whitespace-nowrap self-start sm:self-auto inline-flex items-center gap-1 shadow-xs"
+                      >
+                        <span>Top Up Peakerr</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+
+                  {/* Instant Admin Email Notifications Manager */}
+                  <div className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Send className="w-4 h-4 text-indigo-600" />
+                        <span className="text-xs font-extrabold text-indigo-950">Instant Admin Email Notification Dispatch</span>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded border border-emerald-300">
+                        ⚡ LIVE DISPATCH ACTIVE
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-indigo-800 leading-relaxed">
+                      Every time a customer places an order or deposits money, an automated detailed email alert is sent to your inbox containing Order ID, Service, Link, Amount Paid, and Peakerr Order ID.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                      <input
+                        type="email"
+                        value={adminEmailInput}
+                        onChange={(e) => {
+                          setAdminEmailInput(e.target.value);
+                          setAdminNotificationEmail(e.target.value);
+                        }}
+                        placeholder="your-email@gmail.com"
+                        className="flex-1 px-3.5 py-2 rounded-xl border border-indigo-200 bg-white text-xs font-bold text-slate-900 focus:outline-hidden focus:border-indigo-600"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSendTestEmailAlert}
+                        disabled={isSendingTestEmail}
+                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap disabled:opacity-50"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>{isSendingTestEmail ? 'Sending Test...' : 'Send Test Alert Email'}</span>
+                      </button>
                     </div>
                   </div>
 

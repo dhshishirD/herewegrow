@@ -69,6 +69,8 @@ export const getLocalOrders = (): SmmOrder[] => {
   return master;
 };
 
+import { dispatchOrderEmailAlert, dispatchDepositEmailAlert } from './notificationService';
+
 export const saveLocalOrders = (orders: SmmOrder[]): void => {
   try {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));

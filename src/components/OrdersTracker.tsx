@@ -34,6 +34,23 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
   const [dispatchingId, setDispatchingId] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [copiedAffiliate, setCopiedAffiliate] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'in_progress' | 'completed' | 'pending'>('all');
+
+  const filteredOrders = orders.filter((o) => {
+    const q = searchQuery.trim().toLowerCase();
+    const matchesSearch = !q || 
+      o.id.toLowerCase().includes(q) || 
+      (o.providerOrderId && o.providerOrderId.toLowerCase().includes(q)) ||
+      o.link.toLowerCase().includes(q) ||
+      o.serviceName.toLowerCase().includes(q);
+    
+    if (!matchesSearch) return false;
+    if (statusFilter === 'in_progress') return o.status === 'in_progress';
+    if (statusFilter === 'completed') return o.status === 'completed';
+    if (statusFilter === 'pending') return o.status === 'pending';
+    return true;
+  });
 
   const handleSyncWithProvider = async () => {
     setIsSyncing(true);
@@ -132,15 +149,59 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
         </div>
       )}
 
+      {/* Real-time Order Search & Filter Bar */}
+      {orders.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2 bg-slate-50 border border-slate-200 rounded-2xl">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by Order ID (#ORD-...), Peakerr ID, or post link..."
+              className="w-full pl-9 pr-8 py-2 text-xs font-medium bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-hidden focus:border-indigo-600 shadow-2xs"
+            />
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-slate-700 cursor-pointer"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+            {(['all', 'in_progress', 'completed', 'pending'] as const).map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize whitespace-nowrap transition-all cursor-pointer ${
+                  statusFilter === status
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                }`}
+              >
+                {status === 'all' ? `All (${orders.length})` : status.replace('_', ' ')}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Orders Table & Cards */}
-      {orders.length === 0 ? (
+      {filteredOrders.length === 0 ? (
         <div className="luxury-card p-12 sm:p-16 rounded-3xl text-center border border-slate-200/90 max-w-2xl mx-auto shadow-2xs">
           <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4 text-slate-500">
             <Activity className="w-7 h-7 text-indigo-600" />
           </div>
-          <h3 className="text-xl font-extrabold text-slate-950 font-serif">No Active Orders Yet</h3>
+          <h3 className="text-xl font-extrabold text-slate-950 font-serif">
+            {orders.length === 0 ? 'No Active Orders Yet' : 'No Matching Orders Found'}
+          </h3>
           <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-md mx-auto leading-relaxed">
-            Your real-time order history, start counts, and automated server fulfillment will appear here immediately after checkout with bKash, Nagad, or Crypto.
+            {orders.length === 0 
+              ? 'Your real-time order history, start counts, and automated server fulfillment will appear here immediately after checkout.'
+              : 'Try clearing your search query or switching status filters.'}
           </p>
           <div className="mt-8 flex items-center justify-center gap-3">
             <button
@@ -153,7 +214,7 @@ export const OrdersTracker: React.FC<OrdersTrackerProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => {
+          {filteredOrders.map((order) => {
             const isCompleted = order.status === 'completed';
             const progressPercent = order.quantity > 0 
               ? Math.min(100, Math.round(((order.quantity - order.remains) / order.quantity) * 100))

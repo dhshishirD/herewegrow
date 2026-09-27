@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Ad 2: Free Speed Trial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px;
+      height: 1080px;
+      background: radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.2) 0%, transparent 45%),
+                  radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 45%),
+                  #070A11;
+      font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+      color: #FFFFFF;
+      overflow: hidden;
+      position: relative;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .glow-line-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #F59E0B, #FBBF24, #10B981);
+      box-shadow: 0 0 25px #F59E0B;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .brand-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 2px solid rgba(245, 158, 11, 0.4);
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-title span.pro {
+      font-size: 13px;
+      background: #F59E0B;
+      color: #070A11;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 900;
+    }
+    .brand-tagline {
+      font-size: 15px;
+      color: #94A3B8;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #FBBF24;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+    }
+
+    .headline-wrap {
+      margin-top: 15px;
+    }
+    .badge-sub {
+      display: inline-block;
+      font-size: 17px;
+      font-weight: 800;
+      color: #34D399;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      text-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+    }
+    .headline-main {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #FFFFFF;
+    }
+    .headline-neon {
+      background: linear-gradient(90deg, #F59E0B 0%, #FBBF24 50%, #FDE047 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+    }
+    .sub-text {
+      font-size: 18px;
+      color: #94A3B8;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .steps-container {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 26px 30px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(30, 41, 59, 0.5);
+      padding: 16px 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .step-num {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: #F59E0B;
+      color: #070A11;
+      font-size: 22px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+    }
+    .step-title {
+      font-size: 21px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .step-desc {
+      font-size: 16px;
+      color: #94A3B8;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .bottom-cta {
+      background: linear-gradient(90deg, #D97706 0%, #F59E0B 100%);
+      border-radius: 24px;
+      padding: 24px 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.45);
+    }
+    .cta-left-text {
+      font-size: 28px;
+      font-weight: 800;
+      color: #070A11;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cta-right-box {
+      background: #070A11;
+      padding: 12px 24px;
+      border-radius: 16px;
+      font-size: 19px;
+      font-weight: 800;
+      color: #FBBF24;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-line-top"></div>
+
+  <div class="header">
+    <div class="brand-group">
+      <div class="brand-logo">
+        <img src="../public/branding/herewegrow_logo_friendly_h_arrow.jpg" alt="Logo">
+      </div>
+      <div>
+        <div class="brand-title">
+          HereWeGrow <span class="pro">.PRO</span>
+        </div>
+        <div class="brand-tagline">100% Free Speed Trial • No Credit Card Required</div>
+      </div>
+    </div>
+    <div class="trust-pill">
+      ⚡ 100% FREE TRIAL
+    </div>
+  </div>
+
+  <div class="headline-wrap">
+    <div class="badge-sub">🎁 Instant Live Test • Zero Risk</div>
+    <div class="headline-main">
+      ১ টাকাও লাগবে না!<br>
+      ৬০ সেকেন্ডে <span class="headline-neon">১০০ ফ্রি ভিউজ টেস্ট করুন ⚡</span>
+    </div>
+    <div class="sub-text">
+      মুখে নয়, নিজের চোখে লাইভ স্পিড ও কোয়ালিটি টেস্ট করে দেখুন!
+    </div>
+  </div>
+
+  <div class="steps-container">
+    <div class="step-item">
+      <div class="step-num">১</div>
+      <div>
+        <div class="step-title">কোনো পাসওয়ার্ড বা লগইন নেই</div>
+        <div class="step-desc">শুধু আপনার যেকোনো ভিডিও বা পোস্টের পাবলিক লিঙ্ক পেস্ট করুন।</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">২</div>
+      <div>
+        <div class="step-title">সম্পূর্ণ ফ্রি ১-ক্লিক সাবমিট</div>
+        <div class="step-desc">কোনো কার্ড বা বিকাশ পেমেন্টের প্রয়োজন নেই।</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">৩</div>
+      <div>
+        <div class="step-title">৬০ সেকেন্ডে রেজাল্ট দেখুন</div>
+        <div class="step-desc">সরাসরি আপনার ভিডিওতে ১০০ ফ্রি ভিউজ ইনস্ট্যান্ট ডেলিভারি হবে!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-cta">
+    <div class="cta-left-text">
+      ⚡ এখনই ফ্রি ট্রায়াল নিন: herewegrow.pro
+    </div>
+    <div class="cta-right-box">
+      Direct Link: herewegrow.pro/#trial
+    </div>
+  </div>
+</body>
+</html>

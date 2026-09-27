@@ -45,7 +45,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'affiliate', label: t('nav_affiliate'), icon: Users, badge: t('nav_badge_earn') },
     { id: 'tools', label: t('nav_tools'), icon: Wrench },
     { id: 'orders', label: t('nav_orders'), icon: Activity },
-    { id: 'api', label: t('nav_api'), icon: Code2 },
   ];
 
   const handleNavClick = (id: string) => {

@@ -29,13 +29,14 @@ interface ChatMessage {
   };
 }
 
-const SUPPORT_STORAGE_KEY = 'herewegrow_support_whatsapp_num';
+const SUPPORT_STORAGE_KEY = 'herewegrow_support_whatsapp_num_v2';
+const DEFAULT_WHATSAPP_NUMBER = '8801981505759';
 
 export const LiveSupportWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(1);
   const [whatsappNumber, setWhatsappNumber] = useState(() => {
-    return localStorage.getItem(SUPPORT_STORAGE_KEY) || '8801700000000';
+    return localStorage.getItem(SUPPORT_STORAGE_KEY) || DEFAULT_WHATSAPP_NUMBER;
   });
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -52,10 +53,10 @@ export const LiveSupportWidget: React.FC = () => {
     {
       id: 'welcome-2',
       sender: 'bot',
-      text: 'You can chat here directly, or click below for instant 1-on-1 WhatsApp assistance with our team.',
+      text: 'Need fast 1-on-1 assistance? Click below to chat directly with our Dhaka operations team on WhatsApp (01981-505759).',
       time: 'Just now',
       actionButton: {
-        label: '💬 Chat on WhatsApp (+880)',
+        label: '💬 Chat on WhatsApp (+880 1981-505759)',
         action: 'whatsapp'
       }
     }
@@ -78,7 +79,8 @@ export const LiveSupportWidget: React.FC = () => {
     }
 
     const textToSend = customText || defaultMsg;
-    const url = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(textToSend)}`;
+    const cleanNum = whatsappNumber.replace(/[^0-9]/g, '') || DEFAULT_WHATSAPP_NUMBER;
+    const url = `https://wa.me/${cleanNum}?text=${encodeURIComponent(textToSend)}`;
     window.open(url, '_blank');
   };
 

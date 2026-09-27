@@ -10,6 +10,7 @@ interface FooterProps {
   onNavigateTab: (tab: string) => void;
   onNavigateCategory?: (categorySlug: string) => void;
   onNavigateTool?: (toolSlug: string) => void;
+  onOpenAbout?: () => void;
   onOpenAdmin?: () => void;
 }
 
@@ -17,6 +18,7 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigateTab, 
   onNavigateCategory, 
   onNavigateTool, 
+  onOpenAbout,
   onOpenAdmin 
 }) => {
   const lastTapRef = useRef<number>(0);
@@ -76,13 +78,26 @@ export const Footer: React.FC<FooterProps> = ({
                 : 'The #1 All-in-One Social Creator Tools & Growth Studio. Combining free viral utilities with high-velocity, non-drop SMM fulfillment.'}
             </p>
 
-            <div className="flex items-center gap-2 text-[11px] text-slate-500">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
               <span className="flex items-center gap-1 font-medium">
                 <Lock className="w-3.5 h-3.5 text-emerald-600" />
                 SSL 256-Bit Encrypted
               </span>
               <span>•</span>
               <span className="text-emerald-700 font-bold">24/7 Automated Queue</span>
+            </div>
+
+            {/* Direct WhatsApp Quick Contact in Brand box */}
+            <div className="pt-1">
+              <a
+                href="https://wa.me/8801981505759?text=Hello%20HereWeGrow%20Team%2C%20I%20have%20an%20inquiry%20regarding%20your%20services."
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-800 font-bold text-[11px] border border-emerald-300 transition-colors"
+              >
+                <span>💬 WhatsApp Support:</span>
+                <span className="font-mono font-black">+880 1981-505759</span>
+              </a>
             </div>
           </div>
 
@@ -170,13 +185,20 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Column 3: Platform & Support */}
+          {/* Column 3: Platform, Reseller API & About Us */}
           <div className="space-y-3">
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{isBn ? 'ডেভেলপার ও সাপোর্ট' : 'Developers & Support'}</h4>
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{isBn ? 'কোম্পানি ও রিসেলার' : 'Company & Resellers'}</h4>
             <ul className="space-y-2">
+              {onOpenAbout && (
+                <li>
+                  <button onClick={onOpenAbout} className="hover:text-slate-900 transition-colors font-bold text-indigo-700 flex items-center gap-1 cursor-pointer">
+                    <span>🏢 {isBn ? 'আমাদের সম্পর্কে (About Us)' : 'About HereWeGrow'}</span>
+                  </button>
+                </li>
+              )}
               <li>
-                <button onClick={() => onNavigateTab('api')} className="hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold text-indigo-700 cursor-pointer">
-                  <span>{isBn ? 'রিসেলার API v2' : 'Reseller API v2'}</span>
+                <button onClick={() => onNavigateTab('api')} className="hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold text-slate-900 cursor-pointer">
+                  <span>⚡ {isBn ? 'রিসেলার API v2 ডকুমেন্টস' : 'Reseller API v2 Docs'}</span>
                   <ArrowUpRight className="w-3 h-3 text-indigo-600" />
                 </button>
               </li>
@@ -197,8 +219,13 @@ export const Footer: React.FC<FooterProps> = ({
                 </button>
               </li>
               <li>
-                <a href="https://t.me/" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors text-indigo-600 font-bold flex items-center gap-1">
-                  <span>24/7 Telegram Support</span>
+                <a 
+                  href="https://wa.me/8801981505759?text=Hello%20HereWeGrow%20Support%2C%20I%20need%20assistance." 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-slate-900 transition-colors text-emerald-700 font-bold flex items-center gap-1"
+                >
+                  <span>💬 24/7 WhatsApp: 01981-505759</span>
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               </li>

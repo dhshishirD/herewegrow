@@ -11,6 +11,7 @@ import { OrderModal } from './components/OrderModal';
 import { ProviderSettingsModal } from './components/ProviderSettingsModal';
 import { AdminDashboardModal } from './components/AdminDashboardModal';
 import { OrderConfirmationModal } from './components/OrderConfirmationModal';
+import { AboutUsModal } from './components/AboutUsModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { LiveSupportWidget } from './components/LiveSupportWidget';
 import { CategoryLandingPage, CATEGORY_CONFIGS } from './pages/CategoryLandingPage';
@@ -38,6 +39,7 @@ function MainAppContent() {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isProviderModalOpen, setIsProviderModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<SmmOrder | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [orderModalState, setOrderModalState] = useState<{
@@ -404,6 +406,7 @@ function MainAppContent() {
         onNavigateTab={handleTabNavigate} 
         onNavigateCategory={handleNavigateCategory}
         onNavigateTool={handleNavigateTool}
+        onOpenAbout={() => setIsAboutModalOpen(true)}
         onOpenAdmin={() => setIsAdminModalOpen(true)} 
       />
 
@@ -419,6 +422,13 @@ function MainAppContent() {
 
       {/* Geo / Location / Currency / Language Selector Modal */}
       <GeoSelectorModal />
+
+      {/* About Us Company Information Modal */}
+      <AboutUsModal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
+        onOpenStore={() => handleTabNavigate('store')}
+      />
 
       {/* Wallet Deposit Modal */}
       <WalletModal

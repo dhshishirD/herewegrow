@@ -532,13 +532,18 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               >
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-emerald-500" />
-                  <span>Affiliates & Rewards</span>
+                  <span>Affiliates & Partners</span>
                 </div>
-                {pendingPayoutsCount > 0 && (
-                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-mono">
-                    {pendingPayoutsCount}
+                <div className="flex items-center gap-1">
+                  <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold" title="Total Registered Partners">
+                    {affiliates.length}
                   </span>
-                )}
+                  {pendingPayoutsCount > 0 && (
+                    <span className="px-1.5 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-mono" title="Pending Payouts">
+                      {pendingPayoutsCount}
+                    </span>
+                  )}
+                </div>
               </button>
 
               <button
@@ -598,12 +603,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 <div className="space-y-6">
                   <div>
                     <h4 className="text-base font-extrabold text-slate-900">Revenue & Operations Overview</h4>
-                    <p className="text-xs text-slate-500">Real-time metrics from customer checkouts and wholesale provider balance.</p>
+                    <p className="text-xs text-slate-500">Real-time metrics from customer checkouts, registered affiliates, and wholesale provider balance.</p>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-1">
-                      <span className="text-xs font-bold text-indigo-900">Total Customer Revenue</span>
+                      <span className="text-xs font-bold text-indigo-900">Customer Revenue</span>
                       <div className="text-2xl font-black text-indigo-950 font-mono">
                         ৳ {totalRevenueBDT.toLocaleString()}
                       </div>
@@ -624,7 +629,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     </div>
 
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-                      <span className="text-xs font-bold text-slate-700">Orders Status</span>
+                      <span className="text-xs font-bold text-slate-700">Orders Processed</span>
                       <div className="text-2xl font-black text-slate-900 font-mono">
                         {orders.length} <span className="text-xs font-normal text-slate-500">total</span>
                       </div>
@@ -632,6 +637,24 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         <span className="text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">{pendingOrdersCount} Pending</span>
                         <span className="text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">{completedOrdersCount} Done</span>
                       </div>
+                    </div>
+
+                    <div 
+                      onClick={() => setActiveTab('affiliates')}
+                      className="p-4 rounded-2xl bg-emerald-950 text-white border border-emerald-800 space-y-1 cursor-pointer hover:bg-emerald-900 transition-colors group"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-emerald-300">Opened Affiliates</span>
+                        <span className="text-[10px] font-mono font-bold bg-emerald-800 text-emerald-200 px-1.5 py-0.5 rounded group-hover:bg-emerald-700">
+                          View ➔
+                        </span>
+                      </div>
+                      <div className="text-2xl font-black text-emerald-400 font-mono">
+                        {affiliates.length} <span className="text-xs font-normal text-emerald-300">Partners</span>
+                      </div>
+                      <span className="text-[11px] text-emerald-300/80 font-medium truncate block">
+                        ৳{totalAffiliateSalesBDT.toLocaleString()} total referral sales
+                      </span>
                     </div>
                   </div>
 

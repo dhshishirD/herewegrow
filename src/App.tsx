@@ -413,6 +413,7 @@ function MainAppContent() {
         setActiveTab={handleTabNavigate}
         wallet={wallet}
         currency={currency}
+        orders={orders}
         onOpenWallet={() => setIsWalletModalOpen(true)}
       />
 

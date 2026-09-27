@@ -97,41 +97,59 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
   'youtube-monetization': {
     slug: 'youtube-monetization',
     platformId: 'youtube',
-    title: 'Buy YouTube 4000 Watch Hours & Subscribers (YPP Monetization) | HereWeGrow',
-    h1: 'Buy 4,000 YouTube Watch Hours & Subscribers',
-    tagline: 'Fast-track your YouTube Partner Program (YPP) AdSense monetization with 100% policy-compliant, non-drop watch time and high-retention views.',
-    heroBadge: 'Verified YPP AdSense Safe • 1-Year Refill Guarantee',
+    title: 'Buy YouTube 4000 Watch Hours & 1000 Subscribers (YPP Monetization) 2026 | HereWeGrow',
+    h1: 'Buy 4,000 YouTube Watch Hours & 1,000 Subscribers',
+    tagline: 'Fast-track your YouTube Partner Program (YPP) AdSense monetization with 100% policy-compliant, non-drop watch time, authentic high-retention desktop playback, and a 365-day auto-refill warranty.',
+    heroBadge: 'Official YPP Safe • 240,000 Minutes Guaranteed • 365d Warranty',
     targetKeywords: [
       '4000 watch hours on youtube',
       'buy 4000 watch hours on youtube cheap',
       'youtube watch hours for monetization',
+      'how to get 4000 watch hours on youtube',
+      'buy youtube watch time bangladesh',
+      'youtube 4000 watch hours bkash',
+      'youtube monetization package 2026',
       'youtube views increase',
       'boost youtube views',
       'free youtube subscribers',
       'free youtube views',
       '1 million views on youtube money',
-      'tool seo youtube'
+      'tool seo youtube',
+      'youtube partner program eligibility'
     ],
-    metaDescription: 'Buy 4000 watch hours and 1000 subscribers for YouTube monetization. 100% compliant with YouTube Partner Program (YPP). Instant bKash & Crypto payment.',
-    introText: 'Unlocking the YouTube Partner Program requires 4,000 valid public watch hours (240,000 minutes) and 1,000 subscribers within the last 12 months. HereWeGrow provides high-retention, steady drip-feed watch duration from authentic user sessions that stick permanently in your YouTube Studio analytics.',
+    metaDescription: 'Buy 4000 watch hours and 1000 subscribers for YouTube monetization. 100% compliant with YouTube Partner Program (YPP) & Google AdSense. Instant bKash & Crypto payment.',
+    introText: 'Achieving YouTube Partner Program (YPP) monetization requires 4,000 valid public watch hours (240,000 minutes) and 1,000 subscribers within the past 12 months. HereWeGrow delivers high-retention, steady drip-feed watch time from authentic desktop and mobile browser sessions that count permanently toward your YouTube Studio monetization progress meter.',
     showCalculator: 'youtube',
     whyChooseUs: [
-      { title: '100% YPP Monetization Safe', desc: 'Our drip-speed delivery mimics organic viewers, ensuring full compliance with YouTube community guidelines.' },
-      { title: '365-Day Refill Protection', desc: 'Every watch time and subscriber order comes with an unconditional 1-year auto-refill warranty.' },
-      { title: 'No Passwords Required', desc: 'Only your public channel or video link is needed. Your account remains 100% secure.' }
+      { title: '100% YPP Monetization Compliant', desc: 'Our natural drip-feed pacing mimics authentic human viewer behavior, safely passing YouTube Studio algorithmic and manual reviews.' },
+      { title: '365-Day Unconditional Refill', desc: 'Every watch hour and subscriber package is backed by an automated 1-year replacement warranty if any count fluctuations occur.' },
+      { title: 'Zero Channel Passwords Required', desc: 'We only require your public YouTube channel or video link. Your Google account credentials remain 100% private and secure.' },
+      { title: 'Instant bKash, Nagad & Crypto Checkout', desc: 'Seamless 1-click checkout in Bangladeshi Taka (৳ BDT) with zero gateway fee, plus global Binance Pay and Card support.' }
     ],
     faqs: [
       {
-        q: 'How many minutes is 4,000 watch hours on YouTube?',
-        a: '4,000 watch hours is exactly 240,000 minutes (4,000 × 60 = 240,000 minutes). If your average video length is 15 minutes, you need 16,000 full views to achieve monetization.'
+        q: 'How many minutes is 4,000 watch hours on YouTube and how is it calculated?',
+        a: '4,000 watch hours is exactly 240,000 minutes of valid public playback (4,000 hours × 60 minutes = 240,000 minutes). If your uploaded video is 15 minutes long and viewers watch with 80% average retention (12 minutes), you need approximately 20,000 full views to reach the 4,000 hours milestone.'
       },
       {
-        q: 'Will my channel get monetized and approved for AdSense?',
-        a: 'Yes! Our watch hours are generated from real desktop and mobile user agents with natural playback pacing, passing YouTube Studio review without policy strikes.'
+        q: 'Will my channel get approved for Google AdSense monetization after reaching 4,000 hours?',
+        a: 'Yes! HereWeGrow watch hours are generated with real browser headers, unique residential IPs, and natural playback progression that register directly in YouTube Studio monetization analytics. As long as your channel content follows YouTube Community Guidelines (no copyright infringements or unedited reused content), your application will be approved smoothly.'
       },
       {
-        q: 'What video length is recommended for watch hours?',
-        a: 'We recommend uploading at least one long-form video of 15 to 60 minutes for the fastest and most stable watch-hour accumulation.'
+        q: 'What video length is recommended to order YouTube watch hours?',
+        a: 'We strongly recommend uploading at least one long-form video of 15 to 60+ minutes (such as a podcast, tutorial, vlog, or relaxing background audio/visual). Longer videos allow watch hours to accumulate much faster and with maximum stability.'
+      },
+      {
+        q: 'Do YouTube Shorts views count toward the 4,000 public watch hours requirement?',
+        a: 'No. YouTube’s official policy separates Shorts from long-form watch time. Shorts views count toward the alternative 10 Million Shorts views requirement. For the classic 4,000 hours threshold, you must have public long-form video watch time, which HereWeGrow provides.'
+      },
+      {
+        q: 'How fast will my 4,000 watch hours and 1,000 subscribers be delivered?',
+        a: 'Delivery begins within 60 seconds of order placement and is delivered via an organic drip-feed over 3 to 7 days. This gradual delivery pacing protects your channel and ensures all 240,000 minutes lock into your YouTube Studio analytics permanently.'
+      },
+      {
+        q: 'How much money does 1 Million views make on YouTube AdSense?',
+        a: 'Earnings from 1 Million views typically range from $1,500 to $15,000+ USD (approx. ৳1,80,000 to ৳18,00,000 BDT) depending on your niche RPM. Finance, SaaS, and Tech niches earn the highest RPM ($10–$30), while lifestyle, entertainment, and vlog niches average $2–$6 RPM.'
       }
     ]
   },
@@ -454,6 +472,18 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
   };
 
   const isSmmPanel = config.slug === 'smm-panel';
+  const isYouTubeMonetization = config.slug === 'youtube-monetization' || config.platformId === 'youtube' || categorySlug === 'youtube' || categorySlug === 'youtube-views';
+
+  // Enhanced YouTube Calculator State
+  const [currentWatchHours, setCurrentWatchHours] = useState<number>(500);
+  const [customVideoLength, setCustomVideoLength] = useState<number>(15);
+  const [retentionPct, setRetentionPct] = useState<number>(80);
+
+  const neededHours = Math.max(0, 4000 - currentWatchHours);
+  const neededMinutes = neededHours * 60;
+  const effectiveWatchMinutesPerView = Math.max(1, customVideoLength * (retentionPct / 100));
+  const calcEstimatedViews = Math.ceil(neededMinutes / effectiveWatchMinutesPerView);
+  const recommendedDripDays = Math.max(3, Math.min(14, Math.ceil(neededHours / 450)));
 
   return (
     <div className="py-12 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fadeIn">
@@ -506,6 +536,319 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* YouTube Monetization Exclusive: Interactive Watch Time Calculator & YPP Blueprint */}
+      {isYouTubeMonetization && (
+        <div className="max-w-5xl mx-auto mb-16 space-y-12">
+          
+          {/* 1. Interactive Watch Time Calculator */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white shadow-xl border border-slate-800">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-slate-800 pb-6">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Calculator className="w-5 h-5 text-indigo-400" />
+                  <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Interactive Monetization Engine</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
+                  YouTube 4,000 Watch Hours & Views Calculator
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Calculate exactly how many high-retention views and minutes your channel needs to unlock Google AdSense.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-indigo-900/40 border border-indigo-700/50 text-right flex-shrink-0">
+                <div className="text-[10px] text-indigo-300 font-bold uppercase">YPP Milestone</div>
+                <div className="text-xl font-black text-white font-mono">240,000 Minutes</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Sliders Column */}
+              <div className="lg:col-span-2 space-y-5">
+                <div>
+                  <div className="flex justify-between text-xs font-bold text-slate-300 mb-1.5">
+                    <span>Your Current Watch Hours:</span>
+                    <span className="text-emerald-400 font-mono font-black">{currentWatchHours.toLocaleString()} / 4,000 Hours</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="4000"
+                    step="50"
+                    value={currentWatchHours}
+                    onChange={(e) => setCurrentWatchHours(Number(e.target.value))}
+                    className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                    <span>0h (Brand New)</span>
+                    <span>1,000h</span>
+                    <span>2,000h</span>
+                    <span>3,000h</span>
+                    <span>4,000h (Monetized)</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Your Video Duration</label>
+                    <select
+                      value={customVideoLength}
+                      onChange={(e) => setCustomVideoLength(Number(e.target.value))}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white focus:outline-hidden focus:border-indigo-400"
+                    >
+                      <option value="5">5 Minutes (Short Video)</option>
+                      <option value="10">10 Minutes (Standard)</option>
+                      <option value="15">15 Minutes (Recommended)</option>
+                      <option value="30">30 Minutes (Fast Accumulation)</option>
+                      <option value="60">60 Minutes (Maximum Speed)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Retention Rate</label>
+                    <select
+                      value={retentionPct}
+                      onChange={(e) => setRetentionPct(Number(e.target.value))}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white focus:outline-hidden focus:border-indigo-400"
+                    >
+                      <option value="60">60% Average Retention</option>
+                      <option value="80">80% High Retention (HereWeGrow Standard)</option>
+                      <option value="95">95% Ultra Retention</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Real-time Math Output Card */}
+              <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Hours Needed:</span>
+                    <span className="font-mono font-black text-amber-400 text-sm">{neededHours.toLocaleString()} Hours</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Minutes to Complete:</span>
+                    <span className="font-mono font-bold text-slate-200">{neededMinutes.toLocaleString()} mins</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Est. Views Required:</span>
+                    <span className="font-mono font-black text-emerald-400 text-base">{calcEstimatedViews.toLocaleString()} views</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Safe Drip-Feed Pace:</span>
+                    <span className="font-mono font-bold text-indigo-300">{recommendedDripDays} to {recommendedDripDays + 3} Days</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    const ytService = filteredServices.find(s => s.id === 'yt-002') || filteredServices[0];
+                    if (ytService) onSelectService(ytService);
+                  }}
+                  className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 text-amber-300" />
+                  <span>Get Watch Hours Package (bKash/Nagad)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Official 2026 YouTube Partner Program (YPP) Checklist */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-6">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Official Policy Guide</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
+                2026 YouTube Partner Program (YPP) Eligibility Checklist
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Ensure your channel checks off all 5 criteria before submitting your Google AdSense application.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">4,000 Watch Hours</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Must be generated from valid public long-form videos within the preceding 365 days.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">1,000 Subscribers</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Real, non-drop subscribers to establish your channel base and community engagement.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">2-Step Verification</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Active 2-Factor Authentication enabled on your linked Google account.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">0 Community Strikes</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Channel must have zero active community guideline strikes at the time of review.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">Linked AdSense Account</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  An approved Google AdSense profile linked to receive monthly bank deposits.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-indigo-950">HereWeGrow Warranty</span>
+                </div>
+                <p className="text-[11px] text-indigo-900">
+                  100% money-back and 365-day auto-refill guarantee on watch time and subscribers.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. YouTube AdSense RPM & 1 Million Views Earnings Matrix */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-lg space-y-6">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider">Revenue Breakdown</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
+                How Much Money Does 1 Million Views Make on YouTube?
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Estimated AdSense revenue breakdown based on real RPM (Revenue Per Mille) across high-traffic niches.
+              </p>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-950 text-white font-bold border-b border-slate-800">
+                    <th className="p-4">Content Category / Niche</th>
+                    <th className="p-4">Average RPM</th>
+                    <th className="p-4">100,000 Views Earnings</th>
+                    <th className="p-4 bg-emerald-900/90 text-white font-black">1,000,000 Views Earnings (USD & BDT)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Finance, Crypto & Stock Market</td>
+                    <td className="p-4 font-mono font-bold text-indigo-700">$15.00 – $30.00</td>
+                    <td className="p-4 font-mono">$1,500 – $3,000</td>
+                    <td className="p-4 bg-emerald-50/50 font-mono font-black text-emerald-800">$15,000 – $30,000 (৳18,00,000+)</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Tech Reviews, AI & Software</td>
+                    <td className="p-4 font-mono font-bold text-indigo-700">$8.00 – $18.00</td>
+                    <td className="p-4 font-mono">$800 – $1,800</td>
+                    <td className="p-4 bg-emerald-50/50 font-mono font-black text-emerald-800">$8,000 – $18,000 (৳9,60,000+)</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Educational, Tutorials & Coding</td>
+                    <td className="p-4 font-mono font-bold text-indigo-700">$5.00 – $12.00</td>
+                    <td className="p-4 font-mono">$500 – $1,200</td>
+                    <td className="p-4 bg-emerald-50/50 font-mono font-black text-emerald-800">$5,000 – $12,000 (৳6,00,000+)</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Lifestyle, Travel & Daily Vlogs</td>
+                    <td className="p-4 font-mono font-bold text-indigo-700">$3.00 – $7.00</td>
+                    <td className="p-4 font-mono">$300 – $700</td>
+                    <td className="p-4 bg-emerald-50/50 font-mono font-black text-emerald-800">$3,000 – $7,000 (৳3,60,000+)</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Gaming & Entertainment Comedy</td>
+                    <td className="p-4 font-mono font-bold text-indigo-700">$2.00 – $5.00</td>
+                    <td className="p-4 font-mono">$200 – $500</td>
+                    <td className="p-4 bg-emerald-50/50 font-mono font-black text-emerald-800">$2,000 – $5,000 (৳2,40,000+)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* 4. Long-Form Editorial Authority Guide (Position #0 Target) */}
+          <div className="p-6 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-950">
+              The Complete Blueprint to Unlocking YouTube Partner Program (YPP) Monetization
+            </h2>
+
+            <div className="space-y-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                1. Understanding the 240,000 Minutes Mathematics
+              </h3>
+              <p>
+                To qualify for ad revenue monetization, YouTube requires <strong>4,000 valid public watch hours</strong> accumulated over the rolling last 365 days. 
+                In strict mathematical terms, 4,000 hours equals <strong>240,000 total minutes</strong> (4,000 × 60 = 240,000). 
+                If your channel only uploads 2-minute videos, you would need over 120,000 full-length views. 
+                However, by uploading 15 to 30-minute videos, you can achieve the entire 4,000 hours with just 8,000 to 16,000 dedicated views.
+              </p>
+            </div>
+
+            <div className="space-y-4 border-t border-slate-100 pt-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                2. Why Drip-Feed High Retention Matters (Avoiding Bot Detection)
+              </h3>
+              <p>
+                YouTube’s algorithms utilize sophisticated 48-hour statistical verification windows. 
+                Cheap bot traffic that delivers instant 10-second drops is immediately filtered out and discarded by YouTube Studio analytics. 
+                HereWeGrow utilizes natural residential playback signatures with authentic browser headers and realistic human playback pacing (drip-feed over 3 to 7 days). 
+                This ensures every single minute locks permanently into your monetization progress bar.
+              </p>
+            </div>
+
+            <div className="space-y-4 border-t border-slate-100 pt-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                3. How to Prevent "Reused Content" Rejections during YPP Review
+              </h3>
+              <p>
+                When you hit 4,000 hours and submit your channel for review, a human YouTube reviewer assesses your channel. 
+                To guarantee approval on your first attempt:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
+                <li>Ensure you have your own original voiceover, camera commentary, or creative value added.</li>
+                <li>Write clear, unique descriptions and customize your channel banner and profile icon.</li>
+                <li>Do not re-upload unedited clips from movies, viral TikToks, or television shows.</li>
+                <li>Upload at least 4 to 8 original long-form videos to showcase an active creator presence.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      )}
 
       {/* Embedded 1-Click Free Trial Speed Tester */}
       <div className="max-w-5xl mx-auto mb-16">

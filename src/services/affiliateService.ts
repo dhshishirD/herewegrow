@@ -1,4 +1,5 @@
 import type { AffiliateProfile, AffiliatePayoutRequest, MotivationalQuote, AffiliateTier } from '../types';
+import { dispatchAffiliateRegistrationAlert } from './notificationService';
 
 /**
  * Dedicated Student Affiliate & Reseller Partner Engine for HereWeGrow
@@ -8,6 +9,135 @@ const AFFILIATE_PROFILE_KEY = 'hwg_affiliate_current_user_v2';
 const ALL_AFFILIATES_KEY = 'hwg_all_affiliates_master_v2';
 const PAYOUT_REQUESTS_KEY = 'hwg_affiliate_payout_requests_v2';
 const REFERRER_TRACKING_KEY = 'hwg_active_referrer_code';
+
+// Default Seed Ambassadors if empty
+const DEFAULT_SEED_AFFILIATES: AffiliateProfile[] = [
+  {
+    id: 'AFF-1024',
+    code: 'GROW-DHAKA',
+    name: 'Tanvir Hossain',
+    email: 'tanvir.h@gmail.com',
+    phoneOrBkash: '01711223344',
+    institution: 'Dhaka University',
+    tier: 'gold',
+    commissionRate: 0.20,
+    totalClicks: 342,
+    totalSales: 28,
+    grossSalesBDT: 4200,
+    totalEarningsBDT: 840,
+    pendingPayoutBDT: 0,
+    withdrawnBDT: 840,
+    createdAt: '2026-03-12'
+  },
+  {
+    id: 'AFF-1089',
+    code: 'BUET-CREATOR',
+    name: 'Nayeem Islam',
+    email: 'nayeem.buet@gmail.com',
+    phoneOrBkash: '01899887766',
+    institution: 'BUET',
+    tier: 'silver',
+    commissionRate: 0.15,
+    totalClicks: 185,
+    totalSales: 14,
+    grossSalesBDT: 2150,
+    totalEarningsBDT: 322.5,
+    pendingPayoutBDT: 150,
+    withdrawnBDT: 172.5,
+    createdAt: '2026-03-18'
+  },
+  {
+    id: 'AFF-2041',
+    code: 'CUET-HUSTLE',
+    name: 'Sadia Rahman',
+    email: 'sadia.cuet@gmail.com',
+    phoneOrBkash: '01655443322',
+    institution: 'CUET',
+    tier: 'bronze',
+    commissionRate: 0.10,
+    totalClicks: 94,
+    totalSales: 6,
+    grossSalesBDT: 900,
+    totalEarningsBDT: 90,
+    pendingPayoutBDT: 90,
+    withdrawnBDT: 0,
+    createdAt: '2026-03-22'
+  }
+];
+
+export const getAllAffiliates = (): AffiliateProfile[] => {
+  try {
+    const saved = localStorage.getItem(ALL_AFFILIATES_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed.filter(Boolean);
+    }
+    // Initialize default seed ambassadors
+    localStorage.setItem(ALL_AFFILIATES_KEY, JSON.stringify(DEFAULT_SEED_AFFILIATES));
+    return DEFAULT_SEED_AFFILIATES;
+  } catch (e) {
+    console.error(e);
+  }
+  return DEFAULT_SEED_AFFILIATES;
+};
+
+export const saveAllAffiliates = (affiliates: AffiliateProfile[]): void => {
+  try {
+    localStorage.setItem(ALL_AFFILIATES_KEY, JSON.stringify(affiliates));
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const isAffiliateRegistered = (): boolean => {
+  try {
+    const saved = localStorage.getItem(AFFILIATE_PROFILE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return Boolean(parsed && typeof parsed === 'object' && parsed.name && parsed.code && parsed.phoneOrBkash);
+    }
+  } catch {}
+  return false;
+};
+
+export const registerAffiliateAccount = (params: {
+  name: string;
+  phoneOrBkash: string;
+  institution?: string;
+  customCode?: string;
+  email?: string;
+}): AffiliateProfile => {
+  const cleanCode = (params.customCode && params.customCode.trim().length >= 3)
+    ? params.customCode.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '')
+    : 'HWG-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+
+  const newProfile: AffiliateProfile = {
+    id: 'AFF-' + Math.floor(1000 + Math.random() * 9000),
+    code: cleanCode,
+    name: params.name.trim(),
+    email: params.email?.trim() || '',
+    phoneOrBkash: params.phoneOrBkash.trim(),
+    institution: params.institution?.trim() || 'Student Ambassador',
+    tier: 'bronze',
+    commissionRate: 0.15, // 15% starting rate
+    totalClicks: 0,
+    totalSales: 0,
+    grossSalesBDT: 0,
+    totalEarningsBDT: 0,
+    pendingPayoutBDT: 0,
+    withdrawnBDT: 0,
+    createdAt: new Date().toISOString().split('T')[0]
+  };
+
+  saveCurrentAffiliateProfile(newProfile);
+
+  // Dispatch instant admin alert email to dhshishir3@gmail.com
+  dispatchAffiliateRegistrationAlert(newProfile).catch(err => {
+    console.warn('Affiliate registration alert failed:', err);
+  });
+
+  return newProfile;
+};
 
 export const MOTIVATIONAL_QUOTES: MotivationalQuote[] = [
   {
@@ -78,72 +208,6 @@ export const getDailyMotivationalQuote = (): MotivationalQuote => {
   return MOTIVATIONAL_QUOTES[dayOfYear % MOTIVATIONAL_QUOTES.length];
 };
 
-// Affiliates Storage
-
-export const getAllAffiliates = (): AffiliateProfile[] => {
-  try {
-    const saved = localStorage.getItem(ALL_AFFILIATES_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed.filter(Boolean);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-  return [];
-};
-
-export const saveAllAffiliates = (affiliates: AffiliateProfile[]): void => {
-  try {
-    localStorage.setItem(ALL_AFFILIATES_KEY, JSON.stringify(affiliates));
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-export const isAffiliateRegistered = (): boolean => {
-  try {
-    const saved = localStorage.getItem(AFFILIATE_PROFILE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      return Boolean(parsed && typeof parsed === 'object' && parsed.name && parsed.code && parsed.phoneOrBkash);
-    }
-  } catch {}
-  return false;
-};
-
-export const registerAffiliateAccount = (params: {
-  name: string;
-  phoneOrBkash: string;
-  institution?: string;
-  customCode?: string;
-  email?: string;
-}): AffiliateProfile => {
-  const cleanCode = (params.customCode && params.customCode.trim().length >= 3)
-    ? params.customCode.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '')
-    : 'HWG-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-
-  const newProfile: AffiliateProfile = {
-    id: 'AFF-' + Math.floor(1000 + Math.random() * 9000),
-    code: cleanCode,
-    name: params.name.trim(),
-    email: params.email?.trim() || '',
-    phoneOrBkash: params.phoneOrBkash.trim(),
-    institution: params.institution?.trim() || 'Student Ambassador',
-    tier: 'bronze',
-    commissionRate: 0.15, // 15% starting rate
-    totalClicks: 0,
-    totalSales: 0,
-    grossSalesBDT: 0,
-    totalEarningsBDT: 0,
-    pendingPayoutBDT: 0,
-    withdrawnBDT: 0,
-    createdAt: new Date().toISOString().split('T')[0]
-  };
-
-  saveCurrentAffiliateProfile(newProfile);
-  return newProfile;
-};
 
 export const getCurrentAffiliateProfile = (): AffiliateProfile | null => {
   try {

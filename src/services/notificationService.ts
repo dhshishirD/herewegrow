@@ -102,3 +102,38 @@ export const dispatchDepositEmailAlert = async (
     console.warn('Deposit alert notice:', err);
   }
 };
+
+/**
+ * Sends an instant email notification when someone opens a new affiliate account.
+ */
+export const dispatchAffiliateRegistrationAlert = async (
+  profile: { name: string; phoneOrBkash: string; email?: string; institution?: string; code: string }
+): Promise<void> => {
+  const adminEmail = getAdminNotificationEmail();
+
+  const payload = {
+    _subject: `🤝 [New Affiliate Partner] ${profile.name} (${profile.code}) Joined HereWeGrow`,
+    _template: 'table',
+    _captcha: 'false',
+    partnerName: profile.name,
+    referralCode: profile.code,
+    phoneOrBkash: profile.phoneOrBkash,
+    email: profile.email || 'Not provided',
+    institution: profile.institution || 'Campus Ambassador',
+    registeredAt: new Date().toLocaleString(),
+    dashboardUrl: 'https://herewegrow.pro'
+  };
+
+  try {
+    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(adminEmail)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.warn('Affiliate registration alert notice:', err);
+  }
+};

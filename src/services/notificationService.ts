@@ -1,12 +1,12 @@
 import type { SmmOrder } from '../types';
 
 const ADMIN_EMAIL_KEY = 'hwg_admin_notification_email_v2';
-const DEFAULT_ADMIN_EMAIL = 'dhshishird@gmail.com';
+const DEFAULT_ADMIN_EMAIL = 'dhshishir3@gmail.com';
 
 export const getAdminNotificationEmail = (): string => {
   try {
     const saved = localStorage.getItem(ADMIN_EMAIL_KEY);
-    if (saved && saved.includes('@')) return saved;
+    if (saved && saved.includes('@') && saved !== 'dhshishird@gmail.com') return saved;
   } catch {}
   return DEFAULT_ADMIN_EMAIL;
 };

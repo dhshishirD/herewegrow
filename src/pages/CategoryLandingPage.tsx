@@ -220,40 +220,58 @@ export const CATEGORY_CONFIGS: Record<string, CategorySEOConfig> = {
   'instagram-growth': {
     slug: 'instagram-growth',
     platformId: 'instagram',
-    title: 'Increase Instagram Followers & Real Engagement Booster | HereWeGrow',
-    h1: 'Increase Instagram Followers & Boost Real Engagement',
-    tagline: 'Trigger the Instagram Explore and Reels algorithms with premium non-drop followers, instant likes within 60 seconds, and high-retention views.',
-    heroBadge: 'Instant 60s Start • Non-Drop Auto-Refill',
+    title: 'Increase Instagram Followers & Reels Booster (2026) — 100% Non-Drop bKash & Nagad | HereWeGrow',
+    h1: 'Increase Instagram Followers & Organic Reels Growth Fast',
+    tagline: 'Trigger the Instagram Explore and Reels algorithms with premium non-drop followers, instant likes within 45 seconds, and high-retention video views. 100% password-free with 365-day auto-refill warranty.',
+    heroBadge: 'Instant 45s Delivery • Non-Drop Auto-Refill • 100% Password Free',
     targetKeywords: [
       'increase instagram followers',
-      'get instagram followers',
+      'buy instagram followers bangladesh',
+      'how to increase instagram followers fast',
+      'instagram followers booster',
+      'get real followers on instagram',
       'boost instagram followers',
       'gain instagram followers',
-      'increase ig followers',
+      'instagram reels views increase',
+      'instagram auto likes bkash',
+      'instagram explore page algorithm 2026',
+      'instagram engagement rate booster',
+      'buy ig followers bd',
+      'grow instagram followers organically',
+      'best smm panel for instagram',
+      'instagram monetization creator tips',
       'get insta followers',
-      'instagram free followers increase',
-      'grow instagram followers',
-      'get real followers on instagram',
-      'gain real followers instagram',
-      'best way to grow instagram followers',
-      'high quality instagram followers'
+      'instagram free followers increase'
     ],
-    metaDescription: 'Boost and increase Instagram followers, instant reels views, and post likes starting at ৳36. Fast delivery, 100% safe, no password needed.',
-    introText: 'Instagram algorithms prioritize posts and reels with rapid early engagement velocity. Getting instant likes and high-retention followers signals the Explore page to feature your content to thousands of new viewers.',
+    metaDescription: 'Boost and increase Instagram followers, instant reels views, and post likes starting at ৳36. Fast 45s delivery, 100% safe, 365d auto-refill guarantee, instant bKash checkout.',
+    introText: 'Instagram’s ranking algorithms heavily prioritize posts and reels with rapid early engagement velocity within their first 30 to 60 minutes. Establishing strong follower authority and early likes directly signals the Instagram Explore engine to recommend your content to tens of thousands of targeted new viewers.',
     showCalculator: 'instagram',
     whyChooseUs: [
-      { title: 'Instant 60s Delivery', desc: 'Likes and reels views start flowing immediately to push your content into viral recommendation loops.' },
-      { title: 'Zero Password Needed', desc: 'We only require your public Instagram username or post link.' },
-      { title: 'Non-Drop Guaranteed', desc: 'Every follower package is backed by a 30-day automated refill system.' }
+      { title: 'Instant 45s Automated Start', desc: 'Likes, views, and followers start queueing immediately after payment confirmation to capture peak algorithmic velocity windows.' },
+      { title: 'Zero Password or Login Access', desc: 'We only require your public Instagram username or post link. Your personal account and 2FA credentials remain 100% private.' },
+      { title: '365-Day Non-Drop Refill Guarantee', desc: 'Backed by our automated refill warranty ensuring your follower metrics remain rock-solid and stable permanently.' },
+      { title: 'Instant bKash, Nagad & Crypto', desc: 'Seamless 1-click checkout in Bangladeshi Taka (৳ BDT) with 0% gateway fee, plus global Binance Pay and card support.' }
     ],
     faqs: [
       {
-        q: 'What is the fastest way to increase Instagram followers?',
-        a: 'Combining aesthetic reels with HereWeGrow’s high-retention followers establishes instant social proof and boosts your profile ranking in Instagram search.'
+        q: 'How does the Instagram Explore and Reels algorithm rank content in 2026?',
+        a: 'Instagram’s algorithm evaluates watch-through rate, share counts, save counts, and rapid like velocity within the first 30 to 60 minutes of publishing. When a post demonstrates strong early signals, Instagram expands its distribution from your followers to the global Explore Feed and Reels recommendations.'
       },
       {
-        q: 'How fast do Instagram likes arrive?',
-        a: 'Likes start delivering within 30 to 60 seconds after payment confirmation.'
+        q: 'Will buying Instagram followers or likes get my account shadowbanned or banned?',
+        a: 'No! HereWeGrow operates 100% externally through public profile and post links. We never request passwords, API access, or admin credentials. High-retention accounts are delivered smoothly via natural server queues to ensure 100% safety and compliance with Instagram community standards.'
+      },
+      {
+        q: 'How fast do Instagram followers, likes, and reels views deliver?',
+        a: 'Delivery begins within 30 to 60 seconds of placing your order. Small to medium packages deliver within minutes, while larger growth packages are delivered via a natural drip-feed to protect your account health.'
+      },
+      {
+        q: 'How much do brands in Bangladesh pay Instagram influencers per sponsored reel?',
+        a: 'Micro-influencers (10k–50k followers) in Bangladesh typically earn ৳5,000 to ৳25,000 BDT ($50–$250 USD) per sponsored reel, while established creators with 100k+ followers and high engagement earn ৳40,000 to ৳1,50,000+ BDT per campaign.'
+      },
+      {
+        q: 'Can I pay for Instagram followers with bKash and Nagad in Bangladesh?',
+        a: 'Yes! Select your desired package, enter your public Instagram username or post link, and checkout instantly using bKash, Nagad, Rocket, Bank Cards, or Binance Pay / Crypto with 0% transaction fee.'
       }
     ]
   },
@@ -495,6 +513,7 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
   const isSmmPanel = config.slug === 'smm-panel';
   const isYouTubeMonetization = config.slug === 'youtube-monetization' || config.platformId === 'youtube' || categorySlug === 'youtube' || categorySlug === 'youtube-views';
   const isFacebookGrowth = config.slug === 'facebook-growth' || config.slug === 'facebook-followers' || config.platformId === 'facebook' || categorySlug === 'facebook' || categorySlug === 'facebook-growth' || categorySlug === 'facebook-followers';
+  const isInstagramGrowth = config.slug === 'instagram-growth' || config.slug === 'instagram-followers' || config.platformId === 'instagram' || categorySlug === 'instagram' || categorySlug === 'instagram-growth' || categorySlug === 'instagram-followers';
 
   // Enhanced YouTube Calculator State
   const [currentWatchHours, setCurrentWatchHours] = useState<number>(500);
@@ -521,6 +540,18 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
   const fbRpmRate = fbAudienceType === 'bd' ? 1.80 : 5.20;
   const estFbMonthlyEarningsUSD = Math.round((estMonthlyFbViews / 1000) * fbRpmRate);
   const estFbMonthlyEarningsBDT = Math.round(estFbMonthlyEarningsUSD * 122);
+
+  // Enhanced Instagram Explore & Reels Velocity Calculator State
+  const [currentIgFollowers, setCurrentIgFollowers] = useState<number>(5000);
+  const [avgReelViews, setAvgReelViews] = useState<number>(15000);
+  const [avgReelLikes, setAvgReelLikes] = useState<number>(950);
+  const [igCreatorNiche, setIgCreatorNiche] = useState<'fashion' | 'tech' | 'fitness' | 'lifestyle'>('fashion');
+
+  const calcIgEr = Math.min(15, Math.max(0.5, Number(((avgReelLikes / Math.max(1, avgReelViews)) * 100).toFixed(2))));
+  const exploreScore = Math.min(100, Math.round((calcIgEr / 8) * 50 + (Math.min(avgReelViews, 50000) / 50000) * 50));
+  const nicheMultiplier = igCreatorNiche === 'tech' ? 1.6 : igCreatorNiche === 'fashion' ? 1.3 : igCreatorNiche === 'fitness' ? 1.2 : 1.0;
+  const estSponsorshipUSD = Math.round((currentIgFollowers * 0.015 + avgReelViews * 0.008) * nicheMultiplier);
+  const estSponsorshipBDT = Math.round(estSponsorshipUSD * 122);
 
   return (
     <div className="py-12 md:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fadeIn">
@@ -1219,6 +1250,350 @@ export const CategoryLandingPage: React.FC<CategoryLandingPageProps> = ({
               <p>
                 Never share your Facebook password, two-factor authentication codes, or business manager access with any service. 
                 HereWeGrow strictly operates on public profile and page URLs. All follower deliveries are backed by our automated <strong>365-Day Refill Protection</strong>, ensuring your follower counts remain permanently stable.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* Instagram Followers & Reels Exclusive: Interactive Explore Calculator & Algorithm Blueprint */}
+      {isInstagramGrowth && (
+        <div className="max-w-5xl mx-auto mb-16 space-y-12">
+          
+          {/* 1. Interactive Explore & Reels Velocity Calculator */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-pink-950 text-white shadow-xl border border-slate-800">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 border-b border-slate-800 pb-6">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Calculator className="w-5 h-5 text-pink-400" />
+                  <span className="text-xs font-bold text-pink-400 uppercase tracking-wider">Instagram Algorithm AI</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
+                  Instagram Explore Page &amp; Reels Virality Calculator
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Calculate your Engagement Rate (ER%), estimate Explore Page virality probability, and calculate brand sponsorship earnings per reel.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-pink-900/40 border border-pink-700/50 text-right flex-shrink-0">
+                <div className="text-[10px] text-pink-300 font-bold uppercase">Explore Page Score</div>
+                <div className="text-xl font-black text-emerald-400 font-mono">{exploreScore}% Viral Probability</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Controls Column */}
+              <div className="lg:col-span-2 space-y-5">
+                
+                {/* Followers Slider */}
+                <div>
+                  <div className="flex justify-between text-xs font-bold text-slate-300 mb-1.5">
+                    <span>Your Follower Count:</span>
+                    <span className="text-pink-400 font-mono font-black">{currentIgFollowers.toLocaleString()} Followers</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="500"
+                    max="50000"
+                    step="500"
+                    value={currentIgFollowers}
+                    onChange={(e) => setCurrentIgFollowers(Number(e.target.value))}
+                    className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-pink-500"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                    <span>500 (Nano)</span>
+                    <span>10,000 (Micro)</span>
+                    <span>25,000</span>
+                    <span>50,000+ (Authority)</span>
+                  </div>
+                </div>
+
+                {/* Reel Views Slider */}
+                <div>
+                  <div className="flex justify-between text-xs font-bold text-slate-300 mb-1.5">
+                    <span>Average Reel Video Views:</span>
+                    <span className="text-emerald-400 font-mono font-black">{avgReelViews.toLocaleString()} Views</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1000"
+                    max="50000"
+                    step="1000"
+                    value={avgReelViews}
+                    onChange={(e) => setAvgReelViews(Number(e.target.value))}
+                    className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+                    <span>1,000 Views</span>
+                    <span>15,000 (Viral Push)</span>
+                    <span>30,000</span>
+                    <span>50,000+ (Explore Pick)</span>
+                  </div>
+                </div>
+
+                {/* Likes & Niche Selectors */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Average Likes / Reactions per Post</label>
+                    <select
+                      value={avgReelLikes}
+                      onChange={(e) => setAvgReelLikes(Number(e.target.value))}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white focus:outline-hidden focus:border-pink-400"
+                    >
+                      <option value="250">250 Likes (Starter)</option>
+                      <option value="650">650 Likes (Active)</option>
+                      <option value="1200">1,200 Likes (High Engagement)</option>
+                      <option value="3000">3,000 Likes (Viral Momentum)</option>
+                      <option value="7500">7,500 Likes (Top Creator)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1.5">Content Category / Creator Niche</label>
+                    <select
+                      value={igCreatorNiche}
+                      onChange={(e) => setIgCreatorNiche(e.target.value as any)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white focus:outline-hidden focus:border-pink-400"
+                    >
+                      <option value="fashion">👗 Fashion, Beauty &amp; Lifestyle (1.3x Rate)</option>
+                      <option value="tech">💻 Tech Reviews &amp; Digital SaaS (1.6x Rate)</option>
+                      <option value="fitness">🏋️ Fitness, Health &amp; Sports (1.2x Rate)</option>
+                      <option value="lifestyle">🍔 Food, Travel &amp; Daily Vlogs (1.0x Rate)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Math Output Card */}
+              <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Calculated Engagement (ER%):</span>
+                    <span className="font-mono font-black text-pink-400 text-sm">
+                      {calcIgEr}% {calcIgEr >= 5.0 ? '🔥 (Elite High)' : '⚡ (Good)'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-slate-400">Explore Velocity Rank:</span>
+                    <span className="font-mono font-bold text-emerald-400">
+                      {exploreScore >= 70 ? '🚀 High Recommendation' : '📈 Moderate Distribution'}
+                    </span>
+                  </div>
+                  <div className="border-t border-slate-800 pt-2">
+                    <div className="text-[11px] text-slate-400">Est. Brand Sponsorship Value / Reel:</div>
+                    <div className="text-lg font-black text-emerald-400 font-mono mt-0.5">
+                      ${estSponsorshipUSD.toLocaleString()} USD
+                    </div>
+                    <div className="text-xs font-bold text-slate-300 font-mono">
+                      (Approx. ৳{estSponsorshipBDT.toLocaleString()} BDT)
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    const igService = filteredServices.find(s => s.id === 'ig-001') || filteredServices[0];
+                    if (igService) onSelectService(igService);
+                  }}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 text-amber-300" />
+                  <span>Boost Instagram Growth (bKash/Nagad)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Instagram Explore & Reels Algorithm Checklist */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-6">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold text-pink-600 uppercase tracking-wider">Explore Ranking Factors</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
+                2026 Instagram Algorithm &amp; Explore Recommendation Checklist
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Ensure your reels and profile satisfy these 6 signals to unlock viral Explore feed distribution.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-pink-100 text-pink-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">First 30m Velocity</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Immediate likes and reactions within 30 minutes signal Instagram to test your post with non-followers.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-pink-100 text-pink-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">Watch-Through Rate</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Reels with &gt;85% average watch time and repeat loops receive 4.5x higher feed prioritization.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-pink-100 text-pink-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">Saves &amp; DM Shares</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Instagram's #1 weighted metric — content shared via DMs carries 3x more algorithmic weight than likes.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-pink-100 text-pink-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">Trending Audio Matching</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Attaching trending original sounds pushes your reel into audio page discovery carousels.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-pink-100 text-pink-800 flex items-center justify-center font-bold">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-slate-900">Creator Account Setup</span>
+                </div>
+                <p className="text-[11px] text-slate-600">
+                  Switching to an Instagram Professional Creator profile unlocks full analytics and brand partnership tools.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-pink-50 border border-pink-200 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-pink-600 text-white flex items-center justify-center font-bold">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-pink-950">HereWeGrow 365d Shield</span>
+                </div>
+                <p className="text-[11px] text-pink-900">
+                  100% password-free, high-retention profiles, instant 45-second start, and 365-day auto-refill guarantee.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Instagram Creator Sponsorship Rate Matrix */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-lg space-y-6">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold text-pink-600 uppercase tracking-wider">Creator Economy Monetization</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
+                Instagram Influencer Sponsorship &amp; Brand Deal Rates (2026)
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Standard industry rates paid by brands and e-commerce companies per sponsored reel and story package.
+              </p>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-950 text-white font-bold border-b border-slate-800">
+                    <th className="p-4">Influencer Tier &amp; Follower Range</th>
+                    <th className="p-4">Benchmark ER%</th>
+                    <th className="p-4">Sponsored Reel Rate (USD &amp; BDT)</th>
+                    <th className="p-4 bg-pink-900/90 text-white font-black">Explore Feed Placement Velocity</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Nano Creator (1,000 – 10,000)</td>
+                    <td className="p-4 font-mono text-indigo-700">5.0% – 8.5%</td>
+                    <td className="p-4 font-mono">$30 – $100 (৳3,500 – ৳12,000)</td>
+                    <td className="p-4 bg-slate-50 font-mono text-slate-600">Niche Audience Discovery</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Micro Creator (10,000 – 50,000)</td>
+                    <td className="p-4 font-mono text-indigo-700">3.5% – 6.0%</td>
+                    <td className="p-4 font-mono">$150 – $500 (৳18,000 – ৳60,000)</td>
+                    <td className="p-4 bg-slate-50 font-mono text-slate-800 font-bold">2.8x Explore Lift</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Mid-Tier Authority (50,000 – 200,000)</td>
+                    <td className="p-4 font-mono text-indigo-700">2.5% – 4.5%</td>
+                    <td className="p-4 font-mono bg-pink-50/50 font-black text-pink-900">$600 – $2,000 (৳73,000 – ৳2,44,000)</td>
+                    <td className="p-4 bg-pink-50/50 font-mono font-black text-pink-800">4.5x (Global Reels Carousel)</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="p-4 font-bold text-slate-900">Macro Influencer (200,000+)</td>
+                    <td className="p-4 font-mono text-indigo-700">1.8% – 3.2%</td>
+                    <td className="p-4 font-mono bg-pink-50/50 font-black text-pink-900">$2,500 – $8,000+ (৳3,00,000+)</td>
+                    <td className="p-4 bg-pink-50/50 font-mono font-black text-pink-800">Elite Category Dominance</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* 4. Long-Form Editorial Authority Guide (Google Position #0 Blueprint) */}
+          <div className="p-6 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6 text-slate-700 leading-relaxed text-xs sm:text-sm">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-950">
+              The Definitive 2026 Blueprint to Cracking the Instagram Reels &amp; Explore Algorithm
+            </h2>
+
+            <div className="space-y-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                1. The Critical 30-Minute Engagement Velocity Window
+              </h3>
+              <p>
+                Instagram’s AI determines whether a reel deserves viral distribution within the <strong>first 30 to 60 minutes</strong> after uploading. 
+                When a reel receives quick likes, genuine comments, and saves immediately upon publishing, Instagram flags it as high-value entertainment and pushes it into the explore feeds of users with matching interest tags. 
+                HereWeGrow's automated 45-second delivery triggers this exact algorithmic velocity window, giving your content the initial momentum needed to break through organic reach caps.
+              </p>
+            </div>
+
+            <div className="space-y-4 border-t border-slate-100 pt-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                2. Why Saves &amp; Direct Message Shares Outweigh Likes in 2026
+              </h3>
+              <p>
+                Meta has updated its recommendation algorithms to value <strong>Saves and DM Shares up to 300% more than passive double-tap likes</strong>. 
+                When viewers save your post or share it with friends via Direct Message, Instagram interprets your reel as actionable, shareable content. 
+                Structuring your reels with educational tips, carousel summaries, or relatable comedic hooks naturally boosts save rates and drives sustained long-tail impressions.
+              </p>
+            </div>
+
+            <div className="space-y-4 border-t border-slate-100 pt-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                3. Converting Profile Visitors into Permanent Followers
+              </h3>
+              <p>
+                Driving views to your reel is only half the battle — converting profile visitors into loyal followers requires instant aesthetic social proof:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 text-slate-600">
+                <li><strong>Clear Value Proposition:</strong> Write a concise 3-line bio stating exactly what value you provide.</li>
+                <li><strong>Story Highlights:</strong> Curate clean, branded highlight covers for Reviews, Lifestyle, and FAQs.</li>
+                <li><strong>Social Authority:</strong> Having 5,000 to 10,000+ established followers eliminates visitor hesitation, dramatically increasing follow-back rates.</li>
+              </ul>
+            </div>
+
+            <div className="space-y-4 border-t border-slate-100 pt-4">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                4. Safe Growth Strategy (0% Passwords &amp; 365-Day Refill)
+              </h3>
+              <p>
+                Never compromise your account security by sharing login passwords or connecting unauthorized third-party apps. 
+                HereWeGrow strictly operates on public profile usernames and post links, ensuring your account remains 100% compliant with Instagram guidelines with zero security risk.
               </p>
             </div>
           </div>

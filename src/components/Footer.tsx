@@ -64,8 +64,8 @@ export const Footer: React.FC<FooterProps> = ({
               className="flex items-center gap-2.5 cursor-pointer select-none"
               title="HereWeGrow.pro"
             >
-              <div className="w-8 h-8 rounded-xl bg-slate-900 p-0.5 flex items-center justify-center">
-                <img src="/favicon.svg" alt="HereWeGrow Logo" className="w-full h-full object-contain" />
+              <div className="w-8 h-8 rounded-xl overflow-hidden border border-slate-200 bg-slate-900">
+                <img src="/favicon.png" alt="HereWeGrow Logo" className="w-full h-full object-cover" />
               </div>
               <span className="font-extrabold text-lg text-slate-900 tracking-tight">
                 HereWeGrow<span className="text-indigo-600">.pro</span>

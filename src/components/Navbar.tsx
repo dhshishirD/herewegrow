@@ -74,8 +74,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             onDoubleClick={onOpenAdmin}
             className="flex items-center gap-3 cursor-pointer group select-none"
           >
-            <div className="w-10 h-10 rounded-xl bg-slate-950 p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition-all">
-              <img src="/favicon.svg" alt="HereWeGrow Logo" className="w-full h-full object-contain" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-xs group-hover:scale-105 transition-all border border-slate-200 bg-slate-900">
+              <img src="/favicon.png" alt="HereWeGrow Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-2">

@@ -95,7 +95,7 @@ export const QuickWholesaleTerminal: React.FC<QuickWholesaleTerminalProps> = ({
   }, [selectedServiceId, servicesInCategory]);
 
   const [link, setLink] = useState('');
-  const [quantity, setQuantity] = useState<number>(() => currentService?.minQty || 1000);
+  const [quantity, setQuantity] = useState<number | ''>(1000);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -104,21 +104,14 @@ export const QuickWholesaleTerminal: React.FC<QuickWholesaleTerminalProps> = ({
   const [isGatewayLoading, setIsGatewayLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
 
-  // Update quantity default when service changes
-  useEffect(() => {
-    if (currentService) {
-      if (quantity < currentService.minQty || quantity > currentService.maxQty) {
-        setQuantity(currentService.minQty);
-      }
-    }
-  }, [currentService?.id]);
+  const numericQuantity = typeof quantity === 'number' && quantity > 0 ? quantity : 1;
 
   // Compute calculated charge
   const rawCost = useMemo(() => {
     if (!currentService) return 0;
     const rate = currency === 'BDT' ? currentService.ratePer1kBDT : currentService.ratePer1kUSD;
-    return Number(((quantity / 1000) * rate).toFixed(2));
-  }, [currentService, quantity, currency]);
+    return Number(((numericQuantity / 1000) * rate).toFixed(2));
+  }, [currentService, numericQuantity, currency]);
 
   const currentBalance = currency === 'BDT' ? wallet.balanceBDT : wallet.balanceUSD;
   const hasSufficientBalance = currentBalance >= rawCost && rawCost > 0;
@@ -161,16 +154,6 @@ export const QuickWholesaleTerminal: React.FC<QuickWholesaleTerminalProps> = ({
       return;
     }
 
-    if (quantity < currentService.minQty) {
-      setErrorMessage(`Minimum order quantity for this service is ${currentService.minQty.toLocaleString()}.`);
-      return;
-    }
-
-    if (quantity > currentService.maxQty) {
-      setErrorMessage(`Maximum order quantity for this service is ${currentService.maxQty.toLocaleString()}.`);
-      return;
-    }
-
     if (!hasSufficientBalance) {
       setErrorMessage(`Insufficient wallet balance. You need ${currency === 'BDT' ? `৳${rawCost.toFixed(2)}` : `$${rawCost.toFixed(2)}`}. Please Top-Up or use Direct bKash/Nagad Checkout.`);
       return;
@@ -179,7 +162,7 @@ export const QuickWholesaleTerminal: React.FC<QuickWholesaleTerminalProps> = ({
     setIsSubmitting(true);
 
     try {
-      const result = await createOrder(currentService, link.trim(), quantity, currency);
+      const result = await createOrder(currentService, link.trim(), numericQuantity, currency);
 
       if (result.success && result.order) {
         // Calculate updated wallet
@@ -233,21 +216,31 @@ export const QuickWholesaleTerminal: React.FC<QuickWholesaleTerminalProps> = ({
           serviceId: currentService.id,
           serviceName: currentService.name,
           link: link.trim(),
-          quantity,
+          quantity: numericQuantity,
           currency,
           cost: rawCost
         }
       );
 
+      setIsGatewayLoading(false);
+
       if (res.success && res.paymentUrl) {
+        localStorage.setItem('hwg_pending_order', JSON.stringify({
+          serviceId: currentService.id,
+          link: link.trim(),
+          quantity: numericQuantity,
+          cost: rawCost,
+          currency,
+          time: new Date().toISOString()
+        }));
+
         window.location.href = res.paymentUrl;
       } else {
         setErrorMessage(res.message || 'Payment gateway initiation failed. Please try again.');
-        setIsGatewayLoading(false);
       }
     } catch (err: any) {
-      setErrorMessage(err?.message || 'Payment initialization error.');
       setIsGatewayLoading(false);
+      setErrorMessage(err?.message || 'Payment initialization error.');
     }
   };
 
@@ -558,31 +551,35 @@ export const QuickWholesaleTerminal: React.FC<QuickWholesaleTerminalProps> = ({
             <input
               type="number"
               required
-              min={currentService?.minQty || 10}
-              max={currentService?.maxQty || 1000000}
-              step={10}
+              min="1"
+              placeholder="Enter any quantity (e.g. 100, 500, 1000)"
               value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value) || 0)}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val === '') {
+                  setQuantity('');
+                } else {
+                  const num = parseInt(val, 10);
+                  setQuantity(isNaN(num) ? '' : num);
+                }
+              }}
               className="w-full bg-white text-slate-950 font-mono text-base font-bold rounded-2xl border border-slate-300 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-500/10 transition-all p-3.5 shadow-xs"
             />
 
             {/* Quick Quantity Presets */}
             <div className="flex flex-wrap gap-2 mt-2.5">
-              {[
-                { label: 'Min', qty: currentService?.minQty || 100 },
-                { label: '+500', qty: 500 },
-                { label: '+1,000', qty: 1000 },
-                { label: '+2,500', qty: 2500 },
-                { label: '+5,000', qty: 5000 },
-                { label: '+10,000', qty: 10000 },
-              ].map((preset, idx) => (
+              {[100, 500, 1000, 2500, 5000, 10000].map((presetQty) => (
                 <button
-                  key={idx}
+                  key={presetQty}
                   type="button"
-                  onClick={() => setQuantity(preset.label === 'Min' ? preset.qty : Math.min(currentService?.maxQty || 100000, quantity + preset.qty))}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-mono text-xs font-semibold transition-all border border-slate-200 hover:border-indigo-200 cursor-pointer"
+                  onClick={() => setQuantity(presetQty)}
+                  className={`px-3 py-1.5 rounded-xl font-mono text-xs font-semibold transition-all border cursor-pointer ${
+                    quantity === presetQty
+                      ? 'bg-slate-950 text-white border-slate-950'
+                      : 'bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 border-slate-200 hover:border-indigo-200'
+                  }`}
                 >
-                  {preset.label}
+                  {presetQty >= 1000 ? `${presetQty / 1000}k` : presetQty}
                 </button>
               ))}
             </div>

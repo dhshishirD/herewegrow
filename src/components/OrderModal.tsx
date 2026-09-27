@@ -41,7 +41,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
   if (!isOpen || (!service && !bundle)) return null;
 
   const [link, setLink] = useState('');
-  const [quantity, setQuantity] = useState<number>(service ? service.minQty : 1000);
+  const [quantity, setQuantity] = useState<number | ''>(1000);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [promoCodeInput, setPromoCodeInput] = useState('');
@@ -50,13 +50,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGatewayLoading, setIsGatewayLoading] = useState(false);
 
+  // Normalize numeric quantity for calculations (default to 1 if empty or invalid)
+  const numericQuantity = typeof quantity === 'number' && quantity > 0 ? quantity : 1;
+
   // Compute pricing
   let rawCost = 0;
   if (bundle) {
     rawCost = currency === 'BDT' ? bundle.priceBDT : bundle.priceUSD;
   } else if (service) {
     const rate = currency === 'BDT' ? service.ratePer1kBDT : service.ratePer1kUSD;
-    rawCost = Number(((quantity / 1000) * rate).toFixed(2));
+    rawCost = Number(((numericQuantity / 1000) * rate).toFixed(2));
   }
 
   // Calculate discounted cost if promo code is active
@@ -109,7 +112,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
         localStorage.setItem('hwg_pending_order', JSON.stringify({
           serviceId: service?.id || bundle?.id,
           link,
-          quantity,
+          quantity: numericQuantity,
           cost: totalCost,
           currency,
           time: new Date().toISOString()
@@ -153,8 +156,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({
           category: 'Curated Growth Bundle',
           ratePer1kBDT: bundle!.priceBDT,
           ratePer1kUSD: bundle!.priceUSD,
-          minQty: 1000,
-          maxQty: 1000,
+          minQty: 1,
+          maxQty: 1000000,
           speed: bundle!.deliveryTime,
           refillDays: 60,
           badges: ['best-seller', 'non-drop', 'auto-refill'],
@@ -162,7 +165,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
         };
       }
 
-      const result = await createOrder(targetService, link, quantity, currency);
+      const result = await createOrder(targetService, link, numericQuantity, currency);
       setIsSubmitting(false);
 
       if (result.success && result.order) {
@@ -264,22 +267,50 @@ export const OrderModal: React.FC<OrderModalProps> = ({
           {/* Quantity Selector */}
           {service && (
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-800 mb-1">
-                <span>Quantity</span>
-                <span className="text-indigo-700 font-extrabold font-mono text-sm">{quantity.toLocaleString()} units</span>
+              <div className="flex justify-between text-xs font-bold text-slate-800 mb-1.5">
+                <span>Order Quantity (Units)</span>
+                <span className="text-indigo-700 font-extrabold font-mono text-sm">
+                  {numericQuantity.toLocaleString()} units
+                </span>
               </div>
               <input
                 type="number"
-                min={service.minQty}
-                max={service.maxQty}
-                step="50"
+                min="1"
+                placeholder="Enter any quantity (e.g. 100, 500, 1000)"
                 value={quantity}
-                onChange={(e) => setQuantity(Math.max(service.minQty, Math.min(service.maxQty, Number(e.target.value))))}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') {
+                    setQuantity('');
+                  } else {
+                    const parsed = parseInt(val, 10);
+                    setQuantity(isNaN(parsed) ? '' : parsed);
+                  }
+                }}
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-hidden focus:bg-white focus:border-slate-950 font-mono font-bold"
               />
-              <div className="flex justify-between text-[11px] text-slate-500 font-medium mt-1">
-                <span>Min: {service.minQty.toLocaleString()}</span>
-                <span>Max: {service.maxQty.toLocaleString()}</span>
+              
+              {/* 1-Click Quick Quantity Chips */}
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {[100, 500, 1000, 2500, 5000, 10000].map((presetQty) => (
+                  <button
+                    key={presetQty}
+                    type="button"
+                    onClick={() => setQuantity(presetQty)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                      quantity === presetQty
+                        ? 'bg-slate-950 text-white shadow-2xs'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {presetQty >= 1000 ? `${presetQty / 1000}k` : presetQty}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex justify-between text-[11px] text-slate-500 font-medium mt-1.5">
+                <span>Rate: {currency === 'BDT' ? `৳${service.ratePer1kBDT.toFixed(2)}` : `$${service.ratePer1kUSD.toFixed(3)}`} / 1k</span>
+                <span className="text-emerald-700 font-bold">✨ No minimum limit (order any amount)</span>
               </div>
             </div>
           )}

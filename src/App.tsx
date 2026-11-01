@@ -7,6 +7,7 @@ import { usePath } from './lib/router';
 import { ServicesPage, ToolsPage } from './pages/CatalogPages';
 import { AboutPage } from './pages/About';
 import { CvChecker } from './pages/CvChecker';
+import { OrderPage } from './pages/Order';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
@@ -17,6 +18,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/': Home,
   '/services': ServicesPage,
   '/about': AboutPage,
+  '/order': OrderPage,
   '/templates': TemplatesPage,
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,

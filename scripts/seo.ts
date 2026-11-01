@@ -190,7 +190,7 @@ function pages(): Page[] {
 
 function render(template: string, p: Page): string {
   const url = `${SITE}${p.path}`;
-  const image = p.image ?? `${SITE}/logo.png`;
+  const image = p.image ?? `${SITE}/og.jpg`;
   const ld = p.jsonLd?.length
     ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': p.jsonLd }).replace(/</g, '\\u003c')}</script>`
     : '';

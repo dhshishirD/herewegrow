@@ -4,18 +4,8 @@ import { taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
-
-interface VerifyResponse {
-  ok: boolean;
-  status?: 'paid' | 'pending' | 'unpaid';
-  invoiceId?: string;
-  productId?: string | null;
-  amount?: number;
-  transactionId?: string | null;
-  downloads?: { file: string; url: string; bytes: number }[];
-}
-
-const sizeLabel = (bytes: number) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
+import { DownloadButtons } from '../components/Downloads';
+import { saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 
 type State = { kind: 'checking' } | { kind: 'missing' } | { kind: 'error' } | { kind: 'done'; data: VerifyResponse };
 
@@ -30,9 +20,11 @@ export function PaymentSuccess() {
 
   useEffect(() => {
     if (!invoiceId) return;
-    fetch('/api/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ invoiceId }) })
-      .then((r) => r.json() as Promise<VerifyResponse>)
-      .then((data) => setState(data.ok ? { kind: 'done', data } : { kind: 'error' }))
+    verifyInvoice(invoiceId)
+      .then((data) => {
+        if (data.ok && data.status === 'paid' && data.productId) saveOrder({ invoiceId, productId: data.productId, at: Date.now() });
+        setState(data.ok ? { kind: 'done', data } : { kind: 'error' });
+      })
       .catch(() => setState({ kind: 'error' }));
   }, [invoiceId]);
 
@@ -64,20 +56,11 @@ export function PaymentSuccess() {
               <h2 className="text-xl font-bold">{t({ en: 'Your files are ready', bn: 'আপনার ফাইল প্রস্তুত' })}</h2>
               <p className="mt-2 text-muted">
                 {t({
-                  en: 'Tap to download. The links work for 7 days, so you can come back to this page later.',
-                  bn: 'চাপ দিয়ে ডাউনলোড করুন। লিংক ৭ দিন কাজ করবে, পরে আবার এই পেজে এসে নামাতে পারবেন।',
+                  en: 'Tap to download. Need it again later? Go to herewegrow.pro/order and enter your invoice number.',
+                  bn: 'চাপ দিয়ে ডাউনলোড করুন। পরে আবার লাগলে herewegrow.pro/order-এ গিয়ে ইনভয়েস নম্বর দিন।',
                 })}
               </p>
-              <ul className="mt-5 space-y-3">
-                {downloads.map((d) => (
-                  <li key={d.file}>
-                    <a href={d.url} className="btn btn-primary w-full justify-between sm:w-auto sm:min-w-80" download>
-                      <span>{d.file.endsWith('.zip') ? t({ en: 'Download all files (ZIP)', bn: 'সব ফাইল ডাউনলোড (ZIP)' }) : t({ en: 'Download Word file', bn: 'Word ফাইল ডাউনলোড' })}</span>
-                      <span className="text-sm font-normal opacity-80">{sizeLabel(d.bytes)}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-5"><DownloadButtons downloads={downloads} /></div>
               <p className="mt-5 text-sm text-muted">
                 {t({ en: 'Trouble downloading? ', bn: 'ডাউনলোডে সমস্যা? ' })}
                 <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">

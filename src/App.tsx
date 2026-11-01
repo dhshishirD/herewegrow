@@ -5,6 +5,7 @@ import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
 import { usePath } from './lib/router';
 import { ServicesPage, ToolsPage } from './pages/CatalogPages';
+import { AboutPage } from './pages/About';
 import { CvChecker } from './pages/CvChecker';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
@@ -15,6 +16,7 @@ import { TemplateDetail, TemplatesPage } from './pages/Templates';
 const ROUTES: Record<string, () => JSX.Element> = {
   '/': Home,
   '/services': ServicesPage,
+  '/about': AboutPage,
   '/templates': TemplatesPage,
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,

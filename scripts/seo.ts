@@ -116,6 +116,25 @@ function pages(): Page[] {
       jsonLd: [{ '@type': 'WebApplication', name: 'Teletalk photo and signature resizer', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
       priority: 0.9,
     },
+    {
+      path: '/about',
+      ...seo('/about'),
+      image: `${SITE}/team/shishir.webp`,
+      body: '<h1>HereWeGrow সম্পর্কে</h1><p>দেলোয়ার হাসান শিশির, প্রতিষ্ঠাতা ও লিড সিভি কনসালট্যান্ট, Career Solutions।</p>',
+      jsonLd: [
+        {
+          '@type': 'Person',
+          name: 'Daloyar Hassan Shishir',
+          alternateName: 'দেলোয়ার হাসান শিশির',
+          jobTitle: 'Founder and lead CV consultant',
+          worksFor: { '@id': `${SITE}/#org` },
+          image: `${SITE}/team/shishir.webp`,
+          alumniOf: { '@type': 'CollegeOrUniversity', name: 'Shahjalal University of Science and Technology' },
+        },
+        crumbs([['HereWeGrow', '/'], ['About', '/about']]),
+      ],
+      priority: 0.6,
+    },
     { path: '/privacy', title: 'Privacy | HereWeGrow', description: 'How HereWeGrow handles your information.', body: '<h1>Privacy</h1>', priority: 0.3 },
     { path: '/terms', title: 'Terms | HereWeGrow', description: 'Terms for HereWeGrow services and templates.', body: '<h1>Terms</h1>', priority: 0.3 },
   ];

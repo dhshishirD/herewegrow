@@ -41,7 +41,7 @@ export default function App() {
           Skip to content
         </a>
         <Header />
-        <main id="main">
+        <main id="main" className="pb-20">
           <Page />
         </main>
         <Footer />

@@ -8,10 +8,14 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-24 bg-leaf-dark text-white/90">
+    <footer className="bg-leaf-dark text-white/90">
       <div className="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="font-display text-2xl font-bold text-white">HereWeGrow</p>
+          <p className="flex items-center gap-2.5">
+            <img src="/logo-mark.svg" alt="" width={36} height={36} className="h-9 w-9 rounded-lg ring-1 ring-white/20" />
+            <span className="font-display text-2xl font-semibold text-white">HereWeGrow</span>
+          </p>
+          <p className="mt-4 font-display text-xl text-saffron">{t({ en: 'A CV that gets you called', bn: 'যে সিভি দেখে ডাক আসে' })}</p>
           <p className="mt-3 max-w-sm text-white/75">
             {t({
               en: 'CV writing, CV templates and free job tools for Bangladeshi job seekers. Expert work by Career Solutions.',
@@ -19,7 +23,7 @@ export function Footer() {
             })}
           </p>
           <p className="mt-5 text-sm text-white/70">
-            {t({ en: 'Pay with', bn: 'পেমেন্ট করুন' })}: bKash · Nagad · Rocket
+            {t({ en: 'Pay with bKash, Nagad or Rocket', bn: 'বিকাশ, নগদ বা রকেটে পেমেন্ট' })}
           </p>
         </div>
 

@@ -62,11 +62,31 @@ export interface CvData {
 
 export type DesignId = 'classic' | 'modern' | 'executive';
 
+export type HeadingLang = 'en' | 'bn';
+
 export interface BuilderState {
   data: CvData;
   design: DesignId;
   accent: string;
+  /** Language of the section headings on the CV itself. */
+  headings?: HeadingLang;
 }
+
+/** Section headings on the CV, in English or Bangla. */
+export const LABELS: Record<HeadingLang, Record<string, string>> = {
+  en: {
+    summary: 'Professional Summary', profile: 'Profile', experience: 'Work Experience', career: 'Career History', education: 'Education',
+    skills: 'Skills', coreSkills: 'Core Skills', languages: 'Languages', training: 'Training and Certifications', trainingShort: 'Training',
+    personal: 'Personal Details', references: 'References', contact: 'Contact', present: 'Present',
+    father: "Father's name", mother: "Mother's name", dob: 'Date of birth', nationality: 'Nationality', religion: 'Religion', permanent: 'Permanent address',
+  },
+  bn: {
+    summary: 'পেশাগত সারসংক্ষেপ', profile: 'পরিচিতি', experience: 'কাজের অভিজ্ঞতা', career: 'কর্মজীবন', education: 'শিক্ষাগত যোগ্যতা',
+    skills: 'দক্ষতা', coreSkills: 'মূল দক্ষতা', languages: 'ভাষা', training: 'প্রশিক্ষণ ও সার্টিফিকেট', trainingShort: 'প্রশিক্ষণ',
+    personal: 'ব্যক্তিগত তথ্য', references: 'রেফারেন্স', contact: 'যোগাযোগ', present: 'বর্তমান',
+    father: 'পিতার নাম', mother: 'মাতার নাম', dob: 'জন্মতারিখ', nationality: 'জাতীয়তা', religion: 'ধর্ম', permanent: 'স্থায়ী ঠিকানা',
+  },
+};
 
 export const uid = () => Math.random().toString(36).slice(2, 9);
 

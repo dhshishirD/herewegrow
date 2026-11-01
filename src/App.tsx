@@ -1,4 +1,4 @@
-import type { JSX } from 'react';
+import { lazy, Suspense, type JSX } from 'react';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
@@ -8,7 +8,6 @@ import { LangProvider } from './lib/lang';
 import { usePath } from './lib/router';
 import { ServicesPage, ToolsPage } from './pages/CatalogPages';
 import { AboutPage } from './pages/About';
-import { BuilderPage } from './pages/Builder';
 import { CvChecker } from './pages/CvChecker';
 import { OrderPage } from './pages/Order';
 import { GuidePage, GuidesPage } from './pages/Guides';
@@ -17,6 +16,13 @@ import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
 import { TemplateDetail, TemplatesPage } from './pages/Templates';
+
+const BuilderPage = lazy(() => import('./pages/Builder').then((m) => ({ default: m.BuilderPage })));
+const LazyBuilder = () => (
+  <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}>
+    <BuilderPage />
+  </Suspense>
+);
 
 const ROUTES: Record<string, () => JSX.Element> = {
   '/': Home,
@@ -27,7 +33,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/templates': TemplatesPage,
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,
-  '/builder': BuilderPage,
+  '/builder': LazyBuilder,
   '/tools/photo-signature-resizer': PhotoResizer,
   '/payment/success': PaymentSuccess,
   '/payment/cancel': PaymentCancel,

@@ -53,6 +53,8 @@ export async function callGateway(
       'RT-UDDOKTAPAY-API-KEY': env.PAYMENT_API_KEY,
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      // Hosting firewalls often reject requests with no User-Agent (Workers send none by default)
+      'User-Agent': 'Mozilla/5.0 (compatible; HereWeGrow/1.0; +https://herewegrow.pro)',
     },
     body: JSON.stringify(payload),
   });

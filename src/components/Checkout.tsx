@@ -30,6 +30,7 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
   const { t, lang } = useLang();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [detail, setDetail] = useState<string | null>(null);
   const firstField = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
     const form = new FormData(e.currentTarget);
     setBusy(true);
     setError(null);
+    setDetail(null);
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -62,12 +64,13 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
           lang,
         }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string };
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string; detail?: string };
       if (data.ok && data.paymentUrl) {
         window.location.href = data.paymentUrl;
         return;
       }
       setError(data.error && ERRORS[data.error] ? data.error : 'gateway');
+      setDetail(data.detail ?? (res.ok ? null : `HTTP ${res.status}${data.error ? ` (${data.error})` : ''}`));
     } catch {
       setError('gateway');
     }
@@ -120,7 +123,10 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
           )}
 
           {error && (
-            <p role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-alert">{t(ERRORS[error])}</p>
+            <div role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-alert">
+              <p>{t(ERRORS[error])}</p>
+              {detail && <p className="mt-1 break-words text-xs text-alert/80">{t({ en: 'Details', bn: 'বিস্তারিত' })}: {detail}</p>}
+            </div>
           )}
 
           <button type="submit" className="btn btn-primary w-full" disabled={busy}>

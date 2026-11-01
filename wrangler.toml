@@ -1,6 +1,8 @@
 name = "herewegrow-app"
 main = "worker/index.ts"
 compatibility_date = "2025-03-01"
+# Keep variables set in the Cloudflare dashboard when deploying from GitHub
+keep_vars = true
 
 # Secrets (set in Cloudflare → Workers & Pages → herewegrow-app → Settings → Variables and secrets):
 #   PAYMENT_API_KEY   Paymently / UddoktaPay API key (type: Secret)

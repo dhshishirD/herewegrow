@@ -1,8 +1,8 @@
-// POST /api/checkout — starts a bKash/Nagad/Rocket payment for one catalogue item.
+// Payment API handlers, run inside the Cloudflare Worker (see worker/index.ts).
 // The amount always comes from the shared catalogue, never from the request.
 
-import { findProduct } from '../../shared/catalog';
-import { callGateway, isAllowedOrigin, json, type Env } from '../../server/paymently';
+import { findProduct } from '../shared/catalog';
+import { callGateway, isAllowedOrigin, json, type Env } from './paymently';
 
 interface CheckoutBody {
   productId?: string;
@@ -15,7 +15,8 @@ interface CheckoutBody {
 
 const clean = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
-export const onRequestPost = async ({ request, env }: { request: Request; env: Env }) => {
+/** POST /api/checkout: starts a bKash/Nagad/Rocket payment for one catalogue item. */
+export async function handleCheckout(request: Request, env: Env): Promise<Response> {
   if (!isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
 
   const body = (await request.json().catch(() => ({}))) as CheckoutBody;
@@ -58,4 +59,37 @@ export const onRequestPost = async ({ request, env }: { request: Request; env: E
     console.error('checkout failed', err);
     return json({ ok: false, error: 'gateway' }, 502);
   }
-};
+}
+
+/** POST /api/verify: confirms a payment and checks the amount against the catalogue price. */
+export async function handleVerify(request: Request, env: Env): Promise<Response> {
+  if (!isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
+
+  const body = (await request.json().catch(() => ({}))) as { invoiceId?: unknown };
+  const invoiceId = typeof body.invoiceId === 'string' ? body.invoiceId.trim().slice(0, 80) : '';
+  if (!invoiceId) return json({ ok: false, error: 'invoice' }, 400);
+
+  try {
+    const { data } = await callGateway(env, 'verify-payment', { invoice_id: invoiceId });
+    const meta = (data.metadata ?? {}) as Record<string, unknown>;
+    const product = findProduct(String(meta.product_id ?? ''));
+    const amount = Number(data.amount ?? data.charged_amount ?? 0);
+    const status = String(data.status ?? '').toUpperCase();
+
+    const paid = status === 'COMPLETED' && !!product && amount >= product.price;
+
+    return json({
+      ok: true,
+      status: paid ? 'paid' : status === 'PENDING' ? 'pending' : 'unpaid',
+      invoiceId,
+      productId: product?.id ?? null,
+      amount,
+      name: typeof data.full_name === 'string' ? data.full_name : null,
+      method: typeof data.payment_method === 'string' ? data.payment_method : null,
+      transactionId: typeof data.transaction_id === 'string' ? data.transaction_id : null,
+    });
+  } catch (err) {
+    console.error('verify failed', err);
+    return json({ ok: false, error: 'gateway' }, 502);
+  }
+}

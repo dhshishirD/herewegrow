@@ -14,7 +14,7 @@ export function Header() {
   const path = usePath();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur-md">
+    <header className="site-header sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur-md">
       <div className="wrap flex h-[4.25rem] items-center gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="HereWeGrow home">
           <img src="/logo-mark.svg" alt="" width={34} height={34} className="h-[2.125rem] w-[2.125rem]" />

@@ -8,6 +8,7 @@ import { LangProvider } from './lib/lang';
 import { usePath } from './lib/router';
 import { ServicesPage, ToolsPage } from './pages/CatalogPages';
 import { AboutPage } from './pages/About';
+import { BuilderPage } from './pages/Builder';
 import { CvChecker } from './pages/CvChecker';
 import { OrderPage } from './pages/Order';
 import { GuidePage, GuidesPage } from './pages/Guides';
@@ -26,6 +27,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/templates': TemplatesPage,
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,
+  '/builder': BuilderPage,
   '/tools/photo-signature-resizer': PhotoResizer,
   '/payment/success': PaymentSuccess,
   '/payment/cancel': PaymentCancel,

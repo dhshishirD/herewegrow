@@ -131,6 +131,17 @@
 @keyframes stack-in { from { opacity: 0; translate: 0 24px; } }
 @keyframes stamp-in { from { opacity: 0; scale: 1.6; } }
 
+/* CV builder: only the CV is printed, at A4 with no margins */
+#cv-print { display: none; }
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: #fff !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body > #root > a, .site-header, .site-footer, .no-print, .cart-sheet { display: none !important; }
+  main { padding: 0 !important; }
+  #cv-print { display: block; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

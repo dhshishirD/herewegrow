@@ -1,5 +1,7 @@
 import type { JSX } from 'react';
+import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
+import { CartProvider } from './lib/cart';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
@@ -40,6 +42,7 @@ function Page() {
 export default function App() {
   return (
     <LangProvider>
+      <CartProvider>
       <CheckoutProvider>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">
           Skip to content
@@ -49,7 +52,9 @@ export default function App() {
           <Page />
         </main>
         <Footer />
+        <CartDrawer />
       </CheckoutProvider>
+      </CartProvider>
     </LangProvider>
   );
 }

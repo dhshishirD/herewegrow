@@ -1,12 +1,15 @@
 // Payment API handlers, run inside the Cloudflare Worker (see worker/index.ts).
 // The amount always comes from the shared catalogue, never from the request.
 
+import { CART_PRODUCT_ID, cartProduct, quoteCart } from '../shared/cart';
 import { findProduct } from '../shared/catalog';
 import { downloadLinks } from './downloads';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
 
 interface CheckoutBody {
   productId?: string;
+  /** For a cart: the template ids chosen. */
+  templateIds?: unknown;
   name?: string;
   phone?: string;
   email?: string;
@@ -21,7 +24,16 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   if (!isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
 
   const body = (await request.json().catch(() => ({}))) as CheckoutBody;
-  const product = findProduct(clean(body.productId, 40));
+  // A cart is priced here from the template ids, with the same rules the site shows.
+  let cartIds: string[] = [];
+  let product = findProduct(clean(body.productId, 40));
+  if (clean(body.productId, 40) === CART_PRODUCT_ID) {
+    const raw = Array.isArray(body.templateIds) ? body.templateIds.filter((x): x is string => typeof x === 'string').slice(0, 60) : [];
+    const quote = quoteCart(raw);
+    if (quote.count === 0) return json({ ok: false, error: 'product' }, 400);
+    product = cartProduct(quote);
+    if (product.id === CART_PRODUCT_ID) cartIds = quote.ids;
+  }
   if (!product) return json({ ok: false, error: 'product' }, 400);
 
   const name = clean(body.name, 80);
@@ -43,6 +55,7 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
       metadata: {
         product_id: product.id,
         product_name: product.name.en,
+        template_ids: cartIds.join(','),
         phone,
         customer_email: email,
         note,
@@ -82,7 +95,14 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
     const { data, httpStatus } = await callGateway(env, 'verify-payment', { invoice_id: invoiceId });
     if (httpStatus >= 400) console.error('verify gateway status', httpStatus, data.message ?? '');
     const meta = (data.metadata ?? {}) as Record<string, unknown>;
-    const product = findProduct(String(meta.product_id ?? ''));
+    const productId = String(meta.product_id ?? '');
+    const product =
+      productId === CART_PRODUCT_ID
+        ? (() => {
+            const quote = quoteCart(String(meta.template_ids ?? '').split(','));
+            return quote.count > 1 && !quote.upgrade ? cartProduct(quote) : undefined;
+          })()
+        : findProduct(productId);
     const amount = Number(data.amount ?? data.charged_amount ?? 0);
     const status = String(data.status ?? '').toUpperCase();
 
@@ -94,6 +114,7 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
       status: paid ? 'paid' : status === 'PENDING' ? 'pending' : 'unpaid',
       invoiceId,
       productId: product?.id ?? null,
+      templateIds: product?.id === CART_PRODUCT_ID ? product.templates : undefined,
       amount,
       name: typeof data.full_name === 'string' ? data.full_name : null,
       method: typeof data.payment_method === 'string' ? data.payment_method : null,

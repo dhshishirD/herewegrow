@@ -1,17 +1,30 @@
 import { createContext, useContext, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { CART_PRODUCT_ID, cartProduct, quoteCart } from '../../shared/cart';
 import { findProduct, type Product } from '../../shared/catalog';
+import { markCartPending } from '../lib/cart';
 import { taka, useLang } from '../lib/lang';
 
-const CheckoutContext = createContext<(productId: string) => void>(() => {});
+/** Opens checkout for one product, or for a cart of templates when templateIds is given. */
+type OpenCheckout = (productId: string, templateIds?: string[]) => void;
+
+const CheckoutContext = createContext<OpenCheckout>(() => {});
 
 export const useCheckout = () => useContext(CheckoutContext);
 
 export function CheckoutProvider({ children }: { children: ReactNode }) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const [open, setOpen] = useState<{ product: Product; templateIds?: string[] } | null>(null);
+  const start: OpenCheckout = (id, templateIds) => {
+    if (id === CART_PRODUCT_ID && templateIds) {
+      setOpen({ product: cartProduct(quoteCart(templateIds)), templateIds });
+      return;
+    }
+    const product = findProduct(id);
+    setOpen(product ? { product } : null);
+  };
   return (
-    <CheckoutContext.Provider value={(id) => setProduct(findProduct(id) ?? null)}>
+    <CheckoutContext.Provider value={start}>
       {children}
-      {product && <CheckoutDialog product={product} onClose={() => setProduct(null)} />}
+      {open && <CheckoutDialog product={open.product} templateIds={open.templateIds} onClose={() => setOpen(null)} />}
     </CheckoutContext.Provider>
   );
 }
@@ -28,7 +41,7 @@ const ERRORS: Record<string, { en: string; bn: string }> = {
   },
 };
 
-function CheckoutDialog({ product, onClose }: { product: Product; onClose: () => void }) {
+function CheckoutDialog({ product, templateIds, onClose }: { product: Product; templateIds?: string[]; onClose: () => void }) {
   const { t, lang } = useLang();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +71,8 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          productId: product.id,
+          productId: templateIds ? CART_PRODUCT_ID : product.id,
+          templateIds,
           name: form.get('name'),
           phone: form.get('phone'),
           email: form.get('email'),
@@ -68,6 +82,7 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string; detail?: string };
       if (data.ok && data.paymentUrl) {
+        if (templateIds) markCartPending();
         window.location.href = data.paymentUrl;
         return;
       }

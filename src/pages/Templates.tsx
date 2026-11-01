@@ -4,6 +4,8 @@ import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, type Sector, t
 import { PackGrid } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
 import { PageHead } from '../components/PageHead';
+import { DiscountLadder } from '../components/CartDrawer';
+import { useCart } from '../lib/cart';
 import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
@@ -41,22 +43,48 @@ function pagesLabel(n: number, t: (x: { en: string; bn: string }) => string, lan
   return t({ en: `${n} ${n === 1 ? 'page' : 'pages'}`, bn: `${num(String(n), lang)} পৃষ্ঠা` });
 }
 
+function AddToCart({ id, compact = false }: { id: string; compact?: boolean }) {
+  const { t } = useLang();
+  const { has, toggle } = useCart();
+  const added = has(id);
+  return (
+    <button type="button" aria-pressed={added} onClick={() => toggle(id)}
+      className={compact
+        ? `absolute bottom-6 right-5 z-10 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold shadow-md transition ${added ? 'bg-leaf text-white' : 'bg-white/95 text-ink ring-1 ring-line hover:ring-leaf'}`
+        : `btn w-full ${added ? 'bg-leaf-soft text-leaf-dark' : 'btn-quiet bg-white'}`}>
+      {added ? (
+        <>
+          <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          {t({ en: 'In cart', bn: 'কার্টে আছে' })}
+        </>
+      ) : (
+        <>{compact ? <><span aria-hidden="true">+ </span><span className="sm:hidden">{t({ en: 'Add', bn: 'যোগ করুন' })}</span><span className="hidden sm:inline">{t({ en: 'Add to cart', bn: 'কার্টে যোগ করুন' })}</span></> : t({ en: 'Add to cart', bn: 'কার্টে যোগ করুন' })}</>
+      )}
+    </button>
+  );
+}
+
 function TemplateCard({ tpl }: { tpl: Template }) {
   const { t, lang } = useLang();
   return (
-    <li>
-      <Link href={`/templates/${tpl.id}`} className="group block">
-        <div className="overflow-hidden rounded-xl bg-mist p-3 ring-1 ring-line transition group-hover:-translate-y-1 group-hover:ring-2 group-hover:ring-leaf">
-          <img
-            src={thumb(tpl.id)}
-            alt={t({ en: `Preview of the ${tpl.title.en}`, bn: `${tpl.title.bn}-এর প্রিভিউ` })}
-            width={420}
-            height={594}
-            loading="lazy"
-            decoding="async"
-            className="aspect-[210/297] w-full bg-white object-cover object-top shadow-sm"
-          />
-        </div>
+    <li className="group">
+      <div className="relative">
+        <Link href={`/templates/${tpl.id}`} tabIndex={-1} aria-hidden="true" className="block">
+          <div className="overflow-hidden rounded-xl bg-mist p-3 ring-1 ring-line transition group-hover:-translate-y-1 group-hover:ring-2 group-hover:ring-leaf">
+            <img
+              src={thumb(tpl.id)}
+              alt=""
+              width={420}
+              height={594}
+              loading="lazy"
+              decoding="async"
+              className="aspect-[210/297] w-full bg-white object-cover object-top shadow-sm"
+            />
+          </div>
+        </Link>
+        <AddToCart id={tpl.id} compact />
+      </div>
+      <Link href={`/templates/${tpl.id}`} className="block">
         <div className="mt-3 flex items-start justify-between gap-3">
           <h3 className="text-base font-semibold leading-snug group-hover:text-leaf">{t(tpl.title)}</h3>
           <p className="font-display text-lg font-bold text-leaf whitespace-nowrap">{taka(SINGLE_TEMPLATE_PRICE, lang)}</p>
@@ -94,6 +122,7 @@ export function TemplatesPage() {
     `rounded-full px-4 py-1.5 font-display font-semibold transition-colors ${active ? 'bg-ink text-white' : 'bg-white text-ink ring-1 ring-line hover:ring-leaf hover:text-leaf'}`;
 
   const best = findProduct('pack-best-40');
+  const { addMany, setOpen } = useCart();
 
   return (
     <>
@@ -119,6 +148,16 @@ export function TemplatesPage() {
         }
       />
 
+      <section className="wrap pt-8" aria-labelledby="ladder-title">
+        <div className="grid gap-5 rounded-2xl bg-white p-6 ring-1 ring-line md:grid-cols-[1fr_1.6fr] md:items-center">
+          <div>
+            <h2 id="ladder-title" className="font-display text-2xl">{t({ en: 'The more you pick, the less each costs', bn: 'যত বেশি নেবেন, প্রতিটির দাম তত কম' })}</h2>
+            <p className="mt-1 text-muted">{t({ en: 'Add any templates to your cart, from any sector. The discount applies to every one, and all 40 never cost more than ৳249.', bn: 'যেকোনো খাতের যেকোনো টেমপ্লেট কার্টে যোগ করুন। ছাড় প্রতিটিতে প্রযোজ্য, আর ৪০টির দাম কখনও ৳২৪৯-এর বেশি নয়।' })}</p>
+          </div>
+          <DiscountLadder />
+        </div>
+      </section>
+
       <section className="wrap py-8" aria-labelledby="gallery-title">
         <h2 id="gallery-title" className="sr-only">{t({ en: 'All templates', bn: 'সব টেমপ্লেট' })}</h2>
         <div className="space-y-3">
@@ -142,9 +181,19 @@ export function TemplatesPage() {
           {style !== 'all' && <p className="max-w-2xl text-sm text-muted">{t(STYLE_HINT[style])}</p>}
         </div>
 
-        <p className="mt-6 text-sm text-muted" aria-live="polite">
-          {t({ en: `${list.length} templates`, bn: `${num(String(list.length), 'bn')}টি টেমপ্লেট` })}
-        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted" aria-live="polite">
+            {t({ en: `${list.length} templates`, bn: `${num(String(list.length), 'bn')}টি টেমপ্লেট` })}
+          </p>
+          {list.length > 1 && (
+            <button type="button" className="font-display font-semibold text-leaf underline decoration-2 underline-offset-[6px] hover:text-leaf-dark"
+              onClick={() => { addMany(list.map((x) => x.id)); setOpen(true); }}>
+              {style === 'all' && sector === 'all'
+                ? t({ en: `Add all ${list.length} to cart`, bn: `সব ${num(String(list.length), 'bn')}টি কার্টে যোগ করুন` })
+                : t({ en: `Add these ${list.length} to cart`, bn: `এই ${num(String(list.length), 'bn')}টি কার্টে যোগ করুন` })}
+            </button>
+          )}
+        </div>
         {list.length > 0 ? (
           <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4">
             {list.map((tpl) => <TemplateCard key={tpl.id} tpl={tpl} />)}
@@ -261,7 +310,8 @@ export function TemplateDetail({ id }: { id: string }) {
               <button type="button" className="btn btn-primary mt-5 w-full" onClick={() => order(`tpl-${tpl.id}`)}>
                 {t({ en: `Buy for ${taka(SINGLE_TEMPLATE_PRICE, 'en')}`, bn: `${taka(SINGLE_TEMPLATE_PRICE, 'bn')}-এ কিনুন` })}
               </button>
-              <p className="mt-2 text-center text-sm text-muted">{t({ en: 'bKash, Nagad or Rocket', bn: 'বিকাশ, নগদ বা রকেট' })}</p>
+              <div className="mt-3"><AddToCart id={tpl.id} /></div>
+              <p className="mt-2 text-center text-sm text-muted">{t({ en: 'Buying more than one? Add to cart: up to 35% off each.', bn: 'একাধিক কিনবেন? কার্টে যোগ করুন: প্রতিটিতে ৩৫% পর্যন্ত ছাড়।' })}</p>
             </div>
 
             {packs.length > 0 && (

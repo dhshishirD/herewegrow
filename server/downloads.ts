@@ -23,7 +23,7 @@ export interface DownloadLink {
 }
 
 /** Signed links for a paid product's files. Empty when the bucket isn't set up or a file is missing. */
-export async function downloadLinks(env: Env, invoiceId: string, product: Product): Promise<DownloadLink[]> {
+export async function downloadLinks(env: Env, invoiceId: string, product: Pick<Product, 'files'>): Promise<DownloadLink[]> {
   const secret = secretOf(env);
   if (!env.FILES || !secret || !product.files?.length) return [];
   const exp = Math.floor(Date.now() / 1000) + LINK_DAYS * 86400;

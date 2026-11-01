@@ -1,3 +1,4 @@
+import { PageHead, TOOLS_CRUMB } from '../components/PageHead';
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import { num, useLang } from '../lib/lang';
 import { setPageMeta } from '../lib/seo';
@@ -194,17 +195,14 @@ export function PhotoResizer() {
 
   return (
     <>
-      <div className="bg-mist">
-        <div className="wrap py-12">
-          <h1 className="text-4xl font-bold sm:text-5xl">{t({ en: 'Photo and signature resizer', bn: 'ছবি ও স্বাক্ষর রিসাইজার' })}</h1>
-          <p className="mt-3 max-w-2xl text-lg text-muted">
-            {t({
+      <PageHead
+        crumbs={[TOOLS_CRUMB]}
+        title={t({ en: 'Photo and signature resizer', bn: 'ছবি ও স্বাক্ষর রিসাইজার' })}
+        intro={t({
               en: 'Most government job forms on Teletalk ask for a colour photo of 300×300 pixels under 100 KB and a signature of 300×80 pixels under 60 KB. This tool makes both, free. Your photo never leaves your device.',
               bn: 'টেলিটকের বেশিরভাগ সরকারি চাকরির ফর্মে ৩০০×৩০০ পিক্সেলের রঙিন ছবি (১০০ KB-এর কম) ও ৩০০×৮০ পিক্সেলের স্বাক্ষর (৬০ KB-এর কম) চাওয়া হয়। এই টুল দুটোই বিনামূল্যে বানায়। আপনার ছবি আপনার ডিভাইসের বাইরে যায় না।',
             })}
-          </p>
-        </div>
-      </div>
+      />
 
       <section className="wrap grid gap-10 py-10 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-6">

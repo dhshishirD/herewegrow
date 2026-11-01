@@ -1,3 +1,4 @@
+import { PageHead, TOOLS_CRUMB } from '../components/PageHead';
 import { useEffect, useState } from 'react';
 import { findProduct } from '../../shared/catalog';
 import { useCheckout } from '../components/Checkout';
@@ -73,17 +74,14 @@ export function CvChecker() {
 
   return (
     <>
-      <div className="bg-mist">
-        <div className="wrap py-12">
-          <h1 className="text-4xl font-bold sm:text-5xl">{t({ en: 'Free CV checker', bn: 'ফ্রি সিভি চেকার' })}</h1>
-          <p className="mt-3 max-w-2xl text-lg text-muted">
-            {t({
+      <PageHead
+        crumbs={[TOOLS_CRUMB]}
+        title={t({ en: 'Free CV checker', bn: 'ফ্রি সিভি চেকার' })}
+        intro={t({
               en: 'See how your CV reads to ATS software and to a recruiter, with a score out of 100 and the exact fixes. Your file is read in your browser and never uploaded.',
               bn: 'ATS সফটওয়্যার ও রিক্রুটারের চোখে আপনার সিভি কেমন, তা ১০০-এর মধ্যে স্কোর ও নির্দিষ্ট সংশোধনসহ দেখুন। ফাইলটি আপনার ব্রাউজারেই পড়া হয়, কোথাও আপলোড হয় না।',
             })}
-          </p>
-        </div>
-      </div>
+      />
 
       <section className="wrap grid gap-10 py-10 lg:grid-cols-[1fr_1.15fr]">
         <div>

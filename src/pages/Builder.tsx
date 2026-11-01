@@ -114,6 +114,24 @@ export function BuilderPage() {
   const del = (key: 'experience' | 'education' | 'training' | 'references', id: string) =>
     set({ [key]: (d[key] as { id: string }[]).filter((x) => x.id !== id) } as Partial<CvData>);
 
+  const [wordBusy, setWordBusy] = useState(false);
+  const downloadWord = async () => {
+    setWordBusy(true);
+    try {
+      const { buildDocx } = await import('../builder/word');
+      const blob = await buildDocx(state);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV.docx`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    } catch (err) {
+      console.error(err);
+      window.alert(t({ en: 'The Word file could not be made. Try again, or use Download PDF.', bn: 'Word ফাইল তৈরি করা যায়নি। আবার চেষ্টা করুন, অথবা PDF ডাউনলোড করুন।' }));
+    }
+    setWordBusy(false);
+  };
+
   const download = () => {
     const prev = document.title;
     document.title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
@@ -140,6 +158,15 @@ export function BuilderPage() {
                 </button>
               ))}
             </div>
+            <div role="radiogroup" aria-label={t({ en: 'Heading language', bn: 'শিরোনামের ভাষা' })} className="flex rounded-full bg-white p-0.5 ring-1 ring-line">
+              {(['en', 'bn'] as const).map((h) => (
+                <button key={h} type="button" role="radio" aria-checked={(state.headings ?? 'en') === h} onClick={() => setState((s) => ({ ...s, headings: h }))}
+                  title={t({ en: 'Language of the section headings on your CV', bn: 'সিভির শিরোনামগুলোর ভাষা' })}
+                  className={`rounded-full px-3 py-1 text-sm font-semibold ${(state.headings ?? 'en') === h ? 'bg-leaf text-white' : ''}`}>
+                  {h === 'en' ? 'EN' : 'বাংলা'}
+                </button>
+              ))}
+            </div>
             <div role="radiogroup" aria-label={t({ en: 'Colour', bn: 'রং' })} className="flex gap-1.5">
               {ACCENTS.map((c) => (
                 <button key={c} type="button" role="radio" aria-checked={state.accent === c} aria-label={c} onClick={() => setState((s) => ({ ...s, accent: c }))}
@@ -154,6 +181,9 @@ export function BuilderPage() {
                   </button>
                 ))}
               </div>
+              <button type="button" onClick={downloadWord} disabled={wordBusy} className="btn btn-quiet bg-white !min-h-10" title={t({ en: 'Editable Word file, Classic layout', bn: 'এডিটযোগ্য Word ফাইল, ক্লাসিক লেআউট' })}>
+                {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : 'Word'}
+              </button>
               <button type="button" onClick={download} className="btn btn-primary !min-h-10">{t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}</button>
             </div>
           </div>
@@ -304,7 +334,7 @@ export function BuilderPage() {
               <div ref={previewBox} className="overflow-hidden rounded-xl bg-mist p-0 ring-1 ring-line">
                 <div style={{ height: 1123 * scale }}>
                   <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left' }} className="shadow-lg">
-                    <CvDocument d={d} design={state.design} accent={state.accent} />
+                    <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
                   </div>
                 </div>
               </div>
@@ -323,7 +353,7 @@ export function BuilderPage() {
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
-        <CvDocument d={d} design={state.design} accent={state.accent} />
+        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
       </div>
     </>
   );

@@ -20,8 +20,8 @@ const STATIC: Record<string, RouteSeo> = {
       'বাংলাদেশের চাকরিপ্রার্থীদের জন্য বিশেষজ্ঞ সিভি রাইটিং, Word-এ এডিটযোগ্য সিভি ফরম্যাট ও ফ্রি টুলস। Expert CV writing, editable CV templates and free tools. বিকাশ, নগদ বা রকেটে পেমেন্ট।',
   },
   '/services': {
-    title: 'সিভি রাইটিং সার্ভিস বাংলাদেশ | CV writing and review | HereWeGrow',
-    description: `ফ্রেশার থেকে এক্সিকিউটিভ, নির্দিষ্ট দামে সিভি রাইটিং ও রিভিউ। Professional CV writing in Bangladesh from ৳${price('cv-fresher')}, CV review ৳${price('cv-review')}.`,
+    title: 'সিভি রাইটিং, লিংকডইন ও বিডিজবস প্রোফাইল, SOP | CV writing service Bangladesh | HereWeGrow',
+    description: `নির্দিষ্ট দামে সিভি রাইটিং (৳${price('cv-fresher')} থেকে), সিভি রিভিউ ৳${price('cv-review')}, লিংকডইন প্রোফাইল ৳${price('linkedin-profile')}, বিডিজবস প্রোফাইল ৳${price('bdjobs-profile')}, SOP ও একাডেমিক সিভি। CV writing, LinkedIn and SOP services in Bangladesh.`,
   },
   '/templates': {
     title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${TEMPLATES.length}+ CV templates Bangladesh | HereWeGrow`,

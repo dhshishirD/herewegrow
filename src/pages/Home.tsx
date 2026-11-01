@@ -174,6 +174,10 @@ export function Home() {
             </p>
           </div>
           <div className="mt-10"><ServiceRateCard /></div>
+          <p className="mt-6 text-muted">
+            {t({ en: 'Also: LinkedIn makeover ৳499, BDJobs profile ৳299, SOP and academic CV for higher study. ', bn: 'আরও আছে: লিংকডইন মেকওভার ৳৪৯৯, বিডিজবস প্রোফাইল ৳২৯৯, উচ্চশিক্ষার SOP ও একাডেমিক সিভি। ' })}
+            <Link href="/services#profile" className="font-semibold text-leaf underline underline-offset-4">{t({ en: 'See all services', bn: 'সব সার্ভিস দেখুন' })}</Link>
+          </p>
 
           <h3 className="mt-16 font-display text-2xl">{t({ en: 'How a written CV order works', bn: 'সিভি লেখার অর্ডার যেভাবে হয়' })}</h3>
           <ol className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

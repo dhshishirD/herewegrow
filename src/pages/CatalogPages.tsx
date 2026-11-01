@@ -26,12 +26,30 @@ export function FaqList({ items }: { items: { q: { en: string; bn: string }; a: 
   );
 }
 
+const GROUPS: { id: 'cv' | 'profile' | 'study'; name: { en: string; bn: string }; intro: { en: string; bn: string } }[] = [
+  {
+    id: 'cv',
+    name: { en: 'CV writing', bn: 'সিভি রাইটিং' },
+    intro: { en: 'A new CV written for you, or an expert review of the one you have.', bn: 'আপনার জন্য নতুন সিভি, অথবা বর্তমান সিভির বিশেষজ্ঞ রিভিউ।' },
+  },
+  {
+    id: 'profile',
+    name: { en: 'LinkedIn and BDJobs', bn: 'লিংকডইন ও বিডিজবস' },
+    intro: { en: 'Recruiters search these profiles before they read your CV.', bn: 'সিভি পড়ার আগে রিক্রুটাররা এই প্রোফাইলগুলো খোঁজেন।' },
+  },
+  {
+    id: 'study',
+    name: { en: 'Higher study abroad', bn: 'বিদেশে উচ্চশিক্ষা' },
+    intro: { en: 'Documents for master’s, PhD and scholarship applications.', bn: 'মাস্টার্স, পিএইচডি ও স্কলারশিপ আবেদনের কাগজপত্র।' },
+  },
+];
+
 export function ServicesPage() {
   const { t, lang } = useLang();
-  const title = t({ en: 'CV writing and review', bn: 'সিভি রাইটিং ও রিভিউ' });
+  const title = t({ en: 'CV, LinkedIn and study-abroad services', bn: 'সিভি, লিংকডইন ও উচ্চশিক্ষার সার্ভিস' });
   const intro = t({
-    en: 'Written by the Career Solutions team for bank, NGO, corporate and teaching jobs. Fixed prices, Word and PDF files, changes included.',
-    bn: 'ব্যাংক, এনজিও, কর্পোরেট ও শিক্ষকতার চাকরির জন্য লেখে Career Solutions টিম। নির্দিষ্ট দাম, Word ও PDF ফাইল, সংশোধনসহ।',
+    en: 'Done for you by the Career Solutions team: CVs, LinkedIn and BDJobs profiles, and higher-study documents. Fixed prices, changes included.',
+    bn: 'Career Solutions টিম করে দেবে: সিভি, লিংকডইন ও বিডিজবস প্রোফাইল এবং উচ্চশিক্ষার কাগজপত্র। নির্দিষ্ট দাম, সংশোধনসহ।',
   });
   useEffect(() => setPageMeta(title, intro, '/services'), [title, intro]);
 
@@ -57,7 +75,23 @@ export function ServicesPage() {
         }
       />
 
-      <section className="wrap py-14"><ServiceRateCard /></section>
+      <nav aria-label={t({ en: 'Service groups', bn: 'সার্ভিসের ধরন' })} className="wrap pt-10">
+        <ul className="flex flex-wrap gap-2">
+          {GROUPS.map((g) => (
+            <li key={g.id}>
+              <a href={`#${g.id}`} className="inline-block rounded-full bg-white px-4 py-1.5 font-display font-semibold ring-1 ring-line hover:text-leaf hover:ring-leaf">{t(g.name)}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      {GROUPS.map((g) => (
+        <section key={g.id} id={g.id} className="wrap scroll-mt-24 pt-12">
+          <h2 className="text-3xl">{t(g.name)}</h2>
+          <p className="mt-2 max-w-2xl text-muted">{t(g.intro)}</p>
+          <div className="mt-6"><ServiceRateCard group={g.id} /></div>
+        </section>
+      ))}
+      <div className="pb-14" />
 
       <section className="border-y border-line bg-white">
         <div className="wrap py-16">

@@ -6,19 +6,20 @@ const services = PRODUCTS.filter((p) => p.kind === 'service');
 const packs = PRODUCTS.filter((p) => p.kind === 'pack');
 
 /** Expert services as a rate card: one row per service, price at the right edge. */
-export function ServiceRateCard() {
+export function ServiceRateCard({ group = 'cv' }: { group?: 'cv' | 'profile' | 'study' }) {
   const { t, lang } = useLang();
   const order = useCheckout();
+  const list = services.filter((s) => (s.group ?? 'cv') === group);
 
   return (
     <ul className="divide-y divide-line border-y border-line">
-      {services.map((s) => (
+      {list.map((s) => (
         <li key={s.id} className={`grid gap-4 py-6 md:grid-cols-[1.1fr_1.4fr_auto] md:items-start md:gap-8 ${s.featured ? 'relative' : ''}`}>
           <div>
             <h3 className="text-xl font-bold">{t(s.name)}</h3>
             {s.featured && (
               <p className="mt-1 inline-block rounded bg-gold-soft px-2 py-0.5 text-sm font-semibold text-gold">
-                {t({ en: 'Most chosen', bn: 'সবচেয়ে বেশি নেওয়া হয়' })}
+                {t(s.badge ?? { en: 'Most chosen', bn: 'সবচেয়ে বেশি নেওয়া হয়' })}
               </p>
             )}
             <p className="mt-2 text-muted">{t(s.summary)}</p>

@@ -6,6 +6,16 @@ export interface Env {
   PAYMENT_API_KEY?: string;
   /** Optional override, defaults to the HereWeGrow Paymently panel. */
   PAYMENT_API_BASE?: string;
+  /** R2 bucket "herewegrow-files" holding the Word files and pack zips. */
+  FILES?: R2BucketLike;
+  /** Optional secret for signing download links; falls back to PAYMENT_API_KEY. */
+  DOWNLOAD_SECRET?: string;
+}
+
+/** The small part of the R2 bucket API this site uses. */
+export interface R2BucketLike {
+  get(key: string): Promise<{ body: ReadableStream; size: number; httpEtag: string } | null>;
+  head(key: string): Promise<{ size: number } | null>;
 }
 
 const DEFAULT_BASE = 'https://herewegrow.paymently.io/api';

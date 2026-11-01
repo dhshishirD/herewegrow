@@ -17,8 +17,10 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
 }
 
 const ERRORS: Record<string, { en: string; bn: string }> = {
-  name: { en: 'Enter your full name.', bn: 'আপনার পুরো নাম লিখুন।' },
-  phone: { en: 'Enter an 11-digit mobile number starting with 01.', bn: '০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন।' },
+  phone: {
+    en: 'This number looks incomplete. Use 11 digits starting with 01, or leave it empty.',
+    bn: 'নম্বরটি অসম্পূর্ণ মনে হচ্ছে। ০১ দিয়ে শুরু ১১ সংখ্যা দিন, অথবা খালি রাখুন।',
+  },
   email: { en: 'Check the email address, or leave it empty.', bn: 'ইমেইল ঠিক আছে কিনা দেখুন, অথবা খালি রাখুন।' },
   gateway: {
     en: 'The payment page could not open. Try again in a minute, or order on WhatsApp.',
@@ -93,37 +95,48 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
             <h2 id="checkout-title" className="text-2xl font-bold">{t(product.name)}</h2>
             <p className="mt-1 text-muted">{t(product.delivery)}</p>
           </div>
-          <p className="font-display text-2xl font-bold text-leaf whitespace-nowrap">{taka(product.price, lang)}</p>
+          <div className="flex items-start gap-3">
+            <p className="font-display text-2xl font-bold text-leaf whitespace-nowrap">{taka(product.price, lang)}</p>
+            <button type="button" onClick={onClose} disabled={busy} aria-label={t({ en: 'Close', bn: 'বন্ধ করুন' })}
+              className="-mr-2 -mt-1 rounded-full p-2 text-muted hover:bg-mist hover:text-ink">
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+            </button>
+          </div>
         </div>
 
         <form onSubmit={submit} className="mt-6 space-y-4" noValidate>
-          <div>
-            <label className="label" htmlFor="co-name">{t({ en: 'Full name', bn: 'পুরো নাম' })}</label>
-            <input ref={firstField} id="co-name" name="name" className="field" autoComplete="name" required minLength={2} maxLength={80} />
-          </div>
+          <p className="rounded-lg bg-leaf-soft px-4 py-3 text-sm text-leaf-dark">
+            {t({
+              en: 'All fields are optional. A WhatsApp number helps us reach you if anything goes wrong.',
+              bn: 'সব ঘর ঐচ্ছিক। হোয়াটসঅ্যাপ নম্বর দিলে কোনো সমস্যা হলে আমরা যোগাযোগ করতে পারব।',
+            })}
+          </p>
           <div>
             <label className="label" htmlFor="co-phone">{t({ en: 'WhatsApp number', bn: 'হোয়াটসঅ্যাপ নম্বর' })}</label>
-            <input id="co-phone" name="phone" className="field" inputMode="tel" autoComplete="tel" placeholder="01XXXXXXXXX" required maxLength={16} />
-            <p className="mt-1 text-sm text-muted">{t({ en: 'We send your files and updates here.', bn: 'ফাইল ও আপডেট এই নম্বরে পাঠানো হবে।' })}</p>
+            <input ref={firstField} id="co-phone" name="phone" className="field" inputMode="tel" autoComplete="tel" placeholder="01XXXXXXXXX" maxLength={16}
+              aria-invalid={error === 'phone'} aria-describedby={error === 'phone' ? 'co-error' : undefined} />
           </div>
-          <div>
-            <label className="label" htmlFor="co-email">
-              {t({ en: 'Email', bn: 'ইমেইল' })} <span className="font-normal text-muted">({t({ en: 'optional', bn: 'ঐচ্ছিক' })})</span>
-            </label>
-            <input id="co-email" name="email" type="email" className="field" autoComplete="email" maxLength={120} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="label" htmlFor="co-name">{t({ en: 'Name', bn: 'নাম' })}</label>
+              <input id="co-name" name="name" className="field" autoComplete="name" maxLength={80} />
+            </div>
+            <div>
+              <label className="label" htmlFor="co-email">{t({ en: 'Email', bn: 'ইমেইল' })}</label>
+              <input id="co-email" name="email" type="email" className="field" autoComplete="email" maxLength={120}
+                aria-invalid={error === 'email'} aria-describedby={error === 'email' ? 'co-error' : undefined} />
+            </div>
           </div>
           {isService && (
             <div>
-              <label className="label" htmlFor="co-note">
-                {t({ en: 'Target job or note', bn: 'লক্ষ্য চাকরি বা নোট' })} <span className="font-normal text-muted">({t({ en: 'optional', bn: 'ঐচ্ছিক' })})</span>
-              </label>
+              <label className="label" htmlFor="co-note">{t({ en: 'Target job or note', bn: 'লক্ষ্য চাকরি বা নোট' })}</label>
               <textarea id="co-note" name="note" rows={2} className="field" maxLength={500}
                 placeholder={t({ en: 'e.g. Junior Officer at a private bank', bn: 'যেমন: বেসরকারি ব্যাংকে জুনিয়র অফিসার' })} />
             </div>
           )}
 
           {error && (
-            <div role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-alert">
+            <div id="co-error" role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-alert">
               <p>{t(ERRORS[error])}</p>
               {detail && <p className="mt-1 break-words text-xs text-alert/80">{t({ en: 'Details', bn: 'বিস্তারিত' })}: {detail}</p>}
             </div>
@@ -132,21 +145,24 @@ function CheckoutDialog({ product, onClose }: { product: Product; onClose: () =>
           <button type="submit" className="btn btn-primary w-full" disabled={busy}>
             {busy
               ? t({ en: 'Opening payment page…', bn: 'পেমেন্ট পেজ খোলা হচ্ছে…' })
-              : t({ en: `Pay ${taka(product.price, 'en')} with bKash or Nagad`, bn: `বিকাশ বা নগদে ${taka(product.price, 'bn')} পরিশোধ করুন` })}
+              : t({ en: `Pay ${taka(product.price, 'en')}`, bn: `${taka(product.price, 'bn')} পরিশোধ করুন` })}
           </button>
-          <button type="button" className="btn btn-quiet w-full" onClick={onClose} disabled={busy}>
-            {t({ en: 'Cancel', bn: 'বাতিল' })}
-          </button>
+          <p className="text-center text-sm text-muted">{t({ en: 'bKash, Nagad or Rocket on a secure payment page', bn: 'নিরাপদ পেমেন্ট পেজে বিকাশ, নগদ বা রকেট' })}</p>
           <p className="text-sm text-muted">
             {isService
               ? t({
                   en: 'After paying, send your current CV or details on WhatsApp. We start as soon as we have them.',
                   bn: 'পেমেন্টের পর হোয়াটসঅ্যাপে আপনার বর্তমান সিভি বা তথ্য পাঠান। তথ্য পেলেই কাজ শুরু হবে।',
                 })
-              : t({
-                  en: 'After paying, your files are sent to this WhatsApp number and email.',
-                  bn: 'পেমেন্টের পর ফাইলগুলো এই হোয়াটসঅ্যাপ নম্বর ও ইমেইলে পাঠানো হবে।',
-                })}
+              : product.files?.length
+                ? t({
+                    en: 'After paying, you come back here and download your files straight away.',
+                    bn: 'পেমেন্টের পর এখানে ফিরে এসে সাথে সাথে ফাইল ডাউনলোড করবেন।',
+                  })
+                : t({
+                    en: 'After paying, message us on WhatsApp and we send your files.',
+                    bn: 'পেমেন্টের পর হোয়াটসঅ্যাপে মেসেজ দিন, আমরা ফাইল পাঠিয়ে দেব।',
+                  })}
           </p>
         </form>
       </div>

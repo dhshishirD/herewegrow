@@ -12,7 +12,10 @@ interface VerifyResponse {
   productId?: string | null;
   amount?: number;
   transactionId?: string | null;
+  downloads?: { file: string; url: string; bytes: number }[];
 }
+
+const sizeLabel = (bytes: number) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
 
 type State = { kind: 'checking' } | { kind: 'missing' } | { kind: 'error' } | { kind: 'done'; data: VerifyResponse };
 
@@ -34,6 +37,7 @@ export function PaymentSuccess() {
   }, [invoiceId]);
 
   const product = state.kind === 'done' && state.data.productId ? findProduct(state.data.productId) : undefined;
+  const downloads = state.kind === 'done' && state.data.status === 'paid' ? state.data.downloads ?? [] : [];
   const ref = state.kind === 'done' ? state.data.transactionId || invoiceId : invoiceId;
 
   const message = product
@@ -55,6 +59,33 @@ export function PaymentSuccess() {
             {t(product.name)}, {taka(state.data.amount ?? product.price, lang)}.{' '}
             {t({ en: 'Keep this reference:', bn: 'এই রেফারেন্সটি রাখুন:' })} <strong className="break-all">{ref}</strong>
           </p>
+          {downloads.length > 0 ? (
+            <div className="mt-8 rounded-2xl bg-leaf-soft p-6">
+              <h2 className="text-xl font-bold">{t({ en: 'Your files are ready', bn: 'আপনার ফাইল প্রস্তুত' })}</h2>
+              <p className="mt-2 text-muted">
+                {t({
+                  en: 'Tap to download. The links work for 7 days, so you can come back to this page later.',
+                  bn: 'চাপ দিয়ে ডাউনলোড করুন। লিংক ৭ দিন কাজ করবে, পরে আবার এই পেজে এসে নামাতে পারবেন।',
+                })}
+              </p>
+              <ul className="mt-5 space-y-3">
+                {downloads.map((d) => (
+                  <li key={d.file}>
+                    <a href={d.url} className="btn btn-primary w-full justify-between sm:w-auto sm:min-w-80" download>
+                      <span>{d.file.endsWith('.zip') ? t({ en: 'Download all files (ZIP)', bn: 'সব ফাইল ডাউনলোড (ZIP)' }) : t({ en: 'Download Word file', bn: 'Word ফাইল ডাউনলোড' })}</span>
+                      <span className="text-sm font-normal opacity-80">{sizeLabel(d.bytes)}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 text-sm text-muted">
+                {t({ en: 'Trouble downloading? ', bn: 'ডাউনলোডে সমস্যা? ' })}
+                <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">
+                  {t({ en: 'Get the files on WhatsApp', bn: 'হোয়াটসঅ্যাপে ফাইল নিন' })}
+                </a>
+              </p>
+            </div>
+          ) : (
           <div className="mt-8 rounded-2xl bg-mist p-6">
             <h2 className="text-xl font-bold">{t({ en: 'One more step', bn: 'আর একটি ধাপ' })}</h2>
             <p className="mt-2 text-muted">
@@ -74,6 +105,7 @@ export function PaymentSuccess() {
                 : t({ en: 'Get my files on WhatsApp', bn: 'হোয়াটসঅ্যাপে ফাইল নিন' })}
             </a>
           </div>
+          )}
         </div>
       )}
 

@@ -2,6 +2,7 @@
 // The amount always comes from the shared catalogue, never from the request.
 
 import { findProduct } from '../shared/catalog';
+import { downloadLinks } from './downloads';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
 
 interface CheckoutBody {
@@ -28,14 +29,15 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   const email = clean(body.email, 120);
   const note = clean(body.note, 500);
 
-  if (name.length < 2) return json({ ok: false, error: 'name' }, 400);
-  if (!/^01[3-9]\d{8}$/.test(phone)) return json({ ok: false, error: 'phone' }, 400);
+  // Every field is optional: a buyer can pay without giving any details.
+  // Anything given is checked so typos are caught; empty is fine.
+  if (phone && !/^01[3-9]\d{8}$/.test(phone)) return json({ ok: false, error: 'phone' }, 400);
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ ok: false, error: 'email' }, 400);
 
   const origin = new URL(request.url).origin;
   try {
     const payload = {
-      full_name: name,
+      full_name: name || 'HereWeGrow customer',
       email: email || 'orders@herewegrow.pro',
       amount: String(product.price),
       metadata: {
@@ -85,6 +87,7 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
     const status = String(data.status ?? '').toUpperCase();
 
     const paid = status === 'COMPLETED' && !!product && amount >= product.price;
+    const downloads = paid && product ? await downloadLinks(env, invoiceId, product) : [];
 
     return json({
       ok: true,
@@ -95,6 +98,7 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
       name: typeof data.full_name === 'string' ? data.full_name : null,
       method: typeof data.payment_method === 'string' ? data.payment_method : null,
       transactionId: typeof data.transaction_id === 'string' ? data.transaction_id : null,
+      downloads,
     });
   } catch (err) {
     console.error('verify failed', err);

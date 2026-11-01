@@ -46,32 +46,34 @@ export function ServiceRateCard() {
   );
 }
 
-/** A small stack of pages showing how many templates a pack holds. */
-function PageStack({ count }: { count: string }) {
-  return (
-    <div aria-hidden="true" className="relative h-24 w-20 shrink-0">
-      <div className="absolute inset-0 translate-x-3 -translate-y-1 rotate-6 rounded-sm border border-line bg-mist" />
-      <div className="absolute inset-0 translate-x-1.5 rotate-3 rounded-sm border border-line bg-white" />
-      <div className="absolute inset-0 rounded-sm border border-line bg-white p-2">
-        <div className="h-1.5 w-8 rounded bg-leaf/70" />
-        <div className="mt-1.5 h-1 w-12 rounded bg-line" />
-        <div className="mt-1 h-1 w-10 rounded bg-line" />
-        <div className="mt-2.5 h-1 w-12 rounded bg-line" />
-        <div className="mt-1 h-1 w-9 rounded bg-line" />
-        <p className="absolute bottom-1.5 right-2 font-display text-lg font-bold text-leaf">{count}</p>
+/** Three real template previews fanned out, or a drawn stack for packs without previews. */
+function PackCover({ product, label }: { product: Product; label: string }) {
+  const picks = product.templates?.slice(0, 3) ?? [];
+  if (picks.length === 0) {
+    return (
+      <div aria-hidden="true" className="relative h-28 w-24 shrink-0">
+        <div className="absolute inset-0 translate-x-3 -translate-y-1 rotate-6 rounded-sm border border-line bg-mist" />
+        <div className="absolute inset-0 translate-x-1.5 rotate-3 rounded-sm border border-line bg-white" />
+        <div className="absolute inset-0 rounded-sm border border-line bg-white p-2">
+          <div className="h-1.5 w-8 rounded bg-leaf/70" />
+          <div className="mt-1.5 h-1 w-12 rounded bg-line" />
+          <div className="mt-1 h-1 w-10 rounded bg-line" />
+          <p className="absolute bottom-1.5 right-2 font-display text-lg font-bold text-leaf">{label}</p>
+        </div>
       </div>
+    );
+  }
+  const turn = ['-rotate-6 -translate-x-3', 'rotate-0', 'rotate-6 translate-x-3'];
+  return (
+    <div aria-hidden="true" className="relative h-28 w-24 shrink-0">
+      {picks.map((id, i) => (
+        <img key={id} src={`/templates/${id}/thumb.webp`} alt="" loading="lazy" decoding="async" width={84} height={119}
+          className={`absolute left-1.5 top-0 h-[7.4rem] w-21 rounded-sm bg-white object-cover object-top shadow ring-1 ring-line ${turn[i]}`} style={{ zIndex: i === 1 ? 3 : i }} />
+      ))}
+      <p className="absolute -bottom-2 -right-2 z-10 rounded-full bg-ink px-2 py-0.5 font-display text-sm font-bold text-white">{label}</p>
     </div>
   );
 }
-
-const PACK_COUNT: Record<string, string> = {
-  'pack-fresher': '5',
-  'pack-bank': '5',
-  'pack-teaching': '5',
-  'pack-best-40': '40',
-  'pack-library': '300+',
-  'pack-biodata': 'B',
-};
 
 export function PackGrid({ limit }: { limit?: number }) {
   const { t, lang } = useLang();
@@ -81,15 +83,15 @@ export function PackGrid({ limit }: { limit?: number }) {
   return (
     <div className="grid gap-x-8 gap-y-2 md:grid-cols-2">
       {list.map((p) => (
-        <article key={p.id} className="flex gap-5 border-t border-line py-6">
-          <PageStack count={PACK_COUNT[p.id] === 'B' ? t({ en: 'Bio', bn: 'বায়ো' }) : num(PACK_COUNT[p.id] ?? '', lang)} />
+        <article key={p.id} className="flex gap-6 border-t border-line py-7">
+          <PackCover product={p} label={p.id === 'pack-biodata' ? t({ en: 'Bio', bn: 'বায়ো' }) : p.id === 'pack-library' ? num('300+', lang) : num(p.id === 'pack-best-40' ? '40' : String(p.templates?.length ?? ''), lang)} />
           <div className="flex-1">
             <div className="flex items-baseline justify-between gap-3">
               <h3 className="text-lg font-bold">{t(p.name)}</h3>
               <p className="font-display text-xl font-bold text-leaf whitespace-nowrap">{taka(p.price, lang)}</p>
             </div>
             <p className="mt-1 text-muted">{t(p.summary)}</p>
-            <p className="mt-1 text-sm">{p.includes.map((i) => t(i)).join(' · ')}</p>
+            <p className="mt-1 text-sm">{t(p.includes[0])}{lang === 'bn' ? '। ' : '. '}{t(p.delivery)}{lang === 'bn' ? '।' : '.'}</p>
             <button type="button" className="mt-3 font-display font-semibold text-leaf underline underline-offset-4 decoration-2 hover:text-leaf-dark" onClick={() => order(p.id)}>
               {t({ en: 'Buy and get files', bn: 'কিনুন ও ফাইল নিন' })}
             </button>

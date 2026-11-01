@@ -135,6 +135,17 @@ export function ToolsPage() {
 
   const tools = [
     {
+      href: '/builder',
+      badge: <span className="font-display text-xl font-semibold text-white">CV</span>,
+      tone: 'bg-leaf-dark',
+      name: { en: 'CV builder', bn: 'সিভি বিল্ডার' },
+      body: {
+        en: 'Fill in a simple form, choose from 3 designs and download a print-ready PDF. Saved on your device.',
+        bn: 'সহজ ফর্ম পূরণ করুন, ৩টি ডিজাইন থেকে বেছে নিন, প্রিন্ট-রেডি PDF ডাউনলোড করুন। আপনার ডিভাইসেই সেভ থাকে।',
+      },
+      cta: { en: 'Build my CV', bn: 'সিভি বানান' },
+    },
+    {
       href: '/tools/cv-checker',
       badge: <span className="font-display text-xl font-semibold text-leaf">86</span>,
       tone: 'bg-leaf-soft',
@@ -161,7 +172,7 @@ export function ToolsPage() {
   return (
     <>
       <PageHead crumbs={[{ href: '/tools', label: { en: 'Free tools', bn: 'ফ্রি টুলস' } }]} title={title} intro={intro} />
-      <section className="wrap grid gap-6 py-14 md:grid-cols-2">
+      <section className="wrap grid gap-6 py-14 md:grid-cols-3">
         {tools.map((tool) => (
           <Link key={tool.href} href={tool.href} className="group flex flex-col rounded-2xl bg-white p-8 ring-1 ring-line transition hover:ring-2 hover:ring-leaf">
             <span aria-hidden="true" className={`grid h-16 w-16 place-items-center rounded-xl text-center ${tool.tone}`}>{tool.badge}</span>

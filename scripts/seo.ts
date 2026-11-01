@@ -100,8 +100,15 @@ function pages(): Page[] {
     {
       path: '/tools',
       ...seo('/tools'),
-      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li></ul>`,
+      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li></ul>`,
       priority: 0.7,
+    },
+    {
+      path: '/builder',
+      ...seo('/builder'),
+      body: '<h1>ফ্রি সিভি বিল্ডার</h1><p>সহজ ফর্ম পূরণ করে ৩টি ডিজাইনে সিভি বানান ও PDF ডাউনলোড করুন।</p>',
+      jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow CV builder', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
+      priority: 0.9,
     },
     {
       path: '/tools/cv-checker',

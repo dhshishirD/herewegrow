@@ -33,7 +33,7 @@ const PATHS = [
     href: '/tools',
     price: { en: 'Free', bn: 'ফ্রি' },
     title: { en: 'Use free tools', bn: 'ফ্রি টুলস' },
-    body: { en: 'Score your CV out of 100 and resize photos for Teletalk forms. No sign-up.', bn: 'সিভির স্কোর দেখুন ও টেলিটক ফর্মের জন্য ছবি রিসাইজ করুন। সাইন-আপ লাগে না।' },
+    body: { en: 'Build a CV online, score it out of 100, and resize photos for Teletalk forms. No sign-up.', bn: 'অনলাইনে সিভি বানান, ১০০-এর মধ্যে স্কোর দেখুন, টেলিটক ফর্মের জন্য ছবি রিসাইজ করুন। সাইন-আপ লাগে না।' },
     cta: { en: 'Open tools', bn: 'টুলস খুলুন' },
   },
 ];

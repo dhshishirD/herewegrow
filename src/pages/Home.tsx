@@ -9,6 +9,7 @@ import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
 import { FAQ, STEPS } from '../content/faq';
 import { FaqList } from './CatalogPages';
+import { ExpertSection, ReviewsSection } from '../components/Expert';
 
 const FEATURED = ['ats-banking-standard-bd', 'creative-modern-executive-2page', 'ats-graduate-standard-single-page', 'creative-finance-accountant-2page'];
 
@@ -186,6 +187,9 @@ export function Home() {
           </ol>
         </div>
       </section>
+
+      <ExpertSection />
+      <ReviewsSection />
 
       {/* Free tools */}
       <section className="wrap py-20">

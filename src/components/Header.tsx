@@ -5,6 +5,7 @@ const NAV = [
   { href: '/services', en: 'CV services', bn: 'সিভি সার্ভিস' },
   { href: '/templates', en: 'Templates', bn: 'টেমপ্লেট' },
   { href: '/tools', en: 'Free tools', bn: 'ফ্রি টুলস' },
+  { href: '/about', en: 'About', bn: 'আমাদের কথা' },
 ];
 
 export function Header() {

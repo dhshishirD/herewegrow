@@ -35,6 +35,7 @@ export function Footer() {
                 WhatsApp {SUPPORT_WHATSAPP_DISPLAY}
               </a>
             </li>
+            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/order">{t({ en: 'Download your files again', bn: 'আবার ফাইল ডাউনলোড' })}</Link></li>
             <li className="text-white/70">{t({ en: 'Every day, 9am to 11pm', bn: 'প্রতিদিন সকাল ৯টা থেকে রাত ১১টা' })}</li>
           </ul>
         </div>
@@ -42,6 +43,7 @@ export function Footer() {
         <div>
           <p className="font-display font-semibold text-white">{t({ en: 'Policies', bn: 'নীতিমালা' })}</p>
           <ul className="mt-3 space-y-2">
+            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/about">{t({ en: 'About us', bn: 'আমাদের কথা' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/privacy">{t({ en: 'Privacy', bn: 'গোপনীয়তা' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/terms">{t({ en: 'Terms and refunds', bn: 'শর্তাবলি ও রিফান্ড' })}</Link></li>
           </ul>

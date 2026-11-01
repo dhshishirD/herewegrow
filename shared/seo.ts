@@ -27,6 +27,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${TEMPLATES.length}+ CV templates Bangladesh | HereWeGrow`,
     description: `ব্যাংক, কর্পোরেট, ফ্রেশার, ইঞ্জিনিয়ারিং, শিক্ষকতা ও মেডিকেল চাকরির জন্য Word-এ এডিটযোগ্য সিভি ফরম্যাট। প্রতিটি ৳${SINGLE_TEMPLATE_PRICE}, সব ৪০টি ৳${price('pack-best-40')}। Editable CV format for Bangladesh jobs, instant download.`,
   },
+  '/about': {
+    title: 'About HereWeGrow and Career Solutions | CV expert in Bangladesh',
+    description: '৫ বছরের অভিজ্ঞ সিভি কনসালট্যান্ট দেলোয়ার হাসান শিশির (ইংরেজিতে বিএ, এমএ, শাবিপ্রবি)। হাজারো সিভি, লিংকডইন ও বিডিজবস প্রোফাইল। Meet the CV expert behind HereWeGrow.',
+  },
   '/tools': {
     title: 'চাকরিপ্রার্থীদের জন্য ফ্রি টুলস | Free job tools | HereWeGrow',
     description: 'ফ্রি সিভি চেকার ও টেলিটক সরকারি চাকরির ফর্মের জন্য ছবি-স্বাক্ষর রিসাইজার। Free CV checker and photo and signature resizer, no sign-up.',

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { SUPPORT_WHATSAPP_DISPLAY } from '../../shared/catalog';
 import { ServiceRateCard } from '../components/Catalog';
+import { ExpertSection } from '../components/Expert';
 import { PageHead } from '../components/PageHead';
 import { SERVICE_FAQ, STEPS } from '../content/faq';
 import { num, useLang } from '../lib/lang';
@@ -72,6 +73,8 @@ export function ServicesPage() {
           </ol>
         </div>
       </section>
+
+      <ExpertSection />
 
       <section className="wrap grid gap-10 py-16 md:grid-cols-[1fr_1.6fr]">
         <div>

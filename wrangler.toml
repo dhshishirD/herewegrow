@@ -1,7 +1,16 @@
 name = "herewegrow-app"
+main = "worker/index.ts"
 compatibility_date = "2025-03-01"
+
+# Secrets (set in Cloudflare → Workers & Pages → herewegrow-app → Settings → Variables and secrets):
+#   PAYMENT_API_KEY   Paymently / UddoktaPay API key (type: Secret)
+# Optional plain variable:
+#   PAYMENT_API_BASE  defaults to https://herewegrow.paymently.io/api
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
 html_handling = "auto-trailing-slash"
 not_found_handling = "single-page-application"
+# Send /api/* to the Worker first so the payment API is never answered with the web page
+run_worker_first = ["/api/*"]

@@ -16,3 +16,9 @@ html_handling = "auto-trailing-slash"
 not_found_handling = "single-page-application"
 # Send /api/* to the Worker first so the payment API is never answered with the web page
 run_worker_first = ["/api/*"]
+
+# Workers Logs (matches the dashboard setting, so deploys don't turn it off)
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true

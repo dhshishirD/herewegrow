@@ -1,3 +1,4 @@
+import { CartButton } from './CartDrawer';
 import { useLang } from '../lib/lang';
 import { Link, usePath } from '../lib/router';
 
@@ -47,6 +48,7 @@ export function Header() {
           >
             {lang === 'bn' ? 'English' : 'বাংলা'}
           </button>
+          <CartButton />
           <Link href="/services" className="btn btn-primary hidden sm:inline-flex !min-h-10 !px-4 text-[0.95rem]">
             {t({ en: 'Order a CV', bn: 'সিভি অর্ডার করুন' })}
           </Link>

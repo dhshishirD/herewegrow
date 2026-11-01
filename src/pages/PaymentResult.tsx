@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { findProduct } from '../../shared/catalog';
 import { taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
 import { DownloadButtons } from '../components/Downloads';
-import { saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
+import { productFor, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
+import { takeCartPending, useCart } from '../lib/cart';
 
 type State = { kind: 'checking' } | { kind: 'missing' } | { kind: 'error' } | { kind: 'done'; data: VerifyResponse };
 
 export function PaymentSuccess() {
   const { t, lang } = useLang();
+  const { clear: clearCart } = useCart();
   const invoiceId = new URLSearchParams(window.location.search).get('invoice_id') ?? '';
   const [state, setState] = useState<State>(invoiceId ? { kind: 'checking' } : { kind: 'missing' });
 
@@ -22,13 +23,16 @@ export function PaymentSuccess() {
     if (!invoiceId) return;
     verifyInvoice(invoiceId)
       .then((data) => {
-        if (data.ok && data.status === 'paid' && data.productId) saveOrder({ invoiceId, productId: data.productId, at: Date.now() });
+        if (data.ok && data.status === 'paid' && data.productId) {
+          saveOrder({ invoiceId, productId: data.productId, templateIds: data.templateIds, at: Date.now() });
+          if (takeCartPending()) clearCart();
+        }
         setState(data.ok ? { kind: 'done', data } : { kind: 'error' });
       })
       .catch(() => setState({ kind: 'error' }));
   }, [invoiceId]);
 
-  const product = state.kind === 'done' && state.data.productId ? findProduct(state.data.productId) : undefined;
+  const product = state.kind === 'done' ? productFor(state.data.productId, state.data.templateIds) : undefined;
   const downloads = state.kind === 'done' && state.data.status === 'paid' ? state.data.downloads ?? [] : [];
   const ref = state.kind === 'done' ? state.data.transactionId || invoiceId : invoiceId;
 

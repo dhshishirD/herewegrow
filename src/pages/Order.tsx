@@ -1,9 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { findProduct } from '../../shared/catalog';
 import { DownloadButtons } from '../components/Downloads';
 import { PageHead } from '../components/PageHead';
 import { useLang } from '../lib/lang';
-import { savedOrders, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
+import { productFor, savedOrders, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
 
@@ -31,7 +30,7 @@ export function OrderPage() {
     setState({ kind: 'checking' });
     try {
       const data = await verifyInvoice(clean);
-      if (data.ok && data.status === 'paid' && data.productId) saveOrder({ invoiceId: clean, productId: data.productId, at: Date.now() });
+      if (data.ok && data.status === 'paid' && data.productId) saveOrder({ invoiceId: clean, productId: data.productId, templateIds: data.templateIds, at: Date.now() });
       setState(data.ok ? { kind: 'done', data } : { kind: 'error' });
     } catch {
       setState({ kind: 'error' });
@@ -49,7 +48,7 @@ export function OrderPage() {
   };
 
   const data = state.kind === 'done' ? state.data : null;
-  const product = data?.productId ? findProduct(data.productId) : undefined;
+  const product = productFor(data?.productId, data?.templateIds);
   const help = whatsappLink(`Hello HereWeGrow, I need my files again. Invoice: ${invoice || '(not sure)'}.`);
 
   return (
@@ -77,7 +76,7 @@ export function OrderPage() {
               <h2 className="font-display text-xl">{t({ en: 'Recent orders on this device', bn: 'এই ডিভাইসের সাম্প্রতিক অর্ডার' })}</h2>
               <ul className="mt-3 divide-y divide-line border-y border-line">
                 {recent.map((o) => {
-                  const p = findProduct(o.productId);
+                  const p = productFor(o.productId, o.templateIds);
                   return (
                     <li key={o.invoiceId} className="flex items-center justify-between gap-4 py-3">
                       <div className="min-w-0">

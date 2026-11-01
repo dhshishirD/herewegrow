@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
-import { PackGrid, ServiceRateCard } from '../components/Catalog';
-import { ReviewedCv } from '../components/ReviewedCv';
-import { useLang } from '../lib/lang';
+import { findProduct } from '../../shared/catalog';
+import { SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from '../../shared/templates';
+import { ServiceRateCard } from '../components/Catalog';
+import { useCheckout } from '../components/Checkout';
+import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
 
 const STEPS = [
   {
-    title: { en: 'Choose a service or pack', bn: 'সার্ভিস বা প্যাক বেছে নিন' },
+    title: { en: 'Choose a service', bn: 'সার্ভিস বেছে নিন' },
     body: { en: 'Prices are fixed and shown up front.', bn: 'দাম নির্দিষ্ট, আগেই দেখানো।' },
   },
   {
@@ -48,6 +50,13 @@ const FAQ = [
     },
   },
   {
+    q: { en: 'How do I get a template after paying?', bn: 'পেমেন্টের পর টেমপ্লেট কীভাবে পাব?' },
+    a: {
+      en: 'You come straight back to our site and tap Download. The link works for 7 days, and we can also send the file on WhatsApp.',
+      bn: 'পেমেন্টের পর সরাসরি আমাদের সাইটে ফিরে এসে ডাউনলোড চাপবেন। লিংক ৭ দিন কাজ করে, চাইলে হোয়াটসঅ্যাপেও ফাইল পাঠানো হবে।',
+    },
+  },
+  {
     q: { en: 'What if the payment goes through but I see an error?', bn: 'টাকা কেটে গেছে কিন্তু এরর দেখাচ্ছে, কী করব?' },
     a: {
       en: 'Send your transaction ID on WhatsApp. We check it against the payment record and confirm your order the same day.',
@@ -56,8 +65,35 @@ const FAQ = [
   },
 ];
 
+const FEATURED = ['ats-banking-standard-bd', 'creative-modern-executive-2page', 'ats-graduate-standard-single-page', 'creative-finance-accountant-2page'];
+
+const PATHS = [
+  {
+    href: '/templates',
+    price: { en: 'From ৳39', bn: '৳৩৯ থেকে' },
+    title: { en: 'Do it yourself', bn: 'নিজে করুন' },
+    body: { en: '39 Word templates for bank, corporate, engineering, teaching and more. Download instantly.', bn: 'ব্যাংক, কর্পোরেট, ইঞ্জিনিয়ারিং, শিক্ষকতাসহ ৩৯টি Word টেমপ্লেট। সাথে সাথে ডাউনলোড।' },
+    cta: { en: 'Browse templates', bn: 'টেমপ্লেট দেখুন' },
+  },
+  {
+    href: '/services',
+    price: { en: 'From ৳199', bn: '৳১৯৯ থেকে' },
+    title: { en: 'Get it written', bn: 'লিখিয়ে নিন' },
+    body: { en: 'An expert reviews or writes your CV in 24 to 48 hours, with changes included.', bn: 'বিশেষজ্ঞ ২৪–৪৮ ঘণ্টায় আপনার সিভি রিভিউ বা নতুন করে লিখে দেবেন, সংশোধনসহ।' },
+    cta: { en: 'See prices', bn: 'দাম দেখুন' },
+  },
+  {
+    href: '/tools',
+    price: { en: 'Free', bn: 'ফ্রি' },
+    title: { en: 'Use free tools', bn: 'ফ্রি টুলস' },
+    body: { en: 'Score your CV out of 100 and resize photos for Teletalk forms. No sign-up.', bn: 'সিভির স্কোর দেখুন ও টেলিটক ফর্মের জন্য ছবি রিসাইজ করুন। সাইন-আপ লাগে না।' },
+    cta: { en: 'Open tools', bn: 'টুলস খুলুন' },
+  },
+];
+
 export function Home() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const order = useCheckout();
 
   useEffect(() => {
     setPageMeta(
@@ -70,131 +106,226 @@ export function Home() {
     );
   }, [t]);
 
+  const featured = FEATURED.map((id) => findTemplate(id)).filter((x): x is NonNullable<typeof x> => !!x);
+  const best = findProduct('pack-best-40');
+
   return (
     <>
-      {/* Hero */}
-      <section className="bg-mist">
-        <div className="wrap grid items-center gap-12 py-14 md:grid-cols-[1.05fr_1fr] md:py-20">
-          <div>
-            <h1 className="text-[2.6rem] font-bold leading-[1.08] sm:text-6xl">
-              {t({ en: 'A CV that gets you called for the interview.', bn: 'যে সিভি দেখে ইন্টারভিউয়ের ডাক আসে।' })}
+      {/* Hero: the promise on the left, a shortlisted stack of real CVs on the right */}
+      <section className="relative overflow-hidden border-b border-line bg-paper">
+        <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0" />
+        <div className="wrap relative grid items-center gap-14 pt-12 pb-16 md:grid-cols-[1.1fr_1fr] md:py-20">
+          <div className="hero-copy">
+            <p className="inline-flex items-center gap-2 rounded-full bg-leaf-soft px-3.5 py-1 text-sm font-semibold text-leaf-dark">
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-leaf" />
+              {t({ en: 'Made for job seekers in Bangladesh', bn: 'বাংলাদেশের চাকরিপ্রার্থীদের জন্য' })}
+            </p>
+            <h1 className="mt-6 text-[2.75rem] leading-[1.12] sm:text-6xl lg:text-[4.25rem]">
+              {t({ en: 'A CV that gets you called.', bn: 'যে সিভি দেখে ডাক আসে।' })}
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-muted">
+            <p className="mt-6 max-w-xl text-lg text-muted sm:text-xl">
               {t({
-                en: 'Expert CV writing, ready-to-edit templates and free tools, made for job seekers in Bangladesh. Pay with bKash or Nagad.',
-                bn: 'বাংলাদেশের চাকরিপ্রার্থীদের জন্য বিশেষজ্ঞের সিভি রাইটিং, এডিট-রেডি টেমপ্লেট ও ফ্রি টুলস। বিকাশ বা নগদে পেমেন্ট করুন।',
+                en: 'Have an expert write it, or download a ready Word template and fill it in yourself. Pay in taka with bKash or Nagad.',
+                bn: 'বিশেষজ্ঞকে দিয়ে লিখিয়ে নিন, অথবা রেডি Word টেমপ্লেট ডাউনলোড করে নিজেই পূরণ করুন। বিকাশ বা নগদে টাকায় পেমেন্ট।',
               })}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/tools/cv-checker" className="btn btn-primary">
-                {t({ en: 'Check my CV for free', bn: 'ফ্রিতে সিভি চেক করুন' })}
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href="/templates" className="btn btn-primary !px-6 text-[1.05rem]">
+                {t({ en: `Templates from ${taka(SINGLE_TEMPLATE_PRICE, 'en')}`, bn: `টেমপ্লেট ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} থেকে` })}
               </Link>
-              <Link href="/services" className="btn btn-quiet bg-white">
-                {t({ en: 'See CV writing prices', bn: 'সিভি রাইটিংয়ের দাম দেখুন' })}
+              <Link href="/services" className="btn btn-quiet bg-white !px-6 text-[1.05rem]">
+                {t({ en: 'Get my CV written', bn: 'সিভি লিখিয়ে নিন' })}
               </Link>
             </div>
+            <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem] text-muted">
+              {[
+                { en: 'Instant download', bn: 'সাথে সাথে ডাউনলোড' },
+                { en: 'Editable in Word', bn: 'Word-এ এডিটযোগ্য' },
+                { en: 'Help on WhatsApp', bn: 'হোয়াটসঅ্যাপে সাহায্য' },
+              ].map((x) => (
+                <li key={x.en} className="flex items-center gap-2">
+                  <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 text-leaf"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  {t(x)}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ReviewedCv />
+          <ShortlistStack />
         </div>
       </section>
 
-      {/* How an order works: a real sequence */}
-      <section className="wrap py-16">
-        <h2 className="text-3xl font-bold">{t({ en: 'How an order works', bn: 'অর্ডার যেভাবে কাজ করে' })}</h2>
-        <ol className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((s, i) => (
-            <li key={s.title.en} className="border-l-2 border-leaf pl-4">
-              <p className="font-display text-sm font-semibold text-leaf">{t({ en: `Step ${i + 1}`, bn: `ধাপ ${['১', '২', '৩', '৪'][i]}` })}</p>
-              <h3 className="mt-1 text-lg font-bold">{t(s.title)}</h3>
-              <p className="mt-1 text-muted">{t(s.body)}</p>
+      {/* Three ways in */}
+      <section className="bg-leaf-dark text-white">
+        <div className="wrap grid divide-y divide-white/15 md:grid-cols-3 md:divide-x md:divide-y-0">
+          {PATHS.map((p) => (
+            <Link key={p.href} href={p.href} className="group block py-9 md:px-8 md:py-12 md:first:pl-0 md:last:pr-0">
+              <p className="font-display text-saffron">{t(p.price)}</p>
+              <h2 className="mt-2 text-2xl text-white sm:text-[1.75rem]">{t(p.title)}</h2>
+              <p className="mt-3 text-white/75">{t(p.body)}</p>
+              <p className="mt-5 inline-flex items-center gap-2 font-display font-semibold text-white underline decoration-saffron decoration-2 underline-offset-[6px] group-hover:decoration-white">
+                {t(p.cta)}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured templates */}
+      <section className="wrap py-20">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-3xl sm:text-4xl">{t({ en: 'Templates our team made', bn: 'আমাদের টিমের তৈরি টেমপ্লেট' })}</h2>
+            <p className="mt-3 max-w-2xl text-muted">
+              {t({
+                en: 'See every page before you buy. Download the Word file the moment you pay.',
+                bn: 'কেনার আগে প্রতিটি পৃষ্ঠা দেখুন। পেমেন্ট করার সাথে সাথে Word ফাইল ডাউনলোড করুন।',
+              })}
+            </p>
+          </div>
+          <Link href="/templates" className="font-display font-semibold text-leaf underline decoration-2 underline-offset-[6px]">
+            {t({ en: `See all ${TEMPLATES.length} templates`, bn: `সব ${num(String(TEMPLATES.length), 'bn')}টি টেমপ্লেট দেখুন` })}
+          </Link>
+        </div>
+        <ul className="-mx-5 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+          {featured.map((tpl) => (
+            <li key={tpl.id} className="w-[62%] shrink-0 snap-start sm:w-[40%] md:w-auto">
+              <Link href={`/templates/${tpl.id}`} className="group block">
+                <div className="rounded-xl bg-mist p-3 ring-1 ring-line transition group-hover:-translate-y-1 group-hover:ring-leaf">
+                  <img src={`/templates/${tpl.id}/thumb.webp`} alt={t({ en: `Preview of the ${tpl.title.en}`, bn: `${tpl.title.bn}-এর প্রিভিউ` })}
+                    width={420} height={594} loading="lazy" decoding="async" className="aspect-[210/297] w-full bg-white object-cover object-top shadow-sm" />
+                </div>
+                <div className="mt-3 flex items-start justify-between gap-3">
+                  <h3 className="font-body text-base font-semibold leading-snug group-hover:text-leaf">{t(tpl.title)}</h3>
+                  <p className="font-display font-semibold text-leaf">{taka(SINGLE_TEMPLATE_PRICE, lang)}</p>
+                </div>
+              </Link>
             </li>
           ))}
-        </ol>
+        </ul>
+        {best && (
+          <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-2xl bg-gold-soft px-6 py-6 sm:flex-row sm:items-center sm:px-8">
+            <div>
+              <p className="font-display text-xl text-ink">{t({ en: `All 40 templates for ${taka(best.price, 'en')}`, bn: `৪০টি টেমপ্লেট একসাথে ${taka(best.price, 'bn')}` })}</p>
+              <p className="mt-1 text-muted">{t({ en: 'Every sector, one download, less than ৳7 each.', bn: 'সব খাত, এক ডাউনলোডে, প্রতিটি ৳৭-এরও কম।' })}</p>
+            </div>
+            <button type="button" className="btn btn-primary shrink-0" onClick={() => order(best.id)}>
+              {t({ en: 'Get all 40', bn: '৪০টিই নিন' })}
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Services */}
-      <section id="services" className="wrap py-10">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="text-3xl font-bold">{t({ en: 'CV writing and review', bn: 'সিভি রাইটিং ও রিভিউ' })}</h2>
-            <p className="mt-2 max-w-2xl text-muted">
+      <section id="services" className="border-t border-line bg-white">
+        <div className="wrap py-20">
+          <div className="grid gap-6 md:grid-cols-[1fr_1.4fr] md:items-end">
+            <h2 className="text-3xl sm:text-4xl">{t({ en: 'Or have an expert write it', bn: 'অথবা বিশেষজ্ঞকে দিয়ে লেখান' })}</h2>
+            <p className="max-w-2xl text-muted md:justify-self-end">
               {t({
-                en: 'A person who writes CVs every day works on yours. Prices include Word and PDF files.',
-                bn: 'প্রতিদিন সিভি লেখেন এমন একজন আপনার সিভিতে কাজ করবেন। দামে Word ও PDF ফাইল অন্তর্ভুক্ত।',
+                en: 'Written by the Career Solutions team for bank, NGO, corporate and teaching jobs. Fixed prices, Word and PDF files, changes included.',
+                bn: 'ব্যাংক, এনজিও, কর্পোরেট ও শিক্ষকতার চাকরির জন্য লেখে Career Solutions টিম। নির্দিষ্ট দাম, Word ও PDF ফাইল, সংশোধনসহ।',
               })}
             </p>
           </div>
-        </div>
-        <div className="mt-8"><ServiceRateCard /></div>
-      </section>
+          <div className="mt-10"><ServiceRateCard /></div>
 
-      {/* Templates */}
-      <section className="wrap py-14">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="text-3xl font-bold">{t({ en: 'Edit-it-yourself templates', bn: 'নিজে এডিট করার টেমপ্লেট' })}</h2>
-            <p className="mt-2 max-w-2xl text-muted">
-              {t({
-                en: 'Word files you fill in on a computer or phone. ATS-safe styles are labelled so you know which to send online.',
-                bn: 'কম্পিউটার বা মোবাইলে পূরণ করার Word ফাইল। অনলাইনে কোনটি পাঠাবেন বুঝতে ATS-নিরাপদ স্টাইল আলাদা করে চিহ্নিত।',
-              })}
-            </p>
-          </div>
-          <Link href="/templates" className="font-display font-semibold text-leaf underline decoration-2 underline-offset-4">
-            {t({ en: 'All template packs', bn: 'সব টেমপ্লেট প্যাক' })}
-          </Link>
+          <h3 className="mt-16 font-display text-2xl">{t({ en: 'How a written CV order works', bn: 'সিভি লেখার অর্ডার যেভাবে হয়' })}</h3>
+          <ol className="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map((s, i) => (
+              <li key={s.title.en}>
+                <p aria-hidden="true" className="font-display text-4xl text-saffron">{num(String(i + 1), lang)}</p>
+                <p className="mt-2 font-semibold">{t(s.title)}</p>
+                <p className="mt-1 text-muted">{t(s.body)}</p>
+              </li>
+            ))}
+          </ol>
         </div>
-        <div className="mt-6"><PackGrid limit={4} /></div>
       </section>
 
       {/* Free tools */}
-      <section className="bg-leaf-soft/60">
-        <div className="wrap py-16">
-          <h2 className="text-3xl font-bold">{t({ en: 'Free tools for your application', bn: 'আবেদনের জন্য ফ্রি টুলস' })}</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            <Link href="/tools/cv-checker" className="group block rounded-2xl bg-white p-7 ring-1 ring-line hover:ring-leaf">
-              <h3 className="text-2xl font-bold group-hover:text-leaf">{t({ en: 'CV checker', bn: 'সিভি চেকার' })}</h3>
-              <p className="mt-2 text-muted">
+      <section className="wrap py-20">
+        <h2 className="text-3xl sm:text-4xl">{t({ en: 'Free tools for your application', bn: 'আবেদনের জন্য ফ্রি টুলস' })}</h2>
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <Link href="/tools/cv-checker" className="group flex gap-5 rounded-2xl bg-white p-7 ring-1 ring-line transition hover:ring-leaf">
+            <span aria-hidden="true" className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-leaf-soft font-display text-xl font-semibold text-leaf">86</span>
+            <span>
+              <span className="block font-display text-2xl group-hover:text-leaf">{t({ en: 'CV checker', bn: 'সিভি চেকার' })}</span>
+              <span className="mt-2 block text-muted">
                 {t({
-                  en: 'Upload your CV as a PDF and get a score with the exact fixes to make. Your file never leaves your phone or computer.',
-                  bn: 'PDF সিভি আপলোড করুন, স্কোর ও কী ঠিক করতে হবে তা দেখুন। আপনার ফাইল আপনার মোবাইল বা কম্পিউটারের বাইরে যায় না।',
+                  en: 'Upload your CV as a PDF and get a score out of 100 with the exact fixes. Your file never leaves your phone.',
+                  bn: 'PDF সিভি আপলোড করে ১০০-এর মধ্যে স্কোর ও কী ঠিক করতে হবে তা দেখুন। ফাইল আপনার মোবাইলের বাইরে যায় না।',
                 })}
-              </p>
-            </Link>
-            <Link href="/tools/photo-signature-resizer" className="group block rounded-2xl bg-white p-7 ring-1 ring-line hover:ring-leaf">
-              <h3 className="text-2xl font-bold group-hover:text-leaf">{t({ en: 'Photo and signature resizer', bn: 'ছবি ও স্বাক্ষর রিসাইজার' })}</h3>
-              <p className="mt-2 text-muted">
+              </span>
+            </span>
+          </Link>
+          <Link href="/tools/photo-signature-resizer" className="group flex gap-5 rounded-2xl bg-white p-7 ring-1 ring-line transition hover:ring-leaf">
+            <span aria-hidden="true" className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-gold-soft font-display text-[0.8rem] font-semibold leading-tight text-gold">300<br />×300</span>
+            <span>
+              <span className="block font-display text-2xl group-hover:text-leaf">{t({ en: 'Photo and signature resizer', bn: 'ছবি ও স্বাক্ষর রিসাইজার' })}</span>
+              <span className="mt-2 block text-muted">
                 {t({
-                  en: 'Photo 300×300 under 100 KB and signature 300×80 under 60 KB, as Teletalk government job forms ask.',
-                  bn: 'টেলিটক সরকারি চাকরির ফর্মের মাপে ছবি ৩০০×৩০০ (১০০ KB-এর কম) ও স্বাক্ষর ৩০০×৮০ (৬০ KB-এর কম)।',
+                  en: 'Exact Teletalk sizes for government job forms: photo 300×300, signature 300×80.',
+                  bn: 'সরকারি চাকরির টেলিটক ফর্মের সঠিক মাপ: ছবি ৩০০×৩০০, স্বাক্ষর ৩০০×৮০।',
                 })}
-              </p>
-            </Link>
-          </div>
+              </span>
+            </span>
+          </Link>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="wrap py-16">
-        <h2 className="text-3xl font-bold">{t({ en: 'Questions people ask', bn: 'যে প্রশ্নগুলো বেশি আসে' })}</h2>
-        <div className="mt-6 max-w-3xl divide-y divide-line border-y border-line">
+      <section className="wrap grid gap-10 pb-20 md:grid-cols-[1fr_1.6fr]">
+        <div>
+          <h2 className="text-3xl sm:text-4xl">{t({ en: 'Questions people ask', bn: 'যে প্রশ্নগুলো বেশি আসে' })}</h2>
+          <p className="mt-4 text-muted">
+            {t({ en: 'Something else? ', bn: 'অন্য কোনো প্রশ্ন? ' })}
+            <a href={whatsappLink('Hello HereWeGrow, I have a question.')} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">
+              {t({ en: 'Ask on WhatsApp', bn: 'হোয়াটসঅ্যাপে জিজ্ঞেস করুন' })}
+            </a>
+          </p>
+        </div>
+        <div className="divide-y divide-line border-y border-line">
           {FAQ.map((f) => (
-            <details key={f.q.en} className="group py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-semibold">
+            <details key={f.q.en} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-semibold">
                 {t(f.q)}
-                <span aria-hidden="true" className="text-2xl text-leaf transition-transform group-open:rotate-45">+</span>
+                <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-mist text-xl text-leaf transition-transform group-open:rotate-45">+</span>
               </summary>
-              <p className="mt-2 text-muted">{t(f.a)}</p>
+              <p className="mt-3 max-w-2xl text-muted">{t(f.a)}</p>
             </details>
           ))}
         </div>
-        <p className="mt-8">
-          {t({ en: 'Something else?', bn: 'অন্য কোনো প্রশ্ন?' })}{' '}
-          <a href={whatsappLink('Hello HereWeGrow, I have a question.')} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">
-            {t({ en: 'Ask on WhatsApp', bn: 'হোয়াটসঅ্যাপে জিজ্ঞেস করুন' })}
-          </a>
-        </p>
+      </section>
+
+      {/* Closing call to action */}
+      <section className="-mb-20 border-t border-line bg-leaf-soft">
+        <div className="wrap flex flex-col items-start justify-between gap-6 py-16 md:flex-row md:items-center">
+          <h2 className="max-w-xl text-3xl sm:text-4xl">
+            {t({ en: 'Not sure where to start? Check your CV for free.', bn: 'কোথা থেকে শুরু করবেন বুঝছেন না? ফ্রিতে সিভি চেক করুন।' })}
+          </h2>
+          <Link href="/tools/cv-checker" className="btn btn-primary shrink-0 !px-6">
+            {t({ en: 'Check my CV', bn: 'সিভি চেক করুন' })}
+          </Link>
+        </div>
       </section>
     </>
+  );
+}
+
+/** Three real templates in a loose stack, the top one stamped as shortlisted. */
+function ShortlistStack() {
+  const { t } = useLang();
+  const ids = ['creative-sales-executive-2page', 'ats-classic-professional-2page', 'creative-medical-doctor-2column'];
+  return (
+    <figure className="hero-stack relative mx-auto aspect-[4/4.3] w-full max-w-[29rem]" aria-label={t({ en: 'CV templates, one marked shortlisted', bn: 'সিভি টেমপ্লেট, একটি বাছাই হয়েছে' })}>
+      <img src={`/templates/${ids[0]}/thumb.webp`} alt="" width={420} height={594} className="absolute left-[2%] top-[9%] w-[54%] -rotate-[8deg] rounded-sm bg-white shadow-lg ring-1 ring-line" />
+      <img src={`/templates/${ids[2]}/thumb.webp`} alt="" width={420} height={594} className="absolute right-[1%] top-[5%] w-[54%] rotate-[7deg] rounded-sm bg-white shadow-lg ring-1 ring-line" />
+      <img src={`/templates/${ids[1]}/page-1.webp`} alt="" width={900} height={1273} fetchPriority="high"
+        className="absolute left-1/2 top-0 w-[62%] -translate-x-1/2 rounded-sm bg-white shadow-[0_30px_60px_-20px_rgb(14_59_46/0.45)] ring-1 ring-line" />
+      <div className="hero-stamp absolute bottom-[16%] right-[6%] rotate-[-9deg] rounded-lg border-[3px] border-saffron bg-paper/95 px-4 py-2 text-center shadow-md">
+        <p className="font-display text-xl font-bold leading-tight text-gold sm:text-2xl">{t({ en: 'Shortlisted', bn: 'বাছাই হয়েছে' })}</p>
+        <p className="text-xs font-semibold text-gold/80">{t({ en: 'Call for interview', bn: 'ইন্টারভিউয়ের ডাক' })}</p>
+      </div>
+    </figure>
   );
 }

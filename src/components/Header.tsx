@@ -12,11 +12,11 @@ export function Header() {
   const path = usePath();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
-      <div className="wrap flex h-16 items-center gap-4">
+    <header className="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur-md">
+      <div className="wrap flex h-[4.25rem] items-center gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="HereWeGrow home">
-          <img src="/logo-mark.png" alt="" width={28} height={33} className="h-8 w-auto" />
-          <span className="font-display text-[1.3rem] font-bold tracking-tight text-leaf-dark">HereWeGrow</span>
+          <img src="/logo-mark.svg" alt="" width={34} height={34} className="h-[2.125rem] w-[2.125rem]" />
+          <span className="font-display text-[1.35rem] font-semibold tracking-[-0.02em] text-leaf-dark">HereWeGrow</span>
         </Link>
 
         <nav className="ml-auto hidden md:flex items-center gap-1" aria-label={t({ en: 'Main', bn: 'প্রধান মেনু' })}>

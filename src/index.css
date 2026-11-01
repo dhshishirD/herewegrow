@@ -1,29 +1,31 @@
 @import "tailwindcss";
 
 /*
-  HereWeGrow design tokens
-  ink   – deep green-black text
-  mist  – cool pale green page background (not cream)
-  leaf  – brand green from the logo, primary actions
-  teal  – secondary, links and focus
-  gold  – reviewer's-pen accent, used sparingly (prices, margin notes)
+  HereWeGrow design tokens: Forest & Saffron
+  ink      near-black green, body text
+  leaf     primary green for actions and links
+  leaf-dark  deep forest for header bands, footer, dark sections
+  leaf-soft  mint for quiet backgrounds
+  saffron  warm accent, used only for stamps, highlights and the logo leaf
+  gold     saffron darkened for text on white (meets contrast)
 */
 @theme {
-  --color-ink: #15241d;
-  --color-muted: #55655c;
-  --color-line: #dbe3dd;
-  --color-mist: #f2f5f1;
-  --color-paper: #ffffff;
-  --color-leaf: #0f6b4c;
-  --color-leaf-dark: #0a4f38;
-  --color-leaf-soft: #e3f0e9;
-  --color-teal: #12807c;
-  --color-gold: #a8761c;
-  --color-gold-soft: #f7edd8;
+  --color-ink: #0f1a15;
+  --color-muted: #4f5f57;
+  --color-line: #dde5df;
+  --color-mist: #f1f5f0;
+  --color-paper: #fafbf8;
+  --color-leaf: #12805c;
+  --color-leaf-dark: #0e3b2e;
+  --color-leaf-soft: #e3f3eb;
+  --color-teal: #12805c;
+  --color-saffron: #e3a72f;
+  --color-gold: #8a5d08;
+  --color-gold-soft: #fbefd3;
   --color-alert: #b3402a;
 
-  --font-display: "Anek Bangla Variable", "Anek Bangla", "Hind Siliguri", system-ui, sans-serif;
-  --font-body: "Hind Siliguri", "Anek Bangla", system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Noto Serif Bengali Variable", Georgia, serif;
+  --font-body: "Inter Variable", "Hind Siliguri", system-ui, sans-serif;
 }
 
 @layer base {
@@ -32,15 +34,17 @@
     color: var(--color-ink);
     background: var(--color-paper);
     -webkit-text-size-adjust: 100%;
+    font-optical-sizing: auto;
   }
   body {
-    line-height: 1.6;
+    line-height: 1.65;
     overflow-x: hidden;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    font-weight: 650;
     text-wrap: balance;
   }
   p {
@@ -109,6 +113,21 @@
     line-height: 1.25;
   }
 }
+
+/* Hero: faint ruled-paper grid and one entrance for the CV stack */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(14 59 46 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(14 59 46 / 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 70% at 70% 40%, #000 30%, transparent 75%);
+}
+.hero-stack > img { animation: stack-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.hero-stack > img:nth-child(2) { animation-delay: 0.08s; }
+.hero-stack > img:nth-child(3) { animation-delay: 0.16s; }
+.hero-stamp { animation: stamp-in 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 0.75s both; }
+@keyframes stack-in { from { opacity: 0; translate: 0 24px; } }
+@keyframes stamp-in { from { opacity: 0; scale: 1.6; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }

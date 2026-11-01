@@ -3,6 +3,7 @@ import { PRODUCTS, findProduct } from '../../shared/catalog';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
 import { PackGrid } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
+import { PageHead } from '../components/PageHead';
 import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
@@ -45,7 +46,7 @@ function TemplateCard({ tpl }: { tpl: Template }) {
   return (
     <li>
       <Link href={`/templates/${tpl.id}`} className="group block">
-        <div className="overflow-hidden rounded-lg bg-mist p-3 ring-1 ring-line transition-shadow group-hover:ring-2 group-hover:ring-leaf">
+        <div className="overflow-hidden rounded-xl bg-mist p-3 ring-1 ring-line transition group-hover:-translate-y-1 group-hover:ring-2 group-hover:ring-leaf">
           <img
             src={thumb(tpl.id)}
             alt={t({ en: `Preview of the ${tpl.title.en}`, bn: `${tpl.title.bn}-এর প্রিভিউ` })}
@@ -57,7 +58,7 @@ function TemplateCard({ tpl }: { tpl: Template }) {
           />
         </div>
         <div className="mt-3 flex items-start justify-between gap-3">
-          <h3 className="font-display text-lg font-semibold leading-snug group-hover:text-leaf">{t(tpl.title)}</h3>
+          <h3 className="text-base font-semibold leading-snug group-hover:text-leaf">{t(tpl.title)}</h3>
           <p className="font-display text-lg font-bold text-leaf whitespace-nowrap">{taka(SINGLE_TEMPLATE_PRICE, lang)}</p>
         </div>
         <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
@@ -96,15 +97,14 @@ export function TemplatesPage() {
 
   return (
     <>
-      <div className="bg-mist">
-        <div className="wrap grid gap-8 py-12 md:grid-cols-[1.4fr_1fr] md:items-end md:py-16">
-          <div>
-            <h1 className="text-4xl font-bold sm:text-5xl">{title}</h1>
-            <p className="mt-3 max-w-2xl text-lg text-muted">{intro}</p>
-          </div>
-          {best && (
-            <div className="rounded-2xl bg-white p-5 ring-1 ring-line">
-              <p className="font-display text-lg font-bold">{t({ en: 'Need more than one?', bn: 'একাধিক লাগবে?' })}</p>
+      <PageHead
+        crumbs={[{ href: '/templates', label: { en: 'Templates', bn: 'টেমপ্লেট' } }]}
+        title={title}
+        intro={intro}
+        aside={
+          best && (
+            <div className="rounded-2xl bg-white p-6 ring-1 ring-line">
+              <p className="font-display text-lg font-semibold">{t({ en: 'Need more than one?', bn: 'একাধিক লাগবে?' })}</p>
               <p className="mt-1 text-muted">
                 {t({
                   en: `Get all 40 for ${taka(best.price, 'en')}, less than ৳7 each.`,
@@ -115,9 +115,9 @@ export function TemplatesPage() {
                 {t({ en: `Buy all 40 for ${taka(best.price, 'en')}`, bn: `${taka(best.price, 'bn')}-এ ৪০টিই কিনুন` })}
               </button>
             </div>
-          )}
-        </div>
-      </div>
+          )
+        }
+      />
 
       <section className="wrap py-8" aria-labelledby="gallery-title">
         <h2 id="gallery-title" className="sr-only">{t({ en: 'All templates', bn: 'সব টেমপ্লেট' })}</h2>
@@ -202,11 +202,15 @@ export function TemplateDetail({ id }: { id: string }) {
 
   return (
     <>
-      <div className="wrap pt-6">
-        <Link href="/templates" className="font-display font-semibold text-leaf underline underline-offset-4">
-          {t({ en: 'All templates', bn: 'সব টেমপ্লেট' })}
-        </Link>
-      </div>
+      <nav aria-label={t({ en: 'Breadcrumb', bn: 'অবস্থান' })} className="wrap pt-6 text-sm text-muted">
+        <ol className="flex flex-wrap items-center gap-1.5">
+          <li><Link href="/" className="hover:text-leaf hover:underline">{t({ en: 'Home', bn: 'হোম' })}</Link></li>
+          <li aria-hidden="true">/</li>
+          <li><Link href="/templates" className="hover:text-leaf hover:underline">{t({ en: 'Templates', bn: 'টেমপ্লেট' })}</Link></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" className="text-ink">{title}</li>
+        </ol>
+      </nav>
 
       <section className="wrap grid gap-10 py-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="order-2 space-y-6 rounded-2xl bg-mist p-4 sm:p-8 lg:order-1">
@@ -237,7 +241,7 @@ export function TemplateDetail({ id }: { id: string }) {
               <span>{pagesLabel(tpl.pages, t, lang)}</span>
               {sectorName && <span>{t(sectorName)}</span>}
             </p>
-            <h1 className="mt-3 text-4xl font-bold">{title}</h1>
+            <h1 className="mt-3 text-4xl sm:text-5xl">{title}</h1>
             <p className="mt-3 text-muted">{t(STYLE_HINT[tpl.style])}</p>
 
             <div className="mt-6 rounded-2xl p-6 ring-1 ring-line">

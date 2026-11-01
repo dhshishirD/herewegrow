@@ -41,8 +41,9 @@ export function Footer() {
         </div>
 
         <div>
-          <p className="font-display font-semibold text-white">{t({ en: 'Policies', bn: 'নীতিমালা' })}</p>
+          <p className="font-display font-semibold text-white">{t({ en: 'More', bn: 'আরও' })}</p>
           <ul className="mt-3 space-y-2">
+            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/guides">{t({ en: 'Career guides', bn: 'ক্যারিয়ার গাইড' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/about">{t({ en: 'About us', bn: 'আমাদের কথা' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/privacy">{t({ en: 'Privacy', bn: 'গোপনীয়তা' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/terms">{t({ en: 'Terms and refunds', bn: 'শর্তাবলি ও রিফান্ড' })}</Link></li>

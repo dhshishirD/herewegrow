@@ -3,6 +3,7 @@
 // Bangla first, with the English terms people also search for.
 
 import { PRODUCTS } from './catalog';
+import { findGuide } from './guides';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
 
 export interface RouteSeo {
@@ -31,6 +32,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'About HereWeGrow and Career Solutions | CV expert in Bangladesh',
     description: '৫ বছরের অভিজ্ঞ সিভি কনসালট্যান্ট দেলোয়ার হাসান শিশির (ইংরেজিতে বিএ, এমএ, শাবিপ্রবি)। হাজারো সিভি, লিংকডইন ও বিডিজবস প্রোফাইল। Meet the CV expert behind HereWeGrow.',
   },
+  '/guides': {
+    title: 'ক্যারিয়ার গাইড: সিভি ফরম্যাট, টেলিটক আবেদন ও চাকরির টিপস | HereWeGrow',
+    description: 'বাংলায় চাকরির গাইড: ব্যাংক জবের সিভি ফরম্যাট, ফ্রেশারের সিভি, ATS-ফ্রেন্ডলি সিভি, টেলিটকে ছবি ও স্বাক্ষরের সাইজ এবং সিভির সাধারণ ভুল।',
+  },
   '/tools': {
     title: 'চাকরিপ্রার্থীদের জন্য ফ্রি টুলস | Free job tools | HereWeGrow',
     description: 'ফ্রি সিভি চেকার ও টেলিটক সরকারি চাকরির ফর্মের জন্য ছবি-স্বাক্ষর রিসাইজার। Free CV checker and photo and signature resizer, no sign-up.',
@@ -47,6 +52,9 @@ const STATIC: Record<string, RouteSeo> = {
 
 export function routeSeo(path: string): RouteSeo | undefined {
   if (STATIC[path]) return STATIC[path];
+  const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
+  const guide = gm ? findGuide(gm[1]) : undefined;
+  if (guide) return { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };
   const m = path.match(/^\/templates\/([a-z0-9-]+)$/);
   const t = m ? findTemplate(m[1]) : undefined;
   if (!t) return undefined;

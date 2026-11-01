@@ -1,6 +1,7 @@
 import { PageHead, TOOLS_CRUMB } from '../components/PageHead';
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import { num, useLang } from '../lib/lang';
+import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 
 type PresetId = 'photo' | 'signature' | 'custom';
@@ -305,6 +306,14 @@ export function PhotoResizer() {
             })}
           </p>
         </div>
+      </section>
+      <section className="wrap pb-6">
+        <p className="text-muted">
+          {t({ en: 'New to Teletalk forms? ', bn: 'টেলিটক ফর্মে নতুন? ' })}
+          <Link href="/guides/teletalk-photo-signature-size" className="font-semibold text-leaf underline underline-offset-4">
+            {t({ en: 'Read our guide to photo and signature rules (Bangla)', bn: 'ছবি ও স্বাক্ষরের নিয়ম নিয়ে আমাদের গাইড পড়ুন' })}
+          </Link>
+        </p>
       </section>
     </>
   );

@@ -7,6 +7,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
 import { PRODUCTS } from '../shared/catalog';
+import { GUIDES, type Block } from '../shared/guides';
 import { routeSeo } from '../shared/seo';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES } from '../shared/templates';
 
@@ -138,6 +139,45 @@ function pages(): Page[] {
     { path: '/privacy', title: 'Privacy | HereWeGrow', description: 'How HereWeGrow handles your information.', body: '<h1>Privacy</h1>', priority: 0.3 },
     { path: '/terms', title: 'Terms | HereWeGrow', description: 'Terms for HereWeGrow services and templates.', body: '<h1>Terms</h1>', priority: 0.3 },
   ];
+
+  list.push({
+    path: '/guides',
+    ...seo('/guides'),
+    body: `<h1>ক্যারিয়ার গাইড</h1><ul>${GUIDES.map((g) => `<li>${link(`/guides/${g.slug}`, g.title.bn)}: ${esc(g.summary)}</li>`).join('')}</ul>`,
+    jsonLd: [crumbs([['HereWeGrow', '/'], ['Career guides', '/guides']])],
+    priority: 0.8,
+  });
+  const blockHtml = (b: Block) =>
+    'h2' in b ? `<h2>${esc(b.h2)}</h2>`
+    : 'p' in b ? `<p>${esc(b.p)}</p>`
+    : 'ul' in b ? `<ul>${b.ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`
+    : 'ol' in b ? `<ol>${b.ol.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`
+    : `<p>${esc(b.tip)}</p>`;
+  for (const g of GUIDES) {
+    const url = `${SITE}/guides/${g.slug}`;
+    list.push({
+      path: `/guides/${g.slug}`,
+      ...seo(`/guides/${g.slug}`),
+      body: `<article lang="bn"><h1>${esc(g.title.bn)}</h1><p>${esc(g.summary)}</p>${g.body.map(blockHtml).join('')}<p>${link(g.cta.href, g.cta.label.bn)}</p></article>`,
+      jsonLd: [
+        {
+          '@type': 'Article',
+          headline: g.title.bn,
+          alternativeHeadline: g.title.en,
+          description: g.summary,
+          inLanguage: 'bn',
+          datePublished: g.date,
+          dateModified: g.date,
+          mainEntityOfPage: url,
+          image: `${SITE}/og.jpg`,
+          author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about` },
+          publisher: { '@id': `${SITE}/#org` },
+        },
+        crumbs([['HereWeGrow', '/'], ['Career guides', '/guides'], [g.title.en, `/guides/${g.slug}`]]),
+      ],
+      priority: 0.8,
+    });
+  }
 
   for (const t of TEMPLATES) {
     const sector = SECTORS.find((s) => s.id === t.sector)!;

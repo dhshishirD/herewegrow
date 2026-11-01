@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { findProduct } from '../../shared/catalog';
+import { GUIDES } from '../../shared/guides';
 import { SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from '../../shared/templates';
 import { ServiceRateCard } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
@@ -224,6 +225,24 @@ export function Home() {
             </span>
           </Link>
         </div>
+      </section>
+
+      {/* Guides */}
+      <section className="wrap pb-20">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 className="text-3xl sm:text-4xl">{t({ en: 'Free career guides', bn: 'ফ্রি ক্যারিয়ার গাইড' })}</h2>
+          <Link href="/guides" className="font-display font-semibold text-leaf underline decoration-2 underline-offset-[6px]">{t({ en: 'All guides', bn: 'সব গাইড' })}</Link>
+        </div>
+        <ul className="mt-8 grid gap-6 md:grid-cols-3">
+          {GUIDES.slice(0, 3).map((g) => (
+            <li key={g.slug}>
+              <Link href={`/guides/${g.slug}`} className="group block h-full rounded-2xl border-t-4 border-saffron bg-white p-6 ring-1 ring-line transition hover:ring-leaf">
+                <h3 lang="bn" className="text-xl leading-snug group-hover:text-leaf">{g.title.bn}</h3>
+                <p lang="bn" className="mt-3 text-muted line-clamp-3">{g.summary}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* FAQ */}

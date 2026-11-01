@@ -8,6 +8,7 @@ import { ServicesPage, ToolsPage } from './pages/CatalogPages';
 import { AboutPage } from './pages/About';
 import { CvChecker } from './pages/CvChecker';
 import { OrderPage } from './pages/Order';
+import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
@@ -19,6 +20,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/services': ServicesPage,
   '/about': AboutPage,
   '/order': OrderPage,
+  '/guides': GuidesPage,
   '/templates': TemplatesPage,
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,
@@ -33,6 +35,8 @@ function Page() {
   const path = usePath();
   const tpl = path.match(/^\/templates\/([a-z0-9-]+)$/);
   if (tpl) return <TemplateDetail key={path} id={tpl[1]} />;
+  const guide = path.match(/^\/guides\/([a-z0-9-]+)$/);
+  if (guide) return <GuidePage key={path} slug={guide[1]} />;
   const Component = ROUTES[path] ?? NotFound;
   return <Component key={path} />;
 }

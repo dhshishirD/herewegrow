@@ -1,3 +1,5 @@
+import { routeSeo } from '../../shared/seo';
+
 const setMeta = (selector: string, attr: 'name' | 'property', key: string, value: string) => {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
   if (!el) {
@@ -9,6 +11,12 @@ const setMeta = (selector: string, attr: 'name' | 'property', key: string, value
 };
 
 export function setPageMeta(title: string, description: string, path: string) {
+  // Search-optimised wording for public pages, the same text the pre-built HTML carries.
+  const seo = routeSeo(path);
+  if (seo) {
+    title = seo.title;
+    description = seo.description;
+  }
   const full = title.includes('HereWeGrow') ? title : `${title} | HereWeGrow`;
   document.title = full;
   setMeta('meta[name="description"]', 'name', 'description', description);

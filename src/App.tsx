@@ -4,12 +4,13 @@ import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
 import { usePath } from './lib/router';
-import { ServicesPage, TemplatesPage, ToolsPage } from './pages/CatalogPages';
+import { ServicesPage, ToolsPage } from './pages/CatalogPages';
 import { CvChecker } from './pages/CvChecker';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
+import { TemplateDetail, TemplatesPage } from './pages/Templates';
 
 const ROUTES: Record<string, () => JSX.Element> = {
   '/': Home,
@@ -26,6 +27,8 @@ const ROUTES: Record<string, () => JSX.Element> = {
 
 function Page() {
   const path = usePath();
+  const tpl = path.match(/^\/templates\/([a-z0-9-]+)$/);
+  if (tpl) return <TemplateDetail key={path} id={tpl[1]} />;
   const Component = ROUTES[path] ?? NotFound;
   return <Component key={path} />;
 }

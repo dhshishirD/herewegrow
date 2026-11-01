@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { PackGrid, ServiceRateCard } from '../components/Catalog';
+import { ServiceRateCard } from '../components/Catalog';
 import { useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
@@ -35,32 +35,6 @@ export function ServicesPage() {
             {t({ en: 'Check your CV for free first', bn: 'আগে ফ্রিতে সিভি চেক করুন' })}
           </Link>
           {t({ en: ', then decide.', bn: ', তারপর সিদ্ধান্ত নিন।' })}
-        </p>
-      </section>
-    </>
-  );
-}
-
-export function TemplatesPage() {
-  const { t } = useLang();
-  const title = t({ en: 'CV and biodata templates', bn: 'সিভি ও বায়োডাটা টেমপ্লেট' });
-  const intro = t({
-    en: 'Editable Word files with PDF previews. ATS-safe styles are labelled, so you know which to send through online job portals.',
-    bn: 'PDF প্রিভিউসহ এডিটযোগ্য Word ফাইল। ATS-নিরাপদ স্টাইল আলাদা চিহ্নিত, তাই অনলাইন জব পোর্টালে কোনটি পাঠাবেন বুঝতে পারবেন।',
-  });
-  useEffect(() => setPageMeta(title, intro, '/templates'), [title, intro]);
-
-  return (
-    <>
-      <PageHead title={title} intro={intro} />
-      <section className="wrap py-10"><PackGrid /></section>
-      <section className="wrap">
-        <p className="max-w-2xl text-muted">
-          {t({
-            en: 'Want it done for you instead? An expert can write your CV from ',
-            bn: 'নিজে না করে বিশেষজ্ঞকে দিয়ে করাতে চান? সিভি রাইটিং শুরু ',
-          })}
-          <Link href="/services" className="font-semibold text-leaf underline underline-offset-4">{t({ en: '৳499', bn: '৳৪৯৯ থেকে' })}</Link>.
         </p>
       </section>
     </>

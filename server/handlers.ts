@@ -2,7 +2,7 @@
 // The amount always comes from the shared catalogue, never from the request.
 
 import { findProduct } from '../shared/catalog';
-import { callGateway, isAllowedOrigin, json, type Env } from './paymently';
+import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
 
 interface CheckoutBody {
   productId?: string;
@@ -34,7 +34,7 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
 
   const origin = new URL(request.url).origin;
   try {
-    const { data } = await callGateway(env, 'checkout-v2', {
+    const payload = {
       full_name: name,
       email: email || 'orders@herewegrow.pro',
       amount: String(product.price),
@@ -49,15 +49,22 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
       redirect_url: `${origin}/payment/success`,
       return_type: 'GET',
       cancel_url: `${origin}/payment/cancel`,
-    });
+    };
 
-    if (data.status && typeof data.payment_url === 'string') {
-      return json({ ok: true, paymentUrl: data.payment_url });
+    // The v2 endpoint first, then the older one, as some panels only offer one of them.
+    let result = await callGateway(env, 'checkout-v2', payload);
+    if (!(result.data.status && typeof result.data.payment_url === 'string')) {
+      const fallback = await callGateway(env, 'checkout', payload);
+      if (fallback.data.status && typeof fallback.data.payment_url === 'string') result = fallback;
+      else console.error('checkout gateway refused', describeFailure(result), '| fallback', describeFailure(fallback));
+      if (result !== fallback && !(result.data.status && typeof result.data.payment_url === 'string')) {
+        return json({ ok: false, error: 'gateway', detail: describeFailure(result) }, 502);
+      }
     }
-    return json({ ok: false, error: 'gateway', message: data.message ?? null }, 502);
+    return json({ ok: true, paymentUrl: result.data.payment_url });
   } catch (err) {
     console.error('checkout failed', err);
-    return json({ ok: false, error: 'gateway' }, 502);
+    return json({ ok: false, error: 'gateway', detail: err instanceof Error ? err.message : 'request failed' }, 502);
   }
 }
 
@@ -70,7 +77,8 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
   if (!invoiceId) return json({ ok: false, error: 'invoice' }, 400);
 
   try {
-    const { data } = await callGateway(env, 'verify-payment', { invoice_id: invoiceId });
+    const { data, httpStatus } = await callGateway(env, 'verify-payment', { invoice_id: invoiceId });
+    if (httpStatus >= 400) console.error('verify gateway status', httpStatus, data.message ?? '');
     const meta = (data.metadata ?? {}) as Record<string, unknown>;
     const product = findProduct(String(meta.product_id ?? ''));
     const amount = Number(data.amount ?? data.charged_amount ?? 0);

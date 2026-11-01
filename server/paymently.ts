@@ -30,11 +30,24 @@ export function isAllowedOrigin(request: Request): boolean {
   }
 }
 
-export async function callGateway(env: Env, endpoint: 'checkout-v2' | 'verify-payment', payload: unknown) {
+export interface GatewayResult {
+  ok: boolean;
+  httpStatus: number;
+  data: Record<string, unknown>;
+  /** First part of the reply when it was not JSON (for example an HTML error page). */
+  rawSnippet: string | null;
+}
+
+export async function callGateway(
+  env: Env,
+  endpoint: 'checkout-v2' | 'checkout' | 'verify-payment',
+  payload: unknown,
+): Promise<GatewayResult> {
   if (!env.PAYMENT_API_KEY) {
-    throw new Error('Payment is not configured on the server (PAYMENT_API_KEY missing).');
+    throw new Error('PAYMENT_API_KEY is not set on the Worker.');
   }
-  const res = await fetch(`${env.PAYMENT_API_BASE || DEFAULT_BASE}/${endpoint}`, {
+  const base = (env.PAYMENT_API_BASE || DEFAULT_BASE).replace(/\/+$/, '');
+  const res = await fetch(`${base}/${endpoint}`, {
     method: 'POST',
     headers: {
       'RT-UDDOKTAPAY-API-KEY': env.PAYMENT_API_KEY,
@@ -43,6 +56,16 @@ export async function callGateway(env: Env, endpoint: 'checkout-v2' | 'verify-pa
     },
     body: JSON.stringify(payload),
   });
-  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-  return { ok: res.ok, data };
+  const text = await res.text();
+  try {
+    return { ok: res.ok, httpStatus: res.status, data: JSON.parse(text) as Record<string, unknown>, rawSnippet: null };
+  } catch {
+    return { ok: res.ok, httpStatus: res.status, data: {}, rawSnippet: text.replace(/\s+/g, ' ').slice(0, 160) };
+  }
+}
+
+/** A short, key-free description of a failed gateway reply, safe to show the buyer. */
+export function describeFailure(r: GatewayResult): string {
+  const msg = typeof r.data.message === 'string' ? r.data.message : r.rawSnippet ? `non-JSON reply: ${r.rawSnippet}` : 'no message';
+  return `HTTP ${r.httpStatus}: ${msg}`.slice(0, 220);
 }

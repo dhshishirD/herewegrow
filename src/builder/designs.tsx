@@ -7,7 +7,7 @@ import { LABELS, lines, list, type CvData, type DesignId, type HeadingLang } fro
 type Labels = Record<string, string>;
 
 const PAGE: CSSProperties = {
-  width: 794, minHeight: 1123, background: '#fff', color: '#1f2933',
+  width: 794, minHeight: 1070, background: '#fff', color: '#1f2933',
   fontFamily: '"Inter Variable", "Hind Siliguri", Arial, sans-serif', fontSize: 12.5, lineHeight: 1.5,
 };
 const SERIF = '"Fraunces Variable", "Noto Serif Bengali Variable", Georgia, serif';
@@ -54,11 +54,11 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
   if (d.hidden.includes(k)) return null;
   const { Title, Entry } = T;
 
-  if (k === 'summary') return d.summary ? <section><Title>{L.summary}</Title><p style={{ margin: 0 }}>{d.summary}</p></section> : null;
+  if (k === 'summary') return d.summary ? <section className="cv-section"><Title>{L.summary}</Title><p style={{ margin: 0 }}>{d.summary}</p></section> : null;
 
   if (k === 'experience' && d.experience.length)
     return (
-      <section>
+      <section className="cv-section">
         <Title>{L.experience}</Title>
         {d.experience.map((e) => (
           <Entry key={e.id} title={e.role} sub={[e.org, e.location].filter(Boolean).join(', ')} date={dates(e.start, e.end, e.current, L)}>
@@ -70,7 +70,7 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
 
   if (k === 'education' && d.education.length)
     return (
-      <section>
+      <section className="cv-section">
         <Title>{L.education}</Title>
         {d.education.map((e) => (
           <Entry key={e.id} title={degreeLine(e.degree, e.major)} sub={[e.institution, e.result].filter(Boolean).join(', ')} date={e.year}>
@@ -82,7 +82,7 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
 
   if (k === 'skills' && (d.skills || d.languages))
     return (
-      <section>
+      <section className="cv-section">
         <Title>{L.skills}</Title>
         {d.skills && <p style={{ margin: 0 }}>{list(d.skills).join(', ')}</p>}
         {d.languages && <p style={{ margin: '4px 0 0' }}><strong>{L.languages}:</strong> {d.languages}</p>}
@@ -91,7 +91,7 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
 
   if (k === 'training' && d.training.length)
     return (
-      <section>
+      <section className="cv-section">
         <Title>{L.training}</Title>
         {d.training.map((t) => (
           <Entry key={t.id} title={t.name} sub={[t.org, t.duration].filter(Boolean).join(', ')} date={t.year}>
@@ -105,7 +105,7 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
     const c = d.custom.find((x) => `custom:${x.id}` === k);
     if (!c || !c.items.some((i) => i.title || i.details)) return null;
     return (
-      <section>
+      <section className="cv-section">
         <Title>{c.title}</Title>
         {c.items.map((i) => (
           <Entry key={i.id} title={i.title} sub={i.subtitle} date={i.date}>
@@ -120,7 +120,7 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
     const rows = personalRows(d, L);
     if (!rows.length) return null;
     return (
-      <section>
+      <section className="cv-section">
         <Title>{L.personal}</Title>
         <table style={{ borderCollapse: 'collapse' }}>
           <tbody>
@@ -138,11 +138,11 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
 
   if (k === 'references' && d.references.length)
     return (
-      <section>
+      <section className="cv-section">
         <Title>{L.references}</Title>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 24px' }}>
           {d.references.map((r) => (
-            <div key={r.id}>
+            <div key={r.id} className="cv-ref">
               <strong>{r.name}</strong>
               {r.title && <div>{r.title}</div>}
               {r.org && <div>{r.org}</div>}
@@ -162,10 +162,10 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
 function Classic({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   const T: Theme = {
     Title: ({ children }) => (
-      <h2 style={{ fontFamily: 'inherit', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: accent, borderBottom: `1.5px solid ${accent}`, paddingBottom: 3, margin: '16px 0 8px' }}>{children}</h2>
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: accent, borderBottom: `1.5px solid ${accent}`, paddingBottom: 3, margin: '16px 0 8px' }}>{children}</h2>
     ),
     Entry: ({ title, sub, date, children }) => (
-      <div style={{ marginBottom: 9 }}>
+      <div className="cv-entry" style={{ marginBottom: 9 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
           <strong>{title}</strong>
           {date && <span style={{ color: GREY, whiteSpace: 'nowrap' }}>{date}</span>}
@@ -176,7 +176,7 @@ function Classic({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
     ),
   };
   return (
-    <div style={{ ...PAGE, padding: '46px 56px' }}>
+    <div className="cv-page" style={{ ...PAGE, padding: '46px 56px' }}>
       <header style={{ textAlign: 'center' }}>
         <h1 style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 650, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
         {d.headline && <p style={{ margin: '2px 0 0', fontSize: 14, color: accent, fontWeight: 600 }}>{d.headline}</p>}
@@ -195,12 +195,12 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
   const T: Theme = {
     Title: ({ children }) => (
-      <h2 style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 650, color: accent, margin: '20px 0 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
+      <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 650, color: accent, margin: '20px 0 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ width: 18, height: 3, background: accent, display: 'inline-block', borderRadius: 2 }} />{children}
       </h2>
     ),
     Entry: ({ title, sub, date, children }) => (
-      <div style={{ marginBottom: 11 }}>
+      <div className="cv-entry" style={{ marginBottom: 11 }}>
         <strong style={{ fontSize: 13.5 }}>{title}</strong>
         {(sub || date) && <div style={{ color: GREY }}>{[sub, date].filter(Boolean).join('  ·  ')}</div>}
         {children}
@@ -209,7 +209,7 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   };
   const showSkills = !d.hidden.includes('skills');
   return (
-    <div style={{ ...PAGE, display: 'grid', gridTemplateColumns: '250px 1fr' }}>
+    <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '250px 1fr' }}>
       <aside style={{ background: accent, color: '#fff', padding: '40px 26px' }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 140, height: 140, borderRadius: '50%', objectFit: 'cover', display: 'block', margin: '0 auto 8px', border: '4px solid rgba(255,255,255,.35)' }} />}
         <Side>{L.contact}</Side>
@@ -231,16 +231,16 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
 
 function Executive({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   const T: Theme = {
-    Title: ({ children }) => <h2 style={{ fontFamily: SERIF, fontSize: 16.5, fontWeight: 600, color: accent, margin: '18px 0 7px' }}>{children}</h2>,
+    Title: ({ children }) => <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 16.5, fontWeight: 600, color: accent, margin: '18px 0 7px' }}>{children}</h2>,
     Entry: ({ title, sub, date, children }) => (
-      <div style={{ display: 'grid', gridTemplateColumns: '128px 1fr', gap: 16, marginBottom: 9 }}>
+      <div className="cv-entry" style={{ display: 'grid', gridTemplateColumns: '128px 1fr', gap: 16, marginBottom: 9 }}>
         <div style={{ color: GREY }}>{date}</div>
         <div><strong>{title}</strong>{sub && <div style={{ color: GREY }}>{sub}</div>}{children}</div>
       </div>
     ),
   };
   return (
-    <div style={PAGE}>
+    <div className="cv-page" style={PAGE}>
       <header style={{ borderTop: `10px solid ${accent}`, padding: '34px 56px 18px', display: 'flex', gap: 24, alignItems: 'center', borderBottom: '1px solid #e5e7eb' }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 112, objectFit: 'cover', borderRadius: 6 }} />}
         <div style={{ flex: 1 }}>

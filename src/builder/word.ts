@@ -38,6 +38,7 @@ export async function buildDocx(state: BuilderState): Promise<Blob> {
 
   const heading = (text: string) =>
     new Paragraph({
+      keepNext: true,
       spacing: { before: 240, after: 100 },
       border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: accent, space: 2 } },
       children: [new TextRun({ text: (state.headings ?? 'en') === 'en' ? text.toUpperCase() : text, bold: true, color: accent, size: 22 })],
@@ -46,6 +47,8 @@ export async function buildDocx(state: BuilderState): Promise<Blob> {
   /** A line with text on the left and something (dates, year) right-aligned. */
   const leftRight = (left: TextRun[], right: string) =>
     new Paragraph({
+      keepNext: true,
+      keepLines: true,
       tabStops: [{ type: TabStopType.RIGHT, position: CONTENT }],
       spacing: { after: 20 },
       children: [...left, ...(right ? [new TextRun({ text: `\t${right}`, color: grey })] : [])],
@@ -74,7 +77,7 @@ export async function buildDocx(state: BuilderState): Promise<Blob> {
   };
   const entry = (title: string, sub: string, date: string, text: string) => {
     body.push(leftRight([new TextRun({ text: title, bold: true })], date));
-    if (sub) body.push(plain(sub, { color: grey }));
+    if (sub) body.push(new Paragraph({ keepNext: true, spacing: { after: 40 }, children: [new TextRun({ text: sub, color: grey })] }));
     details(text);
     body.push(new Paragraph({ spacing: { after: 40 }, children: [] }));
   };

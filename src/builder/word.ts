@@ -13,6 +13,7 @@ import {
   TabStopType,
   TextRun,
 } from 'docx';
+import { contactLine, degreeLine, personalRows } from './designs';
 import { LABELS, lines, list, type BuilderState } from './model';
 
 const A4 = { width: 11906, height: 16838 };
@@ -63,66 +64,65 @@ export async function buildDocx(state: BuilderState): Promise<Blob> {
   }
   body.push(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: d.name || 'Your Name', bold: true, size: 44 })] }));
   if (d.headline) body.push(new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: d.headline, bold: true, color: accent, size: 24 })] }));
-  const contact = [d.phone, d.email, d.location, d.linkedin].filter(Boolean).join('  |  ');
+  const contact = contactLine(d).join('  |  ');
   if (contact) body.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 80 }, children: [new TextRun({ text: contact, color: grey })] }));
 
-  if (d.summary) {
-    body.push(heading(L.summary), plain(d.summary));
-  }
+  const details = (text: string) => {
+    const items = lines(text);
+    if (items.length === 1) body.push(plain(items[0]));
+    else for (const x of items) body.push(bullet(x));
+  };
+  const entry = (title: string, sub: string, date: string, text: string) => {
+    body.push(leftRight([new TextRun({ text: title, bold: true })], date));
+    if (sub) body.push(plain(sub, { color: grey }));
+    details(text);
+    body.push(new Paragraph({ spacing: { after: 40 }, children: [] }));
+  };
 
-  if (d.experience.length) {
-    body.push(heading(L.experience));
-    for (const e of d.experience) {
-      const when = [e.start, e.current ? L.present : e.end].filter(Boolean).join(' – ');
-      body.push(leftRight([new TextRun({ text: e.role, bold: true })], when));
-      const where = [e.org, e.location].filter(Boolean).join(', ');
-      if (where) body.push(plain(where, { color: grey }));
-      for (const b of lines(e.bullets)) body.push(bullet(b));
-      body.push(new Paragraph({ spacing: { after: 60 }, children: [] }));
+  for (const k of d.order) {
+    if (d.hidden.includes(k)) continue;
+    if (k === 'summary' && d.summary) body.push(heading(L.summary), plain(d.summary));
+    if (k === 'experience' && d.experience.length) {
+      body.push(heading(L.experience));
+      for (const e of d.experience) entry(e.role, [e.org, e.location].filter(Boolean).join(', '), [e.start, e.current ? L.present : e.end].filter(Boolean).join(' – '), e.bullets);
     }
-  }
-
-  if (d.education.length) {
-    body.push(heading(L.education));
-    for (const e of d.education) {
-      const runs = [new TextRun({ text: e.degree, bold: true })];
-      if (e.institution) runs.push(new TextRun(`, ${e.institution}`));
-      if (e.result) runs.push(new TextRun({ text: ` (${e.result})`, color: grey }));
-      body.push(leftRight(runs, e.year));
+    if (k === 'education' && d.education.length) {
+      body.push(heading(L.education));
+      for (const e of d.education) entry(degreeLine(e.degree, e.major), [e.institution, e.result].filter(Boolean).join(', '), e.year, e.details);
     }
-  }
-
-  if (d.skills || d.languages) {
-    body.push(heading(L.skills));
-    if (d.skills) body.push(plain(list(d.skills).join(', ')));
-    if (d.languages) body.push(new Paragraph({ children: [new TextRun({ text: `${L.languages}: `, bold: true }), new TextRun(d.languages)] }));
-  }
-
-  if (d.training.length) {
-    body.push(heading(L.training));
-    for (const t of d.training) {
-      body.push(new Paragraph({ spacing: { after: 30 }, children: [new TextRun({ text: t.name, bold: true }), new TextRun([t.org && `, ${t.org}`, t.year && ` (${t.year})`].filter(Boolean).join(''))] }));
+    if (k === 'skills' && (d.skills || d.languages)) {
+      body.push(heading(L.skills));
+      if (d.skills) body.push(plain(list(d.skills).join(', ')));
+      if (d.languages) body.push(new Paragraph({ children: [new TextRun({ text: `${L.languages}: `, bold: true }), new TextRun(d.languages)] }));
     }
-  }
-
-  if (d.showPersonal) {
-    const rows: [string, string][] = ([
-      [L.father, d.father], [L.mother, d.mother], [L.dob, d.dob], [L.nationality, d.nationality], [L.religion, d.religion], [L.permanent, d.permanentAddress],
-    ] as [string, string][]).filter(([, v]) => v);
-    if (rows.length) {
-      body.push(heading(L.personal));
-      for (const [k, v] of rows) {
-        body.push(new Paragraph({ tabStops: [{ type: TabStopType.LEFT, position: 2600 }], spacing: { after: 20 }, children: [new TextRun({ text: k, color: grey }), new TextRun(`\t${v}`)] }));
+    if (k === 'training' && d.training.length) {
+      body.push(heading(L.training));
+      for (const t of d.training) entry(t.name, [t.org, t.duration].filter(Boolean).join(', '), t.year, t.details);
+    }
+    if (k.startsWith('custom:')) {
+      const c = d.custom.find((x) => `custom:${x.id}` === k);
+      if (c && c.items.some((i) => i.title || i.details)) {
+        body.push(heading(c.title));
+        for (const i of c.items) entry(i.title, i.subtitle, i.date, i.details);
       }
     }
-  }
-
-  if (d.references.length) {
-    body.push(heading(L.references));
-    for (const r of d.references) {
-      body.push(plain(r.name, { bold: true }));
-      if (r.title) body.push(plain(r.title));
-      if (r.contact) body.push(plain(r.contact, { color: grey }));
+    if (k === 'personal' && d.showPersonal) {
+      const rows = personalRows(d, L);
+      if (rows.length) {
+        body.push(heading(L.personal));
+        for (const [a, v] of rows) body.push(new Paragraph({ tabStops: [{ type: TabStopType.LEFT, position: 2600 }], spacing: { after: 20 }, children: [new TextRun({ text: a, color: grey }), new TextRun(`\t${v}`)] }));
+      }
+    }
+    if (k === 'references' && d.references.length) {
+      body.push(heading(L.references));
+      for (const r of d.references) {
+        body.push(plain(r.name, { bold: true }));
+        for (const x of [r.title, r.org]) if (x) body.push(plain(x));
+        const c = [r.phone, r.email].filter(Boolean).join(', ');
+        if (c) body.push(plain(c, { color: grey }));
+        if (r.relation) body.push(plain(r.relation, { color: grey }));
+        body.push(new Paragraph({ spacing: { after: 40 }, children: [] }));
+      }
     }
   }
 

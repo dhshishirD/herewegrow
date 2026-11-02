@@ -565,12 +565,30 @@ export function BuilderPage() {
                 </div>
               </div>
               {pageBreaks(docHeight).length > 0 && (
-                <p className="mt-2 text-sm text-muted">
-                  {t({
-                    en: `Your CV runs to ${pageBreaks(docHeight).length + 1} pages. Each page gets clean margins, and no job or degree is split across two pages.`,
-                    bn: `আপনার সিভি ${num(String(pageBreaks(docHeight).length + 1), 'bn')} পৃষ্ঠার। প্রতিটি পৃষ্ঠায় পরিচ্ছন্ন মার্জিন থাকবে, আর কোনো কাজ বা ডিগ্রি দুই পৃষ্ঠায় ভাগ হবে না।`,
-                  })}
-                </p>
+                <div className="mt-3 rounded-2xl bg-white p-4 ring-1 ring-line">
+                  <p className="text-sm text-muted">
+                    {t({
+                      en: `Your CV runs to ${pageBreaks(docHeight).length + 1} pages, each with clean A4 margins. How should content move between pages?`,
+                      bn: `আপনার সিভি ${num(String(pageBreaks(docHeight).length + 1), 'bn')} পৃষ্ঠার, প্রতিটিতে পরিচ্ছন্ন A4 মার্জিন। পৃষ্ঠার শেষে লেখা কীভাবে ভাগ হবে?`,
+                    })}
+                  </p>
+                  <div role="radiogroup" aria-label={t({ en: 'Page breaks', bn: 'পৃষ্ঠা ভাগ' })} className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {([
+                      { id: 'keep', name: { en: 'Keep each entry together', bn: 'প্রতিটি এন্ট্রি একসাথে রাখুন' }, note: { en: 'A job or degree moves to the next page whole. Can leave space at the bottom.', bn: 'কাজ বা ডিগ্রি পুরোটা পরের পৃষ্ঠায় যায়। নিচে কিছু ফাঁকা থাকতে পারে।' } },
+                      { id: 'fill', name: { en: 'Fill each page', bn: 'পৃষ্ঠা পুরো ভরাট করুন' }, note: { en: 'Entries can continue on the next page. No empty space left.', bn: 'এন্ট্রি পরের পৃষ্ঠায় চলে যেতে পারে। কোনো ফাঁকা থাকে না।' } },
+                    ] as const).map((o) => {
+                      const on = (state.pageBreak ?? 'keep') === o.id;
+                      return (
+                        <button key={o.id} type="button" role="radio" aria-checked={on} onClick={() => setState((s) => ({ ...s, pageBreak: o.id }))}
+                          className={`rounded-xl p-3 text-left ring-1 ${on ? 'bg-leaf-soft ring-2 ring-leaf' : 'bg-white ring-line hover:ring-leaf'}`}>
+                          <span className="block font-semibold">{t(o.name)}</span>
+                          <span className="mt-0.5 block text-sm text-muted">{t(o.note)}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-2 text-xs text-muted">{t({ en: 'Either way, a heading is never left alone at the bottom of a page.', bn: 'দুই ক্ষেত্রেই কোনো শিরোনাম পৃষ্ঠার নিচে একা পড়ে থাকবে না।' })}</p>
+                </div>
               )}
               <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-line">
                 <p className="font-semibold">{t({ en: 'Want an expert to check it?', bn: 'বিশেষজ্ঞকে দিয়ে যাচাই করাতে চান?' })}</p>
@@ -583,7 +601,7 @@ export function BuilderPage() {
       </div>
 
       {/* What gets printed: the CV alone, at full A4 size */}
-      <div id="cv-print" aria-hidden="true">
+      <div id="cv-print" aria-hidden="true" className={(state.pageBreak ?? 'keep') === 'keep' ? 'cv-keep' : 'cv-fill'}>
         <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
       </div>
     </>

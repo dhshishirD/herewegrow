@@ -105,6 +105,8 @@ export interface BuilderState {
   accent: string;
   /** Language of the section headings on the CV itself. */
   headings?: HeadingLang;
+  /** Multi-page CVs: keep each entry on one page, or let entries split to fill the page. */
+  pageBreak?: 'keep' | 'fill';
 }
 
 export const BUILT_IN = ['summary', 'experience', 'education', 'skills', 'training', 'personal', 'references'] as const;

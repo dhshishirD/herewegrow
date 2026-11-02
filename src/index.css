@@ -141,9 +141,12 @@
   @page { size: A4; margin: 0; }
   #cv-print { page: cv; }
   #cv-print .cv-page { min-height: 283mm !important; }
-  .cv-entry, .cv-ref, tr { break-inside: avoid; page-break-inside: avoid; }
+  /* "Keep together": a job, degree or reference never splits across pages. */
+  .cv-keep .cv-entry, .cv-keep .cv-ref, .cv-keep tr { break-inside: avoid; page-break-inside: avoid; }
+  /* Both settings: a heading takes at least the first line of its content with it, and no line is left alone. */
   .cv-title { break-after: avoid; page-break-after: avoid; }
-  .cv-section > p { orphans: 3; widows: 3; }
+  .cv-entry > div:first-child, .cv-entry > strong { break-after: avoid; page-break-after: avoid; }
+  #cv-print p, #cv-print li { orphans: 2; widows: 2; }
   html, body { background: #fff !important; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body > #root > a, .site-header, .site-footer, .no-print, .cart-sheet { display: none !important; }

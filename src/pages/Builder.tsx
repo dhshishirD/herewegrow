@@ -119,6 +119,18 @@ function cvText(d: CvData) {
   return parts.filter(Boolean).join('\n');
 }
 
+/** Where printed pages end, in CSS pixels: the first page holds 283 mm, later pages 269 mm (A4 minus margins). */
+const MM = 96 / 25.4;
+function pageBreaks(height: number) {
+  const out: number[] = [];
+  let y = 283 * MM;
+  while (y < height - 24) {
+    out.push(Math.round(y));
+    y += 269 * MM;
+  }
+  return out;
+}
+
 /* ── page ─────────────────────────────────────────────────────── */
 
 export function BuilderPage() {
@@ -130,7 +142,9 @@ export function BuilderPage() {
   const [importing, setImporting] = useState(false);
   const [newSection, setNewSection] = useState('');
   const previewBox = useRef<HTMLDivElement>(null);
+  const docRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.6);
+  const [docHeight, setDocHeight] = useState(1123);
 
   const title = t({ en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' });
   const intro = t({
@@ -146,6 +160,15 @@ export function BuilderPage() {
     const fit = () => setScale(Math.min(1, el.clientWidth / 794));
     fit();
     const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [view]);
+
+  // Track the CV's real height so the preview shows every page and where each page ends.
+  useEffect(() => {
+    const el = docRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setDocHeight(el.scrollHeight));
     ro.observe(el);
     return () => ro.disconnect();
   }, [view]);
@@ -528,12 +551,27 @@ export function BuilderPage() {
                 </div>
               )}
               <div ref={previewBox} className="overflow-hidden rounded-xl bg-mist ring-1 ring-line">
-                <div style={{ height: 1123 * scale }}>
-                  <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left' }} className="shadow-lg">
+                <div className="relative" style={{ height: docHeight * scale }}>
+                  <div ref={docRef} style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left' }} className="shadow-lg">
                     <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
                   </div>
+                  {pageBreaks(docHeight).map((y, i) => (
+                    <div key={y} aria-hidden="true" className="pointer-events-none absolute inset-x-0 flex items-center gap-2" style={{ top: y * scale }}>
+                      <span className="h-0 flex-1 border-t-2 border-dashed border-alert/60" />
+                      <span className="rounded-full bg-alert px-2 py-0.5 text-[11px] font-semibold text-white">{t({ en: `Page ${i + 2}`, bn: `পৃষ্ঠা ${num(String(i + 2), 'bn')}` })}</span>
+                      <span className="h-0 w-4 border-t-2 border-dashed border-alert/60" />
+                    </div>
+                  ))}
                 </div>
               </div>
+              {pageBreaks(docHeight).length > 0 && (
+                <p className="mt-2 text-sm text-muted">
+                  {t({
+                    en: `Your CV runs to ${pageBreaks(docHeight).length + 1} pages. Each page gets clean margins, and no job or degree is split across two pages.`,
+                    bn: `আপনার সিভি ${num(String(pageBreaks(docHeight).length + 1), 'bn')} পৃষ্ঠার। প্রতিটি পৃষ্ঠায় পরিচ্ছন্ন মার্জিন থাকবে, আর কোনো কাজ বা ডিগ্রি দুই পৃষ্ঠায় ভাগ হবে না।`,
+                  })}
+                </p>
+              )}
               <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-line">
                 <p className="font-semibold">{t({ en: 'Want an expert to check it?', bn: 'বিশেষজ্ঞকে দিয়ে যাচাই করাতে চান?' })}</p>
                 <p className="mt-1 text-sm text-muted">{t({ en: 'Download the PDF, then get written feedback on every section for ৳199.', bn: 'PDF ডাউনলোড করে ৳১৯৯-এ প্রতিটি অংশের লিখিত মতামত নিন।' })}</p>

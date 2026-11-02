@@ -1,12 +1,34 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ACCENTS, emptyCv, loadState, sampleCv, saveState, uid, type BuilderState, type CvData, type Education, type Experience, type Reference, type Training } from '../builder/model';
-import { CvDocument, DESIGNS } from '../builder/designs';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { CvDocument, DESIGNS, degreeLine } from '../builder/designs';
+import { ImportError, parseCv, readCvFile } from '../builder/importCv';
+import {
+  ACCENTS,
+  SECTION_PRESETS,
+  emptyCv,
+  list,
+  loadState,
+  newCustomItem,
+  newEducation,
+  newExperience,
+  newReference,
+  newTraining,
+  normalise,
+  sampleCv,
+  saveState,
+  uid,
+  type BuilderState,
+  type CustomItem,
+  type CustomSection,
+  type CvData,
+} from '../builder/model';
 import { PageHead } from '../components/PageHead';
-import { useLang } from '../lib/lang';
+import { analyzeCv } from '../lib/cvAnalysis';
+import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 
 type T = (x: { en: string; bn: string }) => string;
+type ListKey = 'experience' | 'education' | 'training' | 'references';
 
 /* ── small form parts ──────────────────────────────────────────── */
 
@@ -30,15 +52,16 @@ function Area({ label, value, onChange, placeholder, rows = 4, hint }: { label: 
   );
 }
 
-function Section({ title, open, onToggle, children, count }: { title: string; open: boolean; onToggle: () => void; children: ReactNode; count?: number }) {
+function Section({ title, open, onToggle, children, count, extra }: { title: ReactNode; open: boolean; onToggle: () => void; children: ReactNode; count?: number; extra?: ReactNode }) {
   return (
     <section className="rounded-2xl bg-white ring-1 ring-line">
-      <h2>
-        <button type="button" onClick={onToggle} aria-expanded={open} className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left font-display text-lg font-semibold">
-          <span>{title}{count ? <span className="ml-2 rounded-full bg-mist px-2 py-0.5 font-body text-sm text-muted">{count}</span> : null}</span>
-          <span aria-hidden="true" className={`grid h-7 w-7 place-items-center rounded-full bg-mist text-leaf transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
+      <div className="flex items-center gap-2 pr-3">
+        <button type="button" onClick={onToggle} aria-expanded={open} className="flex flex-1 items-center justify-between gap-3 px-5 py-4 text-left font-display text-lg font-semibold">
+          <span className="min-w-0 truncate">{title}{count ? <span className="ml-2 rounded-full bg-mist px-2 py-0.5 font-body text-sm text-muted">{num(String(count), 'bn')}</span> : null}</span>
+          <span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mist text-leaf transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
         </button>
-      </h2>
+        {extra}
+      </div>
       {open && <div className="space-y-4 border-t border-line px-5 pb-5 pt-4">{children}</div>}
     </section>
   );
@@ -60,6 +83,10 @@ function ItemBox({ title, onRemove, onUp, onDown, children, t }: { title: string
   );
 }
 
+function AddButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
+  return <button type="button" className="btn btn-quiet w-full bg-white" onClick={onClick}>+ {children}</button>;
+}
+
 const move = <X,>(arr: X[], i: number, dir: -1 | 1) => {
   const j = i + dir;
   if (j < 0 || j >= arr.length) return arr;
@@ -78,20 +105,37 @@ async function photoToDataUrl(file: File): Promise<string> {
   return c.toDataURL('image/jpeg', 0.82);
 }
 
+/** Plain text of the CV for the live score (personal details left out: they are a choice, not a mistake). */
+function cvText(d: CvData) {
+  const parts = [d.name, d.headline, d.phone, d.email, d.location, d.linkedin];
+  if (d.summary) parts.push('Professional Summary', d.summary);
+  if (d.experience.length) parts.push('Work Experience', ...d.experience.flatMap((e) => [e.role, e.org, e.start, e.end, e.bullets]));
+  if (d.education.length) parts.push('Education', ...d.education.flatMap((e) => [degreeLine(e.degree, e.major), e.institution, e.result, e.year, e.details]));
+  if (d.skills) parts.push('Skills', list(d.skills).join(', '));
+  if (d.languages) parts.push('Languages', d.languages);
+  if (d.training.length) parts.push('Training', ...d.training.flatMap((x) => [x.name, x.org, x.details]));
+  for (const c of d.custom) parts.push(c.title, ...c.items.flatMap((i) => [i.title, i.subtitle, i.details]));
+  if (d.references.length) parts.push('References', ...d.references.flatMap((r) => [r.name, r.title, r.org]));
+  return parts.filter(Boolean).join('\n');
+}
+
 /* ── page ─────────────────────────────────────────────────────── */
 
 export function BuilderPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [state, setState] = useState<BuilderState>(() => loadState() ?? { data: emptyCv(), design: 'classic', accent: ACCENTS[0] });
-  const [open, setOpen] = useState<string>('contact');
+  const [open, setOpen] = useState<string>('import');
   const [view, setView] = useState<'edit' | 'preview'>('edit');
+  const [importMsg, setImportMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [newSection, setNewSection] = useState('');
   const previewBox = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.6);
 
   const title = t({ en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' });
   const intro = t({
-    en: 'Fill in your details, pick a design and download a print-ready PDF. Free, no sign-up, and your CV stays on your device.',
-    bn: 'তথ্য দিন, ডিজাইন বেছে নিন, প্রিন্ট-রেডি PDF ডাউনলোড করুন। বিনামূল্যে, সাইন-আপ ছাড়া, আর আপনার সিভি আপনার ডিভাইসেই থাকে।',
+    en: 'Upload your old CV or start fresh, pick a design and download PDF or Word. Free, no sign-up, and your CV stays on your device.',
+    bn: 'পুরনো সিভি আপলোড করুন বা নতুন করে শুরু করুন, ডিজাইন বেছে নিন, PDF বা Word ডাউনলোড করুন। বিনামূল্যে, সাইন-আপ ছাড়া, আর সিভি আপনার ডিভাইসেই থাকে।',
   });
   useEffect(() => setPageMeta(title, intro, '/builder'), [title, intro]);
   useEffect(() => saveState(state), [state]);
@@ -107,12 +151,78 @@ export function BuilderPage() {
   }, [view]);
 
   const d = state.data;
+  const score = useMemo(() => analyzeCv(cvText(d), { fromPdf: false, splitRowShare: 0 }), [d]);
   const set = (patch: Partial<CvData>) => setState((s) => ({ ...s, data: { ...s.data, ...patch } }));
   const toggle = (id: string) => setOpen((cur) => (cur === id ? '' : id));
-  const upd = <K extends 'experience' | 'education' | 'training' | 'references'>(key: K, id: string, patch: Partial<CvData[K][number]>) =>
+  const upd = <K extends ListKey>(key: K, id: string, patch: Partial<CvData[K][number]>) =>
     set({ [key]: (d[key] as { id: string }[]).map((x) => (x.id === id ? { ...x, ...patch } : x)) } as Partial<CvData>);
-  const del = (key: 'experience' | 'education' | 'training' | 'references', id: string) =>
-    set({ [key]: (d[key] as { id: string }[]).filter((x) => x.id !== id) } as Partial<CvData>);
+  const del = (key: ListKey, id: string) => set({ [key]: (d[key] as { id: string }[]).filter((x) => x.id !== id) } as Partial<CvData>);
+  const mv = (key: ListKey, i: number, dir: -1 | 1) => set({ [key]: move(d[key] as { id: string }[], i, dir) } as Partial<CvData>);
+
+  // Custom sections
+  const updSection = (id: string, patch: Partial<CustomSection>) => set({ custom: d.custom.map((c) => (c.id === id ? { ...c, ...patch } : c)) });
+  const updItem = (sid: string, iid: string, patch: Partial<CustomItem>) =>
+    set({ custom: d.custom.map((c) => (c.id === sid ? { ...c, items: c.items.map((i) => (i.id === iid ? { ...i, ...patch } : i)) } : c)) });
+  const addSection = (name: string) => {
+    if (!name.trim()) return;
+    const id = uid();
+    set({ custom: [...d.custom, { id, title: name.trim(), items: [newCustomItem()] }], order: [...d.order, `custom:${id}`] });
+    setOpen(`custom:${id}`);
+    setNewSection('');
+  };
+  const removeSection = (id: string) => set({ custom: d.custom.filter((c) => c.id !== id), order: d.order.filter((k) => k !== `custom:${id}`) });
+
+  const sectionName = (k: string) => {
+    const names: Record<string, { en: string; bn: string }> = {
+      summary: { en: 'Summary', bn: 'সামারি' }, experience: { en: 'Work experience', bn: 'কাজের অভিজ্ঞতা' }, education: { en: 'Education', bn: 'শিক্ষাগত যোগ্যতা' },
+      skills: { en: 'Skills and languages', bn: 'দক্ষতা ও ভাষা' }, training: { en: 'Training and certificates', bn: 'প্রশিক্ষণ ও সার্টিফিকেট' },
+      personal: { en: 'Personal details', bn: 'ব্যক্তিগত তথ্য' }, references: { en: 'References', bn: 'রেফারেন্স' },
+    };
+    if (names[k]) return t(names[k]);
+    return d.custom.find((c) => `custom:${c.id}` === k)?.title || t({ en: 'Untitled section', bn: 'শিরোনামহীন অংশ' });
+  };
+
+  const onImport = async (file: File) => {
+    setImporting(true);
+    setImportMsg(null);
+    try {
+      const text = await readCvFile(file);
+      if (text.replace(/\s/g, '').length < 40) throw new ImportError('empty');
+      const { data, found } = parseCv(text);
+      const hasContent = d.name || d.experience.length || d.education.length;
+      if (hasContent && !window.confirm(t({ en: 'Replace what you have typed with the uploaded CV?', bn: 'আপনার লেখা তথ্যের জায়গায় আপলোড করা সিভি বসাবেন?' }))) {
+        setImporting(false);
+        return;
+      }
+      setState((s) => ({ ...s, data: normalise({ ...data, photo: s.data.photo }) }));
+      const counts = found.filter((f) => f.includes(':')).map((f) => f.split(':')).filter(([, n]) => /^\d+$/.test(n));
+      const parts = [
+        found.includes('contact') ? t({ en: 'contact details', bn: 'যোগাযোগের তথ্য' }) : '',
+        found.includes('summary') ? t({ en: 'summary', bn: 'সামারি' }) : '',
+        ...counts.map(([k, n]) => `${sectionName(k)} (${num(n, lang)})`),
+        found.includes('skills') ? t({ en: 'skills', bn: 'দক্ষতা' }) : '',
+        found.includes('personal') ? t({ en: 'personal details', bn: 'ব্যক্তিগত তথ্য' }) : '',
+      ].filter(Boolean);
+      setImportMsg({
+        ok: true,
+        text: t({
+          en: `Filled: ${parts.join(', ') || 'a few fields'}. Please check every section: CV layouts vary, and two-column designs can mix up.`,
+          bn: `পূরণ হয়েছে: ${parts.join(', ') || 'কিছু ঘর'}। প্রতিটি অংশ একবার দেখে নিন: সিভির লেআউট ভিন্ন হয়, আর দুই কলামের ডিজাইনে লেখা এলোমেলো হতে পারে।`,
+        }),
+      });
+      setOpen('contact');
+    } catch (err) {
+      const code = err instanceof ImportError ? err.code : 'read';
+      const msg: Record<string, { en: string; bn: string }> = {
+        doc: { en: 'Old .doc files cannot be read here. Open it in Word and save as .docx or PDF, then upload again.', bn: 'পুরনো .doc ফাইল এখানে পড়া যায় না। Word-এ খুলে .docx বা PDF হিসেবে সেভ করে আবার আপলোড করুন।' },
+        type: { en: 'Upload a PDF or a Word (.docx) file.', bn: 'PDF বা Word (.docx) ফাইল আপলোড করুন।' },
+        empty: { en: 'No text found. If the PDF is a scanned image, type your details instead.', bn: 'কোনো লেখা পাওয়া যায়নি। PDF যদি স্ক্যান করা ছবি হয়, তথ্যগুলো টাইপ করে দিন।' },
+        read: { en: 'This file could not be read. Try saving it again as PDF or .docx.', bn: 'ফাইলটি পড়া যায়নি। আবার PDF বা .docx হিসেবে সেভ করে চেষ্টা করুন।' },
+      };
+      setImportMsg({ ok: false, text: t(msg[code]) });
+    }
+    setImporting(false);
+  };
 
   const [wordBusy, setWordBusy] = useState(false);
   const downloadWord = async () => {
@@ -140,6 +250,7 @@ export function BuilderPage() {
   };
 
   const isEmpty = !d.name && d.experience.length === 0 && d.education.length === 0;
+  const failing = score.checks.filter((c) => !c.pass).sort((a, b) => b.weight - a.weight).slice(0, 3);
 
   return (
     <>
@@ -191,14 +302,21 @@ export function BuilderPage() {
 
         <div className="wrap grid grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           {/* Form */}
-          <div className={`space-y-3 ${view === 'preview' ? 'max-md:hidden' : ''}`}>
-            {isEmpty && (
-              <div className="rounded-2xl bg-gold-soft p-5">
-                <p className="font-display text-lg">{t({ en: 'First time here?', bn: 'প্রথমবার?' })}</p>
-                <p className="mt-1 text-muted">{t({ en: 'Load an example CV to see how a strong one reads, then replace it with your details.', bn: 'একটি উদাহরণ সিভি দেখে নিন শক্তিশালী সিভি কেমন হয়, তারপর নিজের তথ্য বসান।' })}</p>
-                <button type="button" className="btn btn-primary mt-3" onClick={() => set(sampleCv())}>{t({ en: 'Load an example', bn: 'উদাহরণ দেখুন' })}</button>
+          <div className={`min-w-0 space-y-3 ${view === 'preview' ? 'max-md:hidden' : ''}`}>
+            {/* Import */}
+            <section className="rounded-2xl border-2 border-dashed border-leaf/40 bg-leaf-soft/50 p-5">
+              <p className="font-display text-lg font-semibold">{t({ en: 'Already have a CV?', bn: 'আগের সিভি আছে?' })}</p>
+              <p className="mt-1 text-muted">{t({ en: 'Upload it as PDF or Word (.docx) and we fill the form for you. The file is read on your device and never uploaded.', bn: 'PDF বা Word (.docx) আপলোড করুন, ফর্ম আমরাই পূরণ করে দেব। ফাইলটি আপনার ডিভাইসেই পড়া হয়, কোথাও আপলোড হয় না।' })}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <label className={`btn btn-primary cursor-pointer ${importing ? 'pointer-events-none opacity-60' : ''}`}>
+                  {importing ? t({ en: 'Reading your CV…', bn: 'সিভি পড়া হচ্ছে…' }) : t({ en: 'Upload my CV', bn: 'আমার সিভি আপলোড করুন' })}
+                  <input type="file" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="sr-only"
+                    onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void onImport(f); }} />
+                </label>
+                {isEmpty && <button type="button" className="btn btn-quiet bg-white" onClick={() => set(sampleCv())}>{t({ en: 'Or see an example', bn: 'অথবা উদাহরণ দেখুন' })}</button>}
               </div>
-            )}
+              {importMsg && <p role="status" className={`mt-3 rounded-lg px-4 py-3 text-sm ${importMsg.ok ? 'bg-white text-ink' : 'bg-alert/10 text-alert'}`}>{importMsg.text}</p>}
+            </section>
 
             <Section title={t({ en: 'Contact details', bn: 'যোগাযোগের তথ্য' })} open={open === 'contact'} onToggle={() => toggle('contact')}>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -208,6 +326,7 @@ export function BuilderPage() {
                 <Field label={t({ en: 'Email', bn: 'ইমেইল' })} value={d.email} onChange={(v) => set({ email: v })} placeholder="name@email.com" type="email" />
                 <Field label={t({ en: 'Area, city', bn: 'এলাকা, শহর' })} value={d.location} onChange={(v) => set({ location: v })} placeholder="Mirpur, Dhaka" />
                 <Field label={t({ en: 'LinkedIn (optional)', bn: 'লিংকডইন (ঐচ্ছিক)' })} value={d.linkedin} onChange={(v) => set({ linkedin: v })} placeholder="linkedin.com/in/yourname" />
+                <Field label={t({ en: 'Website or portfolio (optional)', bn: 'ওয়েবসাইট বা পোর্টফোলিও (ঐচ্ছিক)' })} value={d.website} onChange={(v) => set({ website: v })} placeholder="yourname.com" />
               </div>
               <div className="flex flex-wrap items-center gap-4">
                 {d.photo && <img src={d.photo} alt="" className="h-16 w-16 rounded-full object-cover ring-1 ring-line" />}
@@ -220,17 +339,16 @@ export function BuilderPage() {
               <p className="text-sm text-muted">{t({ en: 'The photo shows in the Modern and Executive designs. Leave it out for online portals.', bn: 'ছবি মডার্ন ও এক্সিকিউটিভ ডিজাইনে দেখায়। অনলাইন পোর্টালের জন্য ছবি না দেওয়াই ভালো।' })}</p>
             </Section>
 
-            <Section title={t({ en: 'Summary', bn: 'সামারি' })} open={open === 'summary'} onToggle={() => toggle('summary')}>
+            <Section title={sectionName('summary')} open={open === 'summary'} onToggle={() => toggle('summary')}>
               <Area label={t({ en: 'Two or three lines about you', bn: 'আপনার সম্পর্কে দুই-তিন লাইন' })} value={d.summary} onChange={(v) => set({ summary: v })} rows={4}
                 placeholder="Finance graduate with 2 years of customer service experience..."
                 hint={t({ en: 'Say what you studied or do, one or two results, and the role you want. Skip “to work in a challenging environment”.', bn: 'কী পড়েছেন বা করেন, এক-দুটি অর্জন, আর কোন পদ চান লিখুন। “challenging environment” ধরনের মুখস্থ লাইন বাদ দিন।' })} />
             </Section>
 
-            <Section title={t({ en: 'Work experience', bn: 'কাজের অভিজ্ঞতা' })} open={open === 'exp'} onToggle={() => toggle('exp')} count={d.experience.length}>
-              {d.experience.map((e: Experience, i) => (
-                <ItemBox key={e.id} t={t} title={e.role || t({ en: 'New job', bn: 'নতুন কাজ' })} onRemove={() => del('experience', e.id)}
-                  onUp={i > 0 ? () => set({ experience: move(d.experience, i, -1) }) : undefined}
-                  onDown={i < d.experience.length - 1 ? () => set({ experience: move(d.experience, i, 1) }) : undefined}>
+            <Section title={sectionName('experience')} open={open === 'experience'} onToggle={() => toggle('experience')} count={d.experience.length}>
+              {d.experience.map((e, i) => (
+                <ItemBox key={e.id} t={t} title={e.role || e.org || t({ en: 'New job', bn: 'নতুন কাজ' })} onRemove={() => del('experience', e.id)}
+                  onUp={i > 0 ? () => mv('experience', i, -1) : undefined} onDown={i < d.experience.length - 1 ? () => mv('experience', i, 1) : undefined}>
                   <div className="grid gap-3 sm:grid-cols-2">
                     <Field label={t({ en: 'Job title', bn: 'পদবি' })} value={e.role} onChange={(v) => upd('experience', e.id, { role: v })} />
                     <Field label={t({ en: 'Organisation', bn: 'প্রতিষ্ঠান' })} value={e.org} onChange={(v) => upd('experience', e.id, { org: v })} />
@@ -239,55 +357,92 @@ export function BuilderPage() {
                     <Field label={t({ en: 'Location', bn: 'স্থান' })} value={e.location} onChange={(v) => upd('experience', e.id, { location: v })} placeholder="Dhaka" />
                   </div>
                   <label className="flex items-center gap-2"><input type="checkbox" checked={e.current} onChange={(x) => upd('experience', e.id, { current: x.target.checked })} />{t({ en: 'I work here now', bn: 'এখনও এখানে কাজ করছি' })}</label>
-                  <Area label={t({ en: 'What you achieved (one per line)', bn: 'কী অর্জন করেছেন (প্রতি লাইনে একটি)' })} value={e.bullets} onChange={(v) => upd('experience', e.id, { bullets: v })} rows={4}
+                  <Area label={t({ en: 'Responsibilities and achievements (one per line)', bn: 'দায়িত্ব ও অর্জন (প্রতি লাইনে একটি)' })} value={e.bullets} onChange={(v) => upd('experience', e.id, { bullets: v })} rows={5}
                     placeholder={'Served 60+ customers a day\nOpened 300+ accounts in a year'}
                     hint={t({ en: 'Start with an action word (Led, Opened, Reduced) and add a number where you can.', bn: 'কাজের শব্দ দিয়ে শুরু করুন (Led, Opened, Reduced) আর সম্ভব হলে সংখ্যা দিন।' })} />
                 </ItemBox>
               ))}
-              <button type="button" className="btn btn-quiet w-full bg-white" onClick={() => set({ experience: [...d.experience, { id: uid(), role: '', org: '', location: '', start: '', end: '', current: false, bullets: '' }] })}>
-                + {t({ en: 'Add a job or internship', bn: 'কাজ বা ইন্টার্নশিপ যোগ করুন' })}
-              </button>
+              <AddButton onClick={() => set({ experience: [...d.experience, newExperience()] })}>{t({ en: 'Add a job or internship', bn: 'কাজ বা ইন্টার্নশিপ যোগ করুন' })}</AddButton>
             </Section>
 
-            <Section title={t({ en: 'Education', bn: 'শিক্ষাগত যোগ্যতা' })} open={open === 'edu'} onToggle={() => toggle('edu')} count={d.education.length}>
-              {d.education.map((e: Education, i) => (
-                <ItemBox key={e.id} t={t} title={e.degree || t({ en: 'New degree', bn: 'নতুন ডিগ্রি' })} onRemove={() => del('education', e.id)}
-                  onUp={i > 0 ? () => set({ education: move(d.education, i, -1) }) : undefined}
-                  onDown={i < d.education.length - 1 ? () => set({ education: move(d.education, i, 1) }) : undefined}>
+            <Section title={sectionName('education')} open={open === 'education'} onToggle={() => toggle('education')} count={d.education.length}>
+              {d.education.map((e, i) => (
+                <ItemBox key={e.id} t={t} title={degreeLine(e.degree, e.major) || t({ en: 'New degree', bn: 'নতুন ডিগ্রি' })} onRemove={() => del('education', e.id)}
+                  onUp={i > 0 ? () => mv('education', i, -1) : undefined} onDown={i < d.education.length - 1 ? () => mv('education', i, 1) : undefined}>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <Field label={t({ en: 'Degree or exam', bn: 'ডিগ্রি বা পরীক্ষা' })} value={e.degree} onChange={(v) => upd('education', e.id, { degree: v })} placeholder="BBA in Finance" />
+                    <Field label={t({ en: 'Degree or exam', bn: 'ডিগ্রি বা পরীক্ষা' })} value={e.degree} onChange={(v) => upd('education', e.id, { degree: v })} placeholder="BBA, HSC, SSC" />
+                    <Field label={t({ en: 'Subject or group', bn: 'বিষয় বা বিভাগ' })} value={e.major} onChange={(v) => upd('education', e.id, { major: v })} placeholder="Finance, Science" />
                     <Field label={t({ en: 'Institution', bn: 'প্রতিষ্ঠান' })} value={e.institution} onChange={(v) => upd('education', e.id, { institution: v })} />
                     <Field label={t({ en: 'Result', bn: 'ফলাফল' })} value={e.result} onChange={(v) => upd('education', e.id, { result: v })} placeholder="CGPA 3.50/4.00" />
                     <Field label={t({ en: 'Year', bn: 'সাল' })} value={e.year} onChange={(v) => upd('education', e.id, { year: v })} placeholder="2023" />
                   </div>
+                  <Area label={t({ en: 'Details (optional)', bn: 'বিস্তারিত (ঐচ্ছিক)' })} value={e.details} onChange={(v) => upd('education', e.id, { details: v })} rows={2}
+                    placeholder="Thesis, awards, relevant courses" />
                 </ItemBox>
               ))}
-              <button type="button" className="btn btn-quiet w-full bg-white" onClick={() => set({ education: [...d.education, { id: uid(), degree: '', institution: '', result: '', year: '' }] })}>
-                + {t({ en: 'Add education', bn: 'শিক্ষা যোগ করুন' })}
-              </button>
+              <AddButton onClick={() => set({ education: [...d.education, newEducation()] })}>{t({ en: 'Add education', bn: 'শিক্ষা যোগ করুন' })}</AddButton>
             </Section>
 
-            <Section title={t({ en: 'Skills and languages', bn: 'দক্ষতা ও ভাষা' })} open={open === 'skills'} onToggle={() => toggle('skills')}>
-              <Area label={t({ en: 'Skills, separated by commas', bn: 'দক্ষতা, কমা দিয়ে আলাদা করুন' })} value={d.skills} onChange={(v) => set({ skills: v })} rows={3} placeholder="MS Excel, Customer service, Report writing" />
+            <Section title={sectionName('skills')} open={open === 'skills'} onToggle={() => toggle('skills')}>
+              <Area label={t({ en: 'Skills, separated by commas or one per line', bn: 'দক্ষতা, কমা দিয়ে বা প্রতি লাইনে একটি' })} value={d.skills} onChange={(v) => set({ skills: v })} rows={3} placeholder="MS Excel, Customer service, Report writing"
+                hint={t({ en: 'Use the words the job circular uses, if they are true for you.', bn: 'বিজ্ঞপ্তিতে যে শব্দগুলো আছে, আপনার জন্য সত্যি হলে সেগুলোই ব্যবহার করুন।' })} />
               <Field label={t({ en: 'Languages', bn: 'ভাষা' })} value={d.languages} onChange={(v) => set({ languages: v })} placeholder="Bangla (native), English (fluent)" />
             </Section>
 
-            <Section title={t({ en: 'Training and certificates', bn: 'প্রশিক্ষণ ও সার্টিফিকেট' })} open={open === 'training'} onToggle={() => toggle('training')} count={d.training.length}>
-              {d.training.map((x: Training) => (
-                <ItemBox key={x.id} t={t} title={x.name || t({ en: 'New training', bn: 'নতুন প্রশিক্ষণ' })} onRemove={() => del('training', x.id)}>
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <Field label={t({ en: 'Name', bn: 'নাম' })} value={x.name} onChange={(v) => upd('training', x.id, { name: v })} />
+            <Section title={sectionName('training')} open={open === 'training'} onToggle={() => toggle('training')} count={d.training.length}>
+              {d.training.map((x, i) => (
+                <ItemBox key={x.id} t={t} title={x.name || t({ en: 'New training', bn: 'নতুন প্রশিক্ষণ' })} onRemove={() => del('training', x.id)}
+                  onUp={i > 0 ? () => mv('training', i, -1) : undefined} onDown={i < d.training.length - 1 ? () => mv('training', i, 1) : undefined}>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Field label={t({ en: 'Training or certificate', bn: 'প্রশিক্ষণ বা সার্টিফিকেট' })} value={x.name} onChange={(v) => upd('training', x.id, { name: v })} />
                     <Field label={t({ en: 'Given by', bn: 'প্রতিষ্ঠান' })} value={x.org} onChange={(v) => upd('training', x.id, { org: v })} />
+                    <Field label={t({ en: 'Duration', bn: 'মেয়াদ' })} value={x.duration} onChange={(v) => upd('training', x.id, { duration: v })} placeholder="3 months" />
                     <Field label={t({ en: 'Year', bn: 'সাল' })} value={x.year} onChange={(v) => upd('training', x.id, { year: v })} />
                   </div>
+                  <Area label={t({ en: 'What you learned or did (optional)', bn: 'কী শিখেছেন বা করেছেন (ঐচ্ছিক)' })} value={x.details} onChange={(v) => upd('training', x.id, { details: v })} rows={2}
+                    placeholder="Topics covered, project, grade" />
                 </ItemBox>
               ))}
-              <button type="button" className="btn btn-quiet w-full bg-white" onClick={() => set({ training: [...d.training, { id: uid(), name: '', org: '', year: '' }] })}>
-                + {t({ en: 'Add training', bn: 'প্রশিক্ষণ যোগ করুন' })}
-              </button>
+              <AddButton onClick={() => set({ training: [...d.training, newTraining()] })}>{t({ en: 'Add training', bn: 'প্রশিক্ষণ যোগ করুন' })}</AddButton>
             </Section>
 
-            <Section title={t({ en: 'Personal details (Bangladesh format)', bn: 'ব্যক্তিগত তথ্য (বাংলাদেশি ফরম্যাট)' })} open={open === 'personal'} onToggle={() => toggle('personal')}>
+            {d.custom.map((c) => (
+              <Section key={c.id} title={c.title || sectionName(`custom:${c.id}`)} open={open === `custom:${c.id}`} onToggle={() => toggle(`custom:${c.id}`)} count={c.items.length}
+                extra={<button type="button" className="text-sm text-alert underline" onClick={() => { if (window.confirm(t({ en: `Delete the “${c.title}” section?`, bn: `“${c.title}” অংশটি মুছবেন?` }))) removeSection(c.id); }}>{t({ en: 'Delete', bn: 'মুছুন' })}</button>}>
+                <Field label={t({ en: 'Section title', bn: 'অংশের শিরোনাম' })} value={c.title} onChange={(v) => updSection(c.id, { title: v })} />
+                {c.items.map((it, i) => (
+                  <ItemBox key={it.id} t={t} title={it.title || t({ en: 'New entry', bn: 'নতুন এন্ট্রি' })} onRemove={() => updSection(c.id, { items: c.items.filter((x) => x.id !== it.id) })}
+                    onUp={i > 0 ? () => updSection(c.id, { items: move(c.items, i, -1) }) : undefined} onDown={i < c.items.length - 1 ? () => updSection(c.id, { items: move(c.items, i, 1) }) : undefined}>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Field label={t({ en: 'Title', bn: 'শিরোনাম' })} value={it.title} onChange={(v) => updItem(c.id, it.id, { title: v })} />
+                      <Field label={t({ en: 'Organisation or role (optional)', bn: 'প্রতিষ্ঠান বা ভূমিকা (ঐচ্ছিক)' })} value={it.subtitle} onChange={(v) => updItem(c.id, it.id, { subtitle: v })} />
+                      <Field label={t({ en: 'Date (optional)', bn: 'তারিখ (ঐচ্ছিক)' })} value={it.date} onChange={(v) => updItem(c.id, it.id, { date: v })} placeholder="2024" />
+                    </div>
+                    <Area label={t({ en: 'Description (optional, one point per line)', bn: 'বিবরণ (ঐচ্ছিক, প্রতি লাইনে একটি পয়েন্ট)' })} value={it.details} onChange={(v) => updItem(c.id, it.id, { details: v })} rows={3} />
+                  </ItemBox>
+                ))}
+                <AddButton onClick={() => updSection(c.id, { items: [...c.items, newCustomItem()] })}>{t({ en: 'Add an entry', bn: 'এন্ট্রি যোগ করুন' })}</AddButton>
+              </Section>
+            ))}
+
+            {/* Add a section */}
+            <section className="rounded-2xl bg-white p-5 ring-1 ring-line">
+              <p className="font-display text-lg font-semibold">{t({ en: 'Add a section', bn: 'নতুন অংশ যোগ করুন' })}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {SECTION_PRESETS.filter((p) => !d.custom.some((c) => c.title === p.en || c.title === p.bn)).map((p) => (
+                  <button key={p.en} type="button" title={t(p.hint)} onClick={() => addSection(state.headings === 'bn' ? p.bn : p.en)}
+                    className="rounded-full bg-mist px-3.5 py-1.5 text-sm font-semibold hover:bg-leaf-soft hover:text-leaf-dark">
+                    + {t(p)}
+                  </button>
+                ))}
+              </div>
+              <form className="mt-3 flex gap-2" onSubmit={(e) => { e.preventDefault(); addSection(newSection); }}>
+                <input className="field" value={newSection} onChange={(e) => setNewSection(e.target.value)} placeholder={t({ en: 'Or name your own, e.g. Research', bn: 'অথবা নিজের নাম দিন, যেমন Research' })} aria-label={t({ en: 'New section name', bn: 'নতুন অংশের নাম' })} />
+                <button type="submit" className="btn btn-quiet shrink-0 bg-white" disabled={!newSection.trim()}>{t({ en: 'Add', bn: 'যোগ করুন' })}</button>
+              </form>
+            </section>
+
+            <Section title={sectionName('personal')} open={open === 'personal'} onToggle={() => toggle('personal')}>
               <label className="flex items-start gap-2">
                 <input type="checkbox" className="mt-1.5" checked={d.showPersonal} onChange={(e) => set({ showPersonal: e.target.checked })} />
                 <span>{t({ en: 'Show personal details on my CV. Many government and bank circulars ask for these; private and online applications usually do not.', bn: 'সিভিতে ব্যক্তিগত তথ্য দেখাও। অনেক সরকারি ও ব্যাংকের বিজ্ঞপ্তিতে এগুলো চাওয়া হয়; বেসরকারি ও অনলাইন আবেদনে সাধারণত লাগে না।' })}</span>
@@ -297,27 +452,54 @@ export function BuilderPage() {
                   <Field label={t({ en: "Father's name", bn: 'বাবার নাম' })} value={d.father} onChange={(v) => set({ father: v })} />
                   <Field label={t({ en: "Mother's name", bn: 'মায়ের নাম' })} value={d.mother} onChange={(v) => set({ mother: v })} />
                   <Field label={t({ en: 'Date of birth', bn: 'জন্মতারিখ' })} value={d.dob} onChange={(v) => set({ dob: v })} placeholder="12 March 1999" />
+                  <Field label={t({ en: 'Gender (if asked)', bn: 'লিঙ্গ (চাইলে)' })} value={d.gender} onChange={(v) => set({ gender: v })} />
+                  <Field label={t({ en: 'Marital status (if asked)', bn: 'বৈবাহিক অবস্থা (চাইলে)' })} value={d.marital} onChange={(v) => set({ marital: v })} />
                   <Field label={t({ en: 'Nationality', bn: 'জাতীয়তা' })} value={d.nationality} onChange={(v) => set({ nationality: v })} />
                   <Field label={t({ en: 'Religion (if asked)', bn: 'ধর্ম (চাইলে)' })} value={d.religion} onChange={(v) => set({ religion: v })} />
+                  <Field label={t({ en: 'NID number (only if asked)', bn: 'এনআইডি নম্বর (শুধু চাইলে)' })} value={d.nid} onChange={(v) => set({ nid: v })} />
+                  <Field label={t({ en: 'Present address', bn: 'বর্তমান ঠিকানা' })} value={d.presentAddress} onChange={(v) => set({ presentAddress: v })} />
                   <Field label={t({ en: 'Permanent address', bn: 'স্থায়ী ঠিকানা' })} value={d.permanentAddress} onChange={(v) => set({ permanentAddress: v })} />
                 </div>
               )}
             </Section>
 
-            <Section title={t({ en: 'References', bn: 'রেফারেন্স' })} open={open === 'refs'} onToggle={() => toggle('refs')} count={d.references.length}>
-              {d.references.map((r: Reference) => (
-                <ItemBox key={r.id} t={t} title={r.name || t({ en: 'New reference', bn: 'নতুন রেফারেন্স' })} onRemove={() => del('references', r.id)}>
-                  <div className="grid gap-3 sm:grid-cols-3">
+            <Section title={sectionName('references')} open={open === 'references'} onToggle={() => toggle('references')} count={d.references.length}>
+              {d.references.map((r, i) => (
+                <ItemBox key={r.id} t={t} title={r.name || t({ en: 'New reference', bn: 'নতুন রেফারেন্স' })} onRemove={() => del('references', r.id)}
+                  onUp={i > 0 ? () => mv('references', i, -1) : undefined} onDown={i < d.references.length - 1 ? () => mv('references', i, 1) : undefined}>
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <Field label={t({ en: 'Name', bn: 'নাম' })} value={r.name} onChange={(v) => upd('references', r.id, { name: v })} />
-                    <Field label={t({ en: 'Title, organisation', bn: 'পদবি, প্রতিষ্ঠান' })} value={r.title} onChange={(v) => upd('references', r.id, { title: v })} />
-                    <Field label={t({ en: 'Phone or email', bn: 'ফোন বা ইমেইল' })} value={r.contact} onChange={(v) => upd('references', r.id, { contact: v })} />
+                    <Field label={t({ en: 'Designation', bn: 'পদবি' })} value={r.title} onChange={(v) => upd('references', r.id, { title: v })} />
+                    <Field label={t({ en: 'Organisation', bn: 'প্রতিষ্ঠান' })} value={r.org} onChange={(v) => upd('references', r.id, { org: v })} />
+                    <Field label={t({ en: 'Relation (optional)', bn: 'সম্পর্ক (ঐচ্ছিক)' })} value={r.relation} onChange={(v) => upd('references', r.id, { relation: v })} placeholder="Thesis supervisor" />
+                    <Field label={t({ en: 'Mobile', bn: 'মোবাইল' })} value={r.phone} onChange={(v) => upd('references', r.id, { phone: v })} type="tel" />
+                    <Field label={t({ en: 'Email', bn: 'ইমেইল' })} value={r.email} onChange={(v) => upd('references', r.id, { email: v })} type="email" />
                   </div>
                 </ItemBox>
               ))}
-              <button type="button" className="btn btn-quiet w-full bg-white" onClick={() => set({ references: [...d.references, { id: uid(), name: '', title: '', contact: '' }] })}>
-                + {t({ en: 'Add a reference', bn: 'রেফারেন্স যোগ করুন' })}
-              </button>
+              <AddButton onClick={() => set({ references: [...d.references, newReference()] })}>{t({ en: 'Add a reference', bn: 'রেফারেন্স যোগ করুন' })}</AddButton>
               <p className="text-sm text-muted">{t({ en: 'Ask each person before you list them.', bn: 'রেফারেন্স দেওয়ার আগে অবশ্যই তাঁর অনুমতি নিন।' })}</p>
+            </Section>
+
+            {/* Section order */}
+            <Section title={t({ en: 'Section order and visibility', bn: 'অংশের ক্রম ও দেখানো/লুকানো' })} open={open === 'order'} onToggle={() => toggle('order')}>
+              <p className="text-sm text-muted">{t({ en: 'Move sections up or down, or hide one without deleting it.', bn: 'অংশ উপরে-নিচে সরান, অথবা না মুছে লুকিয়ে রাখুন।' })}</p>
+              <ol className="divide-y divide-line rounded-xl ring-1 ring-line">
+                {d.order.map((k, i) => {
+                  const hidden = d.hidden.includes(k);
+                  return (
+                    <li key={k} className={`flex items-center gap-2 px-3 py-2 ${hidden ? 'text-muted' : ''}`}>
+                      <span className="flex-1 truncate">{sectionName(k)}</span>
+                      <button type="button" disabled={i === 0} onClick={() => set({ order: move(d.order, i, -1) })} className="rounded px-2 py-1 hover:bg-mist disabled:opacity-30" aria-label={t({ en: 'Move up', bn: 'উপরে নিন' })}>↑</button>
+                      <button type="button" disabled={i === d.order.length - 1} onClick={() => set({ order: move(d.order, i, 1) })} className="rounded px-2 py-1 hover:bg-mist disabled:opacity-30" aria-label={t({ en: 'Move down', bn: 'নিচে নিন' })}>↓</button>
+                      <button type="button" aria-pressed={!hidden} onClick={() => set({ hidden: hidden ? d.hidden.filter((x) => x !== k) : [...d.hidden, k] })}
+                        className={`w-20 rounded-full px-2 py-1 text-xs font-semibold ${hidden ? 'bg-mist' : 'bg-leaf-soft text-leaf-dark'}`}>
+                        {hidden ? t({ en: 'Hidden', bn: 'লুকানো' }) : t({ en: 'Shown', bn: 'দেখানো' })}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
             </Section>
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm text-muted">
@@ -331,7 +513,21 @@ export function BuilderPage() {
           {/* Preview */}
           <div className={`min-w-0 ${view === 'edit' ? 'max-md:hidden' : ''}`}>
             <div className="md:sticky md:top-36">
-              <div ref={previewBox} className="overflow-hidden rounded-xl bg-mist p-0 ring-1 ring-line">
+              {!isEmpty && (
+                <div className="mb-4 flex items-start gap-4 rounded-2xl bg-white p-4 ring-1 ring-line">
+                  <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-full font-display text-xl font-semibold ${score.score >= 80 ? 'bg-leaf-soft text-leaf-dark' : score.score >= 60 ? 'bg-gold-soft text-gold' : 'bg-alert/10 text-alert'}`}
+                    aria-label={t({ en: `CV score ${score.score} out of 100`, bn: `সিভি স্কোর ১০০-এর মধ্যে ${num(String(score.score), 'bn')}` })}>
+                    {num(String(score.score), lang)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold">{failing.length ? t({ en: 'To raise your score', bn: 'স্কোর বাড়াতে' }) : t({ en: 'Strong CV. Ready to send.', bn: 'শক্তিশালী সিভি। পাঠানোর জন্য প্রস্তুত।' })}</p>
+                    <ul className="mt-1 space-y-1 text-sm text-muted">
+                      {failing.map((c) => <li key={c.id}>{t(c.fix)}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              )}
+              <div ref={previewBox} className="overflow-hidden rounded-xl bg-mist ring-1 ring-line">
                 <div style={{ height: 1123 * scale }}>
                   <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left' }} className="shadow-lg">
                     <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
@@ -340,11 +536,8 @@ export function BuilderPage() {
               </div>
               <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-line">
                 <p className="font-semibold">{t({ en: 'Want an expert to check it?', bn: 'বিশেষজ্ঞকে দিয়ে যাচাই করাতে চান?' })}</p>
-                <p className="mt-1 text-sm text-muted">{t({ en: 'Download the PDF, then get written feedback on every section for ৳199, or run it through the free CV checker.', bn: 'PDF ডাউনলোড করে ৳১৯৯-এ প্রতিটি অংশের লিখিত মতামত নিন, অথবা ফ্রি সিভি চেকারে দিন।' })}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Link href="/services" className="btn btn-quiet bg-white !min-h-10">{t({ en: 'CV review ৳199', bn: 'সিভি রিভিউ ৳১৯৯' })}</Link>
-                  <Link href="/tools/cv-checker" className="btn btn-quiet bg-white !min-h-10">{t({ en: 'Free CV checker', bn: 'ফ্রি সিভি চেকার' })}</Link>
-                </div>
+                <p className="mt-1 text-sm text-muted">{t({ en: 'Download the PDF, then get written feedback on every section for ৳199.', bn: 'PDF ডাউনলোড করে ৳১৯৯-এ প্রতিটি অংশের লিখিত মতামত নিন।' })}</p>
+                <Link href="/services" className="btn btn-quiet mt-3 bg-white !min-h-10">{t({ en: 'CV review ৳199', bn: 'সিভি রিভিউ ৳১৯৯' })}</Link>
               </div>
             </div>
           </div>

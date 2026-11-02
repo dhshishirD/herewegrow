@@ -50,7 +50,16 @@ export async function readPdf(file: File): Promise<{ text: string; layout: Layou
           break;
         }
       }
-      lines.push(rowItems.map((r) => r.str).join(' '));
+      // Wide gaps become tabs, so columns such as "Job title<tab>2024" stay apart for the CV builder's import.
+      let line = '';
+      rowItems.forEach((r, i) => {
+        if (i > 0) {
+          const prev = rowItems[i - 1];
+          line += r.x - (prev.x + prev.w) > 14 ? '\t' : ' ';
+        }
+        line += r.str;
+      });
+      lines.push(line.replace(/ {2,}/g, ' '));
     }
   }
 

@@ -187,8 +187,14 @@ export function parseCv(raw: string): ImportResult {
   const order: string[] = [];
   const pushOrder = (k: string) => { if (!order.includes(k)) order.push(k); };
 
+  let prevKey: Key | 'header' = 'header';
   for (const b of blocks.slice(1)) {
     const L = b.lines.filter((l) => !/^(page \d+|\d+\s*\/\s*\d+)$/i.test(l));
+    const afterRefs = prevKey === 'references';
+    prevKey = b.key;
+    // PDFs can put the next heading in the middle of the last referee's details. Give the university,
+    // phone and email lines that follow it back to that referee instead of filing them in the new section.
+    if (afterRefs && b.key !== 'references') reclaimRefereeLines(d.references[d.references.length - 1], L);
     if (!L.length) continue;
 
     if (b.key === 'summary') {
@@ -239,7 +245,8 @@ export function parseCv(raw: string): ImportResult {
 
   for (const k of BUILT_IN) pushOrder(k);
   for (const c of d.custom) pushOrder(`custom:${c.id}`);
-  d.order = order;
+  // References belong at the very end, after any extra sections such as Volunteering
+  d.order = [...order.filter((k) => k !== 'references'), ...order.filter((k) => k === 'references')];
   return { data: d, found };
 }
 
@@ -404,6 +411,22 @@ function parseTraining(lines: string[]) {
     t.details = rest.filter((l) => l !== orgLine && !/^(duration|year)\s*[:\-]/i.test(l)).join('\n');
     return t;
   }).filter((t) => t.name);
+}
+
+/** Moves leading university, phone and email lines from `lines` onto the referee they belong to. */
+function reclaimRefereeLines(r: ReturnType<typeof newReference> | undefined, lines: string[]) {
+  if (!r || (r.org && r.phone && r.email)) return;
+  while (lines.length) {
+    const x = stripBullet(lines[0]);
+    const email = x.match(EMAIL)?.[0];
+    const phone = PHONE.test(x) ? x.match(PHONE)?.[0]?.trim() : '';
+    if (email || phone) {
+      r.email = r.email || email || '';
+      r.phone = r.phone || phone || '';
+    } else if (!r.org && x.length < 100 && (INSTITUTION.test(x) || /^department\b/i.test(x))) r.org = x;
+    else break;
+    lines.shift();
+  }
 }
 
 function parseReferences(lines: string[]) {

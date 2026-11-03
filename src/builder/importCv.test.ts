@@ -57,3 +57,39 @@ describe('importing a CV with headings the site does not know', () => {
     expect(data.name).toBe('DALOYAR HASSAN SHISHIR');
   });
 });
+
+describe('references split by the next heading', () => {
+  const REFS = `A NAME
+a@b.com
+
+REFERENCES
+Dr. Hossain Al Mamun
+Professor
+Department of English
++8801711987266, profham.sust@gmail.com
+Dr. Md. Ismail Hossain
+Professor
+VOLUNTEERING
+Shahjalal University of Science and Technology, Sylhet
++8801711069070
+ismail-scw@sust.edu`;
+  const { data } = parseCv(REFS);
+
+  it('gives the second referee back their university, phone and email', () => {
+    expect(data.references).toHaveLength(2);
+    const r2 = data.references[1];
+    expect(r2.org).toMatch(/Shahjalal University/);
+    expect(r2.phone).toMatch(/1711069070/);
+    expect(r2.email).toBe('ismail-scw@sust.edu');
+  });
+
+  it('does not leave those contact lines as a Volunteering section', () => {
+    expect(data.custom.map((c) => c.title)).not.toContain('Volunteering');
+  });
+
+  it('keeps real volunteering entries and puts References last', () => {
+    const r = parseCv(`${REFS}\n• Taught English to 40 children`);
+    expect(r.data.custom.find((c) => c.title === 'Volunteering')?.items).toHaveLength(1);
+    expect(r.data.order[r.data.order.length - 1]).toBe('references');
+  });
+});

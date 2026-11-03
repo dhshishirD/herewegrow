@@ -6,12 +6,15 @@ import { whatsappLink } from '../lib/whatsapp';
 import { DownloadButtons } from '../components/Downloads';
 import { productFor, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 import { takeCartPending, useCart } from '../lib/cart';
+import { findPlan } from '../../shared/plans';
+import { useAuth } from '../lib/auth';
 
 type State = { kind: 'checking' } | { kind: 'missing' } | { kind: 'error' } | { kind: 'done'; data: VerifyResponse };
 
 export function PaymentSuccess() {
   const { t, lang } = useLang();
   const { clear: clearCart } = useCart();
+  const { refresh } = useAuth();
   const invoiceId = new URLSearchParams(window.location.search).get('invoice_id') ?? '';
   const [state, setState] = useState<State>(invoiceId ? { kind: 'checking' } : { kind: 'missing' });
 
@@ -23,7 +26,9 @@ export function PaymentSuccess() {
     if (!invoiceId) return;
     verifyInvoice(invoiceId)
       .then((data) => {
-        if (data.ok && data.status === 'paid' && data.productId) {
+        if (data.ok && data.status === 'paid' && findPlan(data.productId ?? '')) {
+          void refresh(); // the header and Builder see Pro straight away
+        } else if (data.ok && data.status === 'paid' && data.productId) {
           saveOrder({ invoiceId, productId: data.productId, templateIds: data.templateIds, at: Date.now() });
           if (takeCartPending()) clearCart();
         }
@@ -32,11 +37,14 @@ export function PaymentSuccess() {
       .catch(() => setState({ kind: 'error' }));
   }, [invoiceId]);
 
+  const plan = state.kind === 'done' ? findPlan(state.data.productId ?? '') : undefined;
   const product = state.kind === 'done' ? productFor(state.data.productId, state.data.templateIds) : undefined;
   const downloads = state.kind === 'done' && state.data.status === 'paid' ? state.data.downloads ?? [] : [];
   const ref = state.kind === 'done' ? state.data.transactionId || invoiceId : invoiceId;
 
-  const message = product
+  const message = plan
+    ? `Hello HereWeGrow, I paid for "${plan.name.en}" but need help. Invoice: ${invoiceId}${ref !== invoiceId ? `, TrxID: ${ref}` : ''}.`
+    : product
     ? `Hello HereWeGrow, I paid for "${product.name.en}". Invoice: ${invoiceId}${ref !== invoiceId ? `, TrxID: ${ref}` : ''}.${
         product.kind === 'service' ? ' I am sending my CV/details now.' : ' Please send my files.'
       }`
@@ -46,6 +54,26 @@ export function PaymentSuccess() {
     <section className="wrap max-w-2xl py-16">
       {state.kind === 'checking' && (
         <p role="status" className="font-display text-2xl font-semibold">{t({ en: 'Confirming your payment…', bn: 'আপনার পেমেন্ট নিশ্চিত করা হচ্ছে…' })}</p>
+      )}
+
+      {state.kind === 'done' && state.data.status === 'paid' && plan && (
+        <div>
+          <h1 className="text-4xl font-bold text-leaf">{t({ en: 'Pro is active', bn: 'প্রো চালু হয়েছে' })}</h1>
+          <p className="mt-3 text-lg">
+            {t(plan.name)}, {taka(state.data.amount ?? plan.price, lang)}.{' '}
+            {state.data.proUntil
+              ? t({
+                  en: `Your Pro runs until ${new Date(state.data.proUntil).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
+                  bn: `আপনার প্রো ${new Date(state.data.proUntil).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' })} পর্যন্ত চালু থাকবে।`,
+                })
+              : null}
+          </p>
+          <p className="mt-2 text-muted">{t({ en: 'Keep this reference:', bn: 'এই রেফারেন্সটি রাখুন:' })} <strong className="break-all">{ref}</strong></p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/builder" className="btn btn-primary">{t({ en: 'Open the CV builder', bn: 'সিভি বিল্ডার খুলুন' })}</Link>
+            <Link href="/account" className="btn btn-quiet">{t({ en: 'My account', bn: 'আমার অ্যাকাউন্ট' })}</Link>
+          </div>
+        </div>
       )}
 
       {state.kind === 'done' && state.data.status === 'paid' && product && (
@@ -109,7 +137,7 @@ export function PaymentSuccess() {
         </div>
       )}
 
-      {((state.kind === 'done' && (state.data.status === 'unpaid' || (state.data.status === 'paid' && !product))) || state.kind === 'error' || state.kind === 'missing') && (
+      {((state.kind === 'done' && (state.data.status === 'unpaid' || (state.data.status === 'paid' && !product && !plan))) || state.kind === 'error' || state.kind === 'missing') && (
         <div>
           <h1 className="text-4xl font-bold">{t({ en: 'We could not confirm this payment', bn: 'এই পেমেন্ট নিশ্চিত করা যায়নি' })}</h1>
           <p className="mt-3 text-lg text-muted">

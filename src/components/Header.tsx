@@ -1,3 +1,4 @@
+import { PRO_PUBLIC } from '../../shared/plans';
 import { CartButton } from './CartDrawer';
 import { useAuth } from '../lib/auth';
 import { useLang } from '../lib/lang';
@@ -7,6 +8,7 @@ const NAV = [
   { href: '/services', en: 'CV services', bn: 'সিভি সার্ভিস' },
   { href: '/templates', en: 'Templates', bn: 'টেমপ্লেট' },
   { href: '/tools', en: 'Free tools', bn: 'ফ্রি টুলস' },
+  ...(PRO_PUBLIC ? [{ href: '/pro', en: 'Pro', bn: 'প্রো' }] : []),
   { href: '/about', en: 'About', bn: 'আমাদের কথা' },
 ];
 

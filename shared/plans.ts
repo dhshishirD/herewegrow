@@ -6,6 +6,13 @@ import type { Bilingual } from './catalog';
 
 export const DAY_MS = 86_400_000;
 
+/**
+ * Show Pro in the menu and on the account page. Keep false until the Pro features
+ * (clean downloads, saved CVs, AI) are live, so nobody pays for something not there yet.
+ * The /pro page and checkout work either way, for testing.
+ */
+export const PRO_PUBLIC = false;
+
 export type PlanId = 'pro-7' | 'pro-30' | 'pro-365';
 
 export interface Plan {

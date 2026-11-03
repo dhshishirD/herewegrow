@@ -1,4 +1,6 @@
+import { PRO_PUBLIC } from '../../shared/plans';
 import { useAuth } from '../lib/auth';
+import { Link } from '../lib/router';
 import { useLang } from '../lib/lang';
 
 export function AccountPage() {
@@ -40,6 +42,11 @@ export function AccountPage() {
           </dd>
         </div>
       </dl>
+      {PRO_PUBLIC && (
+        <Link href="/pro" className="btn btn-primary mt-6 mr-3">
+          {user.pro ? t({ en: 'Add more Pro time', bn: 'প্রো-এর মেয়াদ বাড়ান' }) : t({ en: 'Get Pro', bn: 'প্রো নিন' })}
+        </Link>
+      )}
       <button type="button" className="btn btn-quiet mt-6" onClick={() => void logout()}>{t({ en: 'Log out', bn: 'লগআউট' })}</button>
     </div>
   );

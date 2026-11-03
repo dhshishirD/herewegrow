@@ -40,6 +40,8 @@ export interface VerifyResponse {
   transactionId?: string | null;
   templateIds?: string[];
   downloads?: { file: string; url: string; bytes: number }[];
+  /** Pro passes: the account's new Pro end date (Unix ms). */
+  proUntil?: number | null;
 }
 
 export async function verifyInvoice(invoiceId: string): Promise<VerifyResponse> {

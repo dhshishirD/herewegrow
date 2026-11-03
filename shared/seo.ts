@@ -44,6 +44,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'ফ্রি সিভি বিল্ডার: অনলাইনে সিভি বানান, PDF ডাউনলোড | Free CV maker Bangladesh | HereWeGrow',
     description: 'সহজ ফর্ম পূরণ করে ৩টি পেশাদার ডিজাইনে সিভি বানান, ATS-ফ্রেন্ডলি PDF ডাউনলোড করুন। বাংলাদেশি ফরম্যাটের ব্যক্তিগত তথ্যসহ। বিনামূল্যে, সাইন-আপ ছাড়া। Free online CV maker.',
   },
+  '/pro': {
+    title: 'HereWeGrow Pro: মার্কছাড়া সিভি ডাউনলোড, প্রিমিয়াম ডিজাইন ও এআই | Pro CV builder | HereWeGrow',
+    description: '৳৪৯ থেকে প্রো পাস: মার্কছাড়া PDF ও Word, প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ, এআই লেখার সাহায্য ও টেমপ্লেটে ছাড়। বিকাশ বা নগদে একবার পেমেন্ট, নিজে থেকে নবায়ন নেই।',
+  },
   '/tools/cv-checker': {
     title: 'ফ্রি সিভি চেকার: ATS স্কোর | Free CV checker and ATS score | HereWeGrow',
     description: 'আপনার সিভি PDF আপলোড করে ১০০-এর মধ্যে স্কোর ও সংশোধনের তালিকা পান। Free ATS CV checker for Bangladeshi job seekers. ফাইল আপনার ব্রাউজারেই থাকে।',

@@ -1,5 +1,5 @@
 // Test helpers: an in-memory KV and a D1-shaped wrapper over Node's built-in SQLite.
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import type { D1Like, D1Statement, KVLike } from './cf';
 
@@ -16,7 +16,9 @@ export function fakeKV(): KVLike & { store: Map<string, string> } {
 export function fakeD1(): D1Like {
   const db = new DatabaseSync(':memory:');
   db.exec('PRAGMA foreign_keys = ON');
-  db.exec(readFileSync(new URL('../migrations/0001_init.sql', import.meta.url), 'utf8'));
+  // Every migration, in order, like D1 applies them.
+  const dir = new URL('../migrations/', import.meta.url);
+  for (const f of readdirSync(dir).filter((n) => n.endsWith('.sql')).sort()) db.exec(readFileSync(new URL(f, dir), 'utf8'));
   const stmt = (sql: string, args: unknown[] = []): D1Statement => ({
     bind: (...v) => stmt(sql, v),
     first: async <T>() => (db.prepare(sql).get(...(args as never[])) as T) ?? null,

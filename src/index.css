@@ -131,15 +131,26 @@
 @keyframes stack-in { from { opacity: 0; translate: 0 24px; } }
 @keyframes stamp-in { from { opacity: 0; scale: 1.6; } }
 
-/* CV builder: only the CV is printed, at A4 with no margins */
+/* CV builder: only the CV is printed, at A4 with no paper margins (the designs carry their own) */
 #cv-print { display: none; }
+.cv-sidebar-bg { display: none; }
 @media print {
   @page { size: A4; margin: 0; }
   html, body { background: #fff !important; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body > #root > a, .site-header, .site-footer, .no-print, .cart-sheet { display: none !important; }
-  main { padding: 0 !important; }
+  main:not(.cv-pad) { padding: 0 !important; }
   #cv-print { display: block; }
+  /* Fill page 1 but never by a hair more than A4, which used to leave an empty extra page */
+  #cv-print .cv-page { min-height: 296mm !important; }
+  /* Top and bottom padding repeat on every page, so page 2 does not start at the paper edge */
+  #cv-print .cv-pad { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  /* Never cut a job, a degree or a heading in half */
+  #cv-print .cv-entry, #cv-print .cv-keep, #cv-print li { break-inside: avoid; }
+  #cv-print .cv-title { break-after: avoid; }
+  #cv-print p { orphans: 2; widows: 2; }
+  /* Fixed elements repeat on each printed page: the Modern sidebar colour runs full height on every page */
+  #cv-print .cv-sidebar-bg { display: block; position: fixed; top: 0; bottom: 0; left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

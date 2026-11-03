@@ -28,6 +28,9 @@ import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 
 type T = (x: { en: string; bn: string }) => string;
+
+/** Height of one A4 page in CSS pixels (297 mm at 96 dpi). */
+const A4_PX = 1123;
 type ListKey = 'experience' | 'education' | 'training' | 'references';
 
 /* ── small form parts ──────────────────────────────────────────── */
@@ -131,6 +134,8 @@ export function BuilderPage() {
   const [newSection, setNewSection] = useState('');
   const previewBox = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.6);
+  const docBox = useRef<HTMLDivElement>(null);
+  const [pages, setPages] = useState(1);
 
   const title = t({ en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' });
   const intro = t({
@@ -146,6 +151,17 @@ export function BuilderPage() {
     const fit = () => setScale(Math.min(1, el.clientWidth / 794));
     fit();
     const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [view]);
+
+  // How many A4 pages the CV fills, so the preview shows every page and where each one ends.
+  useEffect(() => {
+    const el = docBox.current;
+    if (!el) return;
+    const count = () => setPages(Math.max(1, Math.ceil((el.scrollHeight - 2) / A4_PX)));
+    count();
+    const ro = new ResizeObserver(count);
     ro.observe(el);
     return () => ro.disconnect();
   }, [view]);
@@ -527,10 +543,22 @@ export function BuilderPage() {
                   </div>
                 </div>
               )}
+              {pages > 1 && (
+                <p className="mb-2 text-sm text-muted">
+                  {t({ en: `${pages} pages. Dashed lines show where each A4 page ends.`, bn: `${num(String(pages), 'bn')} পৃষ্ঠা। ড্যাশ লাইনে প্রতিটি A4 পৃষ্ঠার শেষ দেখানো হয়েছে।` })}
+                </p>
+              )}
               <div ref={previewBox} className="overflow-hidden rounded-xl bg-mist ring-1 ring-line">
-                <div style={{ height: 1123 * scale }}>
-                  <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left' }} className="shadow-lg">
-                    <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
+                <div style={{ height: pages * A4_PX * scale }}>
+                  <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left', position: 'relative' }} className="shadow-lg">
+                    <div ref={docBox}>
+                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
+                    </div>
+                    {Array.from({ length: pages - 1 }, (_, i) => (
+                      <div key={i} aria-hidden="true" className="pointer-events-none absolute inset-x-0 border-t-2 border-dashed border-red-400" style={{ top: (i + 1) * A4_PX }}>
+                        <span className="absolute right-2 top-1 rounded bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700">{t({ en: `Page ${i + 2}`, bn: `পৃষ্ঠা ${num(String(i + 2), 'bn')}` })}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

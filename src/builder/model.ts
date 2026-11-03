@@ -100,8 +100,23 @@ export interface CvData {
 export type { DesignId };
 export type HeadingLang = 'en' | 'bn';
 
+/** Page margins in millimetres: x = left and right, y = top and bottom. */
+export interface Margins { x: number; y: number }
+/** What the designs were drawn with (about 15 mm at the sides, 12 mm top and bottom). Unset means the design's own look. */
+export const DEFAULT_MARGINS: Margins = { x: 15, y: 12 };
+export const MARGIN_LIMITS = { min: 6, max: 35 } as const;
+export const MARGIN_PRESETS: { id: string; name: { en: string; bn: string }; m: Margins }[] = [
+  { id: 'narrow', name: { en: 'Narrow', bn: 'সরু' }, m: { x: 10, y: 8 } },
+  { id: 'standard', name: { en: 'Standard', bn: 'স্ট্যান্ডার্ড' }, m: DEFAULT_MARGINS },
+  { id: 'comfortable', name: { en: 'Comfortable', bn: 'আরামদায়ক' }, m: { x: 20, y: 18 } },
+  { id: 'word', name: { en: 'Word default 2.54 cm', bn: 'Word ডিফল্ট ২.৫৪ সেমি' }, m: { x: 25.4, y: 25.4 } },
+];
+export const clampMargin = (n: number) => Math.min(MARGIN_LIMITS.max, Math.max(MARGIN_LIMITS.min, Number.isFinite(n) ? n : DEFAULT_MARGINS.x));
+
 export interface BuilderState {
   data: CvData;
+  /** Page margins. Unset keeps each design's own spacing. */
+  margins?: Margins;
   design: DesignId;
   accent: string;
   /** Language of the section headings on the CV itself. */

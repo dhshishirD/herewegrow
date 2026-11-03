@@ -1,7 +1,9 @@
+import type { AuthEnv } from './auth';
+
 // Server-only helpers for the hosted UddoktaPay (Paymently) gateway.
 // The API key is read from the Cloudflare environment and never sent to the browser.
 
-export interface Env {
+export interface Env extends AuthEnv {
   /** Secret: set in Cloudflare Pages → Settings → Variables and secrets. */
   PAYMENT_API_KEY?: string;
   /** Optional override, defaults to the HereWeGrow Paymently panel. */

@@ -1,4 +1,5 @@
 import { CartButton } from './CartDrawer';
+import { useAuth } from '../lib/auth';
 import { useLang } from '../lib/lang';
 import { Link, usePath } from '../lib/router';
 
@@ -12,6 +13,7 @@ const NAV = [
 export function Header() {
   const { lang, setLang, t } = useLang();
   const path = usePath();
+  const { user, openLogin } = useAuth();
 
   return (
     <header className="site-header sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur-md">
@@ -48,6 +50,15 @@ export function Header() {
           >
             {lang === 'bn' ? 'English' : 'বাংলা'}
           </button>
+          {user ? (
+            <Link href="/account" className="rounded-md border border-line px-2.5 py-1.5 text-sm font-semibold hover:border-leaf hover:text-leaf">
+              {t({ en: 'Account', bn: 'অ্যাকাউন্ট' })}
+            </Link>
+          ) : (
+            <button type="button" onClick={openLogin} className="rounded-md border border-line px-2.5 py-1.5 text-sm font-semibold hover:border-leaf hover:text-leaf">
+              {t({ en: 'Log in', bn: 'লগইন' })}
+            </button>
+          )}
           <CartButton />
           <Link href="/services" className="btn btn-primary hidden sm:inline-flex !min-h-10 !px-4 text-[0.95rem]">
             {t({ en: 'Order a CV', bn: 'সিভি অর্ডার করুন' })}

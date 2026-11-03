@@ -9,6 +9,10 @@ keep_vars = true
 # Optional plain variable:
 #   PAYMENT_API_BASE  defaults to https://herewegrow.paymently.io/api
 #   DOWNLOAD_SECRET   optional; signs download links (falls back to PAYMENT_API_KEY)
+#   SESSION_SECRET    required for login: any long random string (type: Secret)
+#   SMS_API_KEY, SMS_SENDER_ID   BulkSMSBD account (login codes)
+#   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET   Google sign-in (optional until ready)
+#   TURNSTILE_SECRET  optional; turns on the captcha check for login codes
 
 [assets]
 directory = "./dist"
@@ -23,6 +27,17 @@ run_worker_first = ["/api/*"]
 [[r2_buckets]]
 binding = "FILES"
 bucket_name = "herewegrow-files"
+
+# Accounts and Pro passes (Phase 1). IDs are not secrets.
+[[d1_databases]]
+binding = "DB"
+database_name = "herewegrow"
+database_id = "5b9405db-d09f-468d-9c4e-6ace7d9735d8"
+migrations_dir = "migrations"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "1a43543598fd451383f8c14162938c7e"
 
 # Workers Logs (matches the dashboard setting, so deploys don't turn it off)
 [observability.logs]

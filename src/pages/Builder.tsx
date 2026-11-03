@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { CvDocument, DESIGNS, degreeLine } from '../builder/designs';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
 import {
   ACCENTS,
@@ -22,9 +22,11 @@ import {
   type CvData,
 } from '../builder/model';
 import { PageHead } from '../components/PageHead';
+import { useAuth } from '../lib/auth';
 import { analyzeCv } from '../lib/cvAnalysis';
+import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
 import { num, useLang } from '../lib/lang';
-import { Link } from '../lib/router';
+import { Link, navigate } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 
 type T = (x: { en: string; bn: string }) => string;
@@ -137,6 +139,14 @@ export function BuilderPage() {
   const docBox = useRef<HTMLDivElement>(null);
   const [pages, setPages] = useState(1);
 
+  // Account: saved CVs and Pro gating (Phase 1 spec, section 6)
+  const { user, openLogin } = useAuth();
+  const pro = !!user?.pro;
+  const [cvId, setCvId] = useState<string | null>(() => cloudId.get());
+  const [savedRaw, setSaved] = useState<{ list: CvSummary[]; limit: number } | null>(null);
+  const saved = user ? savedRaw : null;
+  const [sync, setSync] = useState<'idle' | 'saving' | 'saved' | 'error' | 'limit'>('idle');
+
   const title = t({ en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' });
   const intro = t({
     en: 'Upload your old CV or start fresh, pick a design and download PDF or Word. Free, no sign-up, and your CV stays on your device.',
@@ -144,6 +154,33 @@ export function BuilderPage() {
   });
   useEffect(() => setPageMeta(title, intro, '/builder'), [title, intro]);
   useEffect(() => saveState(state), [state]);
+  useEffect(() => cloudId.set(cvId), [cvId]);
+
+  const userId = user?.id;
+  const refreshList = useCallback(async () => {
+    const r = await listCvs();
+    if (r.ok) setSaved({ list: r.value.cvs, limit: r.value.limit });
+  }, []);
+  useEffect(() => {
+    if (userId) void refreshList();
+  }, [userId, refreshList]);
+
+  // Autosave the open CV to the account, 1.5 seconds after the last change.
+  useEffect(() => {
+    if (!userId || !cvId) return;
+    setSync('saving');
+    const h = setTimeout(async () => {
+      const r = await updateCv(cvId, state);
+      if (r.ok) {
+        setSync('saved');
+        setSaved((x) => x && { ...x, list: x.list.map((c) => (c.id === cvId ? { ...c, title: cvTitle(state), updatedAt: Date.now() } : c)) });
+      } else if (r.error === 'not_found') {
+        setCvId(null); // deleted elsewhere, or saved by another account on this device
+        setSync('idle');
+      } else setSync('error');
+    }, 1500);
+    return () => clearTimeout(h);
+  }, [state, cvId, userId]);
 
   useEffect(() => {
     const el = previewBox.current;
@@ -245,7 +282,7 @@ export function BuilderPage() {
     setWordBusy(true);
     try {
       const { buildDocx } = await import('../builder/word');
-      const blob = await buildDocx(state);
+      const blob = await buildDocx(state, { watermark: !pro });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV.docx`;
@@ -258,7 +295,48 @@ export function BuilderPage() {
     setWordBusy(false);
   };
 
+  const needPro = !pro && isProDesign(state.design);
+  const askPro = () => {
+    if (window.confirm(t({ en: 'This design is part of Pro. Get Pro from ৳49 to download it?', bn: 'এই ডিজাইনটি Pro-এর অংশ। ডাউনলোড করতে ৳৪৯ থেকে Pro নিন?' }))) navigate('/pro');
+  };
+
+  const saveToAccount = async () => {
+    if (!user) return openLogin();
+    setSync('saving');
+    const r = await createCv(state);
+    if (r.ok) {
+      setCvId(r.value);
+      setSync('saved');
+      void refreshList();
+    } else setSync(r.error === 'limit' ? 'limit' : 'error');
+  };
+  const openSaved = async (id: string) => {
+    if (id === cvId) return;
+    if (!cvId && !isEmpty && !window.confirm(t({ en: 'Open this CV? The one on screen is not saved to your account and will be replaced.', bn: 'এই সিভি খুলবেন? স্ক্রিনের সিভিটি অ্যাকাউন্টে সেভ করা নেই, এটি বদলে যাবে।' }))) return;
+    const r = await loadCv(id);
+    if (r.ok && r.value?.data) {
+      setState({ ...r.value, design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
+      setCvId(id);
+      setSync('saved');
+    } else setSync('error');
+  };
+  const newCv = () => {
+    if (!window.confirm(t({ en: 'Start a new CV? The current one stays saved in your account.', bn: 'নতুন সিভি শুরু করবেন? বর্তমানটি আপনার অ্যাকাউন্টে সেভ থাকবে।' }))) return;
+    setCvId(null);
+    setState((s) => ({ ...s, data: emptyCv() }));
+    setSync('idle');
+  };
+  const removeSaved = async (c: CvSummary) => {
+    if (!window.confirm(t({ en: `Delete “${c.title}” from your account?`, bn: `“${c.title}” অ্যাকাউন্ট থেকে মুছবেন?` }))) return;
+    const r = await deleteCv(c.id);
+    if (r.ok) {
+      if (c.id === cvId) setCvId(null);
+      void refreshList();
+    }
+  };
+
   const download = () => {
+    if (needPro) return askPro();
     const prev = document.title;
     document.title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
     window.print();
@@ -282,6 +360,7 @@ export function BuilderPage() {
                   onClick={() => setState((s) => ({ ...s, design: x.id }))}
                   className={`rounded-full px-3.5 py-1.5 text-sm font-semibold ${state.design === x.id ? 'bg-ink text-white' : 'bg-white ring-1 ring-line hover:ring-leaf'}`}>
                   {t(x.name)}
+                  {x.pro && <span className={`ml-1.5 rounded px-1 text-[10px] font-bold uppercase ${state.design === x.id ? 'bg-gold text-white' : 'bg-gold-soft text-gold'}`}>Pro</span>}
                 </button>
               ))}
             </div>
@@ -311,7 +390,9 @@ export function BuilderPage() {
               <button type="button" onClick={downloadWord} disabled={wordBusy} className="btn btn-quiet bg-white !min-h-10" title={t({ en: 'Editable Word file, Classic layout', bn: 'এডিটযোগ্য Word ফাইল, ক্লাসিক লেআউট' })}>
                 {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : 'Word'}
               </button>
-              <button type="button" onClick={download} className="btn btn-primary !min-h-10">{t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}</button>
+              <button type="button" onClick={download} className="btn btn-primary !min-h-10">
+                {needPro && <span aria-hidden="true">🔒 </span>}{t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}
+              </button>
             </div>
           </div>
         </div>
@@ -319,6 +400,62 @@ export function BuilderPage() {
         <div className="wrap grid grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           {/* Form */}
           <div className={`min-w-0 space-y-3 ${view === 'preview' ? 'max-md:hidden' : ''}`}>
+            {/* Saved CVs */}
+            <section className="rounded-2xl bg-white p-5 ring-1 ring-line">
+              {!user ? (
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-display text-lg font-semibold">{t({ en: 'Save your CV online', bn: 'সিভি অনলাইনে সেভ করুন' })}</p>
+                    <p className="mt-1 text-sm text-muted">{t({ en: 'Log in with your phone number to keep your CV safe and open it on any device.', bn: 'ফোন নম্বর দিয়ে লগইন করুন: সিভি নিরাপদ থাকবে, যেকোনো ডিভাইসে খুলতে পারবেন।' })}</p>
+                  </div>
+                  <button type="button" className="btn btn-quiet bg-white !min-h-10" onClick={openLogin}>{t({ en: 'Log in', bn: 'লগইন' })}</button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-display text-lg font-semibold">
+                      {t({ en: 'My CVs', bn: 'আমার সিভি' })}
+                      {saved && <span className="ml-2 font-body text-sm font-normal text-muted">{num(`${saved.list.length}/${saved.limit}`, lang)}</span>}
+                    </p>
+                    <span className={`text-sm ${sync === 'error' ? 'text-alert' : 'text-muted'}`} aria-live="polite">
+                      {cvId && sync === 'saving' && t({ en: 'Saving…', bn: 'সেভ হচ্ছে…' })}
+                      {cvId && sync === 'saved' && t({ en: 'Saved to your account', bn: 'অ্যাকাউন্টে সেভ হয়েছে' })}
+                      {sync === 'error' && t({ en: 'Could not save. Check your internet.', bn: 'সেভ হয়নি। ইন্টারনেট দেখুন।' })}
+                    </span>
+                  </div>
+                  {!!saved?.list.length && (
+                    <ul className="mt-3 space-y-1.5">
+                      {saved.list.map((c) => (
+                        <li key={c.id} className={`flex items-center gap-2 rounded-lg px-3 py-2 ring-1 ${c.id === cvId ? 'bg-leaf-soft/60 ring-leaf/40' : 'ring-line'}`}>
+                          <button type="button" className="min-w-0 flex-1 truncate text-left font-semibold" onClick={() => void openSaved(c.id)} aria-current={c.id === cvId || undefined}>
+                            {c.title}
+                          </button>
+                          {c.id === cvId && <span className="text-xs text-leaf-dark">{t({ en: 'Open', bn: 'খোলা আছে' })}</span>}
+                          <button type="button" className="rounded px-2 py-1 text-sm text-alert hover:bg-mist" onClick={() => void removeSaved(c)} aria-label={t({ en: `Delete ${c.title}`, bn: `${c.title} মুছুন` })}>✕</button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {!cvId && <button type="button" className="btn btn-primary !min-h-10" disabled={sync === 'saving'} onClick={() => void saveToAccount()}>{t({ en: 'Save this CV to my account', bn: 'এই সিভি অ্যাকাউন্টে সেভ করুন' })}</button>}
+                    {cvId && <button type="button" className="btn btn-quiet bg-white !min-h-10" onClick={newCv}>+ {t({ en: 'New CV', bn: 'নতুন সিভি' })}</button>}
+                  </div>
+                  {(sync === 'limit' || (!pro && saved && saved.list.length >= saved.limit && !cvId)) && (
+                    <p className="mt-3 rounded-lg bg-gold-soft px-3 py-2 text-sm">
+                      {t({ en: 'Free accounts keep 1 CV online. Pro keeps up to 20.', bn: 'ফ্রি অ্যাকাউন্টে ১টি সিভি অনলাইনে থাকে। Pro-তে ২০টি পর্যন্ত।' })}{' '}
+                      <Link href="/pro" className="font-semibold underline">{t({ en: 'Get Pro from ৳49', bn: '৳৪৯ থেকে Pro নিন' })}</Link>
+                    </p>
+                  )}
+                </>
+              )}
+              {!pro && (
+                <p className="mt-3 border-t border-line pt-3 text-sm text-muted">
+                  {t({ en: 'Free downloads carry a small “Made with HereWeGrow.pro” footer. Pro removes it and unlocks premium designs.', bn: 'ফ্রি ডাউনলোডে ছোট একটি “Made with HereWeGrow.pro” লেখা থাকে। Pro নিলে এটি থাকে না, প্রিমিয়াম ডিজাইনও খুলে যায়।' })}{' '}
+                  <Link href="/pro" className="font-semibold text-leaf underline">{t({ en: 'See Pro', bn: 'Pro দেখুন' })}</Link>
+                </p>
+              )}
+            </section>
+
             {/* Import */}
             <section className="rounded-2xl border-2 border-dashed border-leaf/40 bg-leaf-soft/50 p-5">
               <p className="font-display text-lg font-semibold">{t({ en: 'Already have a CV?', bn: 'আগের সিভি আছে?' })}</p>
@@ -575,6 +712,7 @@ export function BuilderPage() {
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
         <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
+        {!pro && <div className="cv-watermark">Made with HereWeGrow.pro</div>}
       </div>
     </>
   );

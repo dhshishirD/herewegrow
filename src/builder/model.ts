@@ -96,7 +96,7 @@ export interface CvData {
   hidden: string[];
 }
 
-export type DesignId = 'classic' | 'modern' | 'executive';
+export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant';
 export type HeadingLang = 'en' | 'bn';
 
 export interface BuilderState {

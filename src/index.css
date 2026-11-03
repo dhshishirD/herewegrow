@@ -133,6 +133,7 @@
 
 /* CV builder: only the CV is printed, at A4 with no paper margins (the designs carry their own) */
 #cv-print { display: none; }
+.cv-watermark { display: none; }
 .cv-sidebar-bg { display: none; }
 @media print {
   @page { size: A4; margin: 0; }
@@ -147,10 +148,14 @@
   #cv-print .cv-pad { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   /* Never cut a job, a degree or a heading in half */
   #cv-print .cv-entry, #cv-print .cv-keep, #cv-print li { break-inside: avoid; }
+  /* …but a long entry (7+ bullets) may flow onto the next page, so page 1 is not left half empty */
+  #cv-print .cv-entry:has(li:nth-child(7)) { break-inside: auto; }
   #cv-print .cv-title { break-after: avoid; }
   #cv-print p { orphans: 2; widows: 2; }
   /* Fixed elements repeat on each printed page: the Modern sidebar colour runs full height on every page */
   #cv-print .cv-sidebar-bg { display: block; position: fixed; top: 0; bottom: 0; left: 0; }
+  /* Free downloads: a small footer on every page (Pro removes it) */
+  #cv-print .cv-watermark { display: block; position: fixed; bottom: 4mm; right: 8mm; z-index: 2; font: 600 7.5pt/1 "Inter Variable", Arial, sans-serif; color: #94a3b8; background: rgba(255,255,255,.85); padding: 1mm 2mm; border-radius: 1mm; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,6 +2,9 @@ import { lazy, Suspense, type JSX } from 'react';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
+import { AuthProvider } from './lib/auth';
+import { LoginModal } from './components/LoginModal';
+import { AccountPage } from './pages/Account';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
@@ -37,6 +40,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/tools/photo-signature-resizer': PhotoResizer,
   '/payment/success': PaymentSuccess,
   '/payment/cancel': PaymentCancel,
+  '/account': AccountPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,
 };
@@ -54,6 +58,7 @@ function Page() {
 export default function App() {
   return (
     <LangProvider>
+      <AuthProvider>
       <CartProvider>
       <CheckoutProvider>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">
@@ -65,8 +70,10 @@ export default function App() {
         </main>
         <Footer />
         <CartDrawer />
+        <LoginModal />
       </CheckoutProvider>
       </CartProvider>
+      </AuthProvider>
     </LangProvider>
   );
 }

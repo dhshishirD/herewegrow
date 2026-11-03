@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/fraunces';
 import '@fontsource-variable/noto-serif-bengali';
 import '@fontsource-variable/inter';
+import '@fontsource-variable/plus-jakarta-sans';
 import '@fontsource/hind-siliguri/400.css';
 import '@fontsource/hind-siliguri/600.css';
 import '@fontsource/hind-siliguri/700.css';

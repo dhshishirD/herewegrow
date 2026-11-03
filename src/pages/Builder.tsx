@@ -1,5 +1,6 @@
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
+import { CV_FONTS, ensureAllFonts, ensureFont, findFont } from '../builder/fonts';
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
 import {
   ACCENTS,
@@ -137,11 +138,11 @@ function cvText(d: CvData) {
 const THUMB = 0.15;
 
 /** A live, scaled-down copy of the CV in one design. Memoised so typing re-draws only once per pause. */
-const Thumb = memo(function Thumb({ d, design, accent, headings }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang }) {
+const Thumb = memo(function Thumb({ d, design, accent, headings, font }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; font?: string }) {
   return (
     <div aria-hidden="true" className="pointer-events-none overflow-hidden rounded-md bg-white" style={{ width: 794 * THUMB, height: 1123 * THUMB }}>
       <div style={{ width: 794, transform: `scale(${THUMB})`, transformOrigin: 'top left' }}>
-        <CvDocument d={d} design={design} accent={accent} headings={headings} />
+        <CvDocument d={d} design={design} accent={accent} headings={headings} font={font} />
       </div>
     </div>
   );
@@ -154,7 +155,7 @@ function MarginControl({ margins, onChange, t }: { margins?: Margins; onChange: 
   const slider = (label: string, key: 'x' | 'y') => (
     <label className="block text-sm">
       <span className="flex justify-between font-medium"><span>{label}</span><span className="text-muted">{m[key]} mm</span></span>
-      <input type="range" min={MARGIN_LIMITS.min} max={MARGIN_LIMITS.max} step={1} value={m[key]} className="mt-1 w-full accent-[#12805c]"
+      <input type="range" min={MARGIN_LIMITS.min} max={MARGIN_LIMITS.max} step={1} value={m[key]} className="mt-1 w-full accent-[#1d5bd8]"
         onChange={(e) => onChange({ ...m, [key]: clampMargin(Number(e.target.value)) })} />
     </label>
   );
@@ -185,6 +186,48 @@ function MarginControl({ margins, onChange, t }: { margins?: Margins; onChange: 
   );
 }
 
+/* ── font picker ─────────────────────────────────────────────────── */
+
+function FontPicker({ value, onChange, t }: { value?: string; onChange: (id: string | undefined) => void; t: T }) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  const cur = findFont(value);
+  useEffect(() => ensureFont(value), [value]);
+  const pick = (id: string) => {
+    onChange(id === 'default' ? undefined : id);
+    if (ref.current) ref.current.open = false;
+  };
+  const group = (kind: 'sans' | 'serif', label: string) => (
+    <>
+      <p className="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wider text-muted">{label}</p>
+      {CV_FONTS.filter((f) => f.id !== 'default' && f.kind === kind).map((f) => (
+        <button key={f.id} type="button" role="option" aria-selected={cur.id === f.id} onClick={() => pick(f.id)}
+          className={`flex w-full items-center justify-between rounded-md px-3 py-1.5 text-left text-[15px] hover:bg-mist ${cur.id === f.id ? 'bg-leaf-soft text-leaf-dark' : ''}`}>
+          <span style={{ fontFamily: f.head }}>{f.name}</span>
+          {cur.id === f.id && <span aria-hidden>✓</span>}
+        </button>
+      ))}
+    </>
+  );
+  return (
+    <details ref={ref} className="relative" onToggle={(e) => (e.currentTarget.open ? ensureAllFonts() : undefined)}>
+      <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold ring-1 ring-line hover:ring-leaf [&::-webkit-details-marker]:hidden"
+        title={t({ en: 'Font for your CV', bn: 'সিভির ফন্ট' })}>
+        <span aria-hidden className="font-serif text-base leading-none">Aa</span>
+        <span className="max-w-32 truncate" style={cur.head ? { fontFamily: cur.head } : undefined}>{cur.id === 'default' ? t({ en: 'Font', bn: 'ফন্ট' }) : cur.name}</span>
+        <span aria-hidden className="text-muted">▾</span>
+      </summary>
+      <div role="listbox" aria-label={t({ en: 'Font', bn: 'ফন্ট' })} className="absolute left-0 z-30 mt-2 max-h-[22rem] w-64 overflow-y-auto rounded-xl bg-white p-1.5 shadow-xl ring-1 ring-line">
+        <button type="button" role="option" aria-selected={cur.id === 'default'} onClick={() => pick('default')}
+          className={`w-full rounded-md px-3 py-1.5 text-left text-sm font-semibold hover:bg-mist ${cur.id === 'default' ? 'bg-leaf-soft text-leaf-dark' : ''}`}>
+          {t({ en: 'Design default', bn: 'ডিজাইনের নিজস্ব ফন্ট' })}
+        </button>
+        {group('sans', t({ en: 'Clean sans-serif', bn: 'স্যান্স-সেরিফ' }))}
+        {group('serif', t({ en: 'Classic serif & pairs', bn: 'সেরিফ ও জোড়া' }))}
+      </div>
+    </details>
+  );
+}
+
 function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: boolean; onPick: (id: DesignId) => void; t: T }) {
   // Thumbnails follow the person's own CV (or the example while it is empty), a beat behind their typing
   const live = useDeferredValue(state.data);
@@ -198,7 +241,7 @@ function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: bo
           <button key={x.id} type="button" role="radio" aria-checked={on} title={t(x.note)} onClick={() => onPick(x.id)}
             className={`group shrink-0 snap-start rounded-xl p-1.5 text-left transition ${on ? 'bg-white ring-2 ring-leaf shadow-md' : 'ring-1 ring-line hover:bg-white hover:ring-leaf/50'}`}>
             <div className="relative">
-              <Thumb d={d} design={x.id} accent={state.accent} headings={state.headings} />
+              <Thumb d={d} design={x.id} accent={state.accent} headings={state.headings} font={state.font} />
               {x.pro && (
                 <span className={`absolute right-1.5 top-1.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${pro ? 'bg-leaf text-white' : 'bg-saffron text-ink'}`}>
                   {pro ? 'Pro ✓' : 'Pro'}
@@ -404,7 +447,7 @@ export function BuilderPage() {
     if (!cvId && !isEmpty && !window.confirm(t({ en: 'Open this CV? The one on screen is not saved to your account and will be replaced.', bn: 'এই সিভি খুলবেন? স্ক্রিনের সিভিটি অ্যাকাউন্টে সেভ করা নেই, এটি বদলে যাবে।' }))) return;
     const r = await loadCv(id);
     if (r.ok && r.value?.data) {
-      setState({ ...r.value, design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
+      setState({ ...r.value, headings: 'en', design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
       setCvId(id);
       setSync('saved');
     } else setSync('error');
@@ -449,15 +492,7 @@ export function BuilderPage() {
                 {DESIGNS.map((x) => <option key={x.id} value={x.id}>{t(x.name)}{x.pro && !pro ? ' · Pro' : ''}</option>)}
               </select>
             </label>
-            <div role="radiogroup" aria-label={t({ en: 'Heading language', bn: 'শিরোনামের ভাষা' })} className="flex rounded-full bg-white p-0.5 ring-1 ring-line">
-              {(['en', 'bn'] as const).map((h) => (
-                <button key={h} type="button" role="radio" aria-checked={(state.headings ?? 'en') === h} onClick={() => setState((s) => ({ ...s, headings: h }))}
-                  title={t({ en: 'Language of the section headings on your CV', bn: 'সিভির শিরোনামগুলোর ভাষা' })}
-                  className={`rounded-full px-3 py-1 text-sm font-semibold ${(state.headings ?? 'en') === h ? 'bg-leaf text-white' : ''}`}>
-                  {h === 'en' ? 'EN' : 'বাংলা'}
-                </button>
-              ))}
-            </div>
+            <FontPicker value={state.font} onChange={(font) => setState((s) => ({ ...s, font }))} t={t} />
             <div role="radiogroup" aria-label={t({ en: 'Colour', bn: 'রং' })} className="flex gap-1.5">
               {ACCENTS.map((c) => (
                 <button key={c} type="button" role="radio" aria-checked={state.accent === c} aria-label={c} onClick={() => setState((s) => ({ ...s, accent: c }))}
@@ -780,7 +815,7 @@ export function BuilderPage() {
                 <div style={{ height: pages * A4_PX * scale }}>
                   <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left', position: 'relative' }} className="shadow-lg">
                     <div ref={docBox}>
-                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} />
+                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} />
                     </div>
                     {Array.from({ length: pages - 1 }, (_, i) => (
                       <div key={i} aria-hidden="true" className="pointer-events-none absolute inset-x-0 border-t-2 border-dashed border-red-400" style={{ top: (i + 1) * A4_PX }}>
@@ -807,7 +842,7 @@ export function BuilderPage() {
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
-        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} />
+        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} />
         {!pro && <div className="cv-watermark">Made with HereWeGrow.pro</div>}
       </div>
     </>

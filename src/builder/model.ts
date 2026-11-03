@@ -119,8 +119,10 @@ export interface BuilderState {
   margins?: Margins;
   design: DesignId;
   accent: string;
-  /** Language of the section headings on the CV itself. */
+  /** Language of the section headings on the CV itself. The builder now always writes English. */
   headings?: HeadingLang;
+  /** Font id from builder/fonts.ts. Unset keeps the design's own fonts. */
+  font?: string;
 }
 
 export const BUILT_IN = ['summary', 'experience', 'education', 'skills', 'training', 'personal', 'references'] as const;
@@ -239,7 +241,7 @@ export const sampleCv = (): CvData => {
   };
 };
 
-export const ACCENTS = ['#0e3b2e', '#12805c', '#1d4ed8', '#7c2d12', '#334155', '#6d28d9'];
+export const ACCENTS = ['#1e3a5f', '#1d5bd8', '#0f766e', '#0e3b2e', '#7c2d12', '#334155', '#6d28d9'];
 
 const KEY = 'hwg_builder_v1';
 
@@ -268,7 +270,7 @@ export function loadState(): BuilderState | null {
     const raw = localStorage.getItem(KEY);
     if (!raw) return null;
     const s = JSON.parse(raw) as BuilderState;
-    return s && s.data ? { ...s, data: normalise(s.data) } : null;
+    return s && s.data ? { ...s, headings: 'en', data: normalise(s.data) } : null;
   } catch {
     return null;
   }

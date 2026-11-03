@@ -11,6 +11,7 @@ import { whatsappLink } from '../lib/whatsapp';
 import { FAQ, STEPS } from '../content/faq';
 import { FaqList } from './CatalogPages';
 import { ExpertSection, ReviewsSection } from '../components/Expert';
+import { Showcase } from '../components/Showcase';
 
 const FEATURED = ['ats-banking-standard-bd', 'creative-modern-executive-2page', 'ats-graduate-standard-single-page', 'creative-finance-accountant-2page'];
 
@@ -131,6 +132,9 @@ export function Home() {
           ))}
         </ul>
       </section>
+
+      {/* Promo slider: CV, LinkedIn and BDJobs before → after */}
+      <Showcase />
 
       {/* Three ways in */}
       <section className="bg-leaf-dark text-white">

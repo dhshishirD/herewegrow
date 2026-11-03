@@ -1,3 +1,4 @@
+import { findFont } from './fonts';
 // Builds an editable Word (.docx) version of the CV in the browser.
 // Loaded only when someone asks for a Word file, so the builder page stays light.
 // The Word file always uses the one-column Classic layout: it is the easiest to edit and ATS-safe.
@@ -134,7 +135,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const doc = new Document({
     creator: 'HereWeGrow CV builder',
     title: `${d.name || 'My'} CV`,
-    styles: { default: { document: { run: { font: { ascii: 'Calibri', hAnsi: 'Calibri', cs: 'Nirmala UI' }, size: 21 } } } },
+    styles: { default: { document: { run: { font: { ascii: findFont(state.font).word, hAnsi: findFont(state.font).word, cs: 'Nirmala UI' }, size: 21 } } } },
     numbering: {
       config: [{
         reference: 'bullets',

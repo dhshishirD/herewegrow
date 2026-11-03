@@ -3,6 +3,7 @@
 
 import { handleCheckout, handleVerify } from '../server/handlers';
 import { handleAuth } from '../server/authHandlers';
+import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
 import { sendReminders } from '../server/entitlements';
 import { bulkSmsBd } from '../server/sms';
@@ -18,6 +19,7 @@ export default {
 
     if (pathname.startsWith('/api/')) {
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);
+      if (pathname === '/api/cvs' || pathname.startsWith('/api/cvs/')) return handleCvs(request, env, pathname);
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);
       if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
       if (pathname === '/api/checkout') return handleCheckout(request, env);

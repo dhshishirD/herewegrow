@@ -6,6 +6,7 @@ import {
   AlignmentType,
   BorderStyle,
   Document,
+  Footer,
   ImageRun,
   LevelFormat,
   Packer,
@@ -30,7 +31,8 @@ function dataUrlBytes(url: string): Uint8Array {
   return out;
 }
 
-export async function buildDocx(state: BuilderState): Promise<Blob> {
+/** watermark: free downloads carry a small "Made with HereWeGrow.pro" footer; Pro files do not. */
+export async function buildDocx(state: BuilderState, opts: { watermark?: boolean } = {}): Promise<Blob> {
   const d = state.data;
   const L = LABELS[state.headings ?? 'en'];
   const accent = hex(state.accent);
@@ -136,7 +138,13 @@ export async function buildDocx(state: BuilderState): Promise<Blob> {
         levels: [{ level: 0, format: LevelFormat.BULLET, text: '•', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 360, hanging: 240 } } } }],
       }],
     },
-    sections: [{ properties: { page: { size: A4, margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN } } }, children: body }],
+    sections: [{
+      properties: { page: { size: A4, margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN } } },
+      ...(opts.watermark
+        ? { footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Made with HereWeGrow.pro', size: 14, color: '94A3B8' })] })] }) } }
+        : {}),
+      children: body,
+    }],
   });
   return Packer.toBlob(doc);
 }

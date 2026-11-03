@@ -261,15 +261,57 @@ function Executive({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
-export const DESIGNS: { id: DesignId; name: { en: string; bn: string }; note: { en: string; bn: string } }[] = [
+/** Designs marked pro can be tried by everyone; downloading them needs Pro. */
+/* ── Elegant (Pro): colour header band, spaced headings, dates in a pill ── */
+
+function Elegant({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: accent, margin: '20px 0 9px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        {children}<span style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10, paddingLeft: 12, borderLeft: `2px solid ${accent}33` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: accent, background: `${accent}14`, borderRadius: 999, padding: '0 9px', fontSize: 11.5, fontWeight: 600, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ background: accent, color: '#fff', padding: '38px 56px 30px', display: 'flex', gap: 26, alignItems: 'center' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, margin: 0, lineHeight: 1.1, letterSpacing: '0.01em' }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14.5, opacity: 0.92, letterSpacing: '0.04em' }}>{d.headline}</p>}
+          <p style={{ margin: '12px 0 0', fontSize: 12, opacity: 0.88 }}>{contactLine(d).join('   ·   ')}</p>
+        </div>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 112, height: 112, borderRadius: '50%', objectFit: 'cover', border: '4px solid rgba(255,255,255,.4)' }} />}
+      </header>
+      <div className="cv-pad" style={{ padding: '14px 56px 40px' }}>
+        {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
+export const DESIGNS: { id: DesignId; name: { en: string; bn: string }; note: { en: string; bn: string }; pro?: boolean }[] = [
   { id: 'classic', name: { en: 'Classic (ATS)', bn: 'ক্লাসিক (ATS)' }, note: { en: 'Best for online job portals', bn: 'অনলাইন জব পোর্টালের জন্য সেরা' } },
   { id: 'modern', name: { en: 'Modern', bn: 'মডার্ন' }, note: { en: 'Colour sidebar and photo', bn: 'রঙিন সাইডবার ও ছবি' } },
   { id: 'executive', name: { en: 'Executive', bn: 'এক্সিকিউটিভ' }, note: { en: 'For senior roles', bn: 'সিনিয়র পদের জন্য' } },
+  { id: 'elegant', name: { en: 'Elegant', bn: 'এলিগ্যান্ট' }, note: { en: 'Colour header band, premium look', bn: 'রঙিন হেডার, প্রিমিয়াম লুক' }, pro: true },
 ];
+
+export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
 
 export function CvDocument({ d, design, accent, headings = 'en' }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang }) {
   const L = LABELS[headings];
   if (design === 'modern') return <Modern d={d} accent={accent} L={L} />;
   if (design === 'executive') return <Executive d={d} accent={accent} L={L} />;
+  if (design === 'elegant') return <Elegant d={d} accent={accent} L={L} />;
   return <Classic d={d} accent={accent} L={L} />;
 }

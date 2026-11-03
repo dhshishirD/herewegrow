@@ -210,6 +210,9 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
     ),
   };
   const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
   return (
     <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '250px 1fr' }}>
       {/* Print only: repeats on every page so the sidebar colour runs top to bottom on page 2 as well */}
@@ -220,12 +223,20 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
         {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 5px', wordBreak: 'break-word' }}>{c}</p>)}
         {showSkills && d.skills && (<><Side>{L.skills}</Side><ul style={{ margin: 0, paddingLeft: 16, listStyle: 'disc' }}>{list(d.skills).map((s) => <li key={s} style={{ marginBottom: 3 }}>{s}</li>)}</ul></>)}
         {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+        {/* Short sections go in the sidebar too, so the main column is shorter and the sidebar is not empty */}
+        {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px' }}><span style={{ opacity: 0.75, fontSize: 11 }}>{a}</span><br />{b}</p>)}</>)}
+        {showRefs && (<><Side>{L.references}</Side>{d.references.map((r) => (
+          <p key={r.id} style={{ margin: '0 0 10px', wordBreak: 'break-word' }}>
+            <strong>{r.name}</strong>{[r.title, r.org].filter(Boolean).map((x) => <span key={x}><br />{x}</span>)}
+            {(r.phone || r.email) && <span style={{ opacity: 0.85 }}><br />{[r.phone, r.email].filter(Boolean).join(', ')}</span>}
+          </p>
+        ))}</>)}
       </aside>
       <main className="cv-pad" style={{ padding: '44px 40px' }}>
         <h1 style={{ fontFamily: SERIF, fontSize: 31, fontWeight: 700, margin: 0, color: '#111827', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
         {d.headline && <p style={{ margin: '6px 0 0', fontSize: 15, color: accent, fontWeight: 600 }}>{d.headline}</p>}
         {!d.hidden.includes('summary') && d.summary && <p style={{ margin: '14px 0 0', color: '#374151' }}>{d.summary}</p>}
-        {d.order.filter((k) => k !== 'summary' && k !== 'skills').map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+        {d.order.filter((k) => !['summary', 'skills', 'personal', 'references'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
       </main>
     </div>
   );

@@ -148,6 +148,8 @@
   #cv-print .cv-pad { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   /* Never cut a job, a degree or a heading in half */
   #cv-print .cv-entry, #cv-print .cv-keep, #cv-print li { break-inside: avoid; }
+  /* …but a long entry (7+ bullets) may flow onto the next page, so page 1 is not left half empty */
+  #cv-print .cv-entry:has(li:nth-child(7)) { break-inside: auto; }
   #cv-print .cv-title { break-after: avoid; }
   #cv-print p { orphans: 2; widows: 2; }
   /* Fixed elements repeat on each printed page: the Modern sidebar colour runs full height on every page */

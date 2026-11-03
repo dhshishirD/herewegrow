@@ -13,6 +13,7 @@ keep_vars = true
 #   SMS_API_KEY, SMS_SENDER_ID   BulkSMSBD account (login codes)
 #   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET   Google sign-in (optional until ready)
 #   TURNSTILE_SECRET  optional; turns on the captcha check for login codes
+#   AI_MODEL          optional; another Workers AI model for the writing assistant
 
 [assets]
 directory = "./dist"
@@ -38,6 +39,10 @@ migrations_dir = "migrations"
 [[kv_namespaces]]
 binding = "KV"
 id = "1a43543598fd451383f8c14162938c7e"
+
+# Workers AI for the Builder's AI writing assistant (Pro)
+[ai]
+binding = "AI"
 
 # Pro renewal reminders by SMS, once a day at 09:31 Bangladesh time (03:31 UTC)
 [triggers]

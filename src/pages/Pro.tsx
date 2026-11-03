@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
+import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../../shared/designList';
 import { PLANS, PRO_LIMITS, type PlanId } from '../../shared/plans';
 import { PageHead } from '../components/PageHead';
 import { useAuth } from '../lib/auth';
 import { num, taka, useLang } from '../lib/lang';
+import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 
 type B = { en: string; bn: string };
 
 const EVERY_PLAN: B[] = [
   { en: 'Download PDF and Word without the HereWeGrow mark', bn: 'HereWeGrow চিহ্ন ছাড়া PDF ও Word ডাউনলোড' },
-  { en: 'All premium CV designs', bn: 'সব প্রিমিয়াম সিভি ডিজাইন' },
+  { en: `All ${PRO_DESIGN_COUNT} premium CV designs: ${DESIGN_LIST.filter((d) => d.pro).map((d) => d.name.en).join(', ')}`, bn: `সব ${num(PRO_DESIGN_COUNT, 'bn')}টি প্রিমিয়াম সিভি ডিজাইন: ${DESIGN_LIST.filter((d) => d.pro).map((d) => d.name.bn).join(', ')}` },
   { en: `Save up to ${PRO_LIMITS.savedCvs} CVs online, open them on any device`, bn: `অনলাইনে ${num(PRO_LIMITS.savedCvs, 'bn')}টি পর্যন্ত সিভি সেভ, যেকোনো ডিভাইসে খুলুন` },
-  { en: 'AI writing help: summary, bullet points, Bangla to English, match a job ad', bn: 'এআই লেখার সাহায্য: সামারি, বুলেট পয়েন্ট, বাংলা থেকে ইংরেজি, চাকরির বিজ্ঞাপনের সাথে মিল' },
   { en: 'New Pro tools, e-books and guides as they come, at no extra cost', bn: 'নতুন প্রো টুল, ই-বুক ও গাইড আসলেই পাবেন, বাড়তি খরচ ছাড়া' },
 ];
 
@@ -43,7 +44,7 @@ const FAQ: { q: B; a: B }[] = [
   },
   {
     q: { en: 'What happens to my CVs when Pro ends?', bn: 'প্রো শেষ হলে আমার সিভির কী হবে?' },
-    a: { en: 'They stay saved. You can still open and edit them; clean downloads and AI come back when you renew.', bn: 'সেভ থাকবে। খুলতে ও এডিট করতে পারবেন; নবায়ন করলে আবার মার্কছাড়া ডাউনলোড ও এআই পাবেন।' },
+    a: { en: 'They stay saved. You can still open and edit them; clean downloads come back when you renew.', bn: 'সেভ থাকবে। খুলতে ও এডিট করতে পারবেন; নবায়ন করলে আবার মার্কছাড়া ডাউনলোড পাবেন।' },
   },
 ];
 
@@ -128,12 +129,12 @@ export function ProPage() {
             const x = PLAN_TEXT[p.id];
             const featured = p.id === 'pro-30';
             return (
-              <article key={p.id} className={`flex flex-col rounded-2xl bg-white p-6 ${featured ? 'ring-2 ring-leaf shadow-lg' : 'ring-1 ring-line'}`}>
+              <article key={p.id} className={`relative flex flex-col rounded-2xl bg-white p-6 transition-shadow hover:shadow-md ${featured ? 'ring-2 ring-leaf shadow-lg md:-translate-y-2' : 'ring-1 ring-line'}`}>
                 <div className="flex min-h-7 items-center justify-between gap-2">
                   <h2 className="text-xl font-bold">{t(p.name)}</h2>
                   {x.tag && <span className="rounded bg-gold-soft px-2 py-0.5 text-sm font-semibold text-gold">{t(x.tag)}</span>}
                 </div>
-                <p className="mt-4 font-display text-4xl font-bold">{taka(p.price, lang)}</p>
+                <p className="mt-4 font-display text-4xl font-bold">{taka(p.price, lang)}<span className="ml-1.5 font-body text-base font-normal text-muted">/ {t({ en: `${p.days} days`, bn: `${num(p.days, 'bn')} দিন` })}</span></p>
                 <p className="mt-1 text-sm text-muted">{t(x.perDay)}</p>
                 <ul className="mt-5 flex-1 space-y-2">
                   <li className="flex gap-2.5"><Tick /><span>{t({ en: `${p.days} days of everything in Pro`, bn: `${num(p.days, 'bn')} দিন প্রো-এর সবকিছু` })}</span></li>
@@ -151,6 +152,31 @@ export function ProPage() {
           {t({ en: 'Pay with bKash, Nagad or Rocket. You log in with your mobile number first, so Pro is saved to your account.', bn: 'বিকাশ, নগদ বা রকেটে পেমেন্ট। আগে মোবাইল নম্বর দিয়ে লগইন করবেন, যাতে প্রো আপনার অ্যাকাউন্টে যুক্ত হয়।' })}
         </p>
 
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-leaf-dark">
+          {[
+            { en: 'bKash · Nagad · Rocket', bn: 'বিকাশ · নগদ · রকেট' },
+            { en: 'One payment, no auto-renewal', bn: 'একবার পেমেন্ট, নিজে থেকে নবায়ন নেই' },
+            { en: 'Days add up if you buy again', bn: 'আবার কিনলে দিন যোগ হয়' },
+          ].map((x) => <li key={x.en} className="flex items-center gap-2"><Tick />{t(x)}</li>)}
+        </ul>
+
+        <div className="mt-14">
+          <h2 className="text-2xl font-bold">{t({ en: 'Premium designs', bn: 'প্রিমিয়াম ডিজাইন' })}</h2>
+          <p className="mt-1 text-muted">{t({ en: 'Try every design free in the builder. Pro unlocks the download.', bn: 'বিল্ডারে সব ডিজাইন ফ্রি-তে চেষ্টা করুন। ডাউনলোড খুলতে প্রো লাগে।' })}</p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {DESIGN_LIST.filter((d) => d.pro).map((d) => (
+              <li key={d.id} className="rounded-xl bg-white p-4 ring-1 ring-line">
+                <p className="font-display text-lg font-semibold">{t(d.name)}</p>
+                <p className="mt-1 text-sm text-muted">{t(d.note)}</p>
+              </li>
+            ))}
+            <li className="rounded-xl bg-leaf-soft p-4">
+              <Link href="/builder" className="font-display text-lg font-semibold text-leaf-dark underline underline-offset-4">{t({ en: 'Try them in the builder', bn: 'বিল্ডারে দেখে নিন' })}</Link>
+              <p className="mt-1 text-sm text-leaf-dark">{t({ en: 'No sign-up needed', bn: 'সাইন-আপ লাগবে না' })}</p>
+            </li>
+          </ul>
+        </div>
+
         <div className="mt-14 grid gap-10 md:grid-cols-2">
           <div>
             <h2 className="text-2xl font-bold">{t({ en: 'Every pass includes', bn: 'প্রতিটি পাসে যা থাকছে' })}</h2>
@@ -158,7 +184,7 @@ export function ProPage() {
               {EVERY_PLAN.map((line) => <li key={line.en} className="flex gap-2.5"><Tick /><span>{t(line)}</span></li>)}
             </ul>
             <p className="mt-4 text-sm text-muted">
-              {t({ en: `Fair use: ${PRO_LIMITS.aiActionsPerDay} AI actions and ${PRO_LIMITS.templateDownloadsPerDay} template downloads a day.`, bn: `ন্যায্য ব্যবহার: দিনে ${num(PRO_LIMITS.aiActionsPerDay, 'bn')}টি এআই কাজ ও ${num(PRO_LIMITS.templateDownloadsPerDay, 'bn')}টি টেমপ্লেট ডাউনলোড।` })}
+              {t({ en: `Fair use: up to ${PRO_LIMITS.templateDownloadsPerDay} template downloads a day.`, bn: `ন্যায্য ব্যবহার: দিনে ${num(PRO_LIMITS.templateDownloadsPerDay, 'bn')}টি পর্যন্ত টেমপ্লেট ডাউনলোড।` })}
             </p>
           </div>
           <div>

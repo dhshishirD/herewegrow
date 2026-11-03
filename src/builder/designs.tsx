@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { DESIGN_LIST } from '../../shared/designList';
 import { LABELS, lines, list, type CvData, type DesignId, type HeadingLang } from './model';
 
-// Three CV designs, each laid out on an A4 page (794 × 1123 px at 96 dpi).
+// CV designs, each laid out on an A4 page (794 × 1123 px at 96 dpi).
 // Sections follow the order the person chose. Text stays real text, so the PDF is readable by ATS software.
 // Class names (cv-page, cv-pad, cv-entry, cv-title, cv-keep) are hooks for the print rules in index.css:
 // padding repeats on every printed page, and entries and headings are never split across a page break.
@@ -272,7 +273,6 @@ function Executive({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
-/** Designs marked pro can be tried by everyone; downloading them needs Pro. */
 /* ── Elegant (Pro): colour header band, spaced headings, dates in a pill ── */
 
 function Elegant({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
@@ -310,12 +310,139 @@ function Elegant({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
-export const DESIGNS: { id: DesignId; name: { en: string; bn: string }; note: { en: string; bn: string }; pro?: boolean }[] = [
-  { id: 'classic', name: { en: 'Classic (ATS)', bn: 'ক্লাসিক (ATS)' }, note: { en: 'Best for online job portals', bn: 'অনলাইন জব পোর্টালের জন্য সেরা' } },
-  { id: 'modern', name: { en: 'Modern', bn: 'মডার্ন' }, note: { en: 'Colour sidebar and photo', bn: 'রঙিন সাইডবার ও ছবি' } },
-  { id: 'executive', name: { en: 'Executive', bn: 'এক্সিকিউটিভ' }, note: { en: 'For senior roles', bn: 'সিনিয়র পদের জন্য' } },
-  { id: 'elegant', name: { en: 'Elegant', bn: 'এলিগ্যান্ট' }, note: { en: 'Colour header band, premium look', bn: 'রঙিন হেডার, প্রিমিয়াম লুক' }, pro: true },
-];
+/* ── Minimal (Pro): labels in a narrow left column, lots of white space ── */
+
+function Minimal({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 10.5, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: accent, margin: 0, paddingTop: 2 }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 11 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5, color: '#111827' }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  // Each section becomes a two-column row: label on the left, content on the right,
+  // so the section draws no heading of its own.
+  const { Title } = T;
+  const RowTheme: Theme = { ...T, Title: () => null };
+  return (
+    <div className="cv-page cv-pad" style={{ ...PAGE, padding: '56px 60px 44px' }}>
+      <header className="cv-keep" style={{ marginBottom: 26 }}>
+        <h1 style={{ fontFamily: 'inherit', fontSize: 34, fontWeight: 300, letterSpacing: '-0.02em', margin: 0, color: '#111827', lineHeight: 1.05 }}>{d.name || 'Your Name'}</h1>
+        {d.headline && <p style={{ margin: '8px 0 0', fontSize: 14, color: accent, fontWeight: 600, letterSpacing: '0.02em' }}>{d.headline}</p>}
+        <p style={{ margin: '12px 0 0', color: GREY, fontSize: 12 }}>{contactLine(d).join('   /   ')}</p>
+      </header>
+      {d.order.map((k) => {
+        if (d.hidden.includes(k)) return null;
+        const label = k.startsWith('custom:') ? d.custom.find((x) => `custom:${x.id}` === k)?.title : k === 'summary' ? L.profile : L[k];
+        return (
+          <MinimalRow key={k} label={<Title>{label}</Title>}>
+            <Section k={k} d={d} L={L} T={RowTheme} />
+          </MinimalRow>
+        );
+      })}
+    </div>
+  );
+}
+
+/** A row with an empty body is hidden by CSS (.cv-minimal-row:has(...:empty)). */
+function MinimalRow({ label, children }: { label: ReactNode; children: ReactNode }) {
+  return (
+    <div className="cv-minimal-row" style={{ display: 'grid', gridTemplateColumns: '132px 1fr', gap: 24, borderTop: '1px solid #e5e7eb', padding: '14px 0 4px' }}>
+      <div>{label}</div>
+      <div className="cv-minimal-body">{children}</div>
+    </div>
+  );
+}
+
+/* ── Timeline (Pro): entries hang off a vertical line with dots ─────────── */
+
+function Timeline({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 17, fontWeight: 650, color: '#111827', margin: '22px 0 10px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <span style={{ width: 22, height: 22, borderRadius: 6, background: accent, display: 'inline-block' }} />{children}
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ position: 'relative', margin: '0 0 0 10px', padding: '0 0 12px 22px', borderLeft: `2px solid ${accent}30` }}>
+        <span style={{ position: 'absolute', left: -7, top: 3, width: 12, height: 12, borderRadius: '50%', background: '#fff', border: `3px solid ${accent}` }} />
+        {date && <div style={{ color: accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{date}</div>}
+        <strong style={{ fontSize: 13.5 }}>{title}</strong>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  return (
+    <div className="cv-page cv-pad" style={{ ...PAGE, padding: '44px 54px' }}>
+      <header className="cv-keep" style={{ display: 'flex', gap: 22, alignItems: 'center', paddingBottom: 18, borderBottom: `3px solid ${accent}` }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 96, borderRadius: 18, objectFit: 'cover' }} />}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 650, margin: 0, color: '#111827', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '5px 0 0', fontSize: 14.5, color: accent, fontWeight: 600 }}>{d.headline}</p>}
+          <p style={{ margin: '8px 0 0', color: GREY }}>{contactLine(d).join('   ·   ')}</p>
+        </div>
+      </header>
+      {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+    </div>
+  );
+}
+
+/* ── Corporate (Pro): soft tinted sidebar, dark text, square photo ──────── */
+
+function Corporate({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const tint = `${accent}12`;
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, margin: '20px 0 8px', paddingBottom: 4, borderBottom: `1px solid ${accent}40` }}>{children}</h2>
+  );
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#111827', margin: '20px 0 9px', paddingLeft: 10, borderLeft: `4px solid ${accent}` }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: accent, fontWeight: 600, fontSize: 12 }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  return (
+    <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '1fr 236px' }}>
+      <div className="cv-sidebar-bg cv-sidebar-right" style={{ background: tint, width: 236 }} />
+      <main className="cv-pad" style={{ padding: '46px 34px 40px 52px' }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 31, fontWeight: 650, margin: 0, color: '#111827', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+        {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14.5, color: accent, fontWeight: 600 }}>{d.headline}</p>}
+        {!d.hidden.includes('summary') && d.summary && <p style={{ margin: '14px 0 0', color: '#374151' }}>{d.summary}</p>}
+        {d.order.filter((k) => !['summary', 'skills', 'personal'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </main>
+      <aside className="cv-pad" style={{ background: tint, padding: '46px 24px 40px', position: 'relative', zIndex: 1 }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 120, height: 136, borderRadius: 8, objectFit: 'cover', display: 'block', margin: '0 auto 6px' }} />}
+        <Side>{L.contact}</Side>
+        {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 5px', wordBreak: 'break-word' }}>{c}</p>)}
+        {showSkills && d.skills && (<><Side>{L.skills}</Side>{list(d.skills).map((s) => <p key={s} style={{ margin: '0 0 4px' }}>{s}</p>)}</>)}
+        {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+        {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px' }}><span style={{ color: GREY, fontSize: 11 }}>{a}</span><br />{b}</p>)}</>)}
+      </aside>
+    </div>
+  );
+}
+
+export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
 
@@ -324,5 +451,8 @@ export function CvDocument({ d, design, accent, headings = 'en' }: { d: CvData; 
   if (design === 'modern') return <Modern d={d} accent={accent} L={L} />;
   if (design === 'executive') return <Executive d={d} accent={accent} L={L} />;
   if (design === 'elegant') return <Elegant d={d} accent={accent} L={L} />;
+  if (design === 'minimal') return <Minimal d={d} accent={accent} L={L} />;
+  if (design === 'timeline') return <Timeline d={d} accent={accent} L={L} />;
+  if (design === 'corporate') return <Corporate d={d} accent={accent} L={L} />;
   return <Classic d={d} accent={accent} L={L} />;
 }

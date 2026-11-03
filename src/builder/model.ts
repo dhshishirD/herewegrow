@@ -1,3 +1,4 @@
+import type { DesignId } from '../../shared/designList';
 // The CV builder's data: what the person fills in, kept on their own device.
 
 export interface Experience {
@@ -96,7 +97,7 @@ export interface CvData {
   hidden: string[];
 }
 
-export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant';
+export type { DesignId };
 export type HeadingLang = 'en' | 'bn';
 
 export interface BuilderState {

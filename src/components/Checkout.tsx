@@ -102,7 +102,7 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
         role="dialog"
         aria-modal="true"
         aria-labelledby="checkout-title"
-        className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white p-6 sm:p-8 shadow-xl"
+        className="cart-sheet-up w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white p-6 sm:p-8 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4">
@@ -120,11 +120,13 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
         </div>
 
         <form onSubmit={submit} className="mt-6 space-y-4" noValidate>
-          <p className="rounded-lg bg-leaf-soft px-4 py-3 text-sm text-leaf-dark">
+          <p className="flex gap-2 rounded-lg bg-leaf-soft px-4 py-3 text-sm text-leaf-dark">
+            <svg aria-hidden="true" viewBox="0 0 16 16" className="mt-0.5 h-4 w-4 shrink-0"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <span>
             {t({
               en: 'All fields are optional. A WhatsApp number helps us reach you if anything goes wrong.',
               bn: 'সব ঘর ঐচ্ছিক। হোয়াটসঅ্যাপ নম্বর দিলে কোনো সমস্যা হলে আমরা যোগাযোগ করতে পারব।',
-            })}
+            })}</span>
           </p>
           <div>
             <label className="label" htmlFor="co-phone">{t({ en: 'WhatsApp number', bn: 'হোয়াটসঅ্যাপ নম্বর' })}</label>
@@ -162,7 +164,12 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
               ? t({ en: 'Opening payment page…', bn: 'পেমেন্ট পেজ খোলা হচ্ছে…' })
               : t({ en: `Pay ${taka(product.price, 'en')}`, bn: `${taka(product.price, 'bn')} পরিশোধ করুন` })}
           </button>
-          <p className="text-center text-sm text-muted">{t({ en: 'bKash, Nagad or Rocket on a secure payment page', bn: 'নিরাপদ পেমেন্ট পেজে বিকাশ, নগদ বা রকেট' })}</p>
+          <ul className="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold" aria-label={t({ en: 'Payment methods', bn: 'পেমেন্ট মাধ্যম' })}>
+            {[['bKash', '#e2136e'], ['Nagad', '#f6921e'], ['Rocket', '#8c3494']].map(([n, c]) => (
+              <li key={n} className="rounded-full px-3 py-1 text-white" style={{ background: c }}>{n}</li>
+            ))}
+          </ul>
+          <p className="text-center text-sm text-muted">{t({ en: 'Secure payment page. Your files or Pro are ready right after paying.', bn: 'নিরাপদ পেমেন্ট পেজ। পেমেন্টের পরেই ফাইল বা প্রো চালু।' })}</p>
           <p className="text-sm text-muted">
             {isService
               ? t({

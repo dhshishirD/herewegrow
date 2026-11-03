@@ -243,6 +243,7 @@ export function Home() {
           <div className="mt-10"><ServiceRateCard /></div>
           <p className="mt-6 text-muted">
             {t({ en: 'Also: LinkedIn makeover ৳499, BDJobs profile ৳299, SOP and academic CV for higher study. ', bn: 'আরও আছে: লিংকডইন মেকওভার ৳৪৯৯, বিডিজবস প্রোফাইল ৳২৯৯, উচ্চশিক্ষার SOP ও একাডেমিক সিভি। ' })}
+            <Link href="/linkedin-profile-optimization" className="font-semibold text-leaf underline underline-offset-4">{t({ en: 'LinkedIn', bn: 'লিংকডইন' })}</Link>{' · '}<Link href="/bdjobs-profile-optimization" className="font-semibold text-leaf underline underline-offset-4">{t({ en: 'BDJobs', bn: 'বিডিজবস' })}</Link>{' · '}
             <Link href="/services#profile" className="font-semibold text-leaf underline underline-offset-4">{t({ en: 'See all services', bn: 'সব সার্ভিস দেখুন' })}</Link>
           </p>
 

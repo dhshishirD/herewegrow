@@ -1,48 +1,54 @@
 import { PRODUCTS, type Product } from '../../shared/catalog';
 import { num, taka, useLang } from '../lib/lang';
 import { useCheckout } from './Checkout';
+import { ArrowRight, Clock, Star } from 'lucide-react';
+import { FeatureList } from './FeatureList';
 
 const services = PRODUCTS.filter((p) => p.kind === 'service');
 const packs = PRODUCTS.filter((p) => p.kind === 'pack');
 
-/** Expert services as a rate card: one row per service, price at the right edge. */
+/** Expert services as premium cards: what it is, what you get, when, and the price. */
 export function ServiceRateCard({ group = 'cv' }: { group?: 'cv' | 'profile' | 'study' }) {
   const { t, lang } = useLang();
   const order = useCheckout();
   const list = services.filter((s) => (s.group ?? 'cv') === group);
 
   return (
-    <ul className="divide-y divide-line border-y border-line">
-      {list.map((s) => (
-        <li key={s.id} className={`grid gap-4 py-6 md:grid-cols-[1.1fr_1.4fr_auto] md:items-start md:gap-8 ${s.featured ? 'relative' : ''}`}>
-          <div>
-            <h3 className="text-xl font-bold">{t(s.name)}</h3>
+    <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {list.map((s) => {
+        const dark = !!s.featured;
+        return (
+          <li key={s.id} className={`svc-card group relative flex flex-col rounded-3xl p-6 sm:p-7 ${dark ? 'svc-card-featured text-white' : 'bg-white ring-1 ring-line'}`}>
             {s.featured && (
-              <p className="mt-1 inline-block rounded bg-gold-soft px-2 py-0.5 text-sm font-semibold text-gold">
+              <p className="absolute -top-3 left-6 inline-flex items-center gap-1.5 rounded-full bg-saffron px-3 py-1 text-xs font-bold uppercase tracking-wide text-ink shadow-md">
+                <Star size={12} fill="currentColor" strokeWidth={0} aria-hidden="true" />
                 {t(s.badge ?? { en: 'Most chosen', bn: 'সবচেয়ে বেশি নেওয়া হয়' })}
               </p>
             )}
-            <p className="mt-2 text-muted">{t(s.summary)}</p>
-          </div>
-          <div>
-            <ul className="space-y-1.5">
-              {s.includes.map((line) => (
-                <li key={line.en} className="flex gap-2.5">
-                  <svg aria-hidden="true" viewBox="0 0 16 16" className="mt-1.5 h-3.5 w-3.5 shrink-0 text-leaf"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  <span>{t(line)}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2 text-sm text-muted">{t(s.delivery)}</p>
-          </div>
-          <div className="flex items-center justify-between gap-4 md:flex-col md:items-end">
-            <p className="font-display text-3xl font-bold text-ink">{taka(s.price, lang)}</p>
-            <button type="button" className={`btn ${s.featured ? 'btn-primary' : 'btn-quiet'}`} onClick={() => order(s.id)}>
-              {t({ en: 'Order', bn: 'অর্ডার করুন' })}
-            </button>
-          </div>
-        </li>
-      ))}
+            <h3 className={`text-2xl ${dark ? 'text-white' : ''}`}>{t(s.name)}</h3>
+            <p className={`mt-2 ${dark ? 'text-white/75' : 'text-muted'}`}>{t(s.summary)}</p>
+
+            <div className={`my-5 h-px ${dark ? 'bg-white/15' : 'bg-line'}`} />
+            <p className={`mb-3 text-xs font-bold uppercase tracking-[0.12em] ${dark ? 'text-saffron' : 'text-gold'}`}>{t({ en: 'What you get', bn: 'যা পাবেন' })}</p>
+            <FeatureList items={s.includes} tone={dark ? 'dark' : 'light'} className="flex-1 content-start" />
+
+            <p className={`mt-5 inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ${dark ? 'bg-white/10 text-white/85' : 'bg-mist text-muted'}`}>
+              <Clock size={14} aria-hidden="true" /> {t(s.delivery)}
+            </p>
+
+            <div className="mt-6 flex items-end justify-between gap-4">
+              <p className="leading-none">
+                <span className={`block text-xs font-semibold uppercase tracking-wide ${dark ? 'text-white/60' : 'text-muted'}`}>{t({ en: 'Fixed price', bn: 'নির্দিষ্ট দাম' })}</span>
+                <span className={`mt-1.5 block font-display text-4xl font-bold ${dark ? 'text-white' : 'text-ink'}`}>{taka(s.price, lang)}</span>
+              </p>
+              <button type="button" className={`btn ${dark ? 'bg-saffron text-ink hover:bg-white' : 'btn-primary'}`} onClick={() => order(s.id)}>
+                {t({ en: 'Order now', bn: 'অর্ডার করুন' })}
+                <ArrowRight size={16} aria-hidden="true" className="transition-transform group-hover:translate-x-0.5" />
+              </button>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }

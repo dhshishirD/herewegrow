@@ -2,6 +2,8 @@
 // /api/* is handled here; every other path is served from the built site in ./dist.
 
 import { handleCheckout, handleVerify } from '../server/handlers';
+import { handleAi } from '../server/ai';
+import type { AiEnv } from '../server/ai/provider';
 import { handleAuth } from '../server/authHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
@@ -9,7 +11,7 @@ import { sendReminders } from '../server/entitlements';
 import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
 
-interface WorkerEnv extends Env {
+interface WorkerEnv extends Env, AiEnv {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
 }
 
@@ -20,6 +22,7 @@ export default {
     if (pathname.startsWith('/api/')) {
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);
       if (pathname === '/api/cvs' || pathname.startsWith('/api/cvs/')) return handleCvs(request, env, pathname);
+      if (pathname.startsWith('/api/ai/')) return handleAi(request, env, pathname);
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);
       if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
       if (pathname === '/api/checkout') return handleCheckout(request, env);

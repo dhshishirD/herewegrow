@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
+import { FieldAi, JobAi, SummaryAi } from '../builder/AiBits';
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
 import {
   ACCENTS,
@@ -496,6 +497,7 @@ export function BuilderPage() {
               <Area label={t({ en: 'Two or three lines about you', bn: 'আপনার সম্পর্কে দুই-তিন লাইন' })} value={d.summary} onChange={(v) => set({ summary: v })} rows={4}
                 placeholder="Finance graduate with 2 years of customer service experience..."
                 hint={t({ en: 'Say what you studied or do, one or two results, and the role you want. Skip “to work in a challenging environment”.', bn: 'কী পড়েছেন বা করেন, এক-দুটি অর্জন, আর কোন পদ চান লিখুন। “challenging environment” ধরনের মুখস্থ লাইন বাদ দিন।' })} />
+              <SummaryAi cv={cvText({ ...d, summary: '' })} target={d.headline} onApply={(v) => set({ summary: v })} />
             </Section>
 
             <Section title={sectionName('experience')} open={open === 'experience'} onToggle={() => toggle('experience')} count={d.experience.length}>
@@ -513,6 +515,7 @@ export function BuilderPage() {
                   <Area label={t({ en: 'Responsibilities and achievements (one per line)', bn: 'দায়িত্ব ও অর্জন (প্রতি লাইনে একটি)' })} value={e.bullets} onChange={(v) => upd('experience', e.id, { bullets: v })} rows={5}
                     placeholder={'Served 60+ customers a day\nOpened 300+ accounts in a year'}
                     hint={t({ en: 'Start with an action word (Led, Opened, Reduced) and add a number where you can.', bn: 'কাজের শব্দ দিয়ে শুরু করুন (Led, Opened, Reduced) আর সম্ভব হলে সংখ্যা দিন।' })} />
+                  <FieldAi text={e.bullets} role={e.role} current={e.current} onApply={(v) => upd('experience', e.id, { bullets: v })} />
                 </ItemBox>
               ))}
               <AddButton onClick={() => set({ experience: [...d.experience, newExperience()] })}>{t({ en: 'Add a job or internship', bn: 'কাজ বা ইন্টার্নশিপ যোগ করুন' })}</AddButton>
@@ -666,6 +669,7 @@ export function BuilderPage() {
           {/* Preview */}
           <div className={`min-w-0 ${view === 'edit' ? 'max-md:hidden' : ''}`}>
             <div className="md:sticky md:top-36">
+              {!isEmpty && <JobAi cv={cvText(d)} issues={score.checks.filter((c) => !c.pass).map((c) => c.fix.en)} />}
               {!isEmpty && (
                 <div className="mb-4 flex items-start gap-4 rounded-2xl bg-white p-4 ring-1 ring-line">
                   <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-full font-display text-xl font-semibold ${score.score >= 80 ? 'bg-leaf-soft text-leaf-dark' : score.score >= 60 ? 'bg-gold-soft text-gold' : 'bg-alert/10 text-alert'}`}

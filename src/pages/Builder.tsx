@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
 import {
@@ -20,13 +20,16 @@ import {
   type CustomItem,
   type CustomSection,
   type CvData,
+  type DesignId,
+  type HeadingLang,
 } from '../builder/model';
 import { PageHead } from '../components/PageHead';
+import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
 import { analyzeCv } from '../lib/cvAnalysis';
 import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
 import { num, useLang } from '../lib/lang';
-import { Link, navigate } from '../lib/router';
+import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 
 type T = (x: { en: string; bn: string }) => string;
@@ -122,6 +125,49 @@ function cvText(d: CvData) {
   for (const c of d.custom) parts.push(c.title, ...c.items.flatMap((i) => [i.title, i.subtitle, i.details]));
   if (d.references.length) parts.push('References', ...d.references.flatMap((r) => [r.name, r.title, r.org]));
   return parts.filter(Boolean).join('\n');
+}
+
+/* ── design gallery ──────────────────────────────────────────────── */
+
+const THUMB = 0.15;
+
+/** A live, scaled-down copy of the CV in one design. Memoised so typing re-draws only once per pause. */
+const Thumb = memo(function Thumb({ d, design, accent, headings }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang }) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none overflow-hidden rounded-md bg-white" style={{ width: 794 * THUMB, height: 1123 * THUMB }}>
+      <div style={{ width: 794, transform: `scale(${THUMB})`, transformOrigin: 'top left' }}>
+        <CvDocument d={d} design={design} accent={accent} headings={headings} />
+      </div>
+    </div>
+  );
+});
+
+function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: boolean; onPick: (id: DesignId) => void; t: T }) {
+  // Thumbnails follow the person's own CV (or the example while it is empty), a beat behind their typing
+  const live = useDeferredValue(state.data);
+  const sample = useMemo(sampleCv, []);
+  const d = live.name || live.experience.length ? live : sample;
+  return (
+    <div role="radiogroup" aria-label={t({ en: 'Design', bn: 'ডিজাইন' })} className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-3 pt-1">
+      {DESIGNS.map((x) => {
+        const on = state.design === x.id;
+        return (
+          <button key={x.id} type="button" role="radio" aria-checked={on} title={t(x.note)} onClick={() => onPick(x.id)}
+            className={`group shrink-0 snap-start rounded-xl p-1.5 text-left transition ${on ? 'bg-white ring-2 ring-leaf shadow-md' : 'ring-1 ring-line hover:bg-white hover:ring-leaf/50'}`}>
+            <div className="relative">
+              <Thumb d={d} design={x.id} accent={state.accent} headings={state.headings} />
+              {x.pro && (
+                <span className={`absolute right-1.5 top-1.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${pro ? 'bg-leaf text-white' : 'bg-saffron text-ink'}`}>
+                  {pro ? 'Pro ✓' : 'Pro'}
+                </span>
+              )}
+            </div>
+            <p className={`mt-1.5 truncate px-0.5 text-sm font-semibold ${on ? 'text-leaf-dark' : ''}`} style={{ maxWidth: 794 * THUMB }}>{t(x.name)}</p>
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
 /* ── page ─────────────────────────────────────────────────────── */
@@ -296,9 +342,9 @@ export function BuilderPage() {
   };
 
   const needPro = !pro && isProDesign(state.design);
-  const askPro = () => {
-    if (window.confirm(t({ en: 'This design is part of Pro. Get Pro from ৳49 to download it?', bn: 'এই ডিজাইনটি Pro-এর অংশ। ডাউনলোড করতে ৳৪৯ থেকে Pro নিন?' }))) navigate('/pro');
-  };
+  const [gate, setGate] = useState(false);
+  const askPro = () => setGate(true);
+  const pickDesign = (id: DesignId) => setState((s) => ({ ...s, design: id }));
 
   const saveToAccount = async () => {
     if (!user) return openLogin();
@@ -335,13 +381,13 @@ export function BuilderPage() {
     }
   };
 
-  const download = () => {
-    if (needPro) return askPro();
+  const printNow = () => {
     const prev = document.title;
     document.title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
     window.print();
     document.title = prev;
   };
+  const download = () => (needPro ? askPro() : printNow());
 
   const isEmpty = !d.name && d.experience.length === 0 && d.education.length === 0;
   const failing = score.checks.filter((c) => !c.pass).sort((a, b) => b.weight - a.weight).slice(0, 3);
@@ -354,16 +400,12 @@ export function BuilderPage() {
         {/* Toolbar */}
         <div className="sticky top-[4.25rem] z-20 border-b border-line bg-paper/95 backdrop-blur max-md:top-[7.6rem]">
           <div className="wrap flex flex-wrap items-center gap-3 py-3">
-            <div role="radiogroup" aria-label={t({ en: 'Design', bn: 'ডিজাইন' })} className="flex flex-wrap gap-1.5">
-              {DESIGNS.map((x) => (
-                <button key={x.id} type="button" role="radio" aria-checked={state.design === x.id} title={t(x.note)}
-                  onClick={() => setState((s) => ({ ...s, design: x.id }))}
-                  className={`rounded-full px-3.5 py-1.5 text-sm font-semibold ${state.design === x.id ? 'bg-ink text-white' : 'bg-white ring-1 ring-line hover:ring-leaf'}`}>
-                  {t(x.name)}
-                  {x.pro && <span className={`ml-1.5 rounded px-1 text-[10px] font-bold uppercase ${state.design === x.id ? 'bg-gold text-white' : 'bg-gold-soft text-gold'}`}>Pro</span>}
-                </button>
-              ))}
-            </div>
+            <label className="md:hidden">
+              <span className="sr-only">{t({ en: 'Design', bn: 'ডিজাইন' })}</span>
+              <select className="field !min-h-10 !w-auto !py-1.5 text-sm font-semibold" value={state.design} onChange={(e) => pickDesign(e.target.value as DesignId)}>
+                {DESIGNS.map((x) => <option key={x.id} value={x.id}>{t(x.name)}{x.pro && !pro ? ' · Pro' : ''}</option>)}
+              </select>
+            </label>
             <div role="radiogroup" aria-label={t({ en: 'Heading language', bn: 'শিরোনামের ভাষা' })} className="flex rounded-full bg-white p-0.5 ring-1 ring-line">
               {(['en', 'bn'] as const).map((h) => (
                 <button key={h} type="button" role="radio" aria-checked={(state.headings ?? 'en') === h} onClick={() => setState((s) => ({ ...s, headings: h }))}
@@ -489,7 +531,7 @@ export function BuilderPage() {
                 </label>
                 {d.photo && <button type="button" className="text-sm text-alert underline" onClick={() => set({ photo: '' })}>{t({ en: 'Remove photo', bn: 'ছবি মুছুন' })}</button>}
               </div>
-              <p className="text-sm text-muted">{t({ en: 'The photo shows in the Modern and Executive designs. Leave it out for online portals.', bn: 'ছবি মডার্ন ও এক্সিকিউটিভ ডিজাইনে দেখায়। অনলাইন পোর্টালের জন্য ছবি না দেওয়াই ভালো।' })}</p>
+              <p className="text-sm text-muted">{t({ en: `The photo shows in ${DESIGNS.filter((x) => x.photo).map((x) => x.name.en).join(', ')}. Leave it out for online portals.`, bn: `ছবি দেখায় ${DESIGNS.filter((x) => x.photo).map((x) => x.name.bn).join(', ')} ডিজাইনে। অনলাইন পোর্টালের জন্য ছবি না দেওয়াই ভালো।` })}</p>
             </Section>
 
             <Section title={sectionName('summary')} open={open === 'summary'} onToggle={() => toggle('summary')}>
@@ -666,6 +708,11 @@ export function BuilderPage() {
           {/* Preview */}
           <div className={`min-w-0 ${view === 'edit' ? 'max-md:hidden' : ''}`}>
             <div className="md:sticky md:top-36">
+              <div className="mb-3 flex items-baseline justify-between gap-3">
+                <p className="font-display text-lg font-semibold">{t({ en: 'Choose a design', bn: 'ডিজাইন বেছে নিন' })}</p>
+                <p className="truncate text-sm text-muted">{t(DESIGNS.find((x) => x.id === state.design)?.note ?? DESIGNS[0].note)}</p>
+              </div>
+              <DesignGallery state={state} pro={pro} onPick={pickDesign} t={t} />
               {!isEmpty && (
                 <div className="mb-4 flex items-start gap-4 rounded-2xl bg-white p-4 ring-1 ring-line">
                   <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-full font-display text-xl font-semibold ${score.score >= 80 ? 'bg-leaf-soft text-leaf-dark' : score.score >= 60 ? 'bg-gold-soft text-gold' : 'bg-alert/10 text-alert'}`}
@@ -708,6 +755,11 @@ export function BuilderPage() {
           </div>
         </div>
       </div>
+
+      {gate && (
+        <ProGate designName={DESIGNS.find((x) => x.id === state.design)?.name ?? DESIGNS[0].name} onClose={() => setGate(false)}
+          onUseFree={() => { setGate(false); pickDesign('classic'); setTimeout(printNow, 150); }} />
+      )}
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">

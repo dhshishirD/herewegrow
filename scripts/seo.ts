@@ -8,6 +8,8 @@ import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
 import { PRODUCTS } from '../shared/catalog';
 import { GUIDES, type Block } from '../shared/guides';
+import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
+import { PLANS } from '../shared/plans';
 import { routeSeo } from '../shared/seo';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES } from '../shared/templates';
 
@@ -106,7 +108,7 @@ function pages(): Page[] {
     {
       path: '/builder',
       ...seo('/builder'),
-      body: '<h1>ফ্রি সিভি বিল্ডার</h1><p>সহজ ফর্ম পূরণ করে ৩টি ডিজাইনে সিভি বানান ও PDF ডাউনলোড করুন।</p>',
+      body: `<h1>ফ্রি সিভি বিল্ডার</h1><p>সহজ ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি ডিজাইনে সিভি বানান ও PDF ডাউনলোড করুন।</p><ul>${DESIGN_LIST.map((d) => `<li>${esc(d.name.bn)}: ${esc(d.note.bn)}</li>`).join('')}</ul>`,
       jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow CV builder', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
       priority: 0.9,
     },
@@ -142,6 +144,30 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['About', '/about']]),
       ],
       priority: 0.6,
+    },
+    {
+      path: '/pro',
+      ...seo('/pro'),
+      body: `<h1>HereWeGrow Pro</h1><p>মার্কছাড়া PDF ও Word, ${bn(PRO_DESIGN_COUNT)}টি প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ ও টেমপ্লেটে ছাড়।</p><ul>${PLANS.map((p) => `<li>${esc(p.name.bn)} (${esc(p.name.en)}): ৳${p.price}</li>`).join('')}</ul>`,
+      jsonLd: [
+        {
+          '@type': 'Product',
+          name: 'HereWeGrow Pro',
+          description: 'CV builder pass: watermark-free PDF and Word downloads, premium designs, saved CVs and template discounts.',
+          brand: { '@type': 'Brand', name: 'HereWeGrow' },
+          offers: PLANS.map((p) => ({ '@type': 'Offer', name: p.name.en, price: p.price, priceCurrency: 'BDT', url: `${SITE}/pro`, availability: 'https://schema.org/InStock' })),
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: 'Will money be taken again automatically?', acceptedAnswer: { '@type': 'Answer', text: 'No. You pay once by bKash, Nagad or Rocket. Nothing renews by itself.' } },
+            { '@type': 'Question', name: 'What if I buy Pro again while it is active?', acceptedAnswer: { '@type': 'Answer', text: 'The new days are added after your current end date. You never lose days.' } },
+            { '@type': 'Question', name: 'What happens to my CVs when Pro ends?', acceptedAnswer: { '@type': 'Answer', text: 'They stay saved. You can still open and edit them; clean downloads return when you renew.' } },
+          ],
+        },
+        crumbs([['HereWeGrow', '/'], ['Pro', '/pro']]),
+      ],
+      priority: 0.8,
     },
     { path: '/privacy', title: 'Privacy | HereWeGrow', description: 'How HereWeGrow handles your information.', body: '<h1>Privacy</h1>', priority: 0.3 },
     { path: '/terms', title: 'Terms | HereWeGrow', description: 'Terms for HereWeGrow services and templates.', body: '<h1>Terms</h1>', priority: 0.3 },

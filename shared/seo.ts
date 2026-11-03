@@ -3,6 +3,7 @@
 // Bangla first, with the English terms people also search for.
 
 import { PRODUCTS } from './catalog';
+import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
 import { findGuide } from './guides';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
 
@@ -42,11 +43,11 @@ const STATIC: Record<string, RouteSeo> = {
   },
   '/builder': {
     title: 'ফ্রি সিভি বিল্ডার: অনলাইনে সিভি বানান, PDF ডাউনলোড | Free CV maker Bangladesh | HereWeGrow',
-    description: 'সহজ ফর্ম পূরণ করে ৩টি পেশাদার ডিজাইনে সিভি বানান, ATS-ফ্রেন্ডলি PDF ডাউনলোড করুন। বাংলাদেশি ফরম্যাটের ব্যক্তিগত তথ্যসহ। বিনামূল্যে, সাইন-আপ ছাড়া। Free online CV maker.',
+    description: `সহজ ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি পেশাদার ডিজাইনে সিভি বানান (${bn(FREE_DESIGN_COUNT)}টি ফ্রি), ATS-ফ্রেন্ডলি PDF ডাউনলোড করুন। বাংলাদেশি ফরম্যাটের ব্যক্তিগত তথ্যসহ। বিনামূল্যে, সাইন-আপ ছাড়া। Free online CV maker.`,
   },
   '/pro': {
-    title: 'HereWeGrow Pro: মার্কছাড়া সিভি ডাউনলোড, প্রিমিয়াম ডিজাইন ও এআই | Pro CV builder | HereWeGrow',
-    description: '৳৪৯ থেকে প্রো পাস: মার্কছাড়া PDF ও Word, প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ, এআই লেখার সাহায্য ও টেমপ্লেটে ছাড়। বিকাশ বা নগদে একবার পেমেন্ট, নিজে থেকে নবায়ন নেই।',
+    title: 'HereWeGrow Pro: মার্কছাড়া সিভি ডাউনলোড ও প্রিমিয়াম ডিজাইন | Pro CV builder | HereWeGrow',
+    description: '৳৪৯ থেকে প্রো পাস: মার্কছাড়া PDF ও Word, প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ ও টেমপ্লেটে ছাড়। বিকাশ বা নগদে একবার পেমেন্ট, নিজে থেকে নবায়ন নেই।',
   },
   '/tools/cv-checker': {
     title: 'ফ্রি সিভি চেকার: ATS স্কোর | Free CV checker and ATS score | HereWeGrow',

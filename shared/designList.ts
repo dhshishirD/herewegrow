@@ -1,7 +1,7 @@
 // CV builder designs: ids, names and which need Pro. No layout code here, so the
 // build-time SEO pages can use it too. The layouts live in src/builder/designs.tsx.
 
-export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite';
+export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite' | 'traditional' | 'tech' | 'hybrid' | 'ribbon';
 
 export interface DesignInfo {
   id: DesignId;
@@ -25,6 +25,10 @@ export const DESIGN_LIST: DesignInfo[] = [
   { id: 'bold', name: { en: 'Bold', bn: 'বোল্ড' }, note: { en: 'Strong name, colour edge and section labels', bn: 'বড় নাম, রঙিন কিনারা ও সেকশন লেবেল' }, pro: true, photo: true },
   { id: 'fresher', name: { en: 'Fresher', bn: 'ফ্রেশার' }, note: { en: 'Skills up top, compact, for first jobs', bn: 'স্কিল উপরে, কম্প্যাক্ট, প্রথম চাকরির জন্য' }, pro: true, photo: true },
   { id: 'graphite', name: { en: 'Graphite', bn: 'গ্রাফাইট' }, note: { en: 'Dark charcoal sidebar, serious and sharp', bn: 'গাঢ় চারকোল সাইডবার, গম্ভীর ও ধারালো' }, pro: true, photo: true },
+  { id: 'traditional', name: { en: 'Traditional', bn: 'ট্র্যাডিশনাল' }, note: { en: 'Centred and ruled, formal and timeless', bn: 'মাঝখানে নাম, রুল লাইন, আনুষ্ঠানিক' }, pro: true, photo: true },
+  { id: 'tech', name: { en: 'Tech', bn: 'টেক' }, note: { en: 'Dark header and skill tags, for IT roles', bn: 'গাঢ় হেডার ও স্কিল ট্যাগ, আইটি পদের জন্য' }, pro: true, photo: true },
+  { id: 'hybrid', name: { en: 'Hybrid', bn: 'হাইব্রিড' }, note: { en: 'Summary and skills first, then history', bn: 'আগে সারাংশ ও স্কিল, পরে অভিজ্ঞতা' }, pro: true, photo: true },
+  { id: 'ribbon', name: { en: 'Ribbon', bn: 'রিবন' }, note: { en: 'Colour card header, soft rounded entries', bn: 'রঙিন কার্ড হেডার, নরম গোলাকার এন্ট্রি' }, pro: true, photo: true },
 ];
 
 export const DESIGN_IDS = DESIGN_LIST.map((d) => d.id);

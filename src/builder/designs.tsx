@@ -582,6 +582,170 @@ function Fresher({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
+
+/* ── Traditional (Pro): centred, ruled, formal ─────────────────── */
+
+function Traditional({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 14, fontWeight: 700, textAlign: 'center', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#111827', margin: '18px 0 8px', padding: '3px 0', borderTop: `1px solid ${accent}`, borderBottom: `1px solid ${accent}` }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ fontStyle: 'italic', color: GREY, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ fontStyle: 'italic', color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ padding: `${my(40)} ${mx(56)} 4px`, textAlign: 'center' }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 96, borderRadius: 4, objectFit: 'cover', margin: '0 auto 8px', display: 'block' }} />}
+        <h1 style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 700, margin: 0, color: '#111827', letterSpacing: '0.04em' }}>{d.name || 'Your Name'}</h1>
+        {d.headline && <p style={{ margin: '4px 0 0', fontSize: 14, color: accent, fontWeight: 600 }}>{d.headline}</p>}
+        <p style={{ margin: '8px 0 0', color: GREY, fontSize: 12 }}>{contactLine(d).join('  •  ')}</p>
+      </header>
+      <div className="cv-pad" style={{ padding: `0 ${mx(56)} ${my(40)}` }}>
+        {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Tech (Pro): dark header, skill tags with edge, tidy for IT roles ── */
+
+function Tech({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#111827', margin: '19px 0 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ color: accent, fontWeight: 800 }}>{'//'}</span>{children}
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10, paddingLeft: 12, borderLeft: `2px solid ${accent}` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', fontSize: 11, color: GREY, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: accent, fontWeight: 600 }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const showSkills = !d.hidden.includes('skills') && !!d.skills;
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ background: '#111827', color: '#fff', padding: `${my(34)} ${mx(50)} 22px`, display: 'flex', gap: 22, alignItems: 'center' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 700, margin: 0, lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '5px 0 0', fontSize: 14.5, color: '#fff', opacity: 0.9, fontWeight: 600 }}><span style={{ opacity: 0.6 }}>&gt; </span>{d.headline}</p>}
+          <p style={{ margin: '10px 0 0', fontSize: 12, opacity: 0.8 }}>{contactLine(d).join('   ·   ')}</p>
+        </div>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 96, borderRadius: 10, objectFit: 'cover' }} />}
+      </header>
+      <div className="cv-pad" style={{ padding: `4px ${mx(50)} ${my(40)}` }}>
+        {showSkills && (
+          <section>
+            <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#111827', margin: '19px 0 8px' }}><span style={{ color: accent, fontWeight: 800 }}>{'//'} </span>{L.skills}</h2>
+            <Pills items={list(d.skills)} accent={accent} />
+          </section>
+        )}
+        {d.order.filter((k) => k !== 'skills' || !showSkills).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Hybrid (Pro): summary and skills side by side first, then history ── */
+
+function Hybrid({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', paddingBottom: 3, borderBottom: `1px solid ${accent}55` }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const showSummary = !d.hidden.includes('summary') && !!d.summary;
+  const showSkills = !d.hidden.includes('skills') && !!(d.skills || d.languages);
+  const rest = d.order.filter((k) => !((k === 'summary' && showSummary) || (k === 'skills' && showSkills)));
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ padding: `${my(38)} ${mx(50)} 14px`, borderBottom: `4px solid ${accent}`, display: 'flex', gap: 20, alignItems: 'center' }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 92, height: 92, borderRadius: '50%', objectFit: 'cover' }} />}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 700, margin: 0, color: '#111827', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '4px 0 0', fontSize: 14.5, color: accent, fontWeight: 650 }}>{d.headline}</p>}
+          <p style={{ margin: '8px 0 0', color: GREY, fontSize: 12 }}>{contactLine(d).join('   ·   ')}</p>
+        </div>
+      </header>
+      <div className="cv-pad" style={{ padding: `4px ${mx(50)} ${my(40)}` }}>
+        {(showSummary || showSkills) && (
+          <div className="cv-keep" style={{ display: 'grid', gridTemplateColumns: showSummary && showSkills ? '1.35fr 1fr' : '1fr', gap: 26 }}>
+            {showSummary && <section><T.Title>{L.summary}</T.Title><p style={{ margin: 0 }}>{d.summary}</p></section>}
+            {showSkills && (
+              <section><T.Title>{L.skills}</T.Title>
+                {d.skills && <Pills items={list(d.skills)} accent={accent} />}
+                {d.languages && <p style={{ margin: '8px 0 0' }}><strong>{L.languages}:</strong> {d.languages}</p>}
+              </section>
+            )}
+          </div>
+        )}
+        {rest.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Ribbon (Pro): colour card behind the name, soft rounded look ── */
+
+function Ribbon({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 700, color: accent, margin: '19px 0 8px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        {children}<span style={{ flex: 1, height: 2, background: `linear-gradient(90deg, ${accent}66, transparent)` }} />
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10, padding: '8px 12px', background: `${accent}0d`, borderRadius: 8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: accent, fontWeight: 600, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ margin: `${my(30)} ${mx(36)} 0`, background: accent, color: '#fff', borderRadius: 16, padding: '24px 30px', display: 'flex', gap: 22, alignItems: 'center' }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 104, height: 104, borderRadius: '50%', objectFit: 'cover', border: '4px solid rgba(255,255,255,.45)' }} />}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 700, margin: 0, lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '5px 0 0', fontSize: 14.5, opacity: 0.95, fontWeight: 600 }}>{d.headline}</p>}
+          <p style={{ margin: '10px 0 0', fontSize: 12, opacity: 0.9 }}>{contactLine(d).join('   ·   ')}</p>
+        </div>
+      </header>
+      <div className="cv-pad" style={{ padding: `4px ${mx(44)} ${my(40)}` }}>
+        {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
@@ -598,6 +762,10 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font }
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {
+  if (design === 'traditional') return <Traditional d={d} accent={accent} L={L} />;
+  if (design === 'tech') return <Tech d={d} accent={accent} L={L} />;
+  if (design === 'hybrid') return <Hybrid d={d} accent={accent} L={L} />;
+  if (design === 'ribbon') return <Ribbon d={d} accent={accent} L={L} />;
   if (design === 'pulse') return <Pulse d={d} accent={accent} L={L} />;
   if (design === 'bold') return <Bold d={d} accent={accent} L={L} />;
   if (design === 'fresher') return <Fresher d={d} accent={accent} L={L} />;

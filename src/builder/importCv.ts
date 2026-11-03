@@ -71,6 +71,9 @@ const HEADINGS: [RegExp, Key, string?][] = [
   [/^(trainings?|certifications?|courses?|workshops?|professional\s+(development|training|certifications?)|trainings?\s*(&|and)\s*(certifications?|workshops?|courses?)|certifications?\s*(&|and)\s*trainings?|licen[cs]es?\s*(&|and)\s*certifications?)$|প্রশিক্ষণ/i, 'training'],
   [/education|academic|qualification|credential|শিক্ষা/i, 'education'],
   [/experience|employment|work\s+history|career\s+history|internship|অভিজ্ঞতা/i, 'experience'],
+  [/fellowship|scholarship|exchange\s+program|international\s+(programs?|exposure|experience)/i, 'custom', 'Fellowships and International Programs'],
+  [/policy\s+(analysis|papers?|briefs?|writing)|selected\s+(writing|analysis)|articles?$|op[\s-]?eds?$|blog/i, 'custom', 'Policy Analysis and Writing'],
+  [/leadership|membership|affiliation|committee/i, 'custom', 'Leadership and Memberships'],
   [/project|research/i, 'custom', 'Projects'],
   [/achievement|award|honou?r|accomplishment/i, 'custom', 'Achievements and Awards'],
   [/volunteer|social\s+work/i, 'custom', 'Volunteering'],
@@ -81,7 +84,26 @@ const HEADINGS: [RegExp, Key, string?][] = [
   [/summary|objective|profile|about\s+me|career\s+goal|personal\s+statement|সারসংক্ষেপ/i, 'summary'],
 ];
 
+const titleCase = (s: string) =>
+  s.toLowerCase().replace(/(^|[\s/&-])(\p{L})/gu, (_, a: string, b: string) => a + b.toUpperCase()).replace(/\b(And|Of|The|For|In|On|To)\b(?!$)/g, (w, _x, off: number) => (off === 0 ? w : w.toLowerCase()));
+
+/** An ALL-CAPS short line is almost always a section heading, even one we have no name for. */
+function unknownHeading(line: string): string | null {
+  const clean = line.replace(/[:\-–_|•]+\s*$/, '').replace(/^[^\p{L}]+/u, '').trim();
+  const words = clean.split(/\s+/);
+  if (clean.length < 4 || clean.length > 48 || words.length > 6 || /[\d.,;:()@]/.test(clean)) return null;
+  if (clean !== clean.toUpperCase() || clean === clean.toLowerCase()) return null; // must have letters, all upper case
+  if (/^(curriculum vitae|resume|cv|page)\b/i.test(clean)) return null;
+  return titleCase(clean);
+}
+
 function headingOf(line: string): { key: Key; title?: string } | null {
+  // "Selected Policy Analysis (non-peer-reviewed, 2026)": a known heading followed by a note in brackets
+  const base = line.replace(/\s*\(.*$/, '');
+  if (base !== line && base.trim().split(/\s+/).length <= 5 && !/[.,;:]$/.test(line.trim()) && /\)\s*$/.test(line)) {
+    const known = HEADINGS.find(([re]) => re.test(base));
+    if (known && known[1] === 'custom') return { key: known[1], title: known[2] };
+  }
   const clean = line.replace(/[:\-–_|•]+\s*$/, '').replace(/^[^\p{L}]+/u, '').trim();
   if (!clean || clean.length > 42 || /\d/.test(clean) || /[.,;]$/.test(clean) || clean.split(/\s+/).length > 5) return null;
   if (/:\s*\S/.test(clean) || /[()]|\s[—–-]\s/.test(clean)) return null;
@@ -110,7 +132,12 @@ export function parseCv(raw: string): ImportResult {
   // Split into sections by heading lines.
   const blocks: { key: Key | 'header'; title?: string; lines: string[] }[] = [{ key: 'header', lines: [] }];
   for (const line of allLines) {
-    const h = headingOf(line);
+    let h = headingOf(line);
+    // After the first real heading, an unrecognised ALL-CAPS line starts its own section instead of joining the one above
+    if (!h && blocks.length > 1) {
+      const title = unknownHeading(line);
+      if (title) h = { key: 'custom', title };
+    }
     if (h) blocks.push({ key: h.key, title: h.title, lines: [] });
     else blocks[blocks.length - 1].lines.push(line);
   }

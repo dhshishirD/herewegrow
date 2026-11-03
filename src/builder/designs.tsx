@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { DESIGN_LIST } from '../../shared/designList';
+import { findFont } from './fonts';
 import { DEFAULT_MARGINS, LABELS, clampMargin, lines, list, type CvData, type DesignId, type HeadingLang, type Margins } from './model';
 
 // CV designs, each laid out on an A4 page (794 × 1123 px at 96 dpi).
@@ -11,13 +12,14 @@ type Labels = Record<string, string>;
 
 const PAGE: CSSProperties = {
   width: 794, minHeight: 1123, background: '#fff', color: '#1f2933',
-  fontFamily: '"Inter Variable", "Hind Siliguri", Arial, sans-serif', fontSize: 12.5, lineHeight: 1.5,
+  fontFamily: 'var(--cv-font, "Inter Variable", "Hind Siliguri", Arial, sans-serif)', fontSize: 12.5, lineHeight: 1.5,
 };
 // Page margins: every side padding below is written as mx(px) or my(px), scaled by --cvx / --cvy set in CvDocument.
 // 1 means the design's own spacing, so nothing changes until the person picks a margin.
 const mx = (px: number) => `calc(${px}px * var(--cvx, 1))`;
 const my = (px: number) => `calc(${px}px * var(--cvy, 1))`;
-const SERIF = '"Fraunces Variable", "Noto Serif Bengali Variable", Georgia, serif';
+// The person's font choice (CvDocument sets --cv-font / --cv-head); unset keeps the design's own pairing
+const SERIF = 'var(--cv-head, "Fraunces Variable", "Noto Serif Bengali Variable", Georgia, serif)';
 const GREY = '#52606d';
 
 export const dates = (start: string, end: string, current: boolean, L: Labels) => [start, current ? L.present : end].filter(Boolean).join(' – ');
@@ -450,10 +452,14 @@ export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
 
-export function CvDocument({ d, design, accent, headings = 'en', margins }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins }) {
+export function CvDocument({ d, design, accent, headings = 'en', margins, font }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins; font?: string }) {
   const L = LABELS[headings];
+  const f = findFont(font);
   // No wrapper box (display: contents), only the two scale variables for the paddings
-  const vars = margins ? ({ '--cvx': clampMargin(margins.x) / DEFAULT_MARGINS.x, '--cvy': clampMargin(margins.y) / DEFAULT_MARGINS.y } as CSSProperties) : undefined;
+  const vars = {
+    ...(margins ? { '--cvx': clampMargin(margins.x) / DEFAULT_MARGINS.x, '--cvy': clampMargin(margins.y) / DEFAULT_MARGINS.y } : {}),
+    ...(f.body ? { '--cv-font': f.body, '--cv-head': f.head } : {}),
+  } as CSSProperties;
   return <div style={{ display: 'contents', ...vars }}><Layout d={d} design={design} accent={accent} L={L} /></div>;
 }
 

@@ -13,13 +13,13 @@ function Avatar({ after }: { after: boolean }) {
     <svg viewBox="0 0 64 64" aria-hidden="true" className="h-full w-full">
       <defs>
         <linearGradient id={after ? 'pm-av-a' : 'pm-av-b'} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor={after ? '#f3c66b' : '#d6dbd8'} />
-          <stop offset="1" stopColor={after ? '#e3a72f' : '#bfc6c2'} />
+          <stop offset="0" stopColor={after ? '#5eead4' : '#d6dbd8'} />
+          <stop offset="1" stopColor={after ? '#2ec4a6' : '#bfc6c2'} />
         </linearGradient>
       </defs>
       <rect width="64" height="64" fill={`url(#${after ? 'pm-av-a' : 'pm-av-b'})`} />
-      <circle cx="32" cy="25" r="11" fill={after ? '#0e3b2e' : '#9aa39f'} />
-      <path d="M10 64c2-13 11-20 22-20s20 7 22 20z" fill={after ? '#0e3b2e' : '#9aa39f'} />
+      <circle cx="32" cy="25" r="11" fill={after ? '#0b1f3f' : '#9aa39f'} />
+      <path d="M10 64c2-13 11-20 22-20s20 7 22 20z" fill={after ? '#0b1f3f' : '#9aa39f'} />
       {after && <path d="M27 46l5 6 5-6" fill="none" stroke="#fff" strokeWidth="2" strokeLinejoin="round" />}
     </svg>
   );

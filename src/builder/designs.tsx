@@ -198,7 +198,7 @@ function Classic({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
 
 /* ── Modern: coloured sidebar with photo ─────────────────────── */
 
-function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+function Modern({ d, accent, L, side }: { d: CvData; accent: string; L: Labels; side?: string }) {
   const Side = ({ children }: { children: ReactNode }) => (
     <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 11.5, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', margin: '22px 0 8px', opacity: 0.9 }}>{children}</h2>
   );
@@ -223,8 +223,8 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   return (
     <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '250px 1fr' }}>
       {/* Print only: repeats on every page so the sidebar colour runs top to bottom on page 2 as well */}
-      <div className="cv-sidebar-bg" style={{ background: accent, width: 250 }} />
-      <aside className="cv-pad" style={{ background: accent, color: '#fff', padding: `${my(40)} 26px`, position: 'relative', zIndex: 1 }}>
+      <div className="cv-sidebar-bg" style={{ background: side ?? accent, width: 250 }} />
+      <aside className="cv-pad" style={{ background: side ?? accent, color: '#fff', padding: `${my(40)} 26px`, position: 'relative', zIndex: 1 }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 140, height: 140, borderRadius: '50%', objectFit: 'cover', display: 'block', margin: '0 auto 8px', border: '4px solid rgba(255,255,255,.35)' }} />}
         <Side>{L.contact}</Side>
         {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 5px', wordBreak: 'break-word' }}>{c}</p>)}
@@ -448,6 +448,140 @@ function Corporate({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
+
+/* ── Pills: skills as rounded tags ─────────────────────────────── */
+
+const Pills = ({ items, accent, solid }: { items: string[]; accent: string; solid?: boolean }) => (
+  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px 6px' }}>
+    {items.map((x) => (
+      <span key={x} style={{ fontSize: 11.5, fontWeight: 600, padding: '2px 10px', borderRadius: 999, background: solid ? accent : `${accent}14`, color: solid ? '#fff' : accent, border: solid ? 'none' : `1px solid ${accent}33` }}>{x}</span>
+    ))}
+  </div>
+);
+
+/* ── Pulse (Pro): two columns, tinted right panel with skill tags ── */
+
+function Pulse({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#111827', margin: '20px 0 9px', paddingBottom: 5, borderBottom: `2px solid ${accent}` }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <strong style={{ fontSize: 13.5 }}>{title}</strong>
+        {sub && <div style={{ color: accent, fontWeight: 600 }}>{sub}</div>}
+        {date && <div style={{ color: GREY, fontSize: 11.5 }}>{date}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 11.5, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, margin: '20px 0 8px' }}>{children}</h2>
+  );
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
+  return (
+    <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '1fr 236px' }}>
+      <main className="cv-pad" style={{ padding: `${my(40)} 30px ${my(40)} ${mx(44)}` }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 750, margin: 0, color: '#111827', lineHeight: 1.05 }}>{d.name || 'Your Name'}</h1>
+        {d.headline && <p style={{ margin: '6px 0 0', fontSize: 15, color: accent, fontWeight: 650 }}>{d.headline}</p>}
+        {!d.hidden.includes('summary') && d.summary && <p style={{ margin: '14px 0 0', color: '#374151' }}>{d.summary}</p>}
+        {d.order.filter((k) => !['summary', 'skills', 'personal', 'references'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </main>
+      <aside className="cv-pad" style={{ background: `${accent}10`, borderLeft: `3px solid ${accent}`, padding: `${my(40)} 22px` }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 120, height: 120, borderRadius: 14, objectFit: 'cover', display: 'block', margin: '0 0 6px' }} />}
+        <Side>{L.contact}</Side>
+        {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 5px', wordBreak: 'break-word', fontSize: 11.5 }}>{c}</p>)}
+        {showSkills && d.skills && (<><Side>{L.skills}</Side><Pills items={list(d.skills)} accent={accent} /></>)}
+        {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+        {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px', fontSize: 11.5 }}><span style={{ color: GREY, fontSize: 10.5 }}>{a}</span><br />{b}</p>)}</>)}
+        {showRefs && (<><Side>{L.references}</Side>{d.references.map((r) => (
+          <p key={r.id} style={{ margin: '0 0 9px', wordBreak: 'break-word', fontSize: 11.5 }}>
+            <strong>{r.name}</strong>{[r.title, r.org].filter(Boolean).map((x) => <span key={x}><br />{x}</span>)}
+            {(r.phone || r.email) && <span style={{ color: GREY }}><br />{[r.phone, r.email].filter(Boolean).join(', ')}</span>}
+          </p>
+        ))}</>)}
+      </aside>
+    </div>
+  );
+}
+
+/* ── Bold (Pro): accent edge, uppercase name, filled section labels ── */
+
+function Bold({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ margin: '20px 0 9px' }}>
+        <span style={{ fontFamily: 'inherit', display: 'inline-block', background: accent, color: '#fff', fontSize: 11.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '3px 12px', borderRadius: 3 }}>{children}</span>
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: accent, fontWeight: 700, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  return (
+    <div className="cv-page" style={{ ...PAGE, boxShadow: `inset 14px 0 0 ${accent}` }}>
+      <header className="cv-keep" style={{ padding: `${my(40)} ${mx(48)} 6px ${mx(58)}`, display: 'flex', gap: 24, alignItems: 'center' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 36, fontWeight: 800, margin: 0, color: '#111827', lineHeight: 1.05, letterSpacing: '0.02em', textTransform: 'uppercase' }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '7px 0 0', fontSize: 15, color: accent, fontWeight: 700 }}>{d.headline}</p>}
+          <p style={{ margin: '10px 0 0', color: GREY, fontSize: 12 }}>{contactLine(d).join('   |   ')}</p>
+        </div>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 104, height: 104, borderRadius: 8, objectFit: 'cover' }} />}
+      </header>
+      <div className="cv-pad" style={{ padding: `4px ${mx(48)} ${my(40)} ${mx(58)}` }}>
+        {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
+/* ── Fresher (Pro): skills up top as tags, compact, for first jobs ── */
+
+function Fresher({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, margin: '17px 0 7px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ width: 8, height: 8, background: accent, borderRadius: 2, display: 'inline-block' }} />{children}
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 9, paddingLeft: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const showSkills = !d.hidden.includes('skills') && !!d.skills;
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ padding: `${my(36)} ${mx(50)} 0`, textAlign: 'center' }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover', margin: '0 auto 8px', display: 'block' }} />}
+        <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 700, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
+        {d.headline && <p style={{ margin: '4px 0 0', fontSize: 14.5, color: accent, fontWeight: 650 }}>{d.headline}</p>}
+        <p style={{ margin: '8px 0 0', color: GREY, fontSize: 12 }}>{contactLine(d).join('   ·   ')}</p>
+        {showSkills && <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}><Pills items={list(d.skills).slice(0, 10)} accent={accent} solid /></div>}
+      </header>
+      <div className="cv-pad" style={{ padding: `2px ${mx(50)} ${my(40)}` }}>
+        {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
@@ -464,6 +598,10 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font }
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {
+  if (design === 'pulse') return <Pulse d={d} accent={accent} L={L} />;
+  if (design === 'bold') return <Bold d={d} accent={accent} L={L} />;
+  if (design === 'fresher') return <Fresher d={d} accent={accent} L={L} />;
+  if (design === 'graphite') return <Modern d={d} accent={accent} L={L} side="#1f2933" />;
   if (design === 'modern') return <Modern d={d} accent={accent} L={L} />;
   if (design === 'executive') return <Executive d={d} accent={accent} L={L} />;
   if (design === 'elegant') return <Elegant d={d} accent={accent} L={L} />;

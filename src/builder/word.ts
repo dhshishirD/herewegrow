@@ -15,7 +15,7 @@ import {
   TextRun,
 } from 'docx';
 import { contactLine, degreeLine, personalRows } from './designs';
-import { LABELS, clampMargin, lines, list, type BuilderState } from './model';
+import { LABELS, clampMargin, findFont, lines, list, type BuilderState } from './model';
 
 const A4 = { width: 11906, height: 16838 };
 const MARGIN = 1000; // about 1.76 cm, used until the person picks a margin
@@ -36,6 +36,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const d = state.data;
   const L = LABELS[state.headings ?? 'en'];
   const accent = hex(state.accent);
+  const wordFont = findFont(state.font)?.word ?? 'Calibri';
   const grey = '52606D';
   const marginX = state.margins ? Math.round(clampMargin(state.margins.x) * TWIPS_PER_MM) : MARGIN;
   const marginY = state.margins ? Math.round(clampMargin(state.margins.y) * TWIPS_PER_MM) : MARGIN;
@@ -134,7 +135,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const doc = new Document({
     creator: 'HereWeGrow CV builder',
     title: `${d.name || 'My'} CV`,
-    styles: { default: { document: { run: { font: { ascii: 'Calibri', hAnsi: 'Calibri', cs: 'Nirmala UI' }, size: 21 } } } },
+    styles: { default: { document: { run: { font: { ascii: wordFont, hAnsi: wordFont, cs: 'Nirmala UI' }, size: 21 } } } },
     numbering: {
       config: [{
         reference: 'bullets',

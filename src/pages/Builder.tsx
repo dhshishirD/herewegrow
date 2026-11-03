@@ -3,6 +3,7 @@ import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
 import {
   ACCENTS,
+  CV_FONTS,
   SECTION_PRESETS,
   emptyCv,
   list,
@@ -26,7 +27,6 @@ import {
   type CustomSection,
   type CvData,
   type DesignId,
-  type HeadingLang,
 } from '../builder/model';
 import { PageHead } from '../components/PageHead';
 import { ProGate } from '../components/ProGate';
@@ -137,11 +137,11 @@ function cvText(d: CvData) {
 const THUMB = 0.15;
 
 /** A live, scaled-down copy of the CV in one design. Memoised so typing re-draws only once per pause. */
-const Thumb = memo(function Thumb({ d, design, accent, headings }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang }) {
+const Thumb = memo(function Thumb({ d, design, accent, font }: { d: CvData; design: DesignId; accent: string; font?: string }) {
   return (
     <div aria-hidden="true" className="pointer-events-none overflow-hidden rounded-md bg-white" style={{ width: 794 * THUMB, height: 1123 * THUMB }}>
       <div style={{ width: 794, transform: `scale(${THUMB})`, transformOrigin: 'top left' }}>
-        <CvDocument d={d} design={design} accent={accent} headings={headings} />
+        <CvDocument d={d} design={design} accent={accent} font={font} />
       </div>
     </div>
   );
@@ -198,7 +198,7 @@ function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: bo
           <button key={x.id} type="button" role="radio" aria-checked={on} title={t(x.note)} onClick={() => onPick(x.id)}
             className={`group shrink-0 snap-start rounded-xl p-1.5 text-left transition ${on ? 'bg-white ring-2 ring-leaf shadow-md' : 'ring-1 ring-line hover:bg-white hover:ring-leaf/50'}`}>
             <div className="relative">
-              <Thumb d={d} design={x.id} accent={state.accent} headings={state.headings} />
+              <Thumb d={d} design={x.id} accent={state.accent} font={state.font} />
               {x.pro && (
                 <span className={`absolute right-1.5 top-1.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${pro ? 'bg-leaf text-white' : 'bg-saffron text-ink'}`}>
                   {pro ? 'Pro ✓' : 'Pro'}
@@ -217,7 +217,7 @@ function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: bo
 
 export function BuilderPage() {
   const { t, lang } = useLang();
-  const [state, setState] = useState<BuilderState>(() => loadState() ?? { data: emptyCv(), design: 'classic', accent: ACCENTS[0] });
+  const [state, setState] = useState<BuilderState>(() => { const l = loadState(); return l ? { ...l, headings: 'en' } : { data: emptyCv(), design: 'classic', accent: ACCENTS[0] }; });
   const [open, setOpen] = useState<string>('import');
   const [view, setView] = useState<'edit' | 'preview'>('edit');
   const [importMsg, setImportMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -404,7 +404,7 @@ export function BuilderPage() {
     if (!cvId && !isEmpty && !window.confirm(t({ en: 'Open this CV? The one on screen is not saved to your account and will be replaced.', bn: 'এই সিভি খুলবেন? স্ক্রিনের সিভিটি অ্যাকাউন্টে সেভ করা নেই, এটি বদলে যাবে।' }))) return;
     const r = await loadCv(id);
     if (r.ok && r.value?.data) {
-      setState({ ...r.value, design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
+      setState({ ...r.value, headings: 'en', design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
       setCvId(id);
       setSync('saved');
     } else setSync('error');
@@ -449,15 +449,13 @@ export function BuilderPage() {
                 {DESIGNS.map((x) => <option key={x.id} value={x.id}>{t(x.name)}{x.pro && !pro ? ' · Pro' : ''}</option>)}
               </select>
             </label>
-            <div role="radiogroup" aria-label={t({ en: 'Heading language', bn: 'শিরোনামের ভাষা' })} className="flex rounded-full bg-white p-0.5 ring-1 ring-line">
-              {(['en', 'bn'] as const).map((h) => (
-                <button key={h} type="button" role="radio" aria-checked={(state.headings ?? 'en') === h} onClick={() => setState((s) => ({ ...s, headings: h }))}
-                  title={t({ en: 'Language of the section headings on your CV', bn: 'সিভির শিরোনামগুলোর ভাষা' })}
-                  className={`rounded-full px-3 py-1 text-sm font-semibold ${(state.headings ?? 'en') === h ? 'bg-leaf text-white' : ''}`}>
-                  {h === 'en' ? 'EN' : 'বাংলা'}
-                </button>
-              ))}
-            </div>
+            <label>
+              <span className="sr-only">{t({ en: 'CV font', bn: 'সিভির ফন্ট' })}</span>
+              <select className="field !min-h-10 !w-auto !py-1.5 text-sm font-semibold" value={state.font ?? ''} onChange={(e) => setState((s) => ({ ...s, font: e.target.value || undefined }))}>
+                <option value="">{t({ en: 'Design font', bn: 'ডিজাইনের ফন্ট' })}</option>
+                {CV_FONTS.map((f) => <option key={f.id} value={f.id}>{f.name}</option>)}
+              </select>
+            </label>
             <div role="radiogroup" aria-label={t({ en: 'Colour', bn: 'রং' })} className="flex gap-1.5">
               {ACCENTS.map((c) => (
                 <button key={c} type="button" role="radio" aria-checked={state.accent === c} aria-label={c} onClick={() => setState((s) => ({ ...s, accent: c }))}
@@ -669,7 +667,7 @@ export function BuilderPage() {
               <p className="font-display text-lg font-semibold">{t({ en: 'Add a section', bn: 'নতুন অংশ যোগ করুন' })}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {SECTION_PRESETS.filter((p) => !d.custom.some((c) => c.title === p.en || c.title === p.bn)).map((p) => (
-                  <button key={p.en} type="button" title={t(p.hint)} onClick={() => addSection(state.headings === 'bn' ? p.bn : p.en)}
+                  <button key={p.en} type="button" title={t(p.hint)} onClick={() => addSection(p.en)}
                     className="rounded-full bg-mist px-3.5 py-1.5 text-sm font-semibold hover:bg-leaf-soft hover:text-leaf-dark">
                     + {t(p)}
                   </button>
@@ -780,7 +778,7 @@ export function BuilderPage() {
                 <div style={{ height: pages * A4_PX * scale }}>
                   <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left', position: 'relative' }} className="shadow-lg">
                     <div ref={docBox}>
-                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} />
+                      <CvDocument d={d} design={state.design} accent={state.accent} headings="en" margins={state.margins} font={state.font} />
                     </div>
                     {Array.from({ length: pages - 1 }, (_, i) => (
                       <div key={i} aria-hidden="true" className="pointer-events-none absolute inset-x-0 border-t-2 border-dashed border-red-400" style={{ top: (i + 1) * A4_PX }}>
@@ -807,7 +805,7 @@ export function BuilderPage() {
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
-        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} />
+        <CvDocument d={d} design={state.design} accent={state.accent} headings="en" margins={state.margins} font={state.font} />
         {!pro && <div className="cv-watermark">Made with HereWeGrow.pro</div>}
       </div>
     </>

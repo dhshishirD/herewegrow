@@ -113,12 +113,26 @@ export const MARGIN_PRESETS: { id: string; name: { en: string; bn: string }; m: 
 ];
 export const clampMargin = (n: number) => Math.min(MARGIN_LIMITS.max, Math.max(MARGIN_LIMITS.min, Number.isFinite(n) ? n : DEFAULT_MARGINS.x));
 
+/** Fonts the person can pick for the CV. `word` is the name Word uses when the file is opened on a computer. */
+export const CV_FONTS: { id: string; name: string; css: string; word: string }[] = [
+  { id: 'inter', name: 'Inter', css: '"Inter Variable", "Hind Siliguri", Arial, sans-serif', word: 'Calibri' },
+  { id: 'arial', name: 'Arial', css: '"Arimo", "Hind Siliguri", Arial, sans-serif', word: 'Arial' },
+  { id: 'times', name: 'Times New Roman', css: '"Tinos", "Noto Serif Bengali Variable", "Times New Roman", serif', word: 'Times New Roman' },
+  { id: 'calibri', name: 'Calibri (Lato)', css: '"Lato", "Hind Siliguri", Calibri, sans-serif', word: 'Calibri' },
+  { id: 'garamond', name: 'Garamond', css: '"EB Garamond", "Noto Serif Bengali Variable", Garamond, serif', word: 'Garamond' },
+  { id: 'roboto', name: 'Roboto', css: '"Roboto", "Hind Siliguri", sans-serif', word: 'Arial' },
+  { id: 'opensans', name: 'Open Sans', css: '"Open Sans", "Hind Siliguri", sans-serif', word: 'Arial' },
+];
+export const findFont = (id?: string) => CV_FONTS.find((f) => f.id === id);
+
 export interface BuilderState {
   data: CvData;
   /** Page margins. Unset keeps each design's own spacing. */
   margins?: Margins;
   design: DesignId;
   accent: string;
+  /** Chosen CV font (id from CV_FONTS). Unset keeps each design's own fonts. */
+  font?: string;
   /** Language of the section headings on the CV itself. */
   headings?: HeadingLang;
 }

@@ -88,6 +88,12 @@ export function ServicesPage() {
         <section key={g.id} id={g.id} className="wrap scroll-mt-24 pt-12">
           <h2 className="text-3xl">{t(g.name)}</h2>
           <p className="mt-2 max-w-2xl text-muted">{t(g.intro)}</p>
+          {g.id === 'profile' && (
+            <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-semibold">
+              <Link href="/linkedin-profile-optimization" className="text-leaf underline underline-offset-4">{t({ en: 'See a LinkedIn before and after', bn: 'লিংকডইনের আগে-পরে দেখুন' })}</Link>
+              <Link href="/bdjobs-profile-optimization" className="text-leaf underline underline-offset-4">{t({ en: 'See a BDJobs before and after', bn: 'বিডিজবসের আগে-পরে দেখুন' })}</Link>
+            </p>
+          )}
           <div className="mt-6"><ServiceRateCard group={g.id} /></div>
         </section>
       ))}

@@ -28,6 +28,10 @@ const LazyBuilder = () => (
   </Suspense>
 );
 
+const Landing = lazy(() => import('./pages/ProfileLanding'));
+const LinkedInPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="linkedin" /></Suspense>;
+const BdjobsPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="bdjobs" /></Suspense>;
+
 const ROUTES: Record<string, () => JSX.Element> = {
   '/': Home,
   '/services': ServicesPage,
@@ -43,6 +47,8 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,
   '/pro': ProPage,
+  '/linkedin-profile-optimization': LinkedInPage,
+  '/bdjobs-profile-optimization': BdjobsPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,
 };

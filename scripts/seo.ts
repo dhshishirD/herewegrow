@@ -10,6 +10,7 @@ import { PRODUCTS } from '../shared/catalog';
 import { GUIDES, type Block } from '../shared/guides';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
 import { PLANS } from '../shared/plans';
+import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES } from '../shared/templates';
 
@@ -169,6 +170,32 @@ function pages(): Page[] {
       ],
       priority: 0.8,
     },
+    ...Object.values(PROFILE_PAGES).map((pp): Page => {
+      const prod = PRODUCTS.find((p) => p.id === pp.productId)!;
+      return {
+        path: pp.path,
+        ...seo(pp.path),
+        body: `<h1>${esc(pp.title.bn)}</h1><p>${esc(pp.lead.bn)}</p><p>${esc(pp.lead.en)}</p><ul>${prod.includes.map((i) => `<li>${esc(i.bn)} (${esc(i.en)})</li>`).join('')}</ul><p>৳${prod.price}</p><ul>${pp.faq.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul>`,
+        jsonLd: [
+          {
+            '@type': 'Service',
+            name: prod.name.en,
+            alternateName: prod.name.bn,
+            serviceType: pp.eyebrow.en,
+            description: pp.lead.en,
+            provider: { '@id': `${SITE}/#org` },
+            areaServed: 'BD',
+            offers: { '@type': 'Offer', price: prod.price, priceCurrency: 'BDT', url: `${SITE}${pp.path}` },
+          },
+          {
+            '@type': 'FAQPage',
+            mainEntity: pp.faq.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })),
+          },
+          crumbs([['HereWeGrow', '/'], ['Services', '/services'], [pp.eyebrow.en, pp.path]]),
+        ],
+        priority: 0.9,
+      };
+    }),
     { path: '/privacy', title: 'Privacy | HereWeGrow', description: 'How HereWeGrow handles your information.', body: '<h1>Privacy</h1>', priority: 0.3 },
     { path: '/terms', title: 'Terms | HereWeGrow', description: 'Terms for HereWeGrow services and templates.', body: '<h1>Terms</h1>', priority: 0.3 },
   ];

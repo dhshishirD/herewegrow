@@ -45,6 +45,14 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'ফ্রি সিভি বিল্ডার: অনলাইনে সিভি বানান, PDF ডাউনলোড | Free CV maker Bangladesh | HereWeGrow',
     description: `সহজ ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি পেশাদার ডিজাইনে সিভি বানান (${bn(FREE_DESIGN_COUNT)}টি ফ্রি), ATS-ফ্রেন্ডলি PDF ডাউনলোড করুন। বাংলাদেশি ফরম্যাটের ব্যক্তিগত তথ্যসহ। বিনামূল্যে, সাইন-আপ ছাড়া। Free online CV maker.`,
   },
+  '/linkedin-profile-optimization': {
+    title: `লিংকডইন প্রোফাইল অপটিমাইজেশন সার্ভিস (৳${price('linkedin-profile')}) | LinkedIn profile optimization Bangladesh | HereWeGrow`,
+    description: `রিক্রুটার-রেডি লিংকডইন প্রোফাইল: হেডলাইন, About, অভিজ্ঞতা ও কী-ওয়ার্ড নতুন করে লেখা, ৪৮ ঘণ্টায়। মাত্র ৳${price('linkedin-profile')}, বিকাশ/নগদে পেমেন্ট। LinkedIn profile makeover by CV experts in Bangladesh.`,
+  },
+  '/bdjobs-profile-optimization': {
+    title: `বিডিজবস প্রোফাইল আপডেট ও সেটআপ সার্ভিস (৳${price('bdjobs-profile')}) | BDJobs profile service | HereWeGrow`,
+    description: `বিডিজবস প্রোফাইল ১০০% সম্পূর্ণ: ক্যারিয়ার সামারি, স্কিল, অভিজ্ঞতা ও জব ক্যাটাগরি, ২৪ ঘণ্টায়। মাত্র ৳${price('bdjobs-profile')}। BDJobs profile update and setup by CV experts, ready for 1-click apply.`,
+  },
   '/pro': {
     title: 'HereWeGrow Pro: মার্কছাড়া সিভি ডাউনলোড ও প্রিমিয়াম ডিজাইন | Pro CV builder | HereWeGrow',
     description: '৳৪৯ থেকে প্রো পাস: মার্কছাড়া PDF ও Word, প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ ও টেমপ্লেটে ছাড়। বিকাশ বা নগদে একবার পেমেন্ট, নিজে থেকে নবায়ন নেই।',

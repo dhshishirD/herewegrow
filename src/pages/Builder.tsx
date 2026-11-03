@@ -17,6 +17,11 @@ import {
   saveState,
   uid,
   type BuilderState,
+  type Margins,
+  DEFAULT_MARGINS,
+  MARGIN_LIMITS,
+  MARGIN_PRESETS,
+  clampMargin,
   type CustomItem,
   type CustomSection,
   type CvData,
@@ -141,6 +146,44 @@ const Thumb = memo(function Thumb({ d, design, accent, headings }: { d: CvData; 
     </div>
   );
 });
+
+/** Page margin picker: presets plus fine sliders for the sides and for top and bottom. */
+function MarginControl({ margins, onChange, t }: { margins?: Margins; onChange: (m: Margins | undefined) => void; t: T }) {
+  const m = margins ?? DEFAULT_MARGINS;
+  const active = margins ? MARGIN_PRESETS.find((p) => p.m.x === m.x && p.m.y === m.y)?.id : undefined;
+  const slider = (label: string, key: 'x' | 'y') => (
+    <label className="block text-sm">
+      <span className="flex justify-between font-medium"><span>{label}</span><span className="text-muted">{m[key]} mm</span></span>
+      <input type="range" min={MARGIN_LIMITS.min} max={MARGIN_LIMITS.max} step={1} value={m[key]} className="mt-1 w-full accent-[#12805c]"
+        onChange={(e) => onChange({ ...m, [key]: clampMargin(Number(e.target.value)) })} />
+    </label>
+  );
+  return (
+    <details className="relative">
+      <summary className="btn btn-quiet bg-white !min-h-10 cursor-pointer list-none text-sm" title={t({ en: 'Page margins', bn: 'পৃষ্ঠার মার্জিন' })}>
+        {t({ en: 'Margins', bn: 'মার্জিন' })}
+      </summary>
+      <div className="absolute left-0 top-12 z-30 w-72 rounded-xl bg-white p-4 shadow-xl ring-1 ring-line">
+        <p className="text-sm font-semibold">{t({ en: 'Page margins (A4)', bn: 'পৃষ্ঠার মার্জিন (A4)' })}</p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {MARGIN_PRESETS.map((p) => (
+            <button key={p.id} type="button" aria-pressed={active === p.id} onClick={() => onChange(p.m)}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold ${active === p.id ? 'border-leaf bg-leaf text-white' : 'border-line hover:border-leaf'}`}>
+              {t(p.name)}
+            </button>
+          ))}
+        </div>
+        <div className="mt-4 space-y-3">
+          {slider(t({ en: 'Left and right', bn: 'বাম ও ডান' }), 'x')}
+          {slider(t({ en: 'Top and bottom', bn: 'উপর ও নিচ' }), 'y')}
+        </div>
+        <button type="button" className="mt-4 text-sm font-semibold text-leaf underline underline-offset-4" onClick={() => onChange(undefined)}>
+          {t({ en: 'Reset to the design’s own spacing', bn: 'ডিজাইনের নিজস্ব মার্জিনে ফিরুন' })}
+        </button>
+      </div>
+    </details>
+  );
+}
 
 function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: boolean; onPick: (id: DesignId) => void; t: T }) {
   // Thumbnails follow the person's own CV (or the example while it is empty), a beat behind their typing
@@ -421,6 +464,7 @@ export function BuilderPage() {
                   className={`h-7 w-7 rounded-full ring-offset-2 ${state.accent === c ? 'ring-2 ring-ink' : ''}`} style={{ background: c }} />
               ))}
             </div>
+            <MarginControl margins={state.margins} onChange={(margins) => setState((s) => ({ ...s, margins }))} t={t} />
             <div className="ml-auto flex items-center gap-2">
               <div className="flex rounded-lg bg-mist p-1 md:hidden">
                 {(['edit', 'preview'] as const).map((v) => (
@@ -736,7 +780,7 @@ export function BuilderPage() {
                 <div style={{ height: pages * A4_PX * scale }}>
                   <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left', position: 'relative' }} className="shadow-lg">
                     <div ref={docBox}>
-                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
+                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} />
                     </div>
                     {Array.from({ length: pages - 1 }, (_, i) => (
                       <div key={i} aria-hidden="true" className="pointer-events-none absolute inset-x-0 border-t-2 border-dashed border-red-400" style={{ top: (i + 1) * A4_PX }}>
@@ -763,7 +807,7 @@ export function BuilderPage() {
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
-        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} />
+        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} />
         {!pro && <div className="cv-watermark">Made with HereWeGrow.pro</div>}
       </div>
     </>

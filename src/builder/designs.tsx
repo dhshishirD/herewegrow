@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { DESIGN_LIST } from '../../shared/designList';
-import { LABELS, lines, list, type CvData, type DesignId, type HeadingLang } from './model';
+import { DEFAULT_MARGINS, LABELS, clampMargin, lines, list, type CvData, type DesignId, type HeadingLang, type Margins } from './model';
 
 // CV designs, each laid out on an A4 page (794 × 1123 px at 96 dpi).
 // Sections follow the order the person chose. Text stays real text, so the PDF is readable by ATS software.
@@ -13,6 +13,10 @@ const PAGE: CSSProperties = {
   width: 794, minHeight: 1123, background: '#fff', color: '#1f2933',
   fontFamily: '"Inter Variable", "Hind Siliguri", Arial, sans-serif', fontSize: 12.5, lineHeight: 1.5,
 };
+// Page margins: every side padding below is written as mx(px) or my(px), scaled by --cvx / --cvy set in CvDocument.
+// 1 means the design's own spacing, so nothing changes until the person picks a margin.
+const mx = (px: number) => `calc(${px}px * var(--cvx, 1))`;
+const my = (px: number) => `calc(${px}px * var(--cvy, 1))`;
 const SERIF = '"Fraunces Variable", "Noto Serif Bengali Variable", Georgia, serif';
 const GREY = '#52606d';
 
@@ -179,7 +183,7 @@ function Classic({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
     ),
   };
   return (
-    <div className="cv-page cv-pad" style={{ ...PAGE, padding: '46px 56px' }}>
+    <div className="cv-page cv-pad" style={{ ...PAGE, padding: `${my(46)} ${mx(56)}` }}>
       <header className="cv-keep" style={{ textAlign: 'center' }}>
         <h1 style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 650, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
         {d.headline && <p style={{ margin: '2px 0 0', fontSize: 14, color: accent, fontWeight: 600 }}>{d.headline}</p>}
@@ -218,7 +222,7 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
     <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '250px 1fr' }}>
       {/* Print only: repeats on every page so the sidebar colour runs top to bottom on page 2 as well */}
       <div className="cv-sidebar-bg" style={{ background: accent, width: 250 }} />
-      <aside className="cv-pad" style={{ background: accent, color: '#fff', padding: '40px 26px', position: 'relative', zIndex: 1 }}>
+      <aside className="cv-pad" style={{ background: accent, color: '#fff', padding: `${my(40)} 26px`, position: 'relative', zIndex: 1 }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 140, height: 140, borderRadius: '50%', objectFit: 'cover', display: 'block', margin: '0 auto 8px', border: '4px solid rgba(255,255,255,.35)' }} />}
         <Side>{L.contact}</Side>
         {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 5px', wordBreak: 'break-word' }}>{c}</p>)}
@@ -233,7 +237,7 @@ function Modern({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
           </p>
         ))}</>)}
       </aside>
-      <main className="cv-pad" style={{ padding: '44px 40px' }}>
+      <main className="cv-pad" style={{ padding: `${my(44)} ${mx(40)}` }}>
         <h1 style={{ fontFamily: SERIF, fontSize: 31, fontWeight: 700, margin: 0, color: '#111827', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
         {d.headline && <p style={{ margin: '6px 0 0', fontSize: 15, color: accent, fontWeight: 600 }}>{d.headline}</p>}
         {!d.hidden.includes('summary') && d.summary && <p style={{ margin: '14px 0 0', color: '#374151' }}>{d.summary}</p>}
@@ -257,7 +261,7 @@ function Executive({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   };
   return (
     <div className="cv-page" style={PAGE}>
-      <header className="cv-keep" style={{ borderTop: `10px solid ${accent}`, padding: '34px 56px 18px', display: 'flex', gap: 24, alignItems: 'center', borderBottom: '1px solid #e5e7eb' }}>
+      <header className="cv-keep" style={{ borderTop: `10px solid ${accent}`, padding: `${my(34)} ${mx(56)} 18px`, display: 'flex', gap: 24, alignItems: 'center', borderBottom: '1px solid #e5e7eb' }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 112, objectFit: 'cover', borderRadius: 6 }} />}
         <div style={{ flex: 1 }}>
           <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 600, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
@@ -266,7 +270,7 @@ function Executive({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
         </div>
       </header>
       {/* 40px top padding repeats on later pages; the -34px margin keeps the first page's gap at 6px */}
-      <div className="cv-pad" style={{ padding: '40px 56px 40px', marginTop: -34 }}>
+      <div className="cv-pad" style={{ padding: `${my(40)} ${mx(56)}`, marginTop: `calc(6px - ${my(40)})` }}>
         {d.order.map((k) => <Section key={k} k={k} d={d} L={{ ...L, summary: L.profile }} T={T} />)}
       </div>
     </div>
@@ -295,7 +299,7 @@ function Elegant({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   };
   return (
     <div className="cv-page" style={PAGE}>
-      <header className="cv-keep" style={{ background: accent, color: '#fff', padding: '38px 56px 30px', display: 'flex', gap: 26, alignItems: 'center' }}>
+      <header className="cv-keep" style={{ background: accent, color: '#fff', padding: `${my(38)} ${mx(56)} 30px`, display: 'flex', gap: 26, alignItems: 'center' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <h1 style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, margin: 0, lineHeight: 1.1, letterSpacing: '0.01em' }}>{d.name || 'Your Name'}</h1>
           {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14.5, opacity: 0.92, letterSpacing: '0.04em' }}>{d.headline}</p>}
@@ -303,7 +307,7 @@ function Elegant({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
         </div>
         {d.photo && <img src={d.photo} alt="" style={{ width: 112, height: 112, borderRadius: '50%', objectFit: 'cover', border: '4px solid rgba(255,255,255,.4)' }} />}
       </header>
-      <div className="cv-pad" style={{ padding: '14px 56px 40px' }}>
+      <div className="cv-pad" style={{ padding: `14px ${mx(56)} ${my(40)}` }}>
         {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
       </div>
     </div>
@@ -333,7 +337,7 @@ function Minimal({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   const { Title } = T;
   const RowTheme: Theme = { ...T, Title: () => null };
   return (
-    <div className="cv-page cv-pad" style={{ ...PAGE, padding: '56px 60px 44px' }}>
+    <div className="cv-page cv-pad" style={{ ...PAGE, padding: `${my(56)} ${mx(60)} ${my(44)}` }}>
       <header className="cv-keep" style={{ marginBottom: 26 }}>
         <h1 style={{ fontFamily: 'inherit', fontSize: 34, fontWeight: 300, letterSpacing: '-0.02em', margin: 0, color: '#111827', lineHeight: 1.05 }}>{d.name || 'Your Name'}</h1>
         {d.headline && <p style={{ margin: '8px 0 0', fontSize: 14, color: accent, fontWeight: 600, letterSpacing: '0.02em' }}>{d.headline}</p>}
@@ -382,7 +386,7 @@ function Timeline({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
     ),
   };
   return (
-    <div className="cv-page cv-pad" style={{ ...PAGE, padding: '44px 54px' }}>
+    <div className="cv-page cv-pad" style={{ ...PAGE, padding: `${my(44)} ${mx(54)}` }}>
       <header className="cv-keep" style={{ display: 'flex', gap: 22, alignItems: 'center', paddingBottom: 18, borderBottom: `3px solid ${accent}` }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 96, borderRadius: 18, objectFit: 'cover' }} />}
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -424,13 +428,13 @@ function Corporate({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   return (
     <div className="cv-page" style={{ ...PAGE, display: 'grid', gridTemplateColumns: '1fr 236px' }}>
       <div className="cv-sidebar-bg cv-sidebar-right" style={{ background: tint, width: 236 }} />
-      <main className="cv-pad" style={{ padding: '46px 34px 40px 52px' }}>
+      <main className="cv-pad" style={{ padding: `${my(46)} ${mx(34)} ${my(40)} ${mx(52)}` }}>
         <h1 style={{ fontFamily: SERIF, fontSize: 31, fontWeight: 650, margin: 0, color: '#111827', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
         {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14.5, color: accent, fontWeight: 600 }}>{d.headline}</p>}
         {!d.hidden.includes('summary') && d.summary && <p style={{ margin: '14px 0 0', color: '#374151' }}>{d.summary}</p>}
         {d.order.filter((k) => !['summary', 'skills', 'personal'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
       </main>
-      <aside className="cv-pad" style={{ background: tint, padding: '46px 24px 40px', position: 'relative', zIndex: 1 }}>
+      <aside className="cv-pad" style={{ background: tint, padding: `${my(46)} 24px ${my(40)}`, position: 'relative', zIndex: 1 }}>
         {d.photo && <img src={d.photo} alt="" style={{ width: 120, height: 136, borderRadius: 8, objectFit: 'cover', display: 'block', margin: '0 auto 6px' }} />}
         <Side>{L.contact}</Side>
         {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 5px', wordBreak: 'break-word' }}>{c}</p>)}
@@ -446,8 +450,14 @@ export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
 
-export function CvDocument({ d, design, accent, headings = 'en' }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang }) {
+export function CvDocument({ d, design, accent, headings = 'en', margins }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins }) {
   const L = LABELS[headings];
+  // No wrapper box (display: contents), only the two scale variables for the paddings
+  const vars = margins ? ({ '--cvx': clampMargin(margins.x) / DEFAULT_MARGINS.x, '--cvy': clampMargin(margins.y) / DEFAULT_MARGINS.y } as CSSProperties) : undefined;
+  return <div style={{ display: 'contents', ...vars }}><Layout d={d} design={design} accent={accent} L={L} /></div>;
+}
+
+function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {
   if (design === 'modern') return <Modern d={d} accent={accent} L={L} />;
   if (design === 'executive') return <Executive d={d} accent={accent} L={L} />;
   if (design === 'elegant') return <Elegant d={d} accent={accent} L={L} />;

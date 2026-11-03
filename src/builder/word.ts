@@ -15,11 +15,11 @@ import {
   TextRun,
 } from 'docx';
 import { contactLine, degreeLine, personalRows } from './designs';
-import { LABELS, lines, list, type BuilderState } from './model';
+import { LABELS, clampMargin, lines, list, type BuilderState } from './model';
 
 const A4 = { width: 11906, height: 16838 };
-const MARGIN = 1000; // about 1.76 cm
-const CONTENT = A4.width - MARGIN * 2;
+const MARGIN = 1000; // about 1.76 cm, used until the person picks a margin
+const TWIPS_PER_MM = 56.693;
 
 const hex = (c: string) => c.replace('#', '').toUpperCase();
 
@@ -37,6 +37,9 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const L = LABELS[state.headings ?? 'en'];
   const accent = hex(state.accent);
   const grey = '52606D';
+  const marginX = state.margins ? Math.round(clampMargin(state.margins.x) * TWIPS_PER_MM) : MARGIN;
+  const marginY = state.margins ? Math.round(clampMargin(state.margins.y) * TWIPS_PER_MM) : MARGIN;
+  const CONTENT = A4.width - marginX * 2;
 
   const heading = (text: string) =>
     new Paragraph({
@@ -139,7 +142,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       }],
     },
     sections: [{
-      properties: { page: { size: A4, margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN } } },
+      properties: { page: { size: A4, margin: { top: marginY, bottom: marginY, left: marginX, right: marginX } } },
       ...(opts.watermark
         ? { footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Made with HereWeGrow.pro', size: 14, color: '94A3B8' })] })] }) } }
         : {}),

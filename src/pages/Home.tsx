@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { findProduct } from '../../shared/catalog';
 import { GUIDES } from '../../shared/guides';
-import { SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from '../../shared/templates';
+import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from '../../shared/templates';
 import { ServiceRateCard } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
 import { num, taka, useLang } from '../lib/lang';
@@ -38,6 +38,36 @@ const PATHS = [
   },
 ];
 
+const TRUST = [
+  { en: 'Pay with bKash, Nagad, Rocket', bn: 'বিকাশ, নগদ, রকেটে পেমেন্ট' },
+  { en: 'Instant template download', bn: 'টেমপ্লেট সাথে সাথে ডাউনলোড' },
+  { en: 'Expert CVs in 24 to 48 hours', bn: 'বিশেষজ্ঞের সিভি ২৪–৪৮ ঘণ্টায়' },
+  { en: 'Changes included', bn: 'সংশোধন অন্তর্ভুক্ত' },
+  { en: 'Real people on WhatsApp', bn: 'হোয়াটসঅ্যাপে সরাসরি সাহায্য' },
+];
+
+type Icon = 'pen' | 'file' | 'build' | 'in' | 'briefcase' | 'cap' | 'heart' | 'check';
+const ICONS: Record<Icon, string> = {
+  pen: 'M4 20l4-1 11-11-3-3L5 16l-1 4zM14 6l3 3',
+  file: 'M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5',
+  build: 'M4 5h16v14H4zM4 9h16M9 9v10',
+  in: 'M5 9v10M5 5.5v.01M10 19v-6a3 3 0 016 0v6M10 9v10',
+  briefcase: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16',
+  cap: 'M2 9l10-5 10 5-10 5zM6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5',
+  heart: 'M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.500-7 10-7 10z',
+  check: 'M4 12l5 5L20 6',
+};
+const SERVICES: { icon: Icon; href: string; price: { en: string; bn: string }; title: { en: string; bn: string }; body: { en: string; bn: string } }[] = [
+  { icon: 'pen', href: '/services', price: { en: 'From ৳499', bn: '৳৪৯৯ থেকে' }, title: { en: 'CV writing', bn: 'সিভি রাইটিং' }, body: { en: 'Fresher, experienced or executive CV written for you.', bn: 'ফ্রেশার, অভিজ্ঞ বা এক্সিকিউটিভ সিভি আপনার জন্য লেখা।' } },
+  { icon: 'file', href: '/templates', price: { en: 'From ৳39', bn: '৳৩৯ থেকে' }, title: { en: 'CV templates', bn: 'সিভি টেমপ্লেট' }, body: { en: 'Editable Word designs for every sector.', bn: 'সব খাতের জন্য এডিটযোগ্য Word ডিজাইন।' } },
+  { icon: 'build', href: '/builder', price: { en: 'Free', bn: 'ফ্রি' }, title: { en: 'Online CV builder', bn: 'অনলাইন সিভি বিল্ডার' }, body: { en: 'Fill a form, pick a design, download a PDF.', bn: 'ফর্ম পূরণ করুন, ডিজাইন বেছে নিন, PDF নামান।' } },
+  { icon: 'in', href: '/services#profile', price: { en: '৳499', bn: '৳৪৯৯' }, title: { en: 'LinkedIn makeover', bn: 'লিংকডইন মেকওভার' }, body: { en: 'A profile recruiters find and trust.', bn: 'রিক্রুটারদের চোখে পড়ার মতো প্রোফাইল।' } },
+  { icon: 'briefcase', href: '/services#profile', price: { en: '৳299', bn: '৳২৯৯' }, title: { en: 'BDJobs profile', bn: 'বিডিজবস প্রোফাইল' }, body: { en: 'Set up so employers can shortlist you.', bn: 'নিয়োগকর্তা যাতে আপনাকে বাছাই করতে পারে।' } },
+  { icon: 'cap', href: '/services#profile', price: { en: 'From ৳699', bn: '৳৬৯৯ থেকে' }, title: { en: 'Higher study', bn: 'উচ্চশিক্ষা' }, body: { en: 'Academic CV and SOP or motivation letter.', bn: 'একাডেমিক সিভি ও এসওপি/মোটিভেশন লেটার।' } },
+  { icon: 'heart', href: '/services#profile', price: { en: 'From ৳299', bn: '৳২৯৯ থেকে' }, title: { en: 'Marriage biodata', bn: 'বিয়ের বায়োডাটা' }, body: { en: 'Clean biodata in Bangla or English.', bn: 'বাংলা বা ইংরেজিতে পরিপাটি বায়োডাটা।' } },
+  { icon: 'check', href: '/tools/cv-checker', price: { en: 'Free', bn: 'ফ্রি' }, title: { en: 'CV checker', bn: 'সিভি চেকার' }, body: { en: 'Score out of 100 with the exact fixes.', bn: '১০০-এর মধ্যে স্কোর ও কী ঠিক করবেন।' } },
+];
+
 export function Home() {
   const { t, lang } = useLang();
   const order = useCheckout();
@@ -67,13 +97,13 @@ export function Home() {
               <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-leaf" />
               {t({ en: 'Made for job seekers in Bangladesh', bn: 'বাংলাদেশের চাকরিপ্রার্থীদের জন্য' })}
             </p>
-            <h1 className="mt-6 text-[2.75rem] leading-[1.12] sm:text-6xl lg:text-[4.25rem]">
-              {t({ en: 'A CV that gets you called.', bn: 'যে সিভি দেখে ডাক আসে।' })}
+            <h1 className="mt-6 text-[2.75rem] leading-[1.12] sm:text-5xl lg:text-[3.75rem]">
+              {t({ en: 'Your CV, profiles and job tools. One place.', bn: 'সিভি, প্রোফাইল ও জব টুলস। এক জায়গায়।' })}
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted sm:text-xl">
               {t({
-                en: 'Have an expert write it, or download a ready Word template and fill it in yourself. Pay in taka with bKash or Nagad.',
-                bn: 'বিশেষজ্ঞকে দিয়ে লিখিয়ে নিন, অথবা রেডি Word টেমপ্লেট ডাউনলোড করে নিজেই পূরণ করুন। বিকাশ বা নগদে টাকায় পেমেন্ট।',
+                en: 'Get an expert-written CV, download a ready Word template, build one free online, or polish your LinkedIn and BDJobs profiles. Pay in taka.',
+                bn: 'বিশেষজ্ঞের লেখা সিভি নিন, রেডি Word টেমপ্লেট নামান, ফ্রিতে অনলাইনে বানান, অথবা লিংকডইন ও বিডিজবস প্রোফাইল সাজান। টাকায় পেমেন্ট।',
               })}
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -84,21 +114,22 @@ export function Home() {
                 {t({ en: 'Get my CV written', bn: 'সিভি লিখিয়ে নিন' })}
               </Link>
             </div>
-            <ul className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-[0.95rem] text-muted">
-              {[
-                { en: 'Instant download', bn: 'সাথে সাথে ডাউনলোড' },
-                { en: 'Editable in Word', bn: 'Word-এ এডিটযোগ্য' },
-                { en: 'Help on WhatsApp', bn: 'হোয়াটসঅ্যাপে সাহায্য' },
-              ].map((x) => (
-                <li key={x.en} className="flex items-center gap-2">
-                  <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 text-leaf"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  {t(x)}
-                </li>
-              ))}
-            </ul>
+
           </div>
           <ShortlistStack />
         </div>
+      </section>
+
+      {/* Trust strip */}
+      <section aria-label={t({ en: 'Why people use HereWeGrow', bn: 'কেন HereWeGrow' })} className="border-b border-line bg-white">
+        <ul className="wrap flex flex-wrap justify-center gap-x-8 gap-y-2 py-4 text-sm font-medium text-muted">
+          {TRUST.map((x) => (
+            <li key={x.en} className="flex items-center gap-2">
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 text-leaf"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {t(x)}
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Three ways in */}
@@ -115,6 +146,29 @@ export function Home() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* Everything in one place */}
+      <section className="wrap pt-20">
+        <div className="max-w-2xl">
+          <p className="font-display text-gold">{t({ en: 'All in one place', bn: 'সবকিছু এক জায়গায়' })}</p>
+          <h2 className="mt-2 text-3xl sm:text-4xl">{t({ en: 'Everything you need to get hired', bn: 'চাকরি পেতে যা যা লাগে' })}</h2>
+          <p className="mt-3 text-muted">{t({ en: 'From your first CV to your LinkedIn and BDJobs profiles, with fixed prices and no surprises.', bn: 'প্রথম সিভি থেকে লিংকডইন ও বিডিজবস প্রোফাইল, নির্দিষ্ট দামে, কোনো লুকানো খরচ নেই।' })}</p>
+        </div>
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {SERVICES.map((x) => (
+            <li key={x.title.en}>
+              <Link href={x.href} className="group flex h-full flex-col rounded-2xl bg-white p-4 ring-1 ring-line transition hover:-translate-y-0.5 sm:p-6 hover:ring-leaf">
+                <span aria-hidden="true" className="grid h-11 w-11 place-items-center rounded-xl bg-leaf-soft text-leaf transition group-hover:bg-leaf group-hover:text-white">
+                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={ICONS[x.icon]} /></svg>
+                </span>
+                <h3 className="mt-4 font-body text-lg font-semibold leading-snug">{t(x.title)}</h3>
+                <p className="mt-1.5 flex-1 text-[0.95rem] text-muted">{t(x.body)}</p>
+                <p className="mt-4 font-display font-semibold text-leaf">{t(x.price)}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Featured templates */}
@@ -149,6 +203,18 @@ export function Home() {
             </li>
           ))}
         </ul>
+        <div className="mt-10">
+          <p className="font-display text-lg">{t({ en: 'Browse by field', bn: 'খাত অনুযায়ী দেখুন' })}</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {SECTORS.map((sc) => (
+              <li key={sc.id}>
+                <Link href="/templates" className="inline-block rounded-full border border-line bg-white px-4 py-2 text-[0.95rem] font-medium transition hover:border-leaf hover:text-leaf">
+                  {t(sc.name)} <span className="text-muted">{num(String(TEMPLATES.filter((x) => x.sector === sc.id).length), lang)}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
         {best && (
           <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-2xl bg-gold-soft px-6 py-6 sm:flex-row sm:items-center sm:px-8">
             <div>
@@ -199,7 +265,14 @@ export function Home() {
       {/* Free tools */}
       <section className="wrap py-20">
         <h2 className="text-3xl sm:text-4xl">{t({ en: 'Free tools for your application', bn: 'আবেদনের জন্য ফ্রি টুলস' })}</h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <Link href="/builder" className="group flex gap-5 rounded-2xl bg-white p-7 ring-1 ring-line transition hover:ring-leaf">
+            <span aria-hidden="true" className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-leaf-dark font-display text-xl font-semibold text-white">CV</span>
+            <span>
+              <span className="block font-display text-2xl group-hover:text-leaf">{t({ en: 'CV builder', bn: 'সিভি বিল্ডার' })}</span>
+              <span className="mt-2 block text-muted">{t({ en: 'Fill a simple form, pick a design and download a print-ready PDF.', bn: 'সহজ ফর্ম পূরণ করুন, ডিজাইন বেছে নিন, প্রিন্ট-রেডি PDF নামান।' })}</span>
+            </span>
+          </Link>
           <Link href="/tools/cv-checker" className="group flex gap-5 rounded-2xl bg-white p-7 ring-1 ring-line transition hover:ring-leaf">
             <span aria-hidden="true" className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-leaf-soft font-display text-xl font-semibold text-leaf">86</span>
             <span>

@@ -39,6 +39,10 @@ migrations_dir = "migrations"
 binding = "KV"
 id = "1a43543598fd451383f8c14162938c7e"
 
+# Pro renewal reminders by SMS, once a day at 09:31 Bangladesh time (03:31 UTC)
+[triggers]
+crons = ["31 3 * * *"]
+
 # Workers Logs (matches the dashboard setting, so deploys don't turn it off)
 [observability.logs]
 enabled = true

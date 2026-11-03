@@ -4,6 +4,8 @@
 import { handleCheckout, handleVerify } from '../server/handlers';
 import { handleAuth } from '../server/authHandlers';
 import { handleDownload } from '../server/downloads';
+import { sendReminders } from '../server/entitlements';
+import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
 
 interface WorkerEnv extends Env {
@@ -24,5 +26,15 @@ export default {
     }
 
     return env.ASSETS.fetch(request);
+  },
+
+  /** Daily Cron Trigger (wrangler.toml): Pro renewal reminders by SMS. */
+  async scheduled(_event: unknown, env: WorkerEnv, ctx: { waitUntil(p: Promise<unknown>): void }): Promise<void> {
+    if (!env.DB) return;
+    ctx.waitUntil(
+      sendReminders(env.DB, bulkSmsBd(env))
+        .then((r) => console.log('pro reminders', r))
+        .catch((e) => console.error('pro reminders failed', e)),
+    );
   },
 };

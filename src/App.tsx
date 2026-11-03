@@ -17,6 +17,7 @@ import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
+import { ProPage } from './pages/Pro';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
 import { TemplateDetail, TemplatesPage } from './pages/Templates';
 
@@ -41,6 +42,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/payment/success': PaymentSuccess,
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,
+  '/pro': ProPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,
 };

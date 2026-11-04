@@ -52,6 +52,10 @@ export function AdminCareersPage() {
   const load = useCallback(async () => {
     const res = await fetch('/api/admin/roles');
     const d = (await res.json().catch(() => ({}))) as { roles?: RoleRow[] };
+    if (!res.ok) {
+      setNotice({ ok: false, lines: [res.status === 500 ? 'The database could not be read. Check that all Career Hub tables exist (migration 0003) and look at the Worker logs.' : `Could not load roles (${res.status}).`] });
+      return;
+    }
     setRoles(d.roles ?? []);
   }, []);
 
@@ -87,7 +91,7 @@ export function AdminCareersPage() {
         setNotice({ ok: true, lines: [`${d.created ? 'Imported' : 'Updated'} “${d.slug}” as ${d.created ? 'a draft' : 'it was (status kept)'}.`] });
         await load();
       } else {
-        setNotice({ ok: false, lines: d.errors ?? [d.error === 'json' ? 'That is not valid JSON.' : `Import failed (${d.error ?? res.status}).`] });
+        setNotice({ ok: false, lines: d.errors ?? [d.error === 'json' ? 'That is not valid JSON.' : d.error === 'db' ? 'The database rejected the import. Check that the Career Hub tables exist (migration 0003).' : `Import failed (${d.error ?? res.status}).`] });
       }
     } finally {
       setBusy(false);

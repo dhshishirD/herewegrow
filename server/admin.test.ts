@@ -145,6 +145,32 @@ describe('publish routes', () => {
   });
 });
 
+describe('database failures', () => {
+  const broken = async () => {
+    const s = await setup();
+    const c = await s.cookie(s.admin.id);
+    // The session and user lookups still work; only the Career Hub tables are gone, like before migration 0003.
+    await s.db.prepare('DROP TABLE roles').run().catch(() => {});
+    return { ...s, c };
+  };
+
+  it('listing roles answers 500 with a database error, not a crash or an empty list', async () => {
+    const { call, c, db } = await broken();
+    await db.prepare('DROP TABLE IF EXISTS roles').run();
+    const res = await call('/api/admin/roles', { cookie: c });
+    expect(res.status).toBe(500);
+    expect(await res.json()).toMatchObject({ ok: false, error: 'db' });
+  });
+
+  it('importing answers 500 with a database error', async () => {
+    const { call, c, db } = await broken();
+    await db.prepare('DROP TABLE IF EXISTS roles').run();
+    const res = await call('/api/admin/roles/import', { method: 'POST', cookie: c, body: samplePack() });
+    expect(res.status).toBe(500);
+    expect(await res.json()).toMatchObject({ ok: false, error: 'db' });
+  });
+});
+
 describe('User.isAdmin', () => {
   it('is false by default', async () => {
     const { member } = await setup();

@@ -18,6 +18,7 @@ import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { ProPage } from './pages/Pro';
+import { AdminCareersPage } from './pages/AdminCareers';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
 import { TemplateDetail, TemplatesPage } from './pages/Templates';
 
@@ -47,6 +48,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,
   '/pro': ProPage,
+  '/admin/careers': AdminCareersPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
   '/privacy': PrivacyPage,

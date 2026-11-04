@@ -47,6 +47,7 @@ export function AccountPage() {
           {user.pro ? t({ en: 'Add more Pro time', bn: 'প্রো-এর মেয়াদ বাড়ান' }) : t({ en: 'Get Pro', bn: 'প্রো নিন' })}
         </Link>
       )}
+      {user.isAdmin && <Link href="/admin/careers" className="btn btn-quiet mt-6 mr-3">Career Hub admin</Link>}
       <button type="button" className="btn btn-quiet mt-6" onClick={() => void logout()}>{t({ en: 'Log out', bn: 'লগআউট' })}</button>
     </div>
   );

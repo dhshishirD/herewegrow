@@ -205,4 +205,5 @@ export const publicUser = (u: User) => ({
   lang: u.lang,
   proUntil: u.proUntil,
   pro: !!u.proUntil && u.proUntil > Date.now(),
+  isAdmin: u.isAdmin,
 });

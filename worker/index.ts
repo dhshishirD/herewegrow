@@ -5,6 +5,7 @@ import { handleCheckout, handleClaim, handleVerify } from '../server/handlers';
 import { handleAdmin } from '../server/admin';
 import { careersSitemap, serveCareerPage } from '../server/careers';
 import { serveCareersIndex } from '../server/careerIndex';
+import { handlePromo } from '../server/promoHandlers';
 import { handleAuth } from '../server/authHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
@@ -22,6 +23,7 @@ export default {
 
     if (pathname.startsWith('/api/')) {
       if (pathname.startsWith('/api/admin/')) return handleAdmin(request, env, pathname);
+      if (pathname.startsWith('/api/promo/')) return handlePromo(request, env, pathname);
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);
       if (pathname === '/api/cvs' || pathname.startsWith('/api/cvs/')) return handleCvs(request, env, pathname);
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);

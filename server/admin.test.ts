@@ -145,6 +145,66 @@ describe('publish routes', () => {
   });
 });
 
+describe('promo admin routes', () => {
+  const asAdmin = async () => {
+    const s = await setup();
+    return { ...s, c: await s.cookie(s.admin.id) };
+  };
+  const make = (s: Awaited<ReturnType<typeof asAdmin>>, body: unknown) => s.call('/api/admin/promos', { method: 'POST', cookie: s.c, body });
+
+  it('guards every promo route', async () => {
+    const s = await setup();
+    expect((await s.call('/api/admin/promos')).status).toBe(401);
+    const m = await s.cookie(s.member.id);
+    expect((await s.call('/api/admin/promos', { cookie: m })).status).toBe(403);
+    expect((await s.call('/api/admin/promos', { method: 'POST', cookie: m, body: { code: 'X1X', type: 'fixed', value: 5 } })).status).toBe(403);
+  });
+
+  it('creates a code and lists it with usage', async () => {
+    const s = await asAdmin();
+    const res = await make(s, { code: 'eid30', type: 'percent', value: 30, scope: 'all', note: 'Eid offer' });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ ok: true, codes: ['EID30'] });
+    const list = (await (await s.call('/api/admin/promos', { cookie: s.c })).json()) as { promos: { code: string; used: number; active: boolean }[] };
+    expect(list.promos).toEqual([expect.objectContaining({ code: 'EID30', used: 0, active: true, note: 'Eid offer' })]);
+  });
+
+  it('returns every validation error and a clear message for a duplicate', async () => {
+    const s = await asAdmin();
+    const bad = await make(s, { code: '!', type: 'percent', value: 500 });
+    expect(bad.status).toBe(400);
+    expect(((await bad.json()) as { errors: string[] }).errors.length).toBeGreaterThanOrEqual(2);
+    await make(s, { code: 'EID30', type: 'percent', value: 30 });
+    expect((await make(s, { code: 'EID30', type: 'percent', value: 30 })).status).toBe(400);
+  });
+
+  it('makes a batch of single-use trial codes when a count is given', async () => {
+    const s = await asAdmin();
+    const res = await make(s, { prefix: 'WS', count: 10, type: 'trial_days', value: 7 });
+    const body = (await res.json()) as { ok: boolean; codes: string[] };
+    expect(body.ok).toBe(true);
+    expect(body.codes).toHaveLength(10);
+    const list = (await (await s.call('/api/admin/promos', { cookie: s.c })).json()) as { promos: { maxUses: number }[] };
+    expect(list.promos.every((p) => p.maxUses === 1)).toBe(true);
+  });
+
+  it('switches a code off and on', async () => {
+    const s = await asAdmin();
+    await make(s, { code: 'EID30', type: 'percent', value: 30 });
+    expect((await s.call('/api/admin/promos/EID30/disable', { method: 'POST', cookie: s.c })).status).toBe(200);
+    const off = (await (await s.call('/api/admin/promos', { cookie: s.c })).json()) as { promos: { active: boolean }[] };
+    expect(off.promos[0].active).toBe(false);
+    expect((await s.call('/api/admin/promos/EID30/enable', { method: 'POST', cookie: s.c })).status).toBe(200);
+    expect((await s.call('/api/admin/promos/NOPE1/disable', { method: 'POST', cookie: s.c })).status).toBe(404);
+  });
+
+  it('is POST-only and same-origin for changes', async () => {
+    const s = await asAdmin();
+    expect((await s.call('/api/admin/promos', { method: 'POST', cookie: s.c, body: { code: 'X1X', type: 'fixed', value: 5 }, origin: 'https://evil.example' })).status).toBe(403);
+    expect((await s.call('/api/admin/promos/EID30/disable', { cookie: s.c })).status).toBe(405);
+  });
+});
+
 describe('database failures', () => {
   const broken = async () => {
     const s = await setup();

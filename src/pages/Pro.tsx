@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../../shared/designList';
 import { PLANS, PRO_LIMITS, type PlanId } from '../../shared/plans';
+import { discountedPrice } from '../../shared/promo';
 import { PageHead } from '../components/PageHead';
 import { useAuth } from '../lib/auth';
 import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
+import { checkPromo, PROMO_ERRORS, redeemTrial, savedPromo, type PromoCheck } from '../lib/promo';
 import { setPageMeta } from '../lib/seo';
 
 type B = { en: string; bn: string };
@@ -63,7 +65,11 @@ function Tick() {
 
 export function ProPage() {
   const { t, lang } = useLang();
-  const { user, ready, openLogin, loginOpen } = useAuth();
+  const { user, ready, openLogin, loginOpen, refresh } = useAuth();
+  const [code, setCode] = useState(savedPromo);
+  const [promo, setPromo] = useState<PromoCheck | null>(null);
+  const [promoBusy, setPromoBusy] = useState(false);
+  const [promoMsg, setPromoMsg] = useState<{ ok: boolean; text: B } | null>(null);
   const [pending, setPending] = useState<PlanId | null>(null);
   const [busy, setBusy] = useState<PlanId | null>(null);
   const [error, setError] = useState('');
@@ -75,6 +81,41 @@ export function ProPage() {
   });
   useEffect(() => setPageMeta(title, intro, '/pro'), [title, intro]);
 
+  const applyCode = async () => {
+    if (!code.trim()) return;
+    setPromoBusy(true);
+    setPromoMsg(null);
+    const r = await checkPromo(code, 'pro-30');
+    setPromoBusy(false);
+    if (r.ok) {
+      setPromo(r);
+      setPromoMsg(null);
+    } else {
+      setPromo(null);
+      setPromoMsg({ ok: false, text: PROMO_ERRORS[r.error] ?? PROMO_ERRORS.generic });
+    }
+  };
+
+  const takeTrial = async () => {
+    if (!promo?.ok || promo.kind !== 'trial') return;
+    if (!user) {
+      openLogin();
+      return;
+    }
+    setPromoBusy(true);
+    const r = await redeemTrial(promo.code);
+    setPromoBusy(false);
+    if (r.ok) {
+      await refresh();
+      setPromo(null);
+      setPromoMsg({ ok: true, text: { en: `Done! ${r.days} days of Pro are now on your account.`, bn: `হয়ে গেছে! আপনার অ্যাকাউন্টে ${num(r.days, 'bn')} দিনের প্রো যুক্ত হয়েছে।` } });
+    } else {
+      setPromoMsg({ ok: false, text: PROMO_ERRORS[r.error] ?? PROMO_ERRORS.generic });
+    }
+  };
+
+  const discount = promo?.ok && promo.kind === 'discount' ? promo : null;
+
   const buy = async (id: PlanId) => {
     setError('');
     if (!user) {
@@ -84,7 +125,7 @@ export function ProPage() {
     }
     setBusy(id);
     try {
-      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, lang }) });
+      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, lang, promo: discount?.code }) });
       const d = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string };
       if (d.ok && d.paymentUrl) {
         window.location.href = d.paymentUrl;
@@ -93,6 +134,9 @@ export function ProPage() {
       if (d.error === 'login') {
         setPending(id);
         openLogin();
+      } else if (d.error === 'promo') {
+        setPromo(null);
+        setPromoMsg({ ok: false, text: PROMO_ERRORS[(d as { reason?: string }).reason ?? ''] ?? PROMO_ERRORS.generic });
       } else setError(t(ERRORS[d.error ?? ''] ?? ERRORS.generic));
     } catch {
       setError(t(ERRORS.generic));
@@ -124,6 +168,34 @@ export function ProPage() {
         )}
         {error && <p role="alert" className="mb-6 rounded-lg bg-red-50 px-4 py-3 text-red-800">{error}</p>}
 
+        <div className="mb-8 rounded-xl bg-white p-5 ring-1 ring-line">
+          <label className="label" htmlFor="promo-code">{t({ en: 'Promo code', bn: 'প্রোমো কোড' })}</label>
+          <div className="mt-1 flex flex-wrap gap-3">
+            <input id="promo-code" className="field max-w-xs uppercase" value={code} maxLength={24} autoComplete="off" placeholder={t({ en: 'Enter code', bn: 'কোড দিন' })}
+              onChange={(e) => { setCode(e.target.value); setPromo(null); setPromoMsg(null); }}
+              onKeyDown={(e) => e.key === 'Enter' && void applyCode()} />
+            <button type="button" className="btn btn-quiet bg-white" disabled={promoBusy || !code.trim()} onClick={() => void applyCode()}>
+              {promoBusy ? '…' : t({ en: 'Apply', bn: 'প্রয়োগ করুন' })}
+            </button>
+          </div>
+          {promoMsg && <p role={promoMsg.ok ? 'status' : 'alert'} className={`mt-3 text-sm ${promoMsg.ok ? 'text-leaf-dark' : 'text-red-800'}`}>{t(promoMsg.text)}</p>}
+          {discount && (
+            <p role="status" className="mt-3 text-sm text-leaf-dark">
+              {t({ en: `Code ${discount.code} applied. Your price is shown on each pass below.`, bn: `কোড ${discount.code} প্রয়োগ হয়েছে। নিচে প্রতিটি পাসে আপনার মূল্য দেখানো আছে।` })}
+            </p>
+          )}
+          {promo?.ok && promo.kind === 'trial' && (
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <p role="status" className="text-sm text-leaf-dark">
+                {t({ en: `This code gives you ${promo.days} days of Pro free. One free trial per account.`, bn: `এই কোডে ${num(promo.days, 'bn')} দিনের প্রো ফ্রি। প্রতি অ্যাকাউন্টে একবার।` })}
+              </p>
+              <button type="button" className="btn btn-primary" disabled={promoBusy} onClick={() => void takeTrial()}>
+                {user ? t({ en: `Get ${promo.days} days free`, bn: `${num(promo.days, 'bn')} দিন ফ্রি নিন` }) : t({ en: 'Log in to get it', bn: 'পেতে লগইন করুন' })}
+              </button>
+            </div>
+          )}
+        </div>
+
         <div className="grid gap-5 md:grid-cols-3">
           {PLANS.map((p) => {
             const x = PLAN_TEXT[p.id];
@@ -134,7 +206,7 @@ export function ProPage() {
                   <h2 className="text-xl font-bold">{t(p.name)}</h2>
                   {x.tag && <span className="rounded bg-gold-soft px-2 py-0.5 text-sm font-semibold text-gold">{t(x.tag)}</span>}
                 </div>
-                <p className="mt-4 font-display text-4xl font-bold">{taka(p.price, lang)}<span className="ml-1.5 font-body text-base font-normal text-muted">/ {t({ en: `${p.days} days`, bn: `${num(p.days, 'bn')} দিন` })}</span></p>
+                <p className="mt-4 font-display text-4xl font-bold">{discount && <span className="mr-2 text-xl font-normal text-muted line-through">{taka(p.price, lang)}</span>}{taka(discount ? discountedPrice(p.price, discount) : p.price, lang)}<span className="ml-1.5 font-body text-base font-normal text-muted">/ {t({ en: `${p.days} days`, bn: `${num(p.days, 'bn')} দিন` })}</span></p>
                 <p className="mt-1 text-sm text-muted">{t(x.perDay)}</p>
                 <ul className="mt-5 flex-1 space-y-2">
                   <li className="flex gap-2.5"><Tick /><span>{t({ en: `${p.days} days of everything in Pro`, bn: `${num(p.days, 'bn')} দিন প্রো-এর সবকিছু` })}</span></li>

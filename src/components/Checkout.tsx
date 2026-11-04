@@ -5,6 +5,7 @@ import { markCartPending } from '../lib/cart';
 import { findPlan, templatePrice, type PlanId } from '../../shared/plans';
 import { useAuth } from '../lib/auth';
 import { taka, useLang } from '../lib/lang';
+import { checkPromo, PROMO_ERRORS, savedPromo, type PromoCheck } from '../lib/promo';
 import { DownloadButtons } from './Downloads';
 
 /** Opens checkout for one product, or for a cart of templates when templateIds is given. */
@@ -55,13 +56,33 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
   const firstField = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
   const [claimed, setClaimed] = useState<{ file: string; url: string; bytes: number }[] | null>(null);
+  const [showPromo, setShowPromo] = useState(() => !!savedPromo());
+  const [code, setCode] = useState(savedPromo);
+  const [promo, setPromo] = useState<Extract<PromoCheck, { kind: 'discount' }> | null>(null);
+  const [promoMsg, setPromoMsg] = useState<{ en: string; bn: string } | null>(null);
+  const [promoBusy, setPromoBusy] = useState(false);
 
   // Pro members see the discounted price; the server charges the same amount from the account's plan.
   const planId = (product.kind !== 'service' ? user?.proPlan : null) as PlanId | null | undefined;
   const plan = planId ? findPlan(planId) : undefined;
-  const price = templatePrice(product.price, plan?.id ?? null);
+  const proPrice = templatePrice(product.price, plan?.id ?? null);
+  // With a code the server's own answer is shown; it is also what will be charged.
+  const price = promo ? promo.price : proPrice;
   const single = product.kind !== 'pack' && (product.templates?.length ?? 0) === 1 || (!!templateIds && templateIds.length === 1);
   const canClaim = !!plan && (plan.templateOff >= 100 || (plan.freeTemplatesPerMonth > 0 && single));
+
+  const applyCode = async () => {
+    if (!code.trim()) return;
+    setPromoBusy(true);
+    setPromoMsg(null);
+    const r = await checkPromo(code, templateIds ? CART_PRODUCT_ID : product.id, templateIds);
+    setPromoBusy(false);
+    if (r.ok && r.kind === 'discount') setPromo(r);
+    else {
+      setPromo(null);
+      setPromoMsg(r.ok ? PROMO_ERRORS.type : (PROMO_ERRORS[r.error] ?? PROMO_ERRORS.generic));
+    }
+  };
 
   const claim = async () => {
     setBusy(true);
@@ -111,9 +132,16 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
           email: form.get('email'),
           note: form.get('note'),
           lang,
+          promo: promo?.code,
         }),
       });
-      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string; detail?: string };
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string; detail?: string; reason?: string };
+      if (data.error === 'promo') {
+        setPromo(null);
+        setPromoMsg(PROMO_ERRORS[data.reason ?? ''] ?? PROMO_ERRORS.generic);
+        setBusy(false);
+        return;
+      }
       if (data.ok && data.paymentUrl) {
         if (templateIds) markCartPending();
         window.location.href = data.paymentUrl;
@@ -184,6 +212,28 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
                 placeholder={t({ en: 'e.g. Junior Officer at a private bank', bn: 'যেমন: বেসরকারি ব্যাংকে জুনিয়র অফিসার' })} />
             </div>
           )}
+
+          <div>
+            {showPromo ? (
+              <>
+                <label className="label" htmlFor="co-promo">{t({ en: 'Promo code', bn: 'প্রোমো কোড' })}</label>
+                <div className="flex gap-3">
+                  <input id="co-promo" className="field uppercase" value={code} maxLength={24} autoComplete="off"
+                    onChange={(e) => { setCode(e.target.value); setPromo(null); setPromoMsg(null); }}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); void applyCode(); } }} />
+                  <button type="button" className="btn btn-quiet bg-white" disabled={promoBusy || !code.trim()} onClick={() => void applyCode()}>
+                    {promoBusy ? '…' : t({ en: 'Apply', bn: 'প্রয়োগ' })}
+                  </button>
+                </div>
+                {promo && <p role="status" className="mt-2 text-sm text-leaf-dark">{t({ en: `Code ${promo.code} applied: you save ${taka(proPrice - promo.price, 'en')}.`, bn: `কোড ${promo.code} প্রয়োগ হয়েছে: আপনি ${taka(proPrice - promo.price, 'bn')} বাঁচাচ্ছেন।` })}</p>}
+                {promoMsg && <p role="alert" className="mt-2 text-sm text-alert">{t(promoMsg)}</p>}
+              </>
+            ) : (
+              <button type="button" className="text-sm font-semibold text-leaf-dark underline underline-offset-4" onClick={() => setShowPromo(true)}>
+                {t({ en: 'Have a promo code?', bn: 'প্রোমো কোড আছে?' })}
+              </button>
+            )}
+          </div>
 
           {error && (
             <div id="co-error" role="alert" className="rounded-lg bg-alert/10 px-4 py-3 text-alert">

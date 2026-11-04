@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { INDEX_DESC, INDEX_TITLE, renderCareersIndex, serveCareersIndex } from './careerIndex';
 import { careersSitemap, publishRole } from './careers';
 import { saveRolePack, validateRolePack, type RolePack } from './rolePack';
@@ -84,6 +84,22 @@ describe('serveCareersIndex', () => {
     const html = await res.text();
     expect(html).toContain('href="/careers/bank-officer"');
     expect(html).not.toContain('/careers/teacher');
+  });
+
+  it('answers 503 (not a crash) and logs when the database read fails', async () => {
+    const broken = {
+      prepare: () => {
+        throw new Error('D1_ERROR: no such table: roles');
+      },
+      batch: async () => [],
+    };
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const res = await serveCareersIndex({ DB: broken });
+    expect(res.status).toBe(503);
+    expect(res.headers.get('Cache-Control')).toBe('no-store');
+    expect(await res.text()).toContain('noindex');
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 
   it('still answers (noindex page) with no database', async () => {

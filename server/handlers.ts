@@ -3,11 +3,12 @@
 
 import { CART_PRODUCT_ID, cartProduct, quoteCart } from '../shared/cart';
 import { findProduct } from '../shared/catalog';
-import { findPlan, type Plan } from '../shared/plans';
+import { findPlan, templatePrice, type Plan } from '../shared/plans';
 import { getSessionUser, type User } from './auth';
 import { downloadLinks } from './downloads';
 import { grantPass, recordOrder } from './entitlements';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
+import { activePlan, claimTemplate } from './templatePerks';
 
 interface CheckoutBody {
   productId?: string;
@@ -37,16 +38,21 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   }
 
   // A cart is priced here from the template ids, with the same rules the site shows.
-  let cartIds: string[] = [];
-  let product = findProduct(clean(body.productId, 40));
-  if (clean(body.productId, 40) === CART_PRODUCT_ID) {
-    const raw = Array.isArray(body.templateIds) ? body.templateIds.filter((x): x is string => typeof x === 'string').slice(0, 60) : [];
-    const quote = quoteCart(raw);
-    if (quote.count === 0) return json({ ok: false, error: 'product' }, 400);
-    product = cartProduct(quote);
-    if (product.id === CART_PRODUCT_ID) cartIds = quote.ids;
-  }
+  const { product, cartIds } = resolveTemplateProduct(body);
   if (!product) return json({ ok: false, error: 'product' }, 400);
+
+  // Pro members get the template discount. The plan is read from the account here, never from the request.
+  let amount = product.price;
+  let proPlanId = '';
+  if (product.kind !== 'service' && env.DB) {
+    const user = await getSessionUser(env, request).catch(() => null);
+    const pp = user ? await activePlan(env.DB, user.id) : null;
+    if (pp && pp.templateOff >= 100) return json({ ok: false, error: 'claim' }, 409);
+    if (pp) {
+      amount = templatePrice(product.price, pp.id);
+      proPlanId = pp.id;
+    }
+  }
 
   const name = clean(body.name, 80);
   const phone = clean(body.phone, 20).replace(/[\s-]/g, '').replace(/^\+?88/, '');
@@ -61,8 +67,9 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   return startPayment(request, env, {
     full_name: name || 'HereWeGrow customer',
     email: email || 'orders@herewegrow.pro',
-    amount: String(product.price),
+    amount: String(amount),
     metadata: {
+      pro_plan: proPlanId,
       product_id: product.id,
       product_name: product.name.en,
       template_ids: cartIds.join(','),
@@ -137,7 +144,9 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
     const plan = findPlan(productId);
     if (plan) return verifyPlan(env, invoiceId, plan, meta, data, amount, status);
 
-    const paid = status === 'COMPLETED' && !!product && amount >= product.price;
+    // The discount plan was stored in the payment's metadata by this server at checkout.
+    const need = product ? templatePrice(product.price, findPlan(String(meta.pro_plan ?? ''))?.id ?? null) : 0;
+    const paid = status === 'COMPLETED' && !!product && amount >= need;
     const downloads = paid && product ? await downloadLinks(env, invoiceId, product) : [];
     if (paid && product && env.DB) {
       // Keep a record for support and for linking to an account later. Never blocks the buyer's files.
@@ -198,4 +207,40 @@ async function verifyPlan(
     console.error('pro grant failed', invoiceId, err);
     return json({ ok: false, error: 'grant' }, 502);
   }
+}
+
+/** Product for a template, pack or cart request. Shared by checkout and claim. */
+function resolveTemplateProduct(body: CheckoutBody) {
+  let cartIds: string[] = [];
+  let product = findProduct(clean(body.productId, 40));
+  if (clean(body.productId, 40) === CART_PRODUCT_ID) {
+    const raw = Array.isArray(body.templateIds) ? body.templateIds.filter((x): x is string => typeof x === 'string').slice(0, 60) : [];
+    const quote = quoteCart(raw);
+    if (quote.count === 0) return { product: undefined, cartIds };
+    product = cartProduct(quote);
+    if (product.id === CART_PRODUCT_ID) cartIds = quote.ids;
+  }
+  return { product, cartIds };
+}
+
+/** POST /api/claim: a Pro member takes templates included in their pass (30-day: one a month, yearly: all). */
+export async function handleClaim(request: Request, env: Env): Promise<Response> {
+  if (!isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
+  if (!env.DB || !env.KV) return json({ ok: false, error: 'config' }, 503);
+  const user = await getSessionUser(env, request).catch(() => null);
+  if (!user) return json({ ok: false, error: 'login' }, 401);
+  const plan = await activePlan(env.DB, user.id);
+  if (!plan) return json({ ok: false, error: 'pro' }, 403);
+
+  const body = (await request.json().catch(() => ({}))) as CheckoutBody;
+  const { product } = resolveTemplateProduct(body);
+  if (!product) return json({ ok: false, error: 'product' }, 400);
+
+  // Make the links first, so a missing file never uses up a claim.
+  const invoiceId = `claim-${crypto.randomUUID()}`;
+  const downloads = await downloadLinks(env, invoiceId, product);
+  if (!downloads.length) return json({ ok: false, error: 'file' }, 503);
+  const r = await claimTemplate(env.DB, env.KV, user.id, plan, product);
+  if (!r.ok) return json({ ok: false, error: r.error }, r.error === 'product' ? 400 : 403);
+  return json({ ok: true, productId: product.id, downloads });
 }

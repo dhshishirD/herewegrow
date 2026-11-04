@@ -8,6 +8,8 @@ export interface AccountUser {
   lang: string;
   proUntil: number | null;
   pro: boolean;
+  /** Plan id whose perks apply now (pro-7, pro-30, pro-365), else null/absent. */
+  proPlan?: string | null;
 }
 
 interface AuthValue {

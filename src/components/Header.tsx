@@ -45,14 +45,14 @@ export function Header() {
         </nav>
 
         <div className="ml-auto md:ml-2 flex items-center gap-2">
-          <button
+          {!path.startsWith('/builder') && <button
             type="button"
             onClick={() => setLang(lang === 'bn' ? 'en' : 'bn')}
             className="rounded-md border border-line px-2.5 py-1.5 text-sm font-semibold hover:border-leaf hover:text-leaf"
             aria-label={lang === 'bn' ? 'Switch to English' : 'বাংলায় দেখুন'}
           >
             {lang === 'bn' ? 'English' : 'বাংলা'}
-          </button>
+          </button>}
           {user ? (
             <Link href="/account" className="rounded-md border border-line px-2.5 py-1.5 text-sm font-semibold hover:border-leaf hover:text-leaf">
               {t({ en: 'Account', bn: 'অ্যাকাউন্ট' })}

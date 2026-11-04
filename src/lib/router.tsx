@@ -34,6 +34,8 @@ export function Link({ href, onClick, ...rest }: AnchorHTMLAttributes<HTMLAnchor
     onClick?.(e);
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (!href.startsWith('/')) return;
+    // Career Hub pages are served by the Worker, not the app, so these need a normal page load.
+    if (href === '/careers' || href.startsWith('/careers/') || href.startsWith('/careers?')) return;
     e.preventDefault();
     navigate(href);
   };

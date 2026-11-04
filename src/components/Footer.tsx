@@ -46,6 +46,7 @@ export function Footer() {
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/linkedin-profile-optimization">{t({ en: 'LinkedIn profile optimization', bn: 'লিংকডইন প্রোফাইল অপটিমাইজেশন' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/bdjobs-profile-optimization">{t({ en: 'BDJobs profile setup', bn: 'বিডিজবস প্রোফাইল সেটআপ' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/guides">{t({ en: 'Career guides', bn: 'ক্যারিয়ার গাইড' })}</Link></li>
+            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/careers">{t({ en: 'Career roles and salaries', bn: 'ক্যারিয়ার রোল ও বেতন' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/about">{t({ en: 'About us', bn: 'আমাদের কথা' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/privacy">{t({ en: 'Privacy', bn: 'গোপনীয়তা' })}</Link></li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/terms">{t({ en: 'Terms and refunds', bn: 'শর্তাবলি ও রিফান্ড' })}</Link></li>

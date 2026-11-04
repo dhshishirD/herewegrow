@@ -9,6 +9,7 @@ const NAV = [
   { href: '/templates', en: 'Templates', bn: 'টেমপ্লেট' },
   { href: '/tools', en: 'Free tools', bn: 'ফ্রি টুলস' },
   { href: '/guides', en: 'Guides', bn: 'গাইড' },
+  { href: '/careers', en: 'Careers', bn: 'ক্যারিয়ার' },
   ...(PRO_PUBLIC ? [{ href: '/pro', en: 'Pro', bn: 'প্রো' }] : []),
   { href: '/about', en: 'About', bn: 'আমাদের কথা' },
 ];

@@ -52,9 +52,11 @@ export async function careersSitemap(env: Pick<CareersEnv, 'DB'>): Promise<Respo
   const rows = env.DB
     ? ((await env.DB.prepare("SELECT slug, updated_at FROM roles WHERE status = 'published' ORDER BY slug").all<{ slug: string; updated_at: number }>()).results ?? [])
     : [];
-  const urls = rows
-    .map((r) => `  <url><loc>${escapeHtml(`${SITE}/careers/${r.slug}`)}</loc><lastmod>${new Date(r.updated_at).toISOString().slice(0, 10)}</lastmod></url>`)
-    .join('\n');
+  const day = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+  const entries = rows.map((r) => ({ loc: `${SITE}/careers/${r.slug}`, lastmod: day(r.updated_at) }));
+  // The /careers index is listed once there is at least one published role (it is noindex while empty).
+  if (rows.length) entries.unshift({ loc: `${SITE}/careers`, lastmod: day(Math.max(...rows.map((r) => r.updated_at))) });
+  const urls = entries.map((e) => `  <url><loc>${escapeHtml(e.loc)}</loc><lastmod>${e.lastmod}</lastmod></url>`).join('\n');
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}${urls ? '\n' : ''}</urlset>\n`;
   return new Response(xml, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
 }

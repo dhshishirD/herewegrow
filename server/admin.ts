@@ -14,7 +14,17 @@ export async function requireAdmin(env: AuthEnv, request: Request): Promise<User
   return user;
 }
 
+/** Any database failure becomes a logged 500 { error: 'db' } so the admin page can say so, instead of the Worker crashing. */
 export async function handleAdmin(request: Request, env: AuthEnv, pathname: string): Promise<Response> {
+  try {
+    return await route(request, env, pathname);
+  } catch (e) {
+    console.error('admin request failed', pathname, e);
+    return json({ ok: false, error: 'db' }, 500);
+  }
+}
+
+async function route(request: Request, env: AuthEnv, pathname: string): Promise<Response> {
   // Origin first: a cross-site POST never reaches the session or the database.
   if (request.method !== 'GET' && !isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
   const admin = await requireAdmin(env, request);

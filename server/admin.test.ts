@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createSession, userForPhone, SESSION_COOKIE, type AuthEnv } from './auth';
+import { createSession, publicUser, userForPhone, SESSION_COOKIE, type AuthEnv } from './auth';
 import { handleAdmin } from './admin';
 import { samplePack } from './rolePack.fixture';
 import { fakeD1, fakeKV } from './testkit';
@@ -149,5 +149,13 @@ describe('User.isAdmin', () => {
   it('is false by default', async () => {
     const { member } = await setup();
     expect(member.isAdmin).toBe(false);
+  });
+
+  it('is exposed to the app through publicUser so the admin page can show', async () => {
+    const { member, db, admin } = await setup();
+    expect(publicUser(member).isAdmin).toBe(false);
+    const fresh = (await db.prepare('SELECT is_admin FROM users WHERE id = ?').bind(admin.id).first<{ is_admin: number }>())!;
+    expect(fresh.is_admin).toBe(1);
+    expect(publicUser({ ...member, isAdmin: true }).isAdmin).toBe(true);
   });
 });

@@ -101,6 +101,50 @@ describe('POST /api/admin/roles/import', () => {
   });
 });
 
+describe('publish routes', () => {
+  const imported = async () => {
+    const s = await setup();
+    const c = await s.cookie(s.admin.id);
+    const { id } = (await (await s.call('/api/admin/roles/import', { method: 'POST', cookie: c, body: samplePack() })).json()) as { id: string };
+    return { ...s, c, id };
+  };
+
+  it('admin publishes then unpublishes a role', async () => {
+    const { call, c, id, env } = await imported();
+    const pub = await call(`/api/admin/roles/${id}/publish`, { method: 'POST', cookie: c });
+    expect(pub.status).toBe(200);
+    expect(await pub.json()).toMatchObject({ ok: true, slug: 'bank-officer' });
+    expect(await env.KV!.get('career:bank-officer')).toContain('Bank Officer');
+    expect((await call(`/api/admin/roles/${id}/unpublish`, { method: 'POST', cookie: c })).status).toBe(200);
+    expect(await env.KV!.get('career:bank-officer')).toBeNull();
+  });
+
+  it('a non-admin cannot publish', async () => {
+    const { call, cookie, member, id } = await imported();
+    expect((await call(`/api/admin/roles/${id}/publish`, { method: 'POST', cookie: await cookie(member.id) })).status).toBe(403);
+  });
+
+  it('publish is POST-only, same-origin only, and 404 for unknown roles', async () => {
+    const { call, c, id } = await imported();
+    expect((await call(`/api/admin/roles/${id}/publish`, { cookie: c })).status).toBe(405);
+    expect((await call(`/api/admin/roles/${id}/publish`, { method: 'POST', cookie: c, origin: 'https://evil.example' })).status).toBe(403);
+    expect((await call('/api/admin/roles/missing/publish', { method: 'POST', cookie: c })).status).toBe(404);
+  });
+
+  it('re-importing a published role refreshes its public page', async () => {
+    const { call, c, id, env } = await imported();
+    await call(`/api/admin/roles/${id}/publish`, { method: 'POST', cookie: c });
+    await call('/api/admin/roles/import', { method: 'POST', cookie: c, body: samplePack({ summary: 'Brand new summary text' }) });
+    expect(await env.KV!.get('career:bank-officer')).toContain('Brand new summary text');
+  });
+
+  it('re-importing a draft does not create a public page', async () => {
+    const { call, c, env } = await imported();
+    await call('/api/admin/roles/import', { method: 'POST', cookie: c, body: samplePack({ summary: 'Still a draft' }) });
+    expect(await env.KV!.get('career:bank-officer')).toBeNull();
+  });
+});
+
 describe('User.isAdmin', () => {
   it('is false by default', async () => {
     const { member } = await setup();

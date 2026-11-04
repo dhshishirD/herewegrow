@@ -1,6 +1,7 @@
 // /api/admin/*: Career Hub admin routes. Every route needs a signed-in user with users.is_admin = 1.
 
 import { getSessionUser, type AuthEnv, type User } from './auth';
+import { publishRole, unpublishRole } from './careers';
 import { isAllowedOrigin, json } from './paymently';
 import { MAX_PACK_BYTES, saveRolePack, validateRolePack } from './rolePack';
 
@@ -39,7 +40,18 @@ export async function handleAdmin(request: Request, env: AuthEnv, pathname: stri
     const checked = validateRolePack(body);
     if (!checked.ok) return json({ ok: false, error: 'invalid', errors: checked.errors }, 400);
     const saved = await saveRolePack(db, checked.pack);
+    // A role that is already public keeps its page in step with the new content.
+    const live = await db.prepare("SELECT 1 AS live FROM roles WHERE id = ? AND status = 'published'").bind(saved.id).first();
+    if (live) await publishRole(env, saved.id);
     return json({ ok: true, id: saved.id, created: saved.created, slug: checked.pack.slug });
+  }
+
+  const publish = /^\/api\/admin\/roles\/([\w-]{1,64})\/(publish|unpublish)$/.exec(pathname);
+  if (publish) {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const r = await (publish[2] === 'publish' ? publishRole(env, publish[1]) : unpublishRole(env, publish[1]));
+    if (!r.ok) return json({ ok: false, error: r.error }, r.error === 'not_found' ? 404 : 503);
+    return json({ ok: true, slug: r.slug, status: publish[2] === 'publish' ? 'published' : 'draft' });
   }
 
   return json({ ok: false, error: 'not_found' }, 404);

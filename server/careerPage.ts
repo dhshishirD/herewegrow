@@ -8,12 +8,12 @@ import type { RolePack } from './rolePack';
 const SITE = 'https://herewegrow.pro';
 
 /** JSON for a <script type="application/ld+json"> block that cannot close the tag early. */
-const ldJson = (data: unknown) =>
+export const ldJson = (data: unknown) =>
   JSON.stringify(data).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 
 const list = (items: string[]) => (items.length ? `<ul>${items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : '');
 
-const CSS = `
+export const CSS = `
 :root{--ink:#0b1a33;--muted:#51607a;--line:#e2e8f2;--mist:#f2f5fa;--blue:#1d5bd8;--navy:#0b1f3f}
 *{box-sizing:border-box}body{margin:0;font:16px/1.65 system-ui,-apple-system,"Segoe UI","Noto Sans Bengali","Hind Siliguri",sans-serif;color:var(--ink);background:#fbfcfe}
 header.site{background:var(--navy);padding:14px 20px}header.site a{color:#fff;text-decoration:none;font-weight:700}

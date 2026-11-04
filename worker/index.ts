@@ -4,6 +4,7 @@
 import { handleCheckout, handleClaim, handleVerify } from '../server/handlers';
 import { handleAdmin } from '../server/admin';
 import { careersSitemap, serveCareerPage } from '../server/careers';
+import { serveCareersIndex } from '../server/careerIndex';
 import { handleAuth } from '../server/authHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
@@ -34,6 +35,7 @@ export default {
     // Career Hub: saved role pages and their sitemap; anything else under /careers/ falls through to the app.
     if (request.method === 'GET' || request.method === 'HEAD') {
       if (pathname === '/sitemap-careers.xml') return careersSitemap(env);
+      if (pathname === '/careers' || pathname === '/careers/') return serveCareersIndex(env);
       const page = await serveCareerPage(env, pathname);
       if (page) return page;
     }

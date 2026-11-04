@@ -125,9 +125,19 @@ ${script}
 
 /** GET /careers: the index of published roles. Always answers, so the menu link never lands on a 404. */
 export async function serveCareersIndex(env: { DB?: D1Like }): Promise<Response> {
-  const rows = env.DB
-    ? ((await env.DB.prepare("SELECT slug, title_en, title_bn, field, summary FROM roles WHERE status = 'published'").all<IndexRole>()).results ?? [])
-    : [];
+  let rows: IndexRole[] = [];
+  if (env.DB) {
+    try {
+      rows = (await env.DB.prepare("SELECT slug, title_en, title_bn, field, summary FROM roles WHERE status = 'published'").all<IndexRole>()).results ?? [];
+    } catch (e) {
+      // Do not crash the Worker (Cloudflare error 1101): log the cause and show the friendly page, uncached and not indexable.
+      console.error('careers index: could not read roles from D1', e);
+      return new Response(renderCareersIndex([]), {
+        status: 503,
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Retry-After': '60' },
+      });
+    }
+  }
   return new Response(renderCareersIndex(rows), {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' },
   });

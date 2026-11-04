@@ -22,6 +22,7 @@ export interface User {
   name: string | null;
   lang: string;
   proUntil: number | null;
+  isAdmin: boolean;
 }
 
 export const SESSION_COOKIE = 'hwg_session';
@@ -102,10 +103,11 @@ const userFromRow = (r: Record<string, unknown>): User => ({
   name: (r.name as string) ?? null,
   lang: (r.lang as string) ?? 'bn',
   proUntil: (r.pro_until as number) ?? null,
+  isAdmin: r.is_admin === 1,
 });
 
 const USER_SELECT =
-  'SELECT u.id, u.phone, u.email, u.name, u.lang, e.pro_until FROM users u LEFT JOIN entitlements e ON e.user_id = u.id';
+  'SELECT u.id, u.phone, u.email, u.name, u.lang, e.pro_until, u.is_admin FROM users u LEFT JOIN entitlements e ON e.user_id = u.id';
 
 export async function getUserById(db: D1Like, id: string): Promise<User | null> {
   const row = await db.prepare(`${USER_SELECT} WHERE u.id = ?`).bind(id).first();

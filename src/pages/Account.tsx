@@ -48,6 +48,7 @@ export function AccountPage() {
         </Link>
       )}
       {user.isAdmin && <Link href="/admin/careers" className="btn btn-quiet mt-6 mr-3">Career Hub admin</Link>}
+      {user.isAdmin && <Link href="/admin/promos" className="btn btn-quiet mt-6 mr-3">Promo codes</Link>}
       <button type="button" className="btn btn-quiet mt-6" onClick={() => void logout()}>{t({ en: 'Log out', bn: 'লগআউট' })}</button>
     </div>
   );

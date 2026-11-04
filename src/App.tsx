@@ -1,4 +1,4 @@
-import { lazy, Suspense, type JSX } from 'react';
+import { lazy, Suspense, useEffect, type JSX } from 'react';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
@@ -19,6 +19,8 @@ import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { ProPage } from './pages/Pro';
 import { AdminCareersPage } from './pages/AdminCareers';
+import { AdminPromosPage } from './pages/AdminPromos';
+import { capturePromoParam } from './lib/promo';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
 import { TemplateDetail, TemplatesPage } from './pages/Templates';
 
@@ -49,6 +51,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/account': AccountPage,
   '/pro': ProPage,
   '/admin/careers': AdminCareersPage,
+  '/admin/promos': AdminPromosPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
   '/privacy': PrivacyPage,
@@ -66,6 +69,7 @@ function Page() {
 }
 
 export default function App() {
+  useEffect(capturePromoParam, []);
   return (
     <LangProvider>
       <AuthProvider>

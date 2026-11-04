@@ -3,6 +3,7 @@
 import { getSessionUser, type AuthEnv, type User } from './auth';
 import { publishRole, unpublishRole } from './careers';
 import { isAllowedOrigin, json } from './paymently';
+import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
 import { MAX_PACK_BYTES, saveRolePack, validateRolePack } from './rolePack';
 
 /** The signed-in admin, or the 401/403/503 response to send back. Check with `instanceof Response`. */
@@ -54,6 +55,26 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
     const live = await db.prepare("SELECT 1 AS live FROM roles WHERE id = ? AND status = 'published'").bind(saved.id).first();
     if (live) await publishRole(env, saved.id);
     return json({ ok: true, id: saved.id, created: saved.created, slug: checked.pack.slug });
+  }
+
+  if (pathname === '/api/admin/promos') {
+    if (request.method === 'GET') return json({ ok: true, promos: await listPromos(db) });
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const body = (await request.json().catch(() => ({}))) as PromoInput & { prefix?: unknown; count?: unknown };
+    // A count means "make that many single-use codes"; otherwise it is one named code.
+    if (body.count !== undefined) {
+      const r = await bulkCreatePromos(db, body);
+      return r.ok ? json({ ok: true, codes: r.codes }) : json({ ok: false, error: 'invalid', errors: r.errors }, 400);
+    }
+    const r = await createPromo(db, body);
+    return r.ok ? json({ ok: true, codes: [r.promo.code] }) : json({ ok: false, error: 'invalid', errors: r.errors }, 400);
+  }
+
+  const toggle = /^\/api\/admin\/promos\/([A-Za-z0-9-]{3,24})\/(enable|disable)$/.exec(pathname);
+  if (toggle) {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const found = await setPromoActive(db, toggle[1], toggle[2] === 'enable');
+    return found ? json({ ok: true }) : json({ ok: false, error: 'not_found' }, 404);
   }
 
   const publish = /^\/api\/admin\/roles\/([\w-]{1,64})\/(publish|unpublish)$/.exec(pathname);

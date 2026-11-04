@@ -5,3 +5,4 @@ Disallow: /api/
 Disallow: /order
 
 Sitemap: https://herewegrow.pro/sitemap.xml
+Sitemap: https://herewegrow.pro/sitemap-careers.xml

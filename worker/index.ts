@@ -3,6 +3,7 @@
 
 import { handleCheckout, handleClaim, handleVerify } from '../server/handlers';
 import { handleAdmin } from '../server/admin';
+import { careersSitemap, serveCareerPage } from '../server/careers';
 import { handleAuth } from '../server/authHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
@@ -28,6 +29,13 @@ export default {
       if (pathname === '/api/claim') return handleClaim(request, env);
       if (pathname === '/api/verify') return handleVerify(request, env);
       return json({ ok: false, error: 'not_found' }, 404);
+    }
+
+    // Career Hub: saved role pages and their sitemap; anything else under /careers/ falls through to the app.
+    if (request.method === 'GET' || request.method === 'HEAD') {
+      if (pathname === '/sitemap-careers.xml') return careersSitemap(env);
+      const page = await serveCareerPage(env, pathname);
+      if (page) return page;
     }
 
     return env.ASSETS.fetch(request);

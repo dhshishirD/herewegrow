@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Bilingual } from '../../shared/catalog';
+import { usePath } from './router';
 
 export type Lang = 'bn' | 'en';
 
@@ -24,7 +25,9 @@ const readStored = (): Lang => {
 };
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(readStored);
+  const [stored, setLangState] = useState<Lang>(readStored);
+  // The CV builder is English only (CV input and output are English), whatever the site language is.
+  const lang: Lang = usePath().startsWith('/builder') ? 'en' : stored;
 
   useEffect(() => {
     document.documentElement.lang = lang;

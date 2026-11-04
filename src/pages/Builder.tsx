@@ -71,7 +71,7 @@ function Section({ title, open, onToggle, children, count, extra }: { title: Rea
     <section className="rounded-2xl bg-white ring-1 ring-line">
       <div className="flex items-center gap-2 pr-3">
         <button type="button" onClick={onToggle} aria-expanded={open} className="flex flex-1 items-center justify-between gap-3 px-5 py-4 text-left font-display text-lg font-semibold">
-          <span className="min-w-0 truncate">{title}{count ? <span className="ml-2 rounded-full bg-mist px-2 py-0.5 font-body text-sm text-muted">{num(String(count), 'bn')}</span> : null}</span>
+          <span className="min-w-0 truncate">{title}{count ? <span className="ml-2 rounded-full bg-mist px-2 py-0.5 font-body text-sm text-muted">{count}</span> : null}</span>
           <span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mist text-leaf transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
         </button>
         {extra}

@@ -2,7 +2,10 @@ import { createContext, useContext, useEffect, useRef, useState, type FormEvent,
 import { CART_PRODUCT_ID, cartProduct, quoteCart } from '../../shared/cart';
 import { findProduct, type Product } from '../../shared/catalog';
 import { markCartPending } from '../lib/cart';
+import { findPlan, templatePrice, type PlanId } from '../../shared/plans';
+import { useAuth } from '../lib/auth';
 import { taka, useLang } from '../lib/lang';
+import { DownloadButtons } from './Downloads';
 
 /** Opens checkout for one product, or for a cart of templates when templateIds is given. */
 type OpenCheckout = (productId: string, templateIds?: string[]) => void;
@@ -35,6 +38,9 @@ const ERRORS: Record<string, { en: string; bn: string }> = {
     bn: 'নম্বরটি অসম্পূর্ণ মনে হচ্ছে। ০১ দিয়ে শুরু ১১ সংখ্যা দিন, অথবা খালি রাখুন।',
   },
   email: { en: 'Check the email address, or leave it empty.', bn: 'ইমেইল ঠিক আছে কিনা দেখুন, অথবা খালি রাখুন।' },
+  used: { en: 'You already took your free template this month. You can still buy this one at the Pro price.', bn: 'এই মাসের ফ্রি টেমপ্লেট নেওয়া হয়ে গেছে। Pro মূল্যে এটি কিনতে পারেন।' },
+  limit: { en: 'Daily download limit reached. Try again tomorrow.', bn: 'আজকের ডাউনলোডের সীমা শেষ। কাল আবার চেষ্টা করুন।' },
+  claim: { en: 'This is included in your pass. Use the free button.', bn: 'এটি আপনার পাসের অন্তর্ভুক্ত। ফ্রি বাটনটি ব্যবহার করুন।' },
   gateway: {
     en: 'The payment page could not open. Try again in a minute, or order on WhatsApp.',
     bn: 'পেমেন্ট পেজ খোলা যায়নি। এক মিনিট পর আবার চেষ্টা করুন, অথবা হোয়াটসঅ্যাপে অর্ডার করুন।',
@@ -47,6 +53,33 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
   const [error, setError] = useState<string | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
   const firstField = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
+  const [claimed, setClaimed] = useState<{ file: string; url: string; bytes: number }[] | null>(null);
+
+  // Pro members see the discounted price; the server charges the same amount from the account's plan.
+  const planId = (product.kind !== 'service' ? user?.proPlan : null) as PlanId | null | undefined;
+  const plan = planId ? findPlan(planId) : undefined;
+  const price = templatePrice(product.price, plan?.id ?? null);
+  const single = product.kind !== 'pack' && (product.templates?.length ?? 0) === 1 || (!!templateIds && templateIds.length === 1);
+  const canClaim = !!plan && (plan.templateOff >= 100 || (plan.freeTemplatesPerMonth > 0 && single));
+
+  const claim = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: templateIds ? CART_PRODUCT_ID : product.id, templateIds }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; downloads?: { file: string; url: string; bytes: number }[] };
+      if (data.ok && data.downloads?.length) setClaimed(data.downloads);
+      else setError(data.error === 'used' || data.error === 'limit' ? data.error : 'gateway');
+    } catch {
+      setError('gateway');
+    }
+    setBusy(false);
+  };
 
   useEffect(() => {
     firstField.current?.focus();
@@ -111,7 +144,7 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
             <p className="mt-1 text-muted">{t(product.delivery)}</p>
           </div>
           <div className="flex items-start gap-3">
-            <p className="font-display text-2xl font-bold text-leaf whitespace-nowrap">{taka(product.price, lang)}</p>
+            <p className="font-display text-2xl font-bold text-leaf whitespace-nowrap">{taka(price, lang)}</p>
             <button type="button" onClick={onClose} disabled={busy} aria-label={t({ en: 'Close', bn: 'বন্ধ করুন' })}
               className="-mr-2 -mt-1 rounded-full p-2 text-muted hover:bg-mist hover:text-ink">
               <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
@@ -159,10 +192,18 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
             </div>
           )}
 
-          <button type="submit" className="btn btn-primary w-full" disabled={busy}>
+          {claimed ? <DownloadButtons downloads={claimed} /> : canClaim && (
+            <button type="button" className="btn btn-primary w-full" disabled={busy} onClick={() => void claim()}>
+              {t({ en: 'Take it free with your Pro pass', bn: 'Pro পাসে বিনামূল্যে নিন' })}
+            </button>
+          )}
+          {plan && plan.templateOff < 100 && price < product.price && (
+            <p className="text-center text-sm text-leaf-dark">{t({ en: `Pro price: ${plan.templateOff}% off (list ${taka(product.price, 'en')})`, bn: `Pro মূল্য: ${plan.templateOff}% ছাড়` })}</p>
+          )}
+          <button type="submit" className="btn btn-primary w-full" disabled={busy || !!claimed}>
             {busy
               ? t({ en: 'Opening payment page…', bn: 'পেমেন্ট পেজ খোলা হচ্ছে…' })
-              : t({ en: `Pay ${taka(product.price, 'en')}`, bn: `${taka(product.price, 'bn')} পরিশোধ করুন` })}
+              : t({ en: `Pay ${taka(price, 'en')}`, bn: `${taka(price, 'bn')} পরিশোধ করুন` })}
           </button>
           <ul className="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold" aria-label={t({ en: 'Payment methods', bn: 'পেমেন্ট মাধ্যম' })}>
             {[['bKash', '#e2136e'], ['Nagad', '#f6921e'], ['Rocket', '#8c3494']].map(([n, c]) => (

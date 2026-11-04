@@ -1,7 +1,7 @@
 // Cloudflare Worker for herewegrow.pro.
 // /api/* is handled here; every other path is served from the built site in ./dist.
 
-import { handleCheckout, handleVerify } from '../server/handlers';
+import { handleCheckout, handleClaim, handleVerify } from '../server/handlers';
 import { handleAuth } from '../server/authHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
@@ -23,6 +23,7 @@ export default {
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);
       if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
       if (pathname === '/api/checkout') return handleCheckout(request, env);
+      if (pathname === '/api/claim') return handleClaim(request, env);
       if (pathname === '/api/verify') return handleVerify(request, env);
       return json({ ok: false, error: 'not_found' }, 404);
     }

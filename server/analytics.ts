@@ -19,6 +19,9 @@ const DHAKA_OFFSET_MS = 6 * 3_600_000;
 /** The Asia/Dhaka calendar day (YYYY-MM-DD) of a Unix-ms timestamp. Dhaka is UTC+6 with no DST. */
 export const dhakaDay = (ts: number): string => new Date(ts + DHAKA_OFFSET_MS).toISOString().slice(0, 10);
 
+/** Unix ms of 00:00 Asia/Dhaka on the Dhaka day containing `ts`. */
+export const dhakaDayStart = (ts: number): number => Date.parse(`${dhakaDay(ts)}T00:00:00Z`) - DHAKA_OFFSET_MS;
+
 const str = (v: unknown, max: number): string | null => (typeof v === 'string' && v ? v.slice(0, max) : null);
 
 /** Lowercase, keep [a-z0-9_.-], collapse the rest to "-", max 40 chars. */

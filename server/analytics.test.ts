@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSession, SESSION_COOKIE, userForPhone } from './auth';
 import { dhakaDay, deviceOf, isBot, parseTrack, recordEvent, recordServerEvent } from './analytics';
-import { handleTrack } from './analyticsHandlers';
+import { handleTrack, ipLimiter } from './analyticsHandlers';
 import type { AuthEnv } from './auth';
 import { fakeD1, fakeKV } from './testkit';
 
@@ -69,13 +69,14 @@ describe('isBot / deviceOf', () => {
 
 const setup = () => ({ DB: fakeD1(), KV: fakeKV(), SESSION_SECRET: 's' }) as AuthEnv & { DB: ReturnType<typeof fakeD1> };
 
-const req = (body: unknown, opts: { origin?: string | null; ua?: string; cookie?: string; raw?: string; country?: string } = {}) => {
+const req = (body: unknown, opts: { origin?: string | null; ua?: string; cookie?: string; raw?: string; country?: string; ip?: string } = {}) => {
   const r = new Request(`${SITE}/api/t`, {
     method: 'POST',
     headers: {
       ...(opts.origin === null ? {} : { Origin: opts.origin ?? SITE }),
       'User-Agent': opts.ua ?? WIN,
       ...(opts.cookie ? { Cookie: opts.cookie } : {}),
+      ...(opts.ip ? { 'CF-Connecting-IP': opts.ip } : {}),
     },
     body: opts.raw ?? JSON.stringify(body),
   });
@@ -86,6 +87,7 @@ const req = (body: unknown, opts: { origin?: string | null; ua?: string; cookie?
 const count = async (env: AuthEnv) => (await env.DB!.prepare('SELECT COUNT(*) AS n FROM events').first<{ n: number }>())!.n;
 
 describe('handleTrack', () => {
+  beforeEach(() => ipLimiter.reset());
   it('stores a valid pageview', async () => {
     const env = setup();
     const res = await handleTrack(req(valid, { country: 'BD' }), env);
@@ -108,10 +110,40 @@ describe('handleTrack', () => {
     expect((await handleTrack(req(valid, { ua: 'Googlebot/2.1' }), env)).status).toBe(204);
     expect(await count(env)).toBe(0);
   });
-  it('caps events per vid per day at 300', async () => {
+  it('caps events per vid per Dhaka day at 300, counted in D1', async () => {
     const env = setup();
     for (let i = 0; i < 301; i++) expect((await handleTrack(req(valid), env)).status).toBe(204);
     expect(await count(env)).toBe(300);
+    // another visitor is unaffected
+    await handleTrack(req({ ...valid, vid: 'v2' }), env);
+    expect(await count(env)).toBe(301);
+  });
+  it('counts only the current Dhaka day toward the cap', async () => {
+    const env = setup();
+    const now = Date.now();
+    const yesterday = now - 86_400_000;
+    for (let i = 0; i < 300; i++) await recordEvent(env.DB!, parseTrack(valid)!, { ts: yesterday, country: null, device: 'desktop', userId: null });
+    await handleTrack(req(valid), env);
+    expect(await count(env)).toBe(301);
+  });
+  it('writes nothing to KV, so a KV write quota can never break tracking', async () => {
+    const kv = fakeKV();
+    kv.put = async () => {
+      throw new Error('KV put limit exceeded');
+    };
+    const env = { DB: fakeD1(), KV: kv, SESSION_SECRET: 's' } as AuthEnv;
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    for (let i = 0; i < 3; i++) expect((await handleTrack(req(valid, { ip: '203.0.113.9' }), env)).status).toBe(204);
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+    expect(await count(env)).toBe(3);
+  });
+  it('drops a burst beyond the per-IP limit and leaves other IPs alone', async () => {
+    const env = setup();
+    for (let i = 0; i < 130; i++) await handleTrack(req({ ...valid, vid: `v${i}` }, { ip: '198.51.100.1' }), env);
+    expect(await count(env)).toBe(120);
+    await handleTrack(req(valid, { ip: '198.51.100.2' }), env);
+    expect(await count(env)).toBe(121);
   });
   it('drops events from admins', async () => {
     const env = setup();
@@ -158,5 +190,24 @@ describe('recordEvent / recordServerEvent', () => {
     const rows = (await db.prepare('SELECT * FROM events').all<Record<string, unknown>>()).results!;
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ type: 'event', name: 'purchase', sid: '', path: '', meta: '{"amount":500}', day: '2026-11-05' });
+  });
+});
+
+describe('ipLimiter', () => {
+  beforeEach(() => ipLimiter.reset());
+  it('allows 120 per IP per minute, then a new minute starts fresh', () => {
+    const t = 1_000_000;
+    for (let i = 0; i < 120; i++) expect(ipLimiter.allow('a', t + i)).toBe(true);
+    expect(ipLimiter.allow('a', t + 200)).toBe(false);
+    expect(ipLimiter.allow('b', t + 200)).toBe(true);
+    expect(ipLimiter.allow('a', t + 60_001)).toBe(true);
+  });
+  it('stays bounded however many IPs it sees', () => {
+    const t = 2_000_000;
+    for (let i = 0; i < 25_000; i++) ipLimiter.allow(`ip${i}`, t + i);
+    expect(ipLimiter.size()).toBeLessThanOrEqual(ipLimiter.maxKeys);
+    // expired windows are swept
+    ipLimiter.allow('late', t + 10 * 60_000);
+    expect(ipLimiter.size()).toBeLessThanOrEqual(2);
   });
 });

@@ -36,11 +36,13 @@ export function bulkSmsBd(env: SmsEnv, fetchFn: typeof fetch = fetch): SmsProvid
         });
         const data = (await res.json().catch(() => ({}))) as { response_code?: number; error_message?: string };
         const ok = res.ok && data.response_code === 202;
-        // Provider codes only (never the key or the number), so a failure can be diagnosed from the Worker logs:
-        // 1002 sender id invalid, 1005 internal, 1007 balance, 1032 IP not whitelisted, and so on.
-        if (!ok) // The provider's message can echo the API key back, so strip it before logging.
-        const message = data.error_message?.split(apiKey).join('[key]');
-        console.error('sms send failed', { httpStatus: res.status, code: data.response_code, message });
+        // Provider codes only (never the number), so a failure can be diagnosed from the Worker logs:
+        // 1002 sender id invalid, 1005 internal, 1007 balance, 1011 key not found, 1032 IP not whitelisted.
+        if (!ok) {
+          // The provider's message can echo the API key back, so strip it before logging.
+          const message = data.error_message?.split(apiKey).join('[key]');
+          console.error('sms send failed', { httpStatus: res.status, code: data.response_code, message });
+        }
         return ok;
       } catch (e) {
         console.error('sms send error', e instanceof Error ? e.message : 'unknown');

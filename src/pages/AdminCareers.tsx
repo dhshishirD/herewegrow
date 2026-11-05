@@ -113,6 +113,10 @@ export function AdminCareersPage() {
   return (
     <div className="wrap max-w-3xl py-12">
       <h1 className="text-3xl font-bold">Career Hub admin</h1>
+      <nav className="mt-2 flex gap-4 text-sm">
+        <Link href="/admin" className="underline">Analytics</Link>
+        <Link href="/admin/promos" className="underline">Promo codes</Link>
+      </nav>
 
       <h2 className="mt-8 text-xl font-semibold">Import a role pack</h2>
       <p className="mt-1 text-sm text-muted">Paste the role-pack JSON. Importing the same slug again updates that role. A new role starts as a draft.</p>

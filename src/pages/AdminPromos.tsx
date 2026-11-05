@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useAuth } from '../lib/auth';
+import { Link } from '../lib/router';
 
 interface PromoRow {
   code: string;
@@ -150,6 +151,10 @@ export function AdminPromosPage() {
   return (
     <div className="wrap max-w-4xl py-12">
       <h1 className="text-3xl font-bold">Promo codes</h1>
+      <nav className="mt-2 flex gap-4 text-sm">
+        <Link href="/admin" className="underline">Analytics</Link>
+        <Link href="/admin/careers" className="underline">Career Hub</Link>
+      </nav>
       <p className="mt-2 text-sm text-muted">
         No one pays under ৳10. A trial code gives free Pro days once per account and only works on Pro. A code is used up when the payment is confirmed, not when it is typed.
         A public offer link looks like <code>herewegrow.pro/pro?promo=EID30</code>.

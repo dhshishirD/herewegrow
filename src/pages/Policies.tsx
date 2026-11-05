@@ -55,6 +55,14 @@ export function PrivacyPage() {
             { en: 'We use Google Analytics to count visits to this site.', bn: 'সাইটের ভিজিট গণনার জন্য আমরা Google Analytics ব্যবহার করি।' },
           ],
         },
+        {
+          h: { en: 'Analytics and contact form', bn: 'অ্যানালিটিক্স ও যোগাযোগ ফর্ম' },
+          p: [
+            { en: 'We run our own simple analytics: which pages are viewed and which buttons are used. It uses a random ID kept in your browser; our own analytics sets no cookies (Google Analytics, described above, may). If you are signed in, your visits are linked to your account. If you buy something, the purchase is linked to this anonymous browser ID, so we can see which page or ad led to it. We do not store your IP address, only your country and device type. Raw records are kept for 90 days, after which only daily totals remain.', bn: 'আমরা নিজস্ব সহজ অ্যানালিটিক্স চালাই: কোন পেজ দেখা হয় ও কোন বাটন ব্যবহার হয়। এতে আপনার ব্রাউজারে রাখা একটি এলোমেলো আইডি ব্যবহার হয়; আমাদের নিজস্ব অ্যানালিটিক্স কোনো কুকি সেট করে না (উপরে বলা Google Analytics করতে পারে)। সাইন ইন থাকলে আপনার ভিজিট আপনার অ্যাকাউন্টের সাথে যুক্ত হয়। কিছু কিনলে সেই কেনাকাটা এই বেনামি ব্রাউজার আইডির সাথে যুক্ত হয়, যাতে আমরা বুঝতে পারি কোন পেজ বা বিজ্ঞাপন থেকে এসেছে। আমরা আপনার আইপি অ্যাড্রেস রাখি না, শুধু দেশ ও ডিভাইসের ধরন রাখি। মূল রেকর্ড ৯০ দিন থাকে, তারপর শুধু দৈনিক মোট সংখ্যা থাকে।' },
+            { en: 'Messages you send through the contact form are saved together with the page you were on, the advertising source you came from (if any) and the anonymous browser ID. They are used only to reply to you.', bn: 'যোগাযোগ ফর্মে পাঠানো মেসেজ সংরক্ষণ করা হয়, সাথে থাকে আপনি যে পেজে ছিলেন, যে বিজ্ঞাপন থেকে এসেছেন (যদি থাকে) এবং বেনামি ব্রাউজার আইডি। এগুলো শুধু আপনাকে উত্তর দিতে ব্যবহার হয়।' },
+            { en: `To have your analytics ID or contact messages deleted, message ${SUPPORT_WHATSAPP_DISPLAY} on WhatsApp.`, bn: `আপনার অ্যানালিটিক্স আইডি বা যোগাযোগের মেসেজ মুছতে হোয়াটসঅ্যাপে ${SUPPORT_WHATSAPP_DISPLAY} নম্বরে জানান।` },
+          ],
+        },
       ]}
     />
   );

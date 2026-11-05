@@ -8,6 +8,7 @@ import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 import { FAQ, STEPS } from '../content/faq';
 import { FaqList } from './CatalogPages';
 import { ExpertSection, ReviewsSection } from '../components/Expert';
@@ -329,7 +330,7 @@ export function Home() {
           <h2 className="text-3xl sm:text-4xl">{t({ en: 'Questions people ask', bn: 'যে প্রশ্নগুলো বেশি আসে' })}</h2>
           <p className="mt-4 text-muted">
             {t({ en: 'Something else? ', bn: 'অন্য কোনো প্রশ্ন? ' })}
-            <a href={whatsappLink('Hello HereWeGrow, I have a question.')} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">
+            <a href={whatsappLink('Hello HereWeGrow, I have a question.')} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'home' })} className="font-semibold text-leaf underline underline-offset-4">
               {t({ en: 'Ask on WhatsApp', bn: 'হোয়াটসঅ্যাপে জিজ্ঞেস করুন' })}
             </a>
           </p>

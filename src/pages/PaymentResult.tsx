@@ -3,6 +3,7 @@ import { taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 import { DownloadButtons } from '../components/Downloads';
 import { productFor, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 import { takeCartPending, useCart } from '../lib/cart';
@@ -95,7 +96,7 @@ export function PaymentSuccess() {
               <div className="mt-5"><DownloadButtons downloads={downloads} /></div>
               <p className="mt-5 text-sm text-muted">
                 {t({ en: 'Trouble downloading? ', bn: 'ডাউনলোডে সমস্যা? ' })}
-                <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">
+                <a href={whatsappLink(message)} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'payment' })} className="font-semibold text-leaf underline underline-offset-4">
                   {t({ en: 'Get the files on WhatsApp', bn: 'হোয়াটসঅ্যাপে ফাইল নিন' })}
                 </a>
               </p>
@@ -114,7 +115,7 @@ export function PaymentSuccess() {
                     bn: 'নিচে চাপ দিয়ে হোয়াটসঅ্যাপে মেসেজ দিন। সাধারণত ২ ঘণ্টার মধ্যে (সকাল ৯টা–রাত ১১টা) সেখানে ফাইল পাঠানো হবে।',
                   })}
             </p>
-            <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="btn btn-primary mt-5">
+            <a href={whatsappLink(message)} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'payment' })} className="btn btn-primary mt-5">
               {product.kind === 'service'
                 ? t({ en: 'Send my CV on WhatsApp', bn: 'হোয়াটসঅ্যাপে সিভি পাঠান' })
                 : t({ en: 'Get my files on WhatsApp', bn: 'হোয়াটসঅ্যাপে ফাইল নিন' })}
@@ -133,7 +134,7 @@ export function PaymentSuccess() {
               bn: 'আপনার পেমেন্ট এখনও নিশ্চিত হয়নি। সাধারণত কয়েক মিনিট লাগে। ট্রানজেকশন আইডি পাঠান, আমরা নিজে যাচাই করে দেব।',
             })}
           </p>
-          <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="btn btn-primary mt-6">{t({ en: 'Send transaction ID on WhatsApp', bn: 'হোয়াটসঅ্যাপে ট্রানজেকশন আইডি পাঠান' })}</a>
+          <a href={whatsappLink(message)} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'payment' })} className="btn btn-primary mt-6">{t({ en: 'Send transaction ID on WhatsApp', bn: 'হোয়াটসঅ্যাপে ট্রানজেকশন আইডি পাঠান' })}</a>
         </div>
       )}
 
@@ -147,7 +148,7 @@ export function PaymentSuccess() {
             })}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href={whatsappLink(message)} target="_blank" rel="noreferrer" className="btn btn-primary">{t({ en: 'Message us on WhatsApp', bn: 'হোয়াটসঅ্যাপে মেসেজ দিন' })}</a>
+            <a href={whatsappLink(message)} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'payment' })} className="btn btn-primary">{t({ en: 'Message us on WhatsApp', bn: 'হোয়াটসঅ্যাপে মেসেজ দিন' })}</a>
             <Link href="/services" className="btn btn-quiet">{t({ en: 'Back to services', bn: 'সার্ভিসে ফিরে যান' })}</Link>
           </div>
         </div>

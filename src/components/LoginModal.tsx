@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuth, type AccountUser } from '../lib/auth';
 import { useLang } from '../lib/lang';
+import { track } from '../lib/track';
 
 const ERRORS: Record<string, { en: string; bn: string }> = {
   phone: { en: 'Enter a valid mobile number like 01XXXXXXXXX.', bn: 'সঠিক মোবাইল নম্বর দিন, যেমন 01XXXXXXXXX।' },
@@ -58,6 +59,7 @@ export function LoginModal() {
     setBusy(false);
     if (r.ok && r.user) {
       setUser(r.user);
+      track('login_success');
       closeLogin();
     } else fail(r.error);
   };

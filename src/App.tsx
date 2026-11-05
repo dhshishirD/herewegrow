@@ -3,8 +3,10 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
 import { AuthProvider } from './lib/auth';
+import { PageTracker } from './components/PageTracker';
 import { LoginModal } from './components/LoginModal';
 import { AccountPage } from './pages/Account';
+import { ContactPage, ContactWidget } from './components/ContactWidget';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
@@ -18,6 +20,7 @@ import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { ProPage } from './pages/Pro';
+import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
 import { AdminPromosPage } from './pages/AdminPromos';
 import { capturePromoParam } from './lib/promo';
@@ -50,10 +53,12 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,
   '/pro': ProPage,
+  '/admin': AdminDashboardPage,
   '/admin/careers': AdminCareersPage,
   '/admin/promos': AdminPromosPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
+  '/contact': ContactPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,
 };
@@ -73,6 +78,7 @@ export default function App() {
   return (
     <LangProvider>
       <AuthProvider>
+      <PageTracker />
       <CartProvider>
       <CheckoutProvider>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">
@@ -85,6 +91,7 @@ export default function App() {
         <Footer />
         <CartDrawer />
         <LoginModal />
+        <ContactWidget />
       </CheckoutProvider>
       </CartProvider>
       </AuthProvider>

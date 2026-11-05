@@ -61,8 +61,8 @@ describe('recordOrder', () => {
   it('keeps one row per invoice', async () => {
     const db = fakeD1();
     const o = { invoiceId: 'T1', productId: 'tpl-x', amount: 99, userId: null, phone: '01812345678' };
-    await recordOrder(db, o, NOW);
-    await recordOrder(db, o, NOW + 5);
+    expect(await recordOrder(db, o, NOW)).toBe(true);
+    expect(await recordOrder(db, o, NOW + 5)).toBe(false);
     const rows = await db.prepare('SELECT phone FROM orders').all();
     expect(rows.results).toEqual([{ phone: '01812345678' }]);
   });

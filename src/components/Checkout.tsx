@@ -4,6 +4,7 @@ import { findProduct, type Product } from '../../shared/catalog';
 import { markCartPending } from '../lib/cart';
 import { findPlan, templatePrice, type PlanId } from '../../shared/plans';
 import { useAuth } from '../lib/auth';
+import { track, tracker } from '../lib/track';
 import { taka, useLang } from '../lib/lang';
 import { checkPromo, PROMO_ERRORS, savedPromo, type PromoCheck } from '../lib/promo';
 import { DownloadButtons } from './Downloads';
@@ -116,6 +117,7 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    track('checkout_click', { product: templateIds ? CART_PRODUCT_ID : product.id });
     const form = new FormData(e.currentTarget);
     setBusy(true);
     setError(null);
@@ -133,6 +135,7 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
           note: form.get('note'),
           lang,
           promo: promo?.code,
+          vid: tracker.vid(),
         }),
       });
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string; detail?: string; reason?: string };

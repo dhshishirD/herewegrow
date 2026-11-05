@@ -1,10 +1,11 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { DownloadButtons } from '../components/Downloads';
 import { PageHead } from '../components/PageHead';
 import { useLang } from '../lib/lang';
 import { productFor, savedOrders, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 
 type State = { kind: 'idle' } | { kind: 'checking' } | { kind: 'error' } | { kind: 'done'; data: VerifyResponse };
 
@@ -14,6 +15,7 @@ export function OrderPage() {
   const initial = new URLSearchParams(window.location.search).get('invoice_id') ?? '';
   const [invoice, setInvoice] = useState(initial);
   const [state, setState] = useState<State>({ kind: 'idle' });
+  const started = useRef(false);
   const recent = savedOrders();
 
   const title = t({ en: 'Download your files again', bn: 'আবার ফাইল ডাউনলোড করুন' });
@@ -58,14 +60,14 @@ export function OrderPage() {
         <div>
           <form onSubmit={submit} className="rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8">
             <label className="label" htmlFor="inv">{t({ en: 'Invoice number', bn: 'ইনভয়েস নম্বর' })}</label>
-            <input id="inv" className="field" value={invoice} onChange={(e) => setInvoice(e.target.value)} autoComplete="off" spellCheck={false} maxLength={80}
+            <input id="inv" className="field" value={invoice} onChange={(e) => { if (!started.current) { started.current = true; track('redownload_lookup'); } setInvoice(e.target.value); }} autoComplete="off" spellCheck={false} maxLength={80}
               placeholder={t({ en: 'From your payment page or SMS', bn: 'পেমেন্ট পেজ বা এসএমএস থেকে' })} />
             <button type="submit" className="btn btn-primary mt-4 w-full" disabled={state.kind === 'checking' || !invoice.trim()}>
               {state.kind === 'checking' ? t({ en: 'Checking…', bn: 'যাচাই হচ্ছে…' }) : t({ en: 'Get my files', bn: 'ফাইল নিন' })}
             </button>
             <p className="mt-4 text-sm text-muted">
               {t({ en: 'Lost the invoice number? ', bn: 'ইনভয়েস নম্বর হারিয়ে গেছে? ' })}
-              <a href={help} target="_blank" rel="noreferrer" className="font-semibold text-leaf underline underline-offset-4">
+              <a href={help} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'order' })} className="font-semibold text-leaf underline underline-offset-4">
                 {t({ en: 'Send your bKash/Nagad transaction ID on WhatsApp', bn: 'হোয়াটসঅ্যাপে বিকাশ/নগদের ট্রানজেকশন আইডি পাঠান' })}
               </a>
             </p>

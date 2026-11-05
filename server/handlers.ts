@@ -6,6 +6,7 @@ import { findProduct } from '../shared/catalog';
 import { findPlan, templatePrice, type Plan } from '../shared/plans';
 import { scopeFor } from '../shared/promo';
 import { getSessionUser, type User } from './auth';
+import { trackPurchase } from './analytics';
 import { downloadLinks } from './downloads';
 import { grantPass, recordOrder } from './entitlements';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
@@ -23,6 +24,8 @@ interface CheckoutBody {
   lang?: string;
   /** A promo code typed by the buyer; the server decides what, if anything, it changes. */
   promo?: unknown;
+  /** The visitor id from the analytics tracker, carried through the payment so the purchase can be attributed. */
+  vid?: unknown;
 }
 
 const clean = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
@@ -99,7 +102,7 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   const q = await quoteFor(env, user, body);
   if (failed(q)) return json({ ok: false, error: q.error, ...(q.reason ? { reason: q.reason } : {}) }, q.status);
 
-  if (q.plan) return startPayment(request, env, planPayload(q.plan, user!, lang, q.price, q.promo));
+  if (q.plan) return startPayment(request, env, planPayload(q.plan, user!, lang, q.price, q.promo, clean(body.vid, 64)));
 
   const product = q.product!;
   const name = clean(body.name, 80);
@@ -126,6 +129,7 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
       customer_email: email,
       note,
       lang,
+      vid: clean(body.vid, 64),
     },
   });
 }
@@ -138,11 +142,11 @@ interface PaymentPayload {
 }
 
 /** Metadata for a Pro pass. The user id is set here, on the server, and read back at verify. */
-const planPayload = (plan: Plan, user: User, lang: string, price: number, promo: Promo | null): PaymentPayload => ({
+const planPayload = (plan: Plan, user: User, lang: string, price: number, promo: Promo | null, vid: string): PaymentPayload => ({
   full_name: user.name || 'HereWeGrow customer',
   email: user.email || 'orders@herewegrow.pro',
   amount: String(price),
-  metadata: { product_id: plan.id, product_name: plan.name.en, user_id: user.id, phone: user.phone ?? '', lang, promo: promo?.code ?? '' },
+  metadata: { product_id: plan.id, product_name: plan.name.en, user_id: user.id, phone: user.phone ?? '', lang, promo: promo?.code ?? '', vid },
 });
 
 async function startPayment(request: Request, env: Env, base: PaymentPayload): Promise<Response> {
@@ -166,6 +170,12 @@ async function startPayment(request: Request, env: Env, base: PaymentPayload): P
     return json({ ok: false, error: 'gateway', detail: err instanceof Error ? err.message : 'request failed' }, 502);
   }
 }
+
+/** Analytics must never change what the buyer gets: any failure, even a synchronous one, is only logged. */
+const safeTrack = (db: NonNullable<Env['DB']>, p: Parameters<typeof trackPurchase>[1]): Promise<void> =>
+  Promise.resolve()
+    .then(() => trackPurchase(db, p))
+    .then(() => undefined, (e) => console.error('track purchase failed', e));
 
 /** POST /api/verify: confirms a payment and checks the amount against the catalogue price. */
 export async function handleVerify(request: Request, env: Env): Promise<Response> {
@@ -207,7 +217,13 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
       // Keep a record for support and for linking to an account later. Never blocks the buyer's files.
       const user = await getSessionUser(env, request).catch(() => null);
       const phone = String(meta.phone ?? '') || null;
-      await recordOrder(env.DB, { invoiceId, productId: product.id, amount, userId: user?.id ?? null, phone }).catch((e) => console.error('record order failed', e));
+      const created = await recordOrder(env.DB, { invoiceId, productId: product.id, amount, userId: user?.id ?? null, phone }).catch((e) => {
+        console.error('record order failed', e);
+        return false;
+      });
+      // Only the call that recorded the order writes the purchase event: re-verifying an older invoice (one paid before
+      // analytics existed has no event) must not create a new, today-dated purchase.
+      if (created) await safeTrack(env.DB, { invoiceId, productId: product.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId: user?.id ?? null });
       if (promoRow) {
         const discount = Math.max(0, product.price - amount);
         await recordRedemption(env.DB, { code: promoRow.code, userId: user?.id ?? null, invoiceId, amount, discount, kind: 'discount' }).catch((e) => console.error('record promo failed', e));
@@ -266,6 +282,8 @@ async function verifyPlan(
     if (promoRow) {
       await recordRedemption(env.DB, { code: promoRow.code, userId, invoiceId, amount, discount: Math.max(0, plan.price - amount), kind: 'discount' }).catch((e) => console.error('record promo failed', e));
     }
+    // Only the call that granted the pass writes the purchase event (see the template path above).
+    if (r.granted) await safeTrack(env.DB, { invoiceId, productId: plan.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId });
     return json({ ...base, status: 'paid', proUntil: r.proUntil });
   } catch (err) {
     console.error('pro grant failed', invoiceId, err);

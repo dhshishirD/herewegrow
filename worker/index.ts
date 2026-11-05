@@ -7,9 +7,12 @@ import { careersSitemap, serveCareerPage } from '../server/careers';
 import { serveCareersIndex } from '../server/careerIndex';
 import { handlePromo } from '../server/promoHandlers';
 import { handleAuth } from '../server/authHandlers';
+import { handleContact } from '../server/contact';
+import { handleTrack } from '../server/analyticsHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
 import { sendReminders } from '../server/entitlements';
+import { rollupOld } from '../server/retention';
 import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
 
@@ -27,7 +30,9 @@ export default {
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);
       if (pathname === '/api/cvs' || pathname.startsWith('/api/cvs/')) return handleCvs(request, env, pathname);
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);
+      if (pathname === '/api/t' && request.method === 'POST') return handleTrack(request, env);
       if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+      if (pathname === '/api/contact') return handleContact(request, env);
       if (pathname === '/api/checkout') return handleCheckout(request, env);
       if (pathname === '/api/claim') return handleClaim(request, env);
       if (pathname === '/api/verify') return handleVerify(request, env);
@@ -45,13 +50,18 @@ export default {
     return env.ASSETS.fetch(request);
   },
 
-  /** Daily Cron Trigger (wrangler.toml): Pro renewal reminders by SMS. */
+  /** Daily Cron Trigger (wrangler.toml): Pro renewal reminders by SMS, and the 90-day analytics rollup. Independent: one failing does not stop the other. */
   async scheduled(_event: unknown, env: WorkerEnv, ctx: { waitUntil(p: Promise<unknown>): void }): Promise<void> {
     if (!env.DB) return;
     ctx.waitUntil(
       sendReminders(env.DB, bulkSmsBd(env))
         .then((r) => console.log('pro reminders', r))
         .catch((e) => console.error('pro reminders failed', e)),
+    );
+    ctx.waitUntil(
+      rollupOld(env.DB)
+        .then((r) => console.log('analytics rollup', r))
+        .catch((e) => console.error('analytics rollup failed', e)),
     );
   },
 };

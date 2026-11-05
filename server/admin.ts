@@ -1,10 +1,12 @@
 // /api/admin/*: Career Hub admin routes. Every route needs a signed-in user with users.is_admin = 1.
 
+import { CONTACT_STATUSES, countNewContacts, listContacts, MAX_NOTE, setContactStatus, type ContactStatus } from './contact';
 import { getSessionUser, type AuthEnv, type User } from './auth';
 import { publishRole, unpublishRole } from './careers';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
 import { MAX_PACK_BYTES, saveRolePack, validateRolePack } from './rolePack';
+import { actions, audience, entryPages, funnel, liveNow, overview, parseRange, revenue, sources, topPages } from './stats';
 
 /** The signed-in admin, or the 401/403/503 response to send back. Check with `instanceof Response`. */
 export async function requireAdmin(env: AuthEnv, request: Request): Promise<User | Response> {
@@ -31,6 +33,42 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
   const admin = await requireAdmin(env, request);
   if (admin instanceof Response) return admin;
   const db = env.DB!;
+
+  const stats = /^\/api\/admin\/stats\/(live|overview|pages|sources|audience|actions|funnel|revenue)$/.exec(pathname);
+  if (stats) {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    if (stats[1] === 'live') return json({ ok: true, ...(await liveNow(db)), newMessages: await countNewContacts(db) });
+    if (stats[1] === 'revenue') return json({ ok: true, ...(await revenue(db)) });
+    const r = parseRange(new URL(request.url).searchParams);
+    if (!r) return json({ error: 'range' }, 400);
+    switch (stats[1]) {
+      case 'overview': return json({ ok: true, ...(await overview(db, r)) });
+      case 'pages': return json({ ok: true, topPages: await topPages(db, r), entryPages: await entryPages(db, r) });
+      case 'sources': return json({ ok: true, sources: await sources(db, r) });
+      case 'audience': return json({ ok: true, ...(await audience(db, r)) });
+      case 'funnel': return json({ ok: true, ...(await funnel(db, r)) });
+      default: return json({ ok: true, actions: await actions(db, r) });
+    }
+  }
+
+  if (pathname === '/api/admin/contacts') {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    const status = new URL(request.url).searchParams.get('status');
+    if (status !== null && !CONTACT_STATUSES.includes(status as ContactStatus)) return json({ ok: false, error: 'invalid' }, 400);
+    return json({ ok: true, messages: await listContacts(db, (status as ContactStatus | null) ?? undefined) });
+  }
+
+  const contact = /^\/api\/admin\/contacts\/([\w-]{1,64})$/.exec(pathname);
+  if (contact) {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const body = (await request.json().catch(() => ({}))) as { status?: unknown; note?: unknown };
+    const note = body.note === undefined ? undefined : typeof body.note === 'string' ? body.note.trim() : null;
+    if (!CONTACT_STATUSES.includes(body.status as ContactStatus) || note === null || (note !== undefined && note.length > MAX_NOTE)) {
+      return json({ ok: false, error: 'invalid' }, 400);
+    }
+    const found = await setContactStatus(db, contact[1], body.status as ContactStatus, note);
+    return found ? json({ ok: true }) : json({ ok: false, error: 'not_found' }, 404);
+  }
 
   if (pathname === '/api/admin/roles') {
     if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);

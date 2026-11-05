@@ -10,6 +10,7 @@ import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 import { FaqList } from './CatalogPages';
 
 const COMBO = 'combo-cv-linkedin-bdjobs';
@@ -24,6 +25,7 @@ export default function Landing({ kind }: { kind: ProfileKind }) {
   const otherName = kind === 'linkedin' ? { en: 'BDJobs profile', bn: 'বিডিজবস প্রোফাইল' } : { en: 'LinkedIn profile', bn: 'লিংকডইন প্রোফাইল' };
 
   useEffect(() => setPageMeta(t(page.eyebrow), t(page.lead), page.path), [t, page]);
+  useEffect(() => track('view_service', { kind }), [kind]);
 
   const trust = [
     { icon: Wallet, text: { en: `Fixed price ${taka(product.price, 'en')}`, bn: `নির্দিষ্ট দাম ${taka(product.price, 'bn')}` } },
@@ -55,7 +57,7 @@ export default function Landing({ kind }: { kind: ProfileKind }) {
                 {t({ en: 'Optimize my profile', bn: 'আমার প্রোফাইল অপটিমাইজ করুন' })} · {taka(product.price, lang)}
                 <ArrowRight size={16} aria-hidden="true" />
               </button>
-              <a href={whatsappLink(`Hello HereWeGrow, I want ${product.name.en}.`)} target="_blank" rel="noreferrer" className="btn border border-white/30 text-white hover:border-white">
+              <a href={whatsappLink(`Hello HereWeGrow, I want ${product.name.en}.`)} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'profile' })} className="btn border border-white/30 text-white hover:border-white">
                 WhatsApp {num(SUPPORT_WHATSAPP_DISPLAY, lang)}
               </a>
             </div>

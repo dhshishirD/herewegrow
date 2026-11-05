@@ -39,7 +39,7 @@ export function normalizePhone(raw: unknown): string | null {
 }
 
 /** Count an attempt against a limit. Returns false once the limit is passed. */
-async function allow(kv: KVLike, key: string, limit: number, windowSec: number): Promise<boolean> {
+export async function allow(kv: KVLike, key: string, limit: number, windowSec: number): Promise<boolean> {
   const n = Number((await kv.get(key)) ?? 0);
   if (n >= limit) return false;
   await kv.put(key, String(n + 1), { expirationTtl: windowSec });

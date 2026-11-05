@@ -18,7 +18,8 @@ One admin page (`/admin`) that shows who visits the site, what they view and do,
 events(id INTEGER PK AUTOINCREMENT, ts INTEGER, day TEXT, vid TEXT, sid TEXT,
        type TEXT CHECK(type IN ('pageview','event')), name TEXT, path TEXT,
        ref_host TEXT, utm_source TEXT, utm_medium TEXT, utm_campaign TEXT,
-       device TEXT, country TEXT, user_id TEXT NULL, meta TEXT)   -- meta: small JSON, <= 300 chars
+       device TEXT, country TEXT, user_id TEXT NULL, meta TEXT,        -- meta: small JSON, <= 300 chars
+       dedupe_key TEXT UNIQUE NULL)                                      -- server events: one row per key (e.g. purchase:<invoice>)
 INDEX events_day(day, type), events_ts(ts)
 daily_rollup(day TEXT, metric TEXT, key TEXT, n INTEGER, PRIMARY KEY(day, metric, key))
 contact_messages(id TEXT PK, created_at INTEGER, name TEXT, phone TEXT, email TEXT NULL,

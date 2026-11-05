@@ -11,6 +11,7 @@ export const CONTACT_STATUSES: readonly ContactStatus[] = ['new', 'replied', 'cl
 export const MAX_NOTE = 500;
 const MAX_MESSAGE = 2000;
 const LIST_LIMIT = 200;
+const MAX_BODY_BYTES = 8192;
 
 export interface ContactRow {
   id: string;
@@ -32,7 +33,18 @@ export async function handleContact(request: Request, env: AuthEnv): Promise<Res
   if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
   if (!isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
   if (!env.DB || !env.KV) return json({ ok: false, error: 'config' }, 503);
-  const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+  const declared = Number(request.headers.get('Content-Length'));
+  if (declared > MAX_BODY_BYTES) return json({ ok: false, error: 'size' }, 413);
+  const raw = await request.text();
+  if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) return json({ ok: false, error: 'size' }, 413);
+  let body: Record<string, unknown>;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('shape');
+    body = parsed as Record<string, unknown>;
+  } catch {
+    return json({ ok: false, error: 'invalid', errors: ['json'] }, 400);
+  }
 
   // A bot filled the hidden field: look successful, store nothing.
   if (typeof body.website === 'string' && body.website !== '') return json({ ok: true }, 201);

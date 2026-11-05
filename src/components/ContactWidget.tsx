@@ -3,6 +3,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { useLang } from '../lib/lang';
+import { usePath } from '../lib/router';
 import { track, tracker } from '../lib/track';
 import { whatsappLink } from '../lib/whatsapp';
 
@@ -102,6 +103,7 @@ export function ContactForm() {
 export function ContactWidget() {
   const { t } = useLang();
   const [open, setOpen] = useState(false);
+  const path = usePath();
 
   useEffect(() => {
     if (!open) return;
@@ -109,6 +111,8 @@ export function ContactWidget() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
+
+  if (path === '/contact' || path.startsWith('/admin')) return null;
 
   return (
     <>

@@ -162,7 +162,10 @@ describe('tracker.source', () => {
     tracker.pageview('/a');
     tracker.pageview('/b');
     expect(tracker.source()).toBe('fb');
-    const broken = createTracker({ ...setup().deps, storage: { getItem: () => { throw new Error('x'); }, setItem: () => { throw new Error('x'); } }, session: null, search: undefined as unknown as string });
+    const deps = { ...setup().deps };
+    Object.defineProperty(deps, 'search', { get: () => { throw new Error('boom'); } });
+    const broken = createTracker(deps);
     expect(() => broken.source()).not.toThrow();
+    expect(broken.source()).toBeNull();
   });
 });

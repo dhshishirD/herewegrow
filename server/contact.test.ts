@@ -100,6 +100,28 @@ describe('handleContact', () => {
     expect(await rows(db)).toHaveLength(1);
   });
 
+  it('413 for a body over 8 KB and stores nothing', async () => {
+    const { send, db } = setup();
+    const res = await send({ ...valid, message: 'x'.repeat(9000) });
+    expect(res.status).toBe(413);
+    expect(await res.json()).toEqual({ ok: false, error: 'size' });
+    expect(await rows(db)).toHaveLength(0);
+  });
+
+  it('accepts and stores a 2000-char Bangla message in full (about 6 KB)', async () => {
+    const { send, db } = setup();
+    const msg = 'ক'.repeat(2000);
+    expect((await send({ ...valid, message: msg })).status).toBe(201);
+    expect((await rows(db))[0].message).toBe(msg);
+  });
+
+  it('400 for invalid JSON', async () => {
+    const { env } = setup();
+    const res = await handleContact(new Request('https://herewegrow.pro/api/contact', { method: 'POST', headers: { Origin: 'https://herewegrow.pro' }, body: '{nope' }), env);
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ ok: false, error: 'invalid', errors: ['json'] });
+  });
+
   it('503 when the database is not configured', async () => {
     const { send, env } = setup();
     env.DB = undefined;

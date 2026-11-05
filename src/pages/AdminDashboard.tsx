@@ -224,7 +224,7 @@ function Inbox({ newMessages }: { newMessages: number }) {
         </h2>
         <div className="flex gap-2">
           {INBOX_TABS.map((x) => (
-            <button key={x.id} type="button" className={`btn ${tab === x.id ? 'btn-primary' : 'btn-quiet'}`} onClick={() => setTab(x.id)}>{x.label}</button>
+            <button key={x.id} type="button" aria-pressed={tab === x.id} className={`btn ${tab === x.id ? 'btn-primary' : 'btn-quiet'}`} onClick={() => setTab(x.id)}>{x.label}</button>
           ))}
         </div>
       </div>

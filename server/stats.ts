@@ -104,14 +104,18 @@ export const entryPages = (db: D1Like, r: Range) =>
     r.to,
   );
 
-/** Visitors per source: utm_source, else the referrer host, else direct. */
+/** One row per session: its first pageview in the range. Ref/utm are only sent on a session's first hit, so attribution must come from here. */
+export const SESSION_FIRST_SQL = `SELECT sid, vid, utm_source, utm_medium, utm_campaign, ref_host, MIN(ts) AS ts
+  FROM events WHERE type = 'pageview' AND sid != '' AND day BETWEEN ? AND ? GROUP BY sid`;
+
+/** Visitors per source, attributed per session: utm_source, else the referrer host, else direct. */
 export const sources = (db: D1Like, r: Range) =>
   rows<{ source: string; medium: string; campaign: string; visitors: number }>(
     db,
-    `SELECT COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_medium, '') AS medium, COALESCE(utm_campaign, '') AS campaign,
+    `WITH session_first AS (${SESSION_FIRST_SQL})
+     SELECT COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_medium, '') AS medium, COALESCE(utm_campaign, '') AS campaign,
             COUNT(DISTINCT vid) AS visitors
-     FROM events WHERE type = 'pageview' AND day BETWEEN ? AND ?
-     GROUP BY source, medium, campaign ORDER BY visitors DESC, source LIMIT 30`,
+     FROM session_first GROUP BY source, medium, campaign ORDER BY visitors DESC, source LIMIT 30`,
     r.from,
     r.to,
   );

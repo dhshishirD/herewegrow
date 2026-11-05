@@ -267,6 +267,16 @@ describe('GET /api/admin/stats/*', () => {
     }
   });
 
+  it('returns the documented payload shapes', async () => {
+    const { call, cookie, admin } = await setup();
+    const c = await cookie(admin.id);
+    expect(await (await call('/api/admin/stats/overview?preset=7d', { cookie: c })).json()).toEqual({
+      ok: true, visitors: 0, sessions: 0, pageviews: 0, bounceRate: 0, pagesPerSession: 0, daily: [],
+    });
+    expect(await (await call('/api/admin/stats/sources?preset=7d', { cookie: c })).json()).toEqual({ ok: true, sources: [] });
+    expect(await (await call('/api/admin/stats/live', { cookie: c })).json()).toEqual({ ok: true, count: 0, visitors: [] });
+  });
+
   it('rejects a bad range with 400 { error: "range" }', async () => {
     const { call, cookie, admin } = await setup();
     const res = await call('/api/admin/stats/overview?from=x&to=y', { cookie: await cookie(admin.id) });

@@ -97,13 +97,21 @@ describe('topPages and entryPages', () => {
 describe('sources', () => {
   it('groups utm_source=facebook separately from direct and falls back to the referrer host', async () => {
     const db = fakeD1();
-    await recordEvent(db, input({ vid: 'v1', utmSource: 'facebook', utmMedium: 'cpc', utmCampaign: 'eid' }), ctx(D1));
-    await recordEvent(db, input({ vid: 'v2' }), ctx(D1));
-    await recordEvent(db, input({ vid: 'v3', ref: 'https://www.google.com/search?q=cv' }), ctx(D1));
+    await recordEvent(db, input({ vid: 'v1', sid: 's1', utmSource: 'facebook', utmMedium: 'cpc', utmCampaign: 'eid' }), ctx(D1));
+    await recordEvent(db, input({ vid: 'v2', sid: 's2' }), ctx(D1));
+    await recordEvent(db, input({ vid: 'v3', sid: 's3', ref: 'https://www.google.com/search?q=cv' }), ctx(D1));
     const s = await sources(db, { from: '2026-11-04', to: '2026-11-04' });
     expect(s).toContainEqual({ source: 'facebook', medium: 'cpc', campaign: 'eid', visitors: 1 });
     expect(s).toContainEqual({ source: 'direct', medium: '', campaign: '', visitors: 1 });
     expect(s).toContainEqual({ source: 'www.google.com', medium: '', campaign: '', visitors: 1 });
+  });
+
+  it('attributes a whole session to its first pageview, so later hits without utm are not counted as direct', async () => {
+    const db = fakeD1();
+    await recordEvent(db, input({ vid: 'v1', sid: 's1', path: '/', utmSource: 'facebook' }), ctx(D1));
+    await recordEvent(db, input({ vid: 'v1', sid: 's1', path: '/pro' }), ctx(D1 + MIN));
+    const s = await sources(db, { from: '2026-11-04', to: '2026-11-04' });
+    expect(s).toEqual([{ source: 'facebook', medium: '', campaign: '', visitors: 1 }]);
   });
 });
 

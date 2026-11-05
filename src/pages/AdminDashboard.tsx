@@ -2,7 +2,7 @@
 // The server checks is_admin on every call; this page only hides itself from everyone else.
 // Paths, referrers and utm values come from visitors, so they are only ever rendered as React text.
 
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useAuth } from '../lib/auth';
 import { Link } from '../lib/router';
 
@@ -21,12 +21,48 @@ interface Audience { devices: { device: string; visitors: number }[]; countries:
 interface Actions { actions: { name: string; n: number; visitors: number }[] }
 interface Live { count: number; visitors: { page: string; agoSec: number }[] }
 
-const get = async <T,>(path: string): Promise<T | null> => {
-  const res = await fetch(path).catch(() => null);
-  return res?.ok ? ((await res.json().catch(() => null)) as T | null) : null;
+type Got<T> = { ok: true; data: T } | { ok: false; error: string };
+
+const MESSAGES: Record<string, string> = {
+  login: 'Session expired, sign in again.',
+  forbidden: 'This account is not an admin.',
+  range: 'Invalid date range.',
+  db: 'Database error. Has migration 0005 been applied?',
+  network: 'Could not reach the server.',
 };
 
-function Bars({ data }: { data: Overview['daily'] }) {
+const get = async <T,>(path: string): Promise<Got<T>> => {
+  let res: Response;
+  try {
+    res = await fetch(path);
+  } catch {
+    return { ok: false, error: 'network' };
+  }
+  const body = (await res.json().catch(() => null)) as (T & { error?: string }) | null;
+  if (res.ok && body) return { ok: true, data: body };
+  if (res.status === 401) return { ok: false, error: 'login' };
+  if (res.status === 403) return { ok: false, error: 'forbidden' };
+  if (res.status === 400) return { ok: false, error: 'range' };
+  return { ok: false, error: body?.error === 'db' ? 'db' : `http ${res.status}` };
+};
+
+const fail = (code: string) => MESSAGES[code] ?? `Could not load the stats (${code}).`;
+
+/** Every day from the first to the last in the data, with zeros for days with no visits. */
+function fillDays(data: Overview['daily']): Overview['daily'] {
+  if (data.length < 2) return data;
+  const byDay = new Map(data.map((d) => [d.day, d]));
+  const out: Overview['daily'] = [];
+  const end = Date.parse(`${data[data.length - 1].day}T00:00:00Z`);
+  for (let t = Date.parse(`${data[0].day}T00:00:00Z`); t <= end; t += 86_400_000) {
+    const day = new Date(t).toISOString().slice(0, 10);
+    out.push(byDay.get(day) ?? { day, visitors: 0, pageviews: 0 });
+  }
+  return out;
+}
+
+function Bars({ data: raw }: { data: Overview['daily'] }) {
+  const data = fillDays(raw);
   if (data.length === 0) return <p className="text-muted">No visits in this range.</p>;
   const max = Math.max(...data.map((d) => d.pageviews), 1);
   const W = 640;
@@ -88,39 +124,64 @@ export function AdminDashboardPage() {
   const [preset, setPreset] = useState<Preset | null>('7d');
   const [custom, setCustom] = useState({ from: '', to: '' });
   const [live, setLive] = useState<Live | null>(null);
+  const [liveError, setLiveError] = useState<string | null>(null);
   const [data, setData] = useState<{ overview: Overview; pages: Pages; sources: Sources; audience: Audience; actions: Actions } | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const isAdmin = !!user?.isAdmin;
 
   const query = preset ? `preset=${preset}` : custom.from && custom.to ? `from=${custom.from}&to=${custom.to}` : null;
 
   useEffect(() => {
     if (!isAdmin) return;
-    const poll = async () => setLive(await get<Live>('/api/admin/stats/live'));
+    let stopped = false;
+    let inFlight = false;
+    const poll = async () => {
+      if (inFlight) return;
+      inFlight = true;
+      const r = await get<Live>('/api/admin/stats/live');
+      inFlight = false;
+      if (stopped) return;
+      if (r.ok) {
+        setLive(r.data);
+        setLiveError(null);
+      } else {
+        setLive(null);
+        setLiveError(fail(r.error));
+      }
+    };
     void poll();
     const t = setInterval(() => void poll(), 15_000);
-    return () => clearInterval(t);
+    return () => {
+      stopped = true;
+      clearInterval(t);
+    };
   }, [isAdmin]);
 
-  const load = useCallback(async (q: string) => {
-    const [overview, pages, sources, audience, actions] = await Promise.all([
-      get<Overview>(`/api/admin/stats/overview?${q}`),
-      get<Pages>(`/api/admin/stats/pages?${q}`),
-      get<Sources>(`/api/admin/stats/sources?${q}`),
-      get<Audience>(`/api/admin/stats/audience?${q}`),
-      get<Actions>(`/api/admin/stats/actions?${q}`),
-    ]);
-    if (overview && pages && sources && audience && actions) {
-      setData({ overview, pages, sources, audience, actions });
-      setFailed(false);
-    } else {
-      setFailed(true);
-    }
-  }, []);
-
   useEffect(() => {
-    if (isAdmin && query) void load(query);
-  }, [isAdmin, query, load]);
+    if (!isAdmin || !query) return;
+    let cancelled = false;
+    setData(null);
+    setError(null);
+    void (async () => {
+      const [overview, pages, sources, audience, actions] = await Promise.all([
+        get<Overview>(`/api/admin/stats/overview?${query}`),
+        get<Pages>(`/api/admin/stats/pages?${query}`),
+        get<Sources>(`/api/admin/stats/sources?${query}`),
+        get<Audience>(`/api/admin/stats/audience?${query}`),
+        get<Actions>(`/api/admin/stats/actions?${query}`),
+      ]);
+      if (cancelled) return;
+      if (overview.ok && pages.ok && sources.ok && audience.ok && actions.ok) {
+        setData({ overview: overview.data, pages: pages.data, sources: sources.data, audience: audience.data, actions: actions.data });
+      } else {
+        const bad = [overview, pages, sources, audience, actions].find((r) => !r.ok);
+        setError(fail(bad && !bad.ok ? bad.error : 'unknown'));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin, query]);
 
   if (!ready) return <div className="wrap py-24 text-muted">…</div>;
   if (!user) {
@@ -152,7 +213,8 @@ export function AdminDashboardPage() {
       </div>
 
       <section className="mt-6 rounded-2xl border border-line bg-white p-4">
-        <h2 className="text-lg font-semibold">Live now: {live ? live.count : '…'}</h2>
+        <h2 className="text-lg font-semibold">Live now: {live ? live.count : liveError ? 'unavailable' : '…'}</h2>
+        {liveError && <p role="alert" className="mt-2 text-sm text-red-800">{liveError}</p>}
         {live && live.visitors.length > 0 && (
           <ul className="mt-2 text-sm text-muted">
             {live.visitors.slice(0, 10).map((v, i) => <li key={i}><span className="text-ink">{v.page}</span> · {v.agoSec}s ago</li>)}
@@ -172,7 +234,8 @@ export function AdminDashboardPage() {
         </label>
       </div>
 
-      {failed && <div role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">Could not load the stats. Apply migration 0005 in D1, then reload.</div>}
+      {error && <div role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">{error}</div>}
+      {!data && !error && query && <p className="mt-4 text-muted">Loading…</p>}
 
       {o && data && (
         <>

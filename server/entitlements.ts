@@ -23,9 +23,10 @@ const orderInsert = (db: D1Like, o: PaidOrder, now: number) =>
     )
     .bind(crypto.randomUUID(), o.userId, o.productId, Math.round(o.amount), o.invoiceId, o.phone, now, now);
 
-/** Keep a record of a paid template or service order. Safe to call more than once. */
-export async function recordOrder(db: D1Like, o: PaidOrder, now = Date.now()): Promise<void> {
-  await orderInsert(db, o, now).run();
+/** Keep a record of a paid template or service order. Safe to call more than once; true only when this call added the row. */
+export async function recordOrder(db: D1Like, o: PaidOrder, now = Date.now()): Promise<boolean> {
+  const r = await orderInsert(db, o, now).run();
+  return (r.meta?.changes ?? 0) > 0;
 }
 
 /**

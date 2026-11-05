@@ -217,8 +217,13 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
       // Keep a record for support and for linking to an account later. Never blocks the buyer's files.
       const user = await getSessionUser(env, request).catch(() => null);
       const phone = String(meta.phone ?? '') || null;
-      await recordOrder(env.DB, { invoiceId, productId: product.id, amount, userId: user?.id ?? null, phone }).catch((e) => console.error('record order failed', e));
-      await safeTrack(env.DB, { invoiceId, productId: product.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId: user?.id ?? null });
+      const created = await recordOrder(env.DB, { invoiceId, productId: product.id, amount, userId: user?.id ?? null, phone }).catch((e) => {
+        console.error('record order failed', e);
+        return false;
+      });
+      // Only the call that recorded the order writes the purchase event: re-verifying an older invoice (one paid before
+      // analytics existed has no event) must not create a new, today-dated purchase.
+      if (created) await safeTrack(env.DB, { invoiceId, productId: product.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId: user?.id ?? null });
       if (promoRow) {
         const discount = Math.max(0, product.price - amount);
         await recordRedemption(env.DB, { code: promoRow.code, userId: user?.id ?? null, invoiceId, amount, discount, kind: 'discount' }).catch((e) => console.error('record promo failed', e));
@@ -277,7 +282,8 @@ async function verifyPlan(
     if (promoRow) {
       await recordRedemption(env.DB, { code: promoRow.code, userId, invoiceId, amount, discount: Math.max(0, plan.price - amount), kind: 'discount' }).catch((e) => console.error('record promo failed', e));
     }
-    await safeTrack(env.DB, { invoiceId, productId: plan.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId });
+    // Only the call that granted the pass writes the purchase event (see the template path above).
+    if (r.granted) await safeTrack(env.DB, { invoiceId, productId: plan.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId });
     return json({ ...base, status: 'paid', proUntil: r.proUntil });
   } catch (err) {
     console.error('pro grant failed', invoiceId, err);

@@ -168,6 +168,35 @@ describe('purchase event', () => {
     expect(JSON.parse(rows[0].meta)).toMatchObject({ amount: 149, product: 'pro-30', source: 'newsletter' });
   });
 
+  it('writes no purchase when re-verifying an order that was already recorded (pre-analytics invoice), and answers the same', async () => {
+    const fresh = await setup();
+    const old = await setup();
+    // an invoice paid before this deploy: its order row exists, but it has no purchase event
+    await old.env.DB!.prepare("INSERT INTO orders (id, product_id, amount_bdt, status, gateway_ref, created_at, paid_at) VALUES ('o1', 'cv-review', 199, 'paid', 'OLD1', 1, 1)").run();
+    gateway(paid('199'));
+    await handleCheckout(post('/api/checkout', { productId: 'cv-review', vid: 'vX' }), fresh.env);
+    const a = await (await handleVerify(post('/api/verify', { invoiceId: 'OLD1' }), fresh.env)).json();
+    gateway(paid('199'));
+    await handleCheckout(post('/api/checkout', { productId: 'cv-review', vid: 'vX' }), old.env);
+    const b = await (await handleVerify(post('/api/verify', { invoiceId: 'OLD1' }), old.env)).json();
+    expect(b).toEqual(a);
+    expect(b).toMatchObject({ ok: true, status: 'paid' });
+    expect((await purchases(old.env)).results).toEqual([]);
+    expect((await purchases(fresh.env)).results).toHaveLength(1);
+  });
+
+  it('writes no purchase when re-verifying a Pro pass granted before analytics, and still answers paid', async () => {
+    const { env, user, cookie } = await setup();
+    await env.DB!.prepare("INSERT INTO pass_grants (order_id, user_id, plan_id, days, granted_at) VALUES ('OLDP', ?, 'pro-30', 30, 1)").bind(user.id).run();
+    await env.DB!.prepare('INSERT INTO entitlements (user_id, pro_until, updated_at) VALUES (?, ?, 1) ON CONFLICT(user_id) DO UPDATE SET pro_until = excluded.pro_until').bind(user.id, Date.now() + DAY_MS).run();
+    gateway(paid('149.00'));
+    await handleCheckout(post('/api/checkout', { productId: 'pro-30', vid: 'vO' }, cookie), env);
+    const r = (await (await handleVerify(post('/api/verify', { invoiceId: 'OLDP' }), env)).json()) as { status: string; proUntil: number };
+    expect(r.status).toBe('paid');
+    expect(r.proUntil).toBeGreaterThan(Date.now());
+    expect((await purchases(env)).results).toEqual([]);
+  });
+
   it('writes no purchase for unpaid, pending or mismatched payments', async () => {
     const { env, cookie } = await setup();
     gateway((s) => ({ status: 'PENDING', amount: '199', metadata: s.metadata }));

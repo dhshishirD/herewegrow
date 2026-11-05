@@ -11,7 +11,7 @@ import type { D1Like } from './cf';
 import { grantPass, recordOrder } from './entitlements';
 
 export const MANUAL_PREFIXES = ['manual-', 'free-'] as const;
-export const isManualInvoice = (id: string) => MANUAL_PREFIXES.some((p) => id.startsWith(p));
+export const isManualInvoice = (id: string) => MANUAL_PREFIXES.some((p) => id.toLowerCase().startsWith(p));
 
 const MAX_AMOUNT = 100_000;
 
@@ -22,6 +22,8 @@ export interface ManualInput {
   amount?: unknown;
   reference?: unknown;
   note?: unknown;
+  /** Made by the admin screen once per review, so pressing Confirm twice cannot create two grants. */
+  requestId?: unknown;
 }
 
 export interface ManualGrant {
@@ -75,7 +77,7 @@ function newInvoiceId(kind: 'paid' | 'free'): string {
 }
 
 export type ManualResult =
-  | { ok: true; grant: ManualGrant; proUntil: number | null; belowPrice: boolean }
+  | { ok: true; grant: ManualGrant; proUntil: number | null; belowPrice: boolean; accountCreated: boolean }
   | { ok: false; error: 'invalid'; errors: string[] }
   | { ok: false; error: 'duplicate'; grant: ManualGrant };
 
@@ -106,8 +108,22 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
   }
   if (errors.length || !kind || !phone || (!plan && !product)) return { ok: false, error: 'invalid', errors };
 
-  const id = crypto.randomUUID();
+  const requestId = typeof input.requestId === 'string' && /^[0-9a-f-]{36}$/i.test(input.requestId) ? input.requestId.toLowerCase() : null;
+  const id = requestId ?? crypto.randomUUID();
+
+  // Already approved? (same transaction id, or the same Confirm pressed again.) Checked before any account is created,
+  // so a repeat with a mistyped phone number leaves nothing behind.
+  const earlier = await db
+    .prepare('SELECT * FROM manual_grants WHERE id = ? OR (reference IS NOT NULL AND reference = ?)')
+    .bind(id, reference)
+    .first<Row>();
+  if (earlier) {
+    await applyGrant(db, earlier, now);
+    return { ok: false, error: 'duplicate', grant: toGrant(earlier) };
+  }
+
   const invoiceId = newInvoiceId(kind);
+  const existingUser = await db.prepare('SELECT id FROM users WHERE phone = ?').bind(phone).first();
   const user = await userForPhone(db, phone, 'bn', now);
   const insert = await db
     .prepare(
@@ -118,8 +134,11 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
     .run();
 
   if ((insert.meta?.changes ?? 0) === 0) {
-    // Same transaction id as an earlier approval: report it, and finish that approval if it was left half done.
-    const existing = reference ? await db.prepare('SELECT * FROM manual_grants WHERE reference = ?').bind(reference).first<Row>() : null;
+    // Lost a race with an identical request: report it, and finish that approval if it was left half done.
+    const existing = await db
+      .prepare('SELECT * FROM manual_grants WHERE id = ? OR (reference IS NOT NULL AND reference = ?)')
+      .bind(id, reference)
+      .first<Row>();
     if (!existing) return { ok: false, error: 'invalid', errors: ['Could not save. Try again.'] };
     await applyGrant(db, existing, now);
     return { ok: false, error: 'duplicate', grant: toGrant(existing) };
@@ -128,7 +147,7 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
   const row = (await db.prepare('SELECT * FROM manual_grants WHERE id = ?').bind(id).first<Row>())!;
   const proUntil = await applyGrant(db, row, now);
   const listPrice = plan?.price ?? product?.price ?? 0;
-  return { ok: true, grant: toGrant(row), proUntil, belowPrice: kind === 'paid' && amount < listPrice };
+  return { ok: true, grant: toGrant(row), proUntil, belowPrice: kind === 'paid' && amount < listPrice, accountCreated: !existingUser };
 }
 
 /** Give what the row says: Pro days or an order record. Safe to run again for the same row. */
@@ -154,6 +173,26 @@ async function applyGrant(db: D1Like, row: Row, now: number): Promise<number | n
 export async function listManualGrants(db: D1Like, limit = 100): Promise<ManualGrant[]> {
   const r = await db.prepare('SELECT * FROM manual_grants ORDER BY created_at DESC LIMIT ?').bind(limit).all<Row>();
   return (r.results ?? []).map(toGrant);
+}
+
+/**
+ * True when an admin already approved this gateway transaction id by hand. The gateway verify paths use it so a payment
+ * approved manually and then completed by the gateway is not granted (and counted) a second time.
+ */
+export async function manualReferenceTaken(db: D1Like, transactionId: unknown): Promise<boolean> {
+  const ref = typeof transactionId === 'string' ? transactionId.trim().toUpperCase() : '';
+  if (!ref) return false;
+  const r = await db.prepare('SELECT 1 AS x FROM manual_grants WHERE reference = ?').bind(ref).first();
+  return !!r;
+}
+
+/** A Pro grant's current end date, for the customer's confirmation page. */
+export async function manualProUntil(db: D1Like, invoiceId: string): Promise<number | null> {
+  const r = await db
+    .prepare('SELECT e.pro_until AS pro_until FROM manual_grants g JOIN entitlements e ON e.user_id = g.user_id WHERE g.invoice_id = ?')
+    .bind(invoiceId)
+    .first<{ pro_until: number | null }>();
+  return r?.pro_until ?? null;
 }
 
 /** For /api/verify: the grant behind a manual-/free- invoice number, or null. */

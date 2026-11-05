@@ -129,12 +129,78 @@ describe('POST /api/verify for manual invoices', () => {
     expect(body).toMatchObject({ status: 'paid', productId: template.id, amount: template.price });
   });
 
+  it('tidies the case of a hand-typed number', async () => {
+    const db = fakeD1();
+    const r = await createManualGrant(db, 'admin1', paid(), NOW);
+    if (!r.ok) throw new Error('expected ok');
+    const typed = r.grant.invoiceId.toUpperCase();
+    expect(((await (await verify(db, typed)).json()) as { status: string }).status).toBe('paid');
+    expect(((await (await verify(db, r.grant.invoiceId.toLowerCase())).json()) as { status: string }).status).toBe('paid');
+  });
+
+  it('a free Pro grant reports free and the Pro end date', async () => {
+    const db = fakeD1();
+    const r = await createManualGrant(db, 'admin1', { kind: 'free', phone: '01712345678', productId: 'pro-30', note: 'gift' }, NOW);
+    if (!r.ok) throw new Error('expected ok');
+    const body = (await (await verify(db, r.grant.invoiceId)).json()) as { free: boolean; proUntil: number };
+    expect(body.free).toBe(true);
+    expect(body.proUntil).toBe(r.proUntil);
+  });
+
+  it('a database failure is an error, not "unpaid"', async () => {
+    const res = await handleVerify(
+      new Request('https://herewegrow.pro/api/verify', { method: 'POST', headers: { Origin: 'https://herewegrow.pro', 'Content-Type': 'application/json' }, body: JSON.stringify({ invoiceId: 'manual-AAAAAAAAAAAA' }) }),
+      { DB: { prepare: () => { throw new Error('boom'); } }, KV: fakeKV() } as never,
+    );
+    expect(res.status).toBe(502);
+  });
+
   it('an invented manual-/free- number is unpaid, never paid', async () => {
     const db = fakeD1();
     for (const id of ['manual-AAAAAAAAAAAA', 'free-AAAAAAAAAAAA']) {
       const body = (await (await verify(db, id)).json()) as { status: string };
       expect(body.status).toBe('unpaid');
     }
+  });
+});
+
+describe('createManualGrant: accounts and repeats', () => {
+  const userCount = async (db: ReturnType<typeof fakeD1>) => (await db.prepare('SELECT COUNT(*) AS n FROM users').first<{ n: number }>())!.n;
+
+  it('tells the admin when it had to create the account, and not when one existed', async () => {
+    const db = fakeD1();
+    const a = await createManualGrant(db, 'admin1', paid(), NOW);
+    const b = await createManualGrant(db, 'admin1', paid({ reference: 'ZZZ111222' }), NOW + 1);
+    if (!a.ok || !b.ok) throw new Error('expected ok');
+    expect(a.accountCreated).toBe(true);
+    expect(b.accountCreated).toBe(false);
+  });
+
+  it('a repeated transaction id with a mistyped phone creates no extra account', async () => {
+    const db = fakeD1();
+    await createManualGrant(db, 'admin1', paid(), NOW);
+    const before = await userCount(db);
+    const again = await createManualGrant(db, 'admin1', paid({ phone: '01888888888' }), NOW + 1);
+    expect(again.ok).toBe(false);
+    expect(await userCount(db)).toBe(before);
+  });
+
+  it('the same request id twice makes one free grant (no transaction id to guard it)', async () => {
+    const db = fakeD1();
+    const free = { kind: 'free', phone: '01712345678', productId: 'pro-30', note: 'gift', requestId: '3f2b8c1e-5a7d-4e9a-b0c4-9d1e2f3a4b5c' };
+    const first = await createManualGrant(db, 'admin1', free, NOW);
+    const second = await createManualGrant(db, 'admin1', free, NOW + 1);
+    expect(first.ok).toBe(true);
+    expect(second).toMatchObject({ ok: false, error: 'duplicate' });
+    expect(await listManualGrants(db)).toHaveLength(1);
+    const pass = await db.prepare('SELECT COUNT(*) AS n FROM pass_grants').first<{ n: number }>();
+    expect(pass!.n).toBe(1);
+  });
+
+  it('ignores a malformed request id instead of trusting it as a row id', async () => {
+    const db = fakeD1();
+    const r = await createManualGrant(db, 'admin1', paid({ requestId: "x'; DROP TABLE users;--" }), NOW);
+    expect(r.ok).toBe(true);
   });
 });
 

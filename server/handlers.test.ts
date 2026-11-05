@@ -4,6 +4,7 @@ import { recordEvent } from './analytics';
 import { sources } from './stats';
 import { createSession, SESSION_COOKIE, userForPhone } from './auth';
 import { handleCheckout, handleVerify } from './handlers';
+import { createManualGrant } from './manualAccess';
 import type { Env } from './paymently';
 import { fakeD1, fakeKV } from './testkit';
 
@@ -234,5 +235,45 @@ describe('purchase event', () => {
     expect(k.downloads.map((d) => d.file)).toEqual(['pack-best-40.zip']);
     expect(err).toHaveBeenCalled();
     err.mockRestore();
+  });
+});
+
+describe('a payment approved by hand and then completed by the gateway', () => {
+  const NOW_MS = Date.now();
+  const done = (tx: string, amount: string) => (s: Record<string, unknown>) => ({ status: 'COMPLETED', amount, metadata: s.metadata, transaction_id: tx });
+  const count = async (env: Env, sql: string) => (await env.DB!.prepare(sql).first<{ n: number }>())!.n;
+
+  it('adds Pro days only once when the gateway transaction id matches the manual approval', async () => {
+    const { env, cookie } = await setup();
+    const manual = await createManualGrant(env.DB!, 'admin1', { kind: 'paid', phone: '01712345678', productId: 'pro-30', amount: 149, reference: 'trx123456', note: 'SMS seen' }, NOW_MS);
+    if (!manual.ok) throw new Error('expected ok');
+    gateway(done('TRX123456', '149.00'));
+    await handleCheckout(post('/api/checkout', { productId: 'pro-30' }, cookie), env);
+    const r = (await (await handleVerify(post('/api/verify', { invoiceId: 'GW1' }), env)).json()) as { status: string };
+    expect(r.status).toBe('paid');
+    expect(await count(env, 'SELECT COUNT(*) AS n FROM pass_grants')).toBe(1);
+    expect(await count(env, 'SELECT COUNT(*) AS n FROM orders')).toBe(1);
+    expect(await count(env, "SELECT COUNT(*) AS n FROM events WHERE name = 'purchase'")).toBe(1);
+  });
+
+  it('records a template sale only once, and still shows the customer their files', async () => {
+    const { env } = await setup();
+    const manual = await createManualGrant(env.DB!, 'admin1', { kind: 'paid', phone: '01712345678', productId: 'cv-review', amount: 199, reference: 'TRX777777', note: 'SMS seen' }, NOW_MS);
+    if (!manual.ok) throw new Error('expected ok');
+    gateway(done('trx777777', '199'));
+    await handleCheckout(post('/api/checkout', { productId: 'cv-review' }), env);
+    const r = (await (await handleVerify(post('/api/verify', { invoiceId: 'GW2' }), env)).json()) as { status: string };
+    expect(r.status).toBe('paid');
+    expect(await count(env, 'SELECT COUNT(*) AS n FROM orders')).toBe(1);
+    expect(await count(env, "SELECT COUNT(*) AS n FROM events WHERE name = 'purchase'")).toBe(1);
+  });
+
+  it('a different transaction id is a different payment and is granted normally', async () => {
+    const { env, cookie } = await setup();
+    await createManualGrant(env.DB!, 'admin1', { kind: 'paid', phone: '01712345678', productId: 'pro-30', amount: 149, reference: 'TRX123456', note: 'SMS seen' }, NOW_MS);
+    gateway(done('TRX999999', '149.00'));
+    await handleCheckout(post('/api/checkout', { productId: 'pro-30' }, cookie), env);
+    await handleVerify(post('/api/verify', { invoiceId: 'GW3' }), env);
+    expect(await count(env, 'SELECT COUNT(*) AS n FROM pass_grants')).toBe(2);
   });
 });

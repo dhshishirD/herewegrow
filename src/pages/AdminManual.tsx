@@ -54,7 +54,9 @@ export function AdminManualPage() {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [done, setDone] = useState<{ grant: Grant; proUntil: number | null; belowPrice: boolean } | null>(null);
+  const [done, setDone] = useState<{ grant: Grant; proUntil: number | null; belowPrice: boolean; accountCreated: boolean } | null>(null);
+  // One id per review, sent with the request: pressing Confirm twice cannot make two grants.
+  const [requestId, setRequestId] = useState(() => crypto.randomUUID());
   const [history, setHistory] = useState<Grant[] | null>(null);
   const [historyError, setHistoryError] = useState<string | null>(null);
 
@@ -97,6 +99,7 @@ export function AdminManualPage() {
 
   const review = (e: FormEvent) => {
     e.preventDefault();
+    setRequestId(crypto.randomUUID());
     setConfirming(true);
     setDone(null);
     setErrors([]);
@@ -116,17 +119,18 @@ export function AdminManualPage() {
           amount: draft.mode === 'paid' ? amountValue : undefined,
           reference: draft.mode === 'paid' ? draft.reference : undefined,
           note: draft.note,
+          requestId,
         }),
       });
-      const d = (await res.json().catch(() => ({}))) as { ok?: boolean; grant?: Grant; proUntil?: number | null; belowPrice?: boolean; errors?: string[]; error?: string };
+      const d = (await res.json().catch(() => ({}))) as { ok?: boolean; grant?: Grant; proUntil?: number | null; belowPrice?: boolean; accountCreated?: boolean; errors?: string[]; error?: string };
       if (d.ok && d.grant) {
-        setDone({ grant: d.grant, proUntil: d.proUntil ?? null, belowPrice: !!d.belowPrice });
+        setDone({ grant: d.grant, proUntil: d.proUntil ?? null, belowPrice: !!d.belowPrice, accountCreated: !!d.accountCreated });
         setConfirming(false);
         setDraft({ ...EMPTY, mode: draft.mode, productId: draft.productId });
         await load();
       } else if (res.status === 409 && d.grant) {
         setConfirming(false);
-        setErrors([`This transaction id was already approved on ${dhakaTime(d.grant.createdAt)} for ${d.grant.phone} (${d.grant.productName}). Invoice ${d.grant.invoiceId}. Nothing was added.`]);
+        setErrors([`This was already approved on ${dhakaTime(d.grant.createdAt)} for ${d.grant.phone} (${d.grant.productName}). Invoice ${d.grant.invoiceId}. Nothing was added.`]);
       } else if (res.status === 401 || res.status === 403) {
         setErrors(['Session expired or not an admin. Sign in again.']);
       } else {
@@ -225,6 +229,11 @@ export function AdminManualPage() {
               <p className="font-semibold text-gold">Done: {done.grant.productName} for {done.grant.phone}</p>
               {done.belowPrice && <p className="mt-1 text-amber-800">Saved at {taka(done.grant.amount)}, below the list price.</p>}
               {done.proUntil && <p className="mt-1">Pro now runs until {dateOnly(done.proUntil)}.</p>}
+              {done.accountCreated && (
+                <p className="mt-1 text-amber-800">
+                  No account existed for this number, so one was created. The customer must log in with an SMS code to this number; a Google sign-in is a different account and will not show this.
+                </p>
+              )}
               <p className="mt-2 text-muted">Invoice number</p>
               <p className="select-all break-all font-mono text-ink">{done.grant.invoiceId}</p>
               <a className="btn btn-primary mt-3 w-full" target="_blank" rel="noreferrer" href={`https://wa.me/88${done.grant.phone}?text=${encodeURIComponent(customerMessage(done.grant, done.proUntil))}`}>

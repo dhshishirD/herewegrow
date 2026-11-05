@@ -9,7 +9,7 @@ import { getSessionUser, type User } from './auth';
 import { trackPurchase } from './analytics';
 import { downloadLinks } from './downloads';
 import { grantPass, recordOrder } from './entitlements';
-import { findManualGrant, isManualInvoice } from './manualAccess';
+import { findManualGrant, isManualInvoice, manualProUntil, manualReferenceTaken } from './manualAccess';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
 import { checkPromo, lookupPromo, normalizeCode, priceWith, recordRedemption, type Promo, type PromoError } from './promo';
 import { activePlan, claimTemplate } from './templatePerks';
@@ -187,12 +187,33 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
   if (!invoiceId) return json({ ok: false, error: 'invoice' }, 400);
 
   // Invoice numbers an admin made by hand (manual approval or free grant) are answered from our own records.
+  // Typed by hand from an SMS, so the case is tidied first: manual-ABC… / free-ABC….
   if (isManualInvoice(invoiceId)) {
-    const g = env.DB ? await findManualGrant(env.DB, invoiceId).catch(() => null) : null;
-    if (!g) return json({ ok: true, status: 'unpaid', invoiceId, productId: null, amount: 0, downloads: [] });
-    const product = findProduct(g.productId);
-    const downloads = product ? await downloadLinks(env, invoiceId, product) : [];
-    return json({ ok: true, status: 'paid', invoiceId, productId: g.productId, amount: g.amount, name: null, method: 'manual', downloads });
+    const dash = invoiceId.indexOf('-') + 1;
+    const manualId = invoiceId.slice(0, dash).toLowerCase() + invoiceId.slice(dash).toUpperCase();
+    if (!env.DB) return json({ ok: false, error: 'db' }, 502);
+    try {
+      const g = await findManualGrant(env.DB, manualId);
+      if (!g) return json({ ok: true, status: 'unpaid', invoiceId, productId: null, amount: 0, downloads: [] });
+      const product = findProduct(g.productId);
+      const downloads = product ? await downloadLinks(env, manualId, product) : [];
+      const proUntil = findPlan(g.productId) ? await manualProUntil(env.DB, manualId) : undefined;
+      return json({
+        ok: true,
+        status: 'paid',
+        invoiceId: manualId,
+        productId: g.productId,
+        amount: g.amount,
+        free: g.kind === 'free',
+        proUntil,
+        name: null,
+        method: 'manual',
+        downloads,
+      });
+    } catch (err) {
+      console.error('manual verify failed', err);
+      return json({ ok: false, error: 'db' }, 502);
+    }
   }
 
   try {
@@ -223,7 +244,10 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
       : 0;
     const paid = status === 'COMPLETED' && !!product && amount >= need;
     const downloads = paid && product ? await downloadLinks(env, invoiceId, product) : [];
-    if (paid && product && env.DB) {
+    // An admin may already have approved this very transaction by hand; the sale is then already recorded and counted.
+    const approvedByHand = paid && !!env.DB && (await manualReferenceTaken(env.DB, data.transaction_id).catch(() => false));
+    if (approvedByHand) console.error('gateway payment already approved by hand: not recording again', { invoiceId, tx: data.transaction_id });
+    if (paid && product && env.DB && !approvedByHand) {
       // Keep a record for support and for linking to an account later. Never blocks the buyer's files.
       const user = await getSessionUser(env, request).catch(() => null);
       const phone = String(meta.phone ?? '') || null;
@@ -285,6 +309,11 @@ async function verifyPlan(
     // Money arrived but something does not match: no Pro time, and the log flags it for a manual check.
     console.error('pro verify mismatch: no grant', { invoiceId, plan: plan.id, amount, need, hasUser: !!userId, hasDb: !!env.DB });
     return json({ ...base, status: 'unpaid', error: 'mismatch' });
+  }
+  if (await manualReferenceTaken(env.DB, data.transaction_id).catch(() => false)) {
+    // Approved by hand already: the days are on the account, so the gateway completing later must not add them again.
+    console.error('gateway payment already approved by hand: no second grant', { invoiceId, tx: data.transaction_id });
+    return json({ ...base, status: 'paid' });
   }
   try {
     const phone = String(meta.phone ?? '') || null;

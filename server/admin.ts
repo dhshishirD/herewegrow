@@ -5,7 +5,7 @@ import { publishRole, unpublishRole } from './careers';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
 import { MAX_PACK_BYTES, saveRolePack, validateRolePack } from './rolePack';
-import { actions, audience, entryPages, liveNow, overview, parseRange, sources, topPages } from './stats';
+import { actions, audience, entryPages, funnel, liveNow, overview, parseRange, revenue, sources, topPages } from './stats';
 
 /** The signed-in admin, or the 401/403/503 response to send back. Check with `instanceof Response`. */
 export async function requireAdmin(env: AuthEnv, request: Request): Promise<User | Response> {
@@ -33,10 +33,11 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
   if (admin instanceof Response) return admin;
   const db = env.DB!;
 
-  const stats = /^\/api\/admin\/stats\/(live|overview|pages|sources|audience|actions)$/.exec(pathname);
+  const stats = /^\/api\/admin\/stats\/(live|overview|pages|sources|audience|actions|funnel|revenue)$/.exec(pathname);
   if (stats) {
     if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
     if (stats[1] === 'live') return json({ ok: true, ...(await liveNow(db)) });
+    if (stats[1] === 'revenue') return json({ ok: true, ...(await revenue(db)) });
     const r = parseRange(new URL(request.url).searchParams);
     if (!r) return json({ error: 'range' }, 400);
     switch (stats[1]) {
@@ -44,6 +45,7 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
       case 'pages': return json({ ok: true, topPages: await topPages(db, r), entryPages: await entryPages(db, r) });
       case 'sources': return json({ ok: true, sources: await sources(db, r) });
       case 'audience': return json({ ok: true, ...(await audience(db, r)) });
+      case 'funnel': return json({ ok: true, ...(await funnel(db, r)) });
       default: return json({ ok: true, actions: await actions(db, r) });
     }
   }

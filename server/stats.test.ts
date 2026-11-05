@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { recordEvent, recordServerEvent, type TrackInput } from './analytics';
-import { actions, audience, entryPages, liveNow, overview, parseRange, sources, topPages } from './stats';
+import { actions, audience, entryPages, funnel, liveNow, overview, parseRange, revenue, sources, topPages } from './stats';
 import { fakeD1 } from './testkit';
 
 // 2026-11-04 12:00 Dhaka = 06:00 UTC.
@@ -101,9 +101,9 @@ describe('sources', () => {
     await recordEvent(db, input({ vid: 'v2', sid: 's2' }), ctx(D1));
     await recordEvent(db, input({ vid: 'v3', sid: 's3', ref: 'https://www.google.com/search?q=cv' }), ctx(D1));
     const s = await sources(db, { from: '2026-11-04', to: '2026-11-04' });
-    expect(s).toContainEqual({ source: 'facebook', medium: 'cpc', campaign: 'eid', visitors: 1 });
-    expect(s).toContainEqual({ source: 'direct', medium: '', campaign: '', visitors: 1 });
-    expect(s).toContainEqual({ source: 'www.google.com', medium: '', campaign: '', visitors: 1 });
+    expect(s).toContainEqual({ source: 'facebook', medium: 'cpc', campaign: 'eid', visitors: 1, paid: 0 });
+    expect(s).toContainEqual({ source: 'direct', medium: '', campaign: '', visitors: 1, paid: 0 });
+    expect(s).toContainEqual({ source: 'www.google.com', medium: '', campaign: '', visitors: 1, paid: 0 });
   });
 
   it('attributes a whole session to its first pageview, so later hits without utm are not counted as direct', async () => {
@@ -111,7 +111,7 @@ describe('sources', () => {
     await recordEvent(db, input({ vid: 'v1', sid: 's1', path: '/', utmSource: 'facebook' }), ctx(D1));
     await recordEvent(db, input({ vid: 'v1', sid: 's1', path: '/pro' }), ctx(D1 + MIN));
     const s = await sources(db, { from: '2026-11-04', to: '2026-11-04' });
-    expect(s).toEqual([{ source: 'facebook', medium: '', campaign: '', visitors: 1 }]);
+    expect(s).toEqual([{ source: 'facebook', medium: '', campaign: '', visitors: 1, paid: 0 }]);
   });
 });
 
@@ -140,5 +140,72 @@ describe('actions', () => {
       { name: 'cta_click', n: 3, visitors: 2 },
       { name: 'purchase', n: 1, visitors: 0 },
     ]);
+  });
+});
+
+describe('funnel', () => {
+  it('counts each visitor once per step and takes viewed/started from any of their event names', async () => {
+    const db = fakeD1();
+    const ev = (vid: string, name: string, t: number) => recordEvent(db, input({ vid, sid: `s-${vid}`, type: 'event', name, path: '/x' }), ctx(D1 + t));
+    for (const v of ['a', 'b', 'c']) await recordEvent(db, input({ vid: v, sid: `s-${v}` }), ctx(D1));
+    await recordEvent(db, input({ vid: 'a', sid: 's-a2' }), ctx(D1 + MIN));
+    await ev('a', 'view_pro', 1); await ev('a', 'view_template', 2); await ev('a', 'view_template', 3);
+    await ev('b', 'view_service', 1);
+    await ev('a', 'checkout_click', 4); await ev('a', 'order_start', 5);
+    await ev('b', 'order_start', 4);
+    await recordServerEvent(db, { name: 'purchase', vid: 'a', userId: null, dedupeKey: 'purchase:1', ts: D1 + 6 * MIN });
+    await recordServerEvent(db, { name: 'purchase', vid: 'a', userId: null, dedupeKey: 'purchase:2', ts: D1 + 7 * MIN });
+    // outside the range
+    await recordServerEvent(db, { name: 'purchase', vid: 'c', userId: null, dedupeKey: 'purchase:3', ts: D2 });
+    expect(await funnel(db, { from: '2026-11-04', to: '2026-11-04' })).toEqual({
+      steps: [
+        { key: 'visit', visitors: 3 },
+        { key: 'viewed', visitors: 2 },
+        { key: 'order_started', visitors: 2 },
+        { key: 'paid', visitors: 1 },
+      ],
+    });
+  });
+
+  it('is zeros for an empty range', async () => {
+    const f = await funnel(fakeD1(), { from: '2026-11-04', to: '2026-11-04' });
+    expect(f.steps.map((s) => s.visitors)).toEqual([0, 0, 0, 0]);
+  });
+});
+
+describe('sources paid', () => {
+  it('counts purchases whose meta matches the row, with COALESCE-style normalisation', async () => {
+    const db = fakeD1();
+    await recordEvent(db, input({ vid: 'v1', sid: 's1', utmSource: 'facebook', utmMedium: 'cpc', utmCampaign: 'eid' }), ctx(D1));
+    await recordEvent(db, input({ vid: 'v2', sid: 's2' }), ctx(D1));
+    const buy = (k: string, meta: Record<string, unknown>, ts = D1) => recordServerEvent(db, { name: 'purchase', vid: 'v1', userId: null, dedupeKey: k, meta, ts });
+    await buy('1', { amount: 199, product: 'x', source: 'facebook', medium: 'cpc', campaign: 'eid' });
+    await buy('2', { amount: 199, product: 'x', source: 'facebook', medium: 'cpc', campaign: 'eid' });
+    await buy('3', { amount: 199, product: 'x', source: 'direct', medium: '', campaign: '' });
+    await buy('4', { amount: 199, product: 'x', source: 'facebook', medium: 'cpc', campaign: 'eid' }, D2); // out of range
+    await buy('5', { amount: 99, product: 'x', source: 'newsletter', medium: '', campaign: '' });
+    const s = await sources(db, { from: '2026-11-04', to: '2026-11-04' });
+    expect(s).toContainEqual({ source: 'newsletter', medium: '', campaign: '', visitors: 0, paid: 1 });
+    expect(s).toContainEqual({ source: 'facebook', medium: 'cpc', campaign: 'eid', visitors: 1, paid: 2 });
+    expect(s).toContainEqual({ source: 'direct', medium: '', campaign: '', visitors: 1, paid: 1 });
+  });
+});
+
+describe('revenue', () => {
+  it('sums only paid orders for the current Dhaka day and the 7-day window, and counts pro grants', async () => {
+    const db = fakeD1();
+    const now = Date.UTC(2026, 10, 5, 6); // 2026-11-05 12:00 Dhaka
+    const order = (id: string, amount: number, status: string, paidAt: number | null) =>
+      db.prepare('INSERT INTO orders (id, product_id, amount_bdt, status, gateway_ref, created_at, paid_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(id, 'p', amount, status, id, paidAt ?? 0, paidAt).run();
+    await order('today1', 100, 'paid', now - MIN);
+    await order('today2', 50, 'paid', Date.UTC(2026, 10, 4, 18, 30)); // 00:30 Dhaka on the 5th (UTC is still the 4th)
+    await order('yday', 200, 'paid', Date.UTC(2026, 10, 4, 17, 30)); // 23:30 Dhaka on the 4th
+    await order('d6', 20, 'paid', Date.UTC(2026, 10, 5, 6) - 6 * 86_400_000);
+    await order('d7', 1000, 'paid', Date.UTC(2026, 10, 5, 6) - 7 * 86_400_000); // outside the week
+    await order('pending', 999, 'pending', now - MIN);
+    await db.prepare("INSERT INTO users (id, created_at) VALUES ('u1', 0)").run();
+    await db.prepare("INSERT INTO pass_grants (order_id, user_id, plan_id, days, granted_at) VALUES ('g1','u1','pro-30',30,?)").bind(now - MIN).run();
+    await db.prepare("INSERT INTO pass_grants (order_id, user_id, plan_id, days, granted_at) VALUES ('g2','u1','pro-30',30,?)").bind(now - 9 * 86_400_000).run();
+    expect(await revenue(db, now)).toEqual({ today: 150, week: 370, proActivations: 1, orders: 4 });
   });
 });

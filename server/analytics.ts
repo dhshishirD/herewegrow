@@ -112,3 +112,37 @@ export async function recordServerEvent(
     .run();
   return (r.meta?.changes ?? 0) > 0;
 }
+
+/**
+ * The purchase event for a paid invoice, attributed to the buyer's first touch: the earliest event of that visitor
+ * with a utm_source, else the earliest event's referrer host, else 'direct'. One row per invoice; true if this call wrote it.
+ */
+export async function trackPurchase(
+  db: D1Like,
+  p: { invoiceId: string; productId: string; amount: number; vid: string; userId: string | null },
+): Promise<boolean> {
+  let source = 'direct';
+  let medium = '';
+  let campaign = '';
+  if (p.vid) {
+    const utmRow = await db
+      .prepare('SELECT utm_source, utm_medium, utm_campaign FROM events WHERE vid = ? AND utm_source IS NOT NULL ORDER BY ts LIMIT 1')
+      .bind(p.vid)
+      .first<{ utm_source: string; utm_medium: string | null; utm_campaign: string | null }>();
+    if (utmRow) {
+      source = utmRow.utm_source;
+      medium = utmRow.utm_medium ?? '';
+      campaign = utmRow.utm_campaign ?? '';
+    } else {
+      const first = await db.prepare('SELECT ref_host FROM events WHERE vid = ? ORDER BY ts LIMIT 1').bind(p.vid).first<{ ref_host: string | null }>();
+      if (first?.ref_host) source = first.ref_host;
+    }
+  }
+  return recordServerEvent(db, {
+    name: 'purchase',
+    vid: p.vid || null,
+    userId: p.userId,
+    meta: { amount: p.amount, product: p.productId, source, medium, campaign },
+    dedupeKey: `purchase:${p.invoiceId}`,
+  });
+}

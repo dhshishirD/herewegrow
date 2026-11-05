@@ -16,10 +16,19 @@ const PRESETS: { id: Preset; label: string }[] = [
 
 interface Overview { visitors: number; sessions: number; pageviews: number; bounceRate: number; pagesPerSession: number; daily: { day: string; visitors: number; pageviews: number }[] }
 interface Pages { topPages: { path: string; views: number; visitors: number }[]; entryPages: { path: string; sessions: number }[] }
-interface Sources { sources: { source: string; medium: string; campaign: string; visitors: number }[] }
+interface Sources { sources: { source: string; medium: string; campaign: string; visitors: number; paid: number }[] }
+interface Funnel { steps: { key: 'visit' | 'viewed' | 'order_started' | 'paid'; visitors: number }[] }
+interface Revenue { today: number; week: number; proActivations: number; orders: number }
 interface Audience { devices: { device: string; visitors: number }[]; countries: { country: string; visitors: number }[]; newVsReturning: { new: number; returning: number } }
 interface Actions { actions: { name: string; n: number; visitors: number }[] }
 interface Live { count: number; visitors: { page: string; agoSec: number }[] }
+
+const STEP_LABEL: Record<Funnel['steps'][number]['key'], string> = {
+  visit: 'Visited',
+  viewed: 'Viewed a service, template or Pro',
+  order_started: 'Started an order',
+  paid: 'Paid',
+};
 
 type Got<T> = { ok: true; data: T } | { ok: false; error: string };
 
@@ -112,6 +121,31 @@ function Table({ title, head, rows }: { title: string; head: string[]; rows: Rea
   );
 }
 
+function FunnelBars({ steps }: { steps: Funnel['steps'] }) {
+  const max = Math.max(...steps.map((x) => x.visitors), 1);
+  return (
+    <ul className="mt-3 space-y-3">
+      {steps.map((st, i) => {
+        const prev = i ? steps[i - 1].visitors : 0;
+        const drop = i && prev > 0 ? Math.round((1 - st.visitors / prev) * 100) : null;
+        return (
+          <li key={st.key}>
+            <div className="flex justify-between text-sm">
+              <span>{STEP_LABEL[st.key]}</span>
+              <span>{st.visitors}{drop !== null && <span className="text-muted"> · {drop}% drop-off</span>}</span>
+            </div>
+            <div className="mt-1 h-3 rounded bg-line">
+              <div className="h-3 rounded bg-leaf" style={{ width: `${(st.visitors / max) * 100}%` }} />
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+const taka = (n: number) => `৳${n.toLocaleString('en-US')}`;
+
 const Kpi = ({ label, value }: { label: string; value: string }) => (
   <div className="rounded-2xl border border-line bg-white p-4">
     <div className="text-sm text-muted">{label}</div>
@@ -125,7 +159,7 @@ export function AdminDashboardPage() {
   const [custom, setCustom] = useState({ from: '', to: '' });
   const [live, setLive] = useState<Live | null>(null);
   const [liveError, setLiveError] = useState<string | null>(null);
-  const [data, setData] = useState<{ overview: Overview; pages: Pages; sources: Sources; audience: Audience; actions: Actions } | null>(null);
+  const [data, setData] = useState<{ overview: Overview; pages: Pages; sources: Sources; audience: Audience; actions: Actions; funnel: Funnel; revenue: Revenue } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const isAdmin = !!user?.isAdmin;
 
@@ -163,18 +197,20 @@ export function AdminDashboardPage() {
     setData(null);
     setError(null);
     void (async () => {
-      const [overview, pages, sources, audience, actions] = await Promise.all([
+      const [overview, pages, sources, audience, actions, funnel, revenue] = await Promise.all([
         get<Overview>(`/api/admin/stats/overview?${query}`),
         get<Pages>(`/api/admin/stats/pages?${query}`),
         get<Sources>(`/api/admin/stats/sources?${query}`),
         get<Audience>(`/api/admin/stats/audience?${query}`),
         get<Actions>(`/api/admin/stats/actions?${query}`),
+        get<Funnel>(`/api/admin/stats/funnel?${query}`),
+        get<Revenue>('/api/admin/stats/revenue'),
       ]);
       if (cancelled) return;
-      if (overview.ok && pages.ok && sources.ok && audience.ok && actions.ok) {
-        setData({ overview: overview.data, pages: pages.data, sources: sources.data, audience: audience.data, actions: actions.data });
+      if (overview.ok && pages.ok && sources.ok && audience.ok && actions.ok && funnel.ok && revenue.ok) {
+        setData({ overview: overview.data, pages: pages.data, sources: sources.data, audience: audience.data, actions: actions.data, funnel: funnel.data, revenue: revenue.data });
       } else {
-        const bad = [overview, pages, sources, audience, actions].find((r) => !r.ok);
+        const bad = [overview, pages, sources, audience, actions, funnel, revenue].find((r) => !r.ok);
         setError(fail(bad && !bad.ok ? bad.error : 'unknown'));
       }
     })();
@@ -247,6 +283,18 @@ export function AdminDashboardPage() {
             <Kpi label="Pages / session" value={o.pagesPerSession.toFixed(1)} />
           </div>
 
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Kpi label="Revenue today" value={taka(data.revenue.today)} />
+            <Kpi label="Revenue, last 7 days" value={taka(data.revenue.week)} />
+            <Kpi label="Orders, last 7 days" value={String(data.revenue.orders)} />
+            <Kpi label="Pro activations, last 7 days" value={String(data.revenue.proActivations)} />
+          </div>
+
+          <section className="mt-6 rounded-2xl border border-line bg-white p-4">
+            <h2 className="text-lg font-semibold">Funnel</h2>
+            <FunnelBars steps={data.funnel.steps} />
+          </section>
+
           <section className="mt-6 rounded-2xl border border-line bg-white p-4">
             <h2 className="text-lg font-semibold">Page views per day</h2>
             <Bars data={o.daily} />
@@ -255,7 +303,7 @@ export function AdminDashboardPage() {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Table title="Top pages" head={['Page', 'Views', 'Visitors']} rows={data.pages.topPages.map((p) => [p.path, p.views, p.visitors])} />
             <Table title="Entry pages" head={['Page', 'Sessions']} rows={data.pages.entryPages.map((p) => [p.path, p.sessions])} />
-            <Table title="Sources" head={['Source', 'Medium', 'Campaign', 'Visitors']} rows={data.sources.sources.map((s) => [s.source, s.medium || '-', s.campaign || '-', s.visitors])} />
+            <Table title="Sources" head={['Source', 'Medium', 'Campaign', 'Visitors', 'Paid']} rows={data.sources.sources.map((s) => [s.source, s.medium || '-', s.campaign || '-', s.visitors, s.paid])} />
             <Table title="Actions" head={['Action', 'Count', 'Visitors']} rows={data.actions.actions.map((a) => [a.name, a.n, a.visitors])} />
             <Table title="Devices" head={['Device', 'Visitors']} rows={data.audience.devices.map((d) => [d.device, d.visitors])} />
             <Table title="Countries" head={['Country', 'Visitors']} rows={data.audience.countries.map((c) => [c.country, c.visitors])} />

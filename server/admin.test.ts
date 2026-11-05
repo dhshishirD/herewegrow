@@ -247,7 +247,7 @@ describe('User.isAdmin', () => {
 });
 
 describe('GET /api/admin/stats/*', () => {
-  const paths = ['live', 'overview', 'pages', 'sources', 'audience', 'actions'].map((n) => `/api/admin/stats/${n}?preset=7d`);
+  const paths = ['live', 'overview', 'pages', 'sources', 'audience', 'actions', 'funnel', 'revenue'].map((n) => `/api/admin/stats/${n}?preset=7d`);
 
   it('is 401 anonymous and 403 for a non-admin', async () => {
     const { call, cookie, member } = await setup();
@@ -275,6 +275,8 @@ describe('GET /api/admin/stats/*', () => {
     });
     expect(await (await call('/api/admin/stats/sources?preset=7d', { cookie: c })).json()).toEqual({ ok: true, sources: [] });
     expect(await (await call('/api/admin/stats/live', { cookie: c })).json()).toEqual({ ok: true, count: 0, visitors: [] });
+    expect(await (await call('/api/admin/stats/revenue', { cookie: c })).json()).toEqual({ ok: true, today: 0, week: 0, proActivations: 0, orders: 0 });
+    expect(((await (await call('/api/admin/stats/funnel?preset=7d', { cookie: c })).json()) as { steps: unknown[] }).steps).toHaveLength(4);
   });
 
   it('rejects a bad range with 400 { error: "range" }', async () => {

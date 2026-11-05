@@ -108,17 +108,79 @@ export const entryPages = (db: D1Like, r: Range) =>
 export const SESSION_FIRST_SQL = `SELECT sid, vid, utm_source, utm_medium, utm_campaign, ref_host, MIN(ts) AS ts
   FROM events WHERE type = 'pageview' AND sid != '' AND day BETWEEN ? AND ? GROUP BY sid`;
 
-/** Visitors per source, attributed per session: utm_source, else the referrer host, else direct. */
+/**
+ * Visitors per source, attributed per session: utm_source, else the referrer host, else direct.
+ * `paid` counts purchase events in the range whose first-touch source/medium/campaign (stored in meta) match the row.
+ * A source with purchases but no visitors in the range still gets a row (visitors 0).
+ */
 export const sources = (db: D1Like, r: Range) =>
-  rows<{ source: string; medium: string; campaign: string; visitors: number }>(
+  rows<{ source: string; medium: string; campaign: string; visitors: number; paid: number }>(
     db,
-    `WITH session_first AS (${SESSION_FIRST_SQL})
-     SELECT COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_medium, '') AS medium, COALESCE(utm_campaign, '') AS campaign,
-            COUNT(DISTINCT vid) AS visitors
-     FROM session_first GROUP BY source, medium, campaign ORDER BY visitors DESC, source LIMIT 30`,
+    `WITH session_first AS (${SESSION_FIRST_SQL}),
+     vis AS (
+       SELECT COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_medium, '') AS medium, COALESCE(utm_campaign, '') AS campaign,
+              COUNT(DISTINCT vid) AS visitors
+       FROM session_first GROUP BY source, medium, campaign),
+     buys AS (
+       SELECT COALESCE(json_extract(meta, '$.source'), 'direct') AS source, COALESCE(json_extract(meta, '$.medium'), '') AS medium,
+              COALESCE(json_extract(meta, '$.campaign'), '') AS campaign, COUNT(*) AS paid
+       FROM events WHERE name = 'purchase' AND day BETWEEN ? AND ? GROUP BY source, medium, campaign)
+     SELECT * FROM (
+       SELECT vis.source, vis.medium, vis.campaign, vis.visitors, COALESCE(buys.paid, 0) AS paid
+       FROM vis LEFT JOIN buys ON buys.source = vis.source AND buys.medium = vis.medium AND buys.campaign = vis.campaign
+       UNION ALL
+       SELECT b.source, b.medium, b.campaign, 0, b.paid FROM buys b
+       WHERE NOT EXISTS (SELECT 1 FROM vis WHERE vis.source = b.source AND vis.medium = b.medium AND vis.campaign = b.campaign))
+     ORDER BY visitors DESC, paid DESC, source LIMIT 30`,
+    r.from,
+    r.to,
     r.from,
     r.to,
   );
+
+const FUNNEL_VIEWED = ['view_service', 'view_template', 'view_pro'];
+const FUNNEL_STARTED = ['order_start', 'checkout_click'];
+
+/** Distinct visitors reaching each step in the range: any pageview, a view_* event, an order start/checkout click, a purchase. */
+export async function funnel(db: D1Like, r: Range) {
+  const count = async (where: string, ...names: string[]) =>
+    (
+      await db
+        .prepare(`SELECT COUNT(DISTINCT vid) AS n FROM events WHERE vid IS NOT NULL AND day BETWEEN ? AND ? AND ${where}`)
+        .bind(r.from, r.to, ...names)
+        .first<{ n: number }>()
+    )?.n ?? 0;
+  const marks = (xs: string[]) => xs.map(() => '?').join(', ');
+  return {
+    steps: [
+      { key: 'visit' as const, visitors: await count("type = 'pageview'") },
+      { key: 'viewed' as const, visitors: await count(`type = 'event' AND name IN (${marks(FUNNEL_VIEWED)})`, ...FUNNEL_VIEWED) },
+      { key: 'order_started' as const, visitors: await count(`type = 'event' AND name IN (${marks(FUNNEL_STARTED)})`, ...FUNNEL_STARTED) },
+      { key: 'paid' as const, visitors: await count("type = 'event' AND name = 'purchase'") },
+    ],
+  };
+}
+
+const DHAKA_OFFSET_MS = 6 * 3_600_000;
+
+/** Paid revenue (BDT) for today and the last 7 Dhaka days, plus Pro activations and paid orders in that week. */
+export async function revenue(db: D1Like, now: number = Date.now()) {
+  const todayStart = Date.parse(`${dhakaDay(now)}T00:00:00Z`) - DHAKA_OFFSET_MS;
+  const weekStart = todayStart - 6 * DAY_MS;
+  const end = todayStart + DAY_MS;
+  const money = await db
+    .prepare(
+      `SELECT COALESCE(SUM(CASE WHEN paid_at >= ? THEN amount_bdt END), 0) AS today, COALESCE(SUM(amount_bdt), 0) AS week, COUNT(*) AS orders
+       FROM orders WHERE status = 'paid' AND paid_at >= ? AND paid_at < ?`,
+    )
+    .bind(todayStart, weekStart, end)
+    .first<{ today: number; week: number; orders: number }>();
+  const grants = await db
+    .prepare('SELECT COUNT(*) AS n FROM pass_grants WHERE granted_at >= ? AND granted_at < ?')
+    .bind(weekStart, end)
+    .first<{ n: number }>();
+  return { today: money?.today ?? 0, week: money?.week ?? 0, proActivations: grants?.n ?? 0, orders: money?.orders ?? 0 };
+}
 
 export async function audience(db: D1Like, r: Range) {
   const devices = await rows<{ device: string; visitors: number }>(

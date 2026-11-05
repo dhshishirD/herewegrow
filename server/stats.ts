@@ -124,7 +124,7 @@ export const sources = (db: D1Like, r: Range) =>
      buys AS (
        SELECT COALESCE(json_extract(meta, '$.source'), 'direct') AS source, COALESCE(json_extract(meta, '$.medium'), '') AS medium,
               COALESCE(json_extract(meta, '$.campaign'), '') AS campaign, COUNT(*) AS paid
-       FROM events WHERE name = 'purchase' AND day BETWEEN ? AND ? GROUP BY source, medium, campaign)
+       FROM events WHERE name = 'purchase' AND json_valid(meta) AND day BETWEEN ? AND ? GROUP BY source, medium, campaign)
      SELECT * FROM (
        SELECT vis.source, vis.medium, vis.campaign, vis.visitors, COALESCE(buys.paid, 0) AS paid
        FROM vis LEFT JOIN buys ON buys.source = vis.source AND buys.medium = vis.medium AND buys.campaign = vis.campaign

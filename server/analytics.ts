@@ -105,7 +105,9 @@ export async function recordServerEvent(
   e: { name: string; vid: string | null; userId: string | null; meta?: Record<string, unknown>; dedupeKey: string; ts?: number },
 ): Promise<boolean> {
   const ts = e.ts ?? Date.now();
-  const meta = e.meta ? JSON.stringify(e.meta).slice(0, 300) : null;
+  // Never cut JSON mid-string: a truncated document is invalid and breaks json_extract. Too long means no meta.
+  const json = e.meta ? JSON.stringify(e.meta) : null;
+  const meta = json && json.length <= 300 ? json : null;
   const r = await db
     .prepare(`${INSERT} ON CONFLICT(dedupe_key) DO NOTHING`)
     .bind(ts, dhakaDay(ts), e.vid, '', 'event', e.name, '', null, null, null, null, null, null, e.userId, meta, e.dedupeKey)
@@ -121,6 +123,7 @@ export async function trackPurchase(
   db: D1Like,
   p: { invoiceId: string; productId: string; amount: number; vid: string; userId: string | null },
 ): Promise<boolean> {
+  const cap = (v: string) => v.slice(0, 40);
   let source = 'direct';
   let medium = '';
   let campaign = '';
@@ -130,12 +133,12 @@ export async function trackPurchase(
       .bind(p.vid)
       .first<{ utm_source: string; utm_medium: string | null; utm_campaign: string | null }>();
     if (utmRow) {
-      source = utmRow.utm_source;
-      medium = utmRow.utm_medium ?? '';
-      campaign = utmRow.utm_campaign ?? '';
+      source = cap(utmRow.utm_source);
+      medium = cap(utmRow.utm_medium ?? '');
+      campaign = cap(utmRow.utm_campaign ?? '');
     } else {
       const first = await db.prepare('SELECT ref_host FROM events WHERE vid = ? ORDER BY ts LIMIT 1').bind(p.vid).first<{ ref_host: string | null }>();
-      if (first?.ref_host) source = first.ref_host;
+      if (first?.ref_host) source = cap(first.ref_host);
     }
   }
   return recordServerEvent(db, {

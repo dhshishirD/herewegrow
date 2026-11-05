@@ -191,6 +191,15 @@ describe('sources paid', () => {
   });
 });
 
+describe('sources with a malformed purchase meta', () => {
+  it('ignores the bad row instead of throwing', async () => {
+    const db = fakeD1();
+    await recordEvent(db, input({ vid: 'v1', sid: 's1' }), ctx(D1));
+    await db.prepare("INSERT INTO events (ts, day, type, name, dedupe_key, meta) VALUES (?, '2026-11-04', 'event', 'purchase', 'purchase:bad', '{\"source\":\"abc')").bind(D1).run();
+    expect(await sources(db, { from: '2026-11-04', to: '2026-11-04' })).toEqual([{ source: 'direct', medium: '', campaign: '', visitors: 1, paid: 0 }]);
+  });
+});
+
 describe('revenue', () => {
   it('sums only paid orders for the current Dhaka day and the 7-day window, and counts pro grants', async () => {
     const db = fakeD1();

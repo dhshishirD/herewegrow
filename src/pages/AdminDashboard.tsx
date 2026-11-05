@@ -127,7 +127,7 @@ function FunnelBars({ steps }: { steps: Funnel['steps'] }) {
     <ul className="mt-3 space-y-3">
       {steps.map((st, i) => {
         const prev = i ? steps[i - 1].visitors : 0;
-        const drop = i && prev > 0 ? Math.round((1 - st.visitors / prev) * 100) : null;
+        const drop = i && prev > 0 ? Math.max(0, Math.round((1 - st.visitors / prev) * 100)) : null;
         return (
           <li key={st.key}>
             <div className="flex justify-between text-sm">
@@ -286,7 +286,7 @@ export function AdminDashboardPage() {
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Kpi label="Revenue today" value={taka(data.revenue.today)} />
             <Kpi label="Revenue, last 7 days" value={taka(data.revenue.week)} />
-            <Kpi label="Orders, last 7 days" value={String(data.revenue.orders)} />
+            <Kpi label="Paid orders (incl. Pro), 7 days" value={String(data.revenue.orders)} />
             <Kpi label="Pro activations, last 7 days" value={String(data.revenue.proActivations)} />
           </div>
 

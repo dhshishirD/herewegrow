@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DAY_MS } from '../shared/plans';
 import { recordEvent } from './analytics';
+import { sources } from './stats';
 import { createSession, SESSION_COOKIE, userForPhone } from './auth';
 import { handleCheckout, handleVerify } from './handlers';
 import type { Env } from './paymently';
@@ -139,6 +140,21 @@ describe('purchase event', () => {
     expect(metas['purchase:INV3']).toMatchObject({ source: 'direct', medium: '', campaign: '' });
   });
 
+  it('caps a very long referrer host so the purchase meta stays valid JSON and sources() still works', async () => {
+    const { env } = await setup();
+    await seed(env, 'vL', null, 1000, `${'a'.repeat(250)}.com`);
+    gateway(paid('199'));
+    await handleCheckout(post('/api/checkout', { productId: 'cv-review', vid: 'vL' }), env);
+    await handleVerify(post('/api/verify', { invoiceId: 'INVL' }), env);
+    const rows = (await purchases(env)).results!;
+    expect(rows).toHaveLength(1);
+    const meta = JSON.parse(rows[0].meta) as { source: string; amount: number };
+    expect(meta.source).toBe('a'.repeat(40));
+    expect(meta.amount).toBe(199);
+    const s = await sources(env.DB!, { from: '1970-01-01', to: '2100-01-01' });
+    expect(s.some((r) => r.source === 'a'.repeat(40) && r.paid === 1)).toBe(true);
+  });
+
   it('records one purchase for a Pro pass, with the user id, once', async () => {
     const { env, user, cookie } = await setup();
     await seed(env, 'vP', 'newsletter', 1000);
@@ -180,6 +196,13 @@ describe('purchase event', () => {
     const p = (await (await handleVerify(post('/api/verify', { invoiceId: 'INV8' }), env)).json()) as { status: string; proUntil: number };
     expect(p.status).toBe('paid');
     expect(p.proUntil).toBeGreaterThan(Date.now());
+    // a template whose files are in the bucket: the links survive the tracking failure
+    env.FILES = { head: async () => ({ size: 7 }), get: async () => null };
+    gateway(paid('249'));
+    await handleCheckout(post('/api/checkout', { productId: 'pack-best-40', vid: 'v1' }), env);
+    const k = (await (await handleVerify(post('/api/verify', { invoiceId: 'INV9' }), env)).json()) as { status: string; downloads: { file: string }[] };
+    expect(k.status).toBe('paid');
+    expect(k.downloads.map((d) => d.file)).toEqual(['pack-best-40.zip']);
     expect(err).toHaveBeenCalled();
     err.mockRestore();
   });

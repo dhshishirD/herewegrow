@@ -27,6 +27,8 @@ CREATE INDEX IF NOT EXISTS events_day ON events (day, type);
 
 CREATE INDEX IF NOT EXISTS events_ts ON events (ts);
 
+CREATE INDEX IF NOT EXISTS events_vid_ts ON events (vid, ts);
+
 CREATE TABLE IF NOT EXISTS daily_rollup (
   day TEXT NOT NULL,
   metric TEXT NOT NULL,

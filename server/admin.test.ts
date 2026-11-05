@@ -20,7 +20,7 @@ const setup = async () => {
     return handleAdmin(
       new Request(`https://herewegrow.pro${path}`, { method: init.method ?? 'GET', headers, body: init.body === undefined ? undefined : JSON.stringify(init.body) }),
       env,
-      path,
+      path.split('?')[0],
     );
   };
   return { db, env, admin, member, cookie, call };
@@ -243,5 +243,34 @@ describe('User.isAdmin', () => {
     const fresh = (await db.prepare('SELECT is_admin FROM users WHERE id = ?').bind(admin.id).first<{ is_admin: number }>())!;
     expect(fresh.is_admin).toBe(1);
     expect(publicUser({ ...member, isAdmin: true }).isAdmin).toBe(true);
+  });
+});
+
+describe('GET /api/admin/stats/*', () => {
+  const paths = ['live', 'overview', 'pages', 'sources', 'audience', 'actions'].map((n) => `/api/admin/stats/${n}?preset=7d`);
+
+  it('is 401 anonymous and 403 for a non-admin', async () => {
+    const { call, cookie, member } = await setup();
+    for (const p of paths) {
+      expect((await call(p)).status).toBe(401);
+      expect((await call(p, { cookie: await cookie(member.id) })).status).toBe(403);
+    }
+  });
+
+  it('is 200 for an admin', async () => {
+    const { call, cookie, admin } = await setup();
+    const c = await cookie(admin.id);
+    for (const p of paths) {
+      const res = await call(p, { cookie: c });
+      expect(res.status, p).toBe(200);
+      expect(((await res.json()) as { ok: boolean }).ok).toBe(true);
+    }
+  });
+
+  it('rejects a bad range with 400 { error: "range" }', async () => {
+    const { call, cookie, admin } = await setup();
+    const res = await call('/api/admin/stats/overview?from=x&to=y', { cookie: await cookie(admin.id) });
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ error: 'range' });
   });
 });

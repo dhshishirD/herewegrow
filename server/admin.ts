@@ -5,6 +5,7 @@ import { publishRole, unpublishRole } from './careers';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
 import { MAX_PACK_BYTES, saveRolePack, validateRolePack } from './rolePack';
+import { actions, audience, entryPages, liveNow, overview, parseRange, sources, topPages } from './stats';
 
 /** The signed-in admin, or the 401/403/503 response to send back. Check with `instanceof Response`. */
 export async function requireAdmin(env: AuthEnv, request: Request): Promise<User | Response> {
@@ -31,6 +32,21 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
   const admin = await requireAdmin(env, request);
   if (admin instanceof Response) return admin;
   const db = env.DB!;
+
+  const stats = /^\/api\/admin\/stats\/(live|overview|pages|sources|audience|actions)$/.exec(pathname);
+  if (stats) {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    if (stats[1] === 'live') return json({ ok: true, ...(await liveNow(db)) });
+    const r = parseRange(new URL(request.url).searchParams);
+    if (!r) return json({ error: 'range' }, 400);
+    switch (stats[1]) {
+      case 'overview': return json({ ok: true, ...(await overview(db, r)) });
+      case 'pages': return json({ ok: true, topPages: await topPages(db, r), entryPages: await entryPages(db, r) });
+      case 'sources': return json({ ok: true, sources: await sources(db, r) });
+      case 'audience': return json({ ok: true, ...(await audience(db, r)) });
+      default: return json({ ok: true, actions: await actions(db, r) });
+    }
+  }
 
   if (pathname === '/api/admin/roles') {
     if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);

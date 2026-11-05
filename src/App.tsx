@@ -19,6 +19,7 @@ import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { ProPage } from './pages/Pro';
+import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
 import { AdminPromosPage } from './pages/AdminPromos';
 import { capturePromoParam } from './lib/promo';
@@ -51,6 +52,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,
   '/pro': ProPage,
+  '/admin': AdminDashboardPage,
   '/admin/careers': AdminCareersPage,
   '/admin/promos': AdminPromosPage,
   '/linkedin-profile-optimization': LinkedInPage,

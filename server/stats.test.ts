@@ -86,11 +86,17 @@ describe('liveNow', () => {
     expect(live.visitors).toEqual([{ page: '/after', agoSec: 60 }, { page: '/before', agoSec: 180 }]);
   });
 
-  it('reads only today and yesterday (Dhaka), not a stray row with a future ts on an old day', async () => {
+  it('scans only the newest rows by id, so the read cost stays bounded however big the table grows', async () => {
     const db = fakeD1();
     const now = D1 + 10 * MIN;
-    await db.prepare("INSERT INTO events (ts, day, vid, type, path) VALUES (?, '2026-10-01', 'x', 'pageview', '/x')").bind(now - MIN).run();
-    expect((await liveNow(db, now)).count).toBe(0);
+    await recordEvent(db, input({ vid: 'buried', path: '/buried' }), ctx(now - MIN)); // recent, but 3000+ rows back by id
+    await db
+      .prepare("WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 3001) INSERT INTO events (ts, day, vid, type, path) SELECT ?, '2026-10-01', 'old', 'pageview', '/o' FROM n")
+      .bind(now - 60 * MIN)
+      .run();
+    await recordEvent(db, input({ vid: 'fresh', path: '/fresh' }), ctx(now - MIN));
+    const live = await liveNow(db, now);
+    expect(live.visitors).toEqual([{ page: '/fresh', agoSec: 60 }]);
   });
 });
 

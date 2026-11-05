@@ -73,6 +73,25 @@ describe('liveNow', () => {
     expect(live.count).toBe(1);
     expect(live.visitors).toEqual([{ page: '/new', agoSec: 240 }]);
   });
+
+  it('keeps the 5-minute window across Dhaka midnight', async () => {
+    const db = fakeD1();
+    const midnight = Date.UTC(2026, 10, 4, 18); // 00:00 Dhaka on 2026-11-05
+    const now = midnight + 2 * MIN;
+    await recordEvent(db, input({ vid: 'late', path: '/before' }), ctx(midnight - MIN)); // 23:59 on the 4th
+    await recordEvent(db, input({ vid: 'early', path: '/after' }), ctx(midnight + MIN));
+    await recordEvent(db, input({ vid: 'old', path: '/old' }), ctx(midnight - 10 * MIN));
+    const live = await liveNow(db, now);
+    expect(live.count).toBe(2);
+    expect(live.visitors).toEqual([{ page: '/after', agoSec: 60 }, { page: '/before', agoSec: 180 }]);
+  });
+
+  it('reads only today and yesterday (Dhaka), not a stray row with a future ts on an old day', async () => {
+    const db = fakeD1();
+    const now = D1 + 10 * MIN;
+    await db.prepare("INSERT INTO events (ts, day, vid, type, path) VALUES (?, '2026-10-01', 'x', 'pageview', '/x')").bind(now - MIN).run();
+    expect((await liveNow(db, now)).count).toBe(0);
+  });
 });
 
 describe('topPages and entryPages', () => {

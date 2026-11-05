@@ -211,3 +211,23 @@ describe('ipLimiter', () => {
     expect(ipLimiter.size()).toBeLessThanOrEqual(2);
   });
 });
+
+describe('events schema (write cost)', () => {
+  const sql = async (db: ReturnType<typeof fakeD1>, q: string) => (await db.prepare(q).all<{ name: string; sql: string | null }>()).results!;
+  it('has no AUTOINCREMENT, no ts-only index, and a partial unique index on dedupe_key', async () => {
+    const db = fakeD1();
+    const table = (await sql(db, "SELECT name, sql FROM sqlite_master WHERE type = 'table' AND name = 'events'"))[0];
+    expect(table.sql).not.toMatch(/AUTOINCREMENT/i);
+    expect(table.sql).not.toMatch(/UNIQUE/i);
+    const idx = await sql(db, "SELECT name, sql FROM sqlite_master WHERE type = 'index' AND tbl_name = 'events'");
+    expect(idx.map((i) => i.name).sort()).toEqual(['events_day', 'events_dedupe', 'events_vid_ts']);
+    expect(idx.find((i) => i.name === 'events_dedupe')!.sql).toMatch(/UNIQUE INDEX[\s\S]*WHERE dedupe_key IS NOT NULL/i);
+  });
+  it('allows many rows without a dedupe key', async () => {
+    const db = fakeD1();
+    const base = parseTrack(valid)!;
+    await recordEvent(db, base, { ts: 1, country: null, device: 'mobile', userId: null });
+    await recordEvent(db, base, { ts: 2, country: null, device: 'mobile', userId: null });
+    expect((await db.prepare('SELECT COUNT(*) AS n FROM events WHERE dedupe_key IS NULL').first<{ n: number }>())!.n).toBe(2);
+  });
+});

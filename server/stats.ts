@@ -44,11 +44,17 @@ const rows = async <T>(db: D1Like, sql: string, ...binds: unknown[]): Promise<T[
 // never from leftover events, so a day is counted once and there is no gap between crossing the horizon and the cron running.
 const NOT_ROLLED = "day NOT IN (SELECT day FROM daily_rollup WHERE metric = 'pageviews' AND key = '*')";
 
-/** Visitors with a hit in the last 5 minutes, each with the last page they were on. */
+/**
+ * Visitors with a hit in the last 5 minutes, each with the last page they were on. There is no ts-only index (it cost a
+ * write per event), so the scan is limited to today and yesterday (Dhaka) through events_day; yesterday covers a window
+ * that crosses Dhaka midnight.
+ */
 export async function liveNow(db: D1Like, now: number = Date.now()): Promise<{ count: number; visitors: { page: string; agoSec: number }[] }> {
   const r = await rows<{ path: string; ts: number }>(
     db,
-    "SELECT path, MAX(ts) AS ts FROM events WHERE ts >= ? AND vid IS NOT NULL AND path != '' GROUP BY vid ORDER BY ts DESC",
+    "SELECT path, MAX(ts) AS ts FROM events WHERE day IN (?, ?) AND ts >= ? AND vid IS NOT NULL AND path != '' GROUP BY vid ORDER BY ts DESC",
+    dhakaDay(now),
+    dhakaDay(now - LIVE_WINDOW_MS),
     now - LIVE_WINDOW_MS,
   );
   return { count: r.length, visitors: r.map((v) => ({ page: v.path, agoSec: Math.max(0, Math.round((now - v.ts) / 1000)) })) };

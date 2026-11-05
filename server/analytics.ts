@@ -112,7 +112,8 @@ export async function recordServerEvent(
   const json = e.meta ? JSON.stringify(e.meta) : null;
   const meta = json && json.length <= 300 ? json : null;
   const r = await db
-    .prepare(`${INSERT} ON CONFLICT(dedupe_key) DO NOTHING`)
+    // The conflict target names the partial unique index events_dedupe (WHERE dedupe_key IS NOT NULL).
+    .prepare(`${INSERT} ON CONFLICT (dedupe_key) WHERE dedupe_key IS NOT NULL DO NOTHING`)
     .bind(ts, dhakaDay(ts), e.vid, '', 'event', e.name, '', null, null, null, null, null, null, e.userId, meta, e.dedupeKey)
     .run();
   return (r.meta?.changes ?? 0) > 0;

@@ -15,23 +15,24 @@ One admin page (`/admin`) that shows who visits the site, what they view and do,
 
 ## 3. Data model (migration `0005_analytics.sql`)
 ```
-events(id INTEGER PK AUTOINCREMENT, ts INTEGER, day TEXT, vid TEXT, sid TEXT,
+events(id INTEGER PK, ts INTEGER, day TEXT, vid TEXT, sid TEXT,
        type TEXT CHECK(type IN ('pageview','event')), name TEXT, path TEXT,
        ref_host TEXT, utm_source TEXT, utm_medium TEXT, utm_campaign TEXT,
        device TEXT, country TEXT, user_id TEXT NULL, meta TEXT,        -- meta: small JSON, <= 300 chars
-       dedupe_key TEXT UNIQUE NULL)                                      -- server events: one row per key (e.g. purchase:<invoice>)
-INDEX events_day(day, type), events_ts(ts)
+       dedupe_key TEXT NULL)                                             -- server events: one row per key (e.g. purchase:<invoice>)
+INDEX events_day(day, type), events_vid_ts(vid, ts)
+UNIQUE INDEX events_dedupe(dedupe_key) WHERE dedupe_key IS NOT NULL   -- partial: beacon rows (no key) add no index entry
 daily_rollup(day TEXT, metric TEXT, key TEXT, n INTEGER, PRIMARY KEY(day, metric, key))
 contact_messages(id TEXT PK, created_at INTEGER, name TEXT, phone TEXT, email TEXT NULL,
        message TEXT, page TEXT, vid TEXT NULL, utm_source TEXT NULL,
        status TEXT CHECK(status IN ('new','replied','closed')) DEFAULT 'new', note TEXT NULL)
 ```
-Times are Unix ms. Index writes count toward D1 write limits (see Risks).
+Times are Unix ms. Index writes count toward D1 write limits (see Risks), so the table has no AUTOINCREMENT (it writes `sqlite_sequence` on every insert) and no ts-only index; the live view filters `day IN (today, yesterday)` and uses `events_day`.
 
 ## 4. Ingest
 `POST /api/t` (beacon, JSON <= 1 KB, via `navigator.sendBeacon`):
 `{vid, sid, type, name?, path, ref?, utm?, meta?}`.
-Server: origin check; drop bots by User-Agent pattern; validate/trim every field; `country` from `request.cf`; `device` (mobile/desktop/tablet) from User-Agent; `ref_host` = host of referrer only; per-`vid` cap (KV counter, 300 events/day); always answer `204` so the tracker never blocks the page. Failures are logged, never shown.
+Server: origin check; drop bots by User-Agent pattern; validate/trim every field; `country` from `request.cf`; `device` (mobile/desktop/tablet) from User-Agent; `ref_host` = host of referrer only; per-`vid` cap of 300 events per Dhaka day, counted in D1 on `events_vid_ts` (no KV writes on this path: Cloudflare Free allows 1,000 KV writes a day for the whole account and login/checkout need them); a best-effort in-memory limit of 120 events per IP per minute per Worker isolate (IP never stored); always answer `204` so the tracker never blocks the page. Failures are logged, never shown.
 
 ### Events tracked
 `pageview` (every route change) · `view_service`, `view_template`, `view_pro` · `order_start`, `checkout_click` · `cta_whatsapp_click` · `login_success` · `cv_export` · `contact_submit` · `pro_click`.
@@ -77,7 +78,7 @@ Vitest: payload validation and trimming, bot filter, per-vid cap, Dhaka day boun
 6. Retention/rollup in the daily cron + privacy note
 
 ## 12. Risks
-- **D1 write volume.** Each event costs about 3 row writes (row + 2 indexes). The free plan allows 100k writes/day, so roughly 30k events/day; the Workers Paid plan raises this a lot. Mitigations: per-vid cap, bot filter, and no tracking of admin traffic. If volume outgrows this, the ingest module can switch to Analytics Engine without changing the dashboard's API.
+- **D1 write volume.** Each event costs about 3 row writes when inserted (row + `events_day` + `events_vid_ts`; the partial dedupe index only has entries for server events) and about 3 more when it is deleted after 90 days. The free plan allows 100k row writes/day, which is about 16k events/day in theory; leaving room for the site's own writes (orders, grants, accounts, CVs, contact), plan on **roughly 10–12k events/day on D1 Free. This is an estimate**, not a measured figure — watch D1 usage in the Cloudflare dashboard after launch. The Workers Paid plan raises this a lot. Mitigations: per-vid daily cap, per-IP limit, bot filter, no tracking of admin traffic, and a Cloudflare WAF rate-limiting rule on `/api/t` (see Rollout notes). If volume outgrows this, the ingest module can switch to Analytics Engine without changing the dashboard's API.
 - **Numbers will not match GA4** exactly (different visitor definition, ad-blockers hide the beacon for some users; `purchase` is server-side so it is complete).
 
 ## 13. Open items (need your call)
@@ -87,3 +88,7 @@ Vitest: payload validation and trimming, bot filter, per-vid cap, Dhaka day boun
 
 ## 14. Out of scope
 Heatmaps and session replay, A/B testing, email marketing, automatic job matching, chat widget, customer-facing dashboards.
+
+## 15. Rollout notes
+- Apply `0005_analytics.sql` in the D1 Console, one statement at a time, after confirming 0003 and 0004 are applied, and **before** deploying the code. Do not use `wrangler d1 migrations apply` for this database (`d1_migrations` is empty because earlier migrations were applied by hand).
+- Recommended: add a Cloudflare WAF rate-limiting rule for `/api/t` (Security → WAF → Rate limiting rules), e.g. path equals `/api/t`, about 60 requests per 10 seconds per IP, action Block. The in-Worker per-IP limit is per isolate and best-effort only; this rule is the real guard against a flood using up D1 writes.

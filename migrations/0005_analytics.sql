@@ -1,10 +1,13 @@
 -- First-party analytics (events, daily rollups) and the contact inbox.
--- Apply once after 0004: Cloudflare → D1 → herewegrow → Console (one statement at a time),
--- or: npx wrangler d1 migrations apply herewegrow --remote
+-- Apply once after 0004: Cloudflare → D1 → herewegrow → Console, one statement at a time.
+-- Do NOT use `wrangler d1 migrations apply` for this database: earlier migrations were applied by hand, so
+-- d1_migrations is empty and wrangler would try to re-run 0001–0004.
+-- Write cost per event is kept low on purpose: no AUTOINCREMENT (no sqlite_sequence write), no ts-only index, and the
+-- dedupe_key uniqueness is a partial index, so the many rows without a key (every beacon hit) add no entry to it.
 -- Times are Unix milliseconds. `day` is YYYY-MM-DD in Asia/Dhaka (UTC+6).
 
 CREATE TABLE IF NOT EXISTS events (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER PRIMARY KEY,
   ts INTEGER NOT NULL,
   day TEXT NOT NULL,
   vid TEXT,
@@ -20,14 +23,14 @@ CREATE TABLE IF NOT EXISTS events (
   country TEXT,
   user_id TEXT,
   meta TEXT,
-  dedupe_key TEXT UNIQUE
+  dedupe_key TEXT
 );
 
 CREATE INDEX IF NOT EXISTS events_day ON events (day, type);
 
-CREATE INDEX IF NOT EXISTS events_ts ON events (ts);
-
 CREATE INDEX IF NOT EXISTS events_vid_ts ON events (vid, ts);
+
+CREATE UNIQUE INDEX IF NOT EXISTS events_dedupe ON events (dedupe_key) WHERE dedupe_key IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS daily_rollup (
   day TEXT NOT NULL,

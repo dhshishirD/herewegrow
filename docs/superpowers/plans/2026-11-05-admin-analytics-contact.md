@@ -14,7 +14,7 @@
 - Day boundary is Asia/Dhaka (UTC+6, no DST); `day` is `YYYY-MM-DD`; all times Unix ms.
 - Visitor id `vid` = random UUID in localStorage; session `sid` = sessionStorage, rolls after 30 min idle. No cookies, no IPs, no names/phones in `events`.
 - Raw events kept 90 days; then `daily_rollup`. Admin traffic is never tracked.
-- `/api/t` always answers `204` (except bad origin `403`); body <= 1024 bytes; `meta` <= 300 chars; per-`vid` cap 300 events/day via KV key `evcap:<vid>:<day>`.
+- `/api/t` always answers `204` (except bad origin `403`); body <= 1024 bytes; `meta` <= 300 chars; per-`vid` cap 300 events per Dhaka day. (Final review: the original KV key `evcap:<vid>:<day>` was replaced by a D1 count on `events_vid_ts` plus a per-isolate per-IP limit — no KV writes on `/api/t`.)
 - Contact: rate limit 3 per 10 min per IP (KV), honeypot field `website`, Turnstile only when `TURNSTILE_SECRET` is set, message <= 2000 chars.
 - Admin routes use `requireAdmin` and the same-origin check in `server/admin.ts`; DB errors return `{ ok:false, error:'db' }` 500.
 - Follow repo patterns: handlers return `json(...)` from `server/paymently.ts`; D1 typed as `D1Like`; each PR must pass `npm run lint && npm test && npm run build`.
@@ -170,6 +170,7 @@
 - [ ] **Step 7: Commit** `feat(analytics): 90-day rollup, cron, privacy note`.
 
 ## Rollout notes (for the owner, after each merge)
-- After Task 1 merges: apply `migrations/0005_analytics.sql` in the D1 Console one statement at a time (same as 0003/0004) before deploying later PRs; confirm 0003 and 0004 were applied.
+- Before deploying: apply `migrations/0005_analytics.sql` in the D1 Console one statement at a time (same as 0003/0004); confirm 0003 and 0004 were applied first. Do not use `wrangler d1 migrations apply` (`d1_migrations` is empty).
+- Recommended: add a Cloudflare WAF rate-limiting rule on `/api/t` (e.g. about 60 requests per 10 seconds per IP, Block). The in-Worker per-IP limit is best-effort per isolate; the WAF rule protects the D1 write budget (roughly 10–12k events/day on D1 Free, an estimate).
 - Ad links: use `?utm_source=facebook&utm_medium=paid&utm_campaign=<name>`.
 - Optional: set `TURNSTILE_SECRET` to enable the captcha on login codes and the contact form.

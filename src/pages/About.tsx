@@ -6,6 +6,7 @@ import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 
 export function AboutPage() {
   const { t, lang } = useLang();
@@ -52,7 +53,7 @@ export function AboutPage() {
           </ul>
           <div className="mt-12 flex flex-wrap gap-3">
             <Link href="/services" className="btn btn-primary">{t({ en: 'See CV services', bn: 'সিভি সার্ভিস দেখুন' })}</Link>
-            <a href={whatsappLink('Hello, I would like to talk about my CV.')} target="_blank" rel="noreferrer" className="btn btn-quiet bg-white">
+            <a href={whatsappLink('Hello, I would like to talk about my CV.')} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'about' })} className="btn btn-quiet bg-white">
               WhatsApp {num(SUPPORT_WHATSAPP_DISPLAY, lang)}
             </a>
           </div>

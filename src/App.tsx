@@ -3,6 +3,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
 import { AuthProvider } from './lib/auth';
+import { PageTracker } from './components/PageTracker';
 import { LoginModal } from './components/LoginModal';
 import { AccountPage } from './pages/Account';
 import { Footer } from './components/Footer';
@@ -73,6 +74,7 @@ export default function App() {
   return (
     <LangProvider>
       <AuthProvider>
+      <PageTracker />
       <CartProvider>
       <CheckoutProvider>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">

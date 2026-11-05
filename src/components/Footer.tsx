@@ -2,6 +2,7 @@ import { SUPPORT_WHATSAPP_DISPLAY } from '../../shared/catalog';
 import { useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 
 export function Footer() {
   const { t } = useLang();
@@ -31,7 +32,7 @@ export function Footer() {
           <p className="font-display font-semibold text-white">{t({ en: 'Get help', bn: 'সাহায্য' })}</p>
           <ul className="mt-3 space-y-2">
             <li>
-              <a className="hover:text-white underline-offset-4 hover:underline" href={whatsappLink('Hello HereWeGrow')} target="_blank" rel="noreferrer">
+              <a className="hover:text-white underline-offset-4 hover:underline" href={whatsappLink('Hello HereWeGrow')} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'footer' })}>
                 WhatsApp {SUPPORT_WHATSAPP_DISPLAY}
               </a>
             </li>

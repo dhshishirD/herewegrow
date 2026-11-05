@@ -37,6 +37,7 @@ import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type C
 import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
+import { track } from '../lib/track';
 
 type T = (x: { en: string; bn: string }) => string;
 
@@ -420,6 +421,7 @@ export function BuilderPage() {
       a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV.docx`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      track('cv_export', { format: 'docx' });
     } catch (err) {
       console.error(err);
       window.alert(t({ en: 'The Word file could not be made. Try again, or use Download PDF.', bn: 'Word ফাইল তৈরি করা যায়নি। আবার চেষ্টা করুন, অথবা PDF ডাউনলোড করুন।' }));
@@ -468,6 +470,7 @@ export function BuilderPage() {
   };
 
   const printNow = () => {
+    track('cv_export', { format: 'pdf' });
     const prev = document.title;
     document.title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
     window.print();

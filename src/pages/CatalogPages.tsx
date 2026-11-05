@@ -8,6 +8,7 @@ import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
+import { track } from '../lib/track';
 
 export function FaqList({ items }: { items: { q: { en: string; bn: string }; a: { en: string; bn: string } }[] }) {
   const { t } = useLang();
@@ -52,6 +53,7 @@ export function ServicesPage() {
     bn: 'Career Solutions টিম করে দেবে: সিভি, লিংকডইন ও বিডিজবস প্রোফাইল এবং উচ্চশিক্ষার কাগজপত্র। নির্দিষ্ট দাম, সংশোধনসহ।',
   });
   useEffect(() => setPageMeta(title, intro, '/services'), [title, intro]);
+  useEffect(() => track('view_service'), []);
 
   return (
     <>
@@ -67,7 +69,7 @@ export function ServicesPage() {
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Link href="/tools/cv-checker" className="btn btn-primary">{t({ en: 'Check my CV', bn: 'সিভি চেক করুন' })}</Link>
-              <a href={whatsappLink('Hello HereWeGrow, which CV service is right for me?')} target="_blank" rel="noreferrer" className="btn btn-quiet bg-white">
+              <a href={whatsappLink('Hello HereWeGrow, which CV service is right for me?')} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'services' })} className="btn btn-quiet bg-white">
                 WhatsApp {num(SUPPORT_WHATSAPP_DISPLAY, lang)}
               </a>
             </div>

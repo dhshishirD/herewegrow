@@ -8,6 +8,7 @@ import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { checkPromo, PROMO_ERRORS, redeemTrial, savedPromo, type PromoCheck } from '../lib/promo';
 import { setPageMeta } from '../lib/seo';
+import { track, tracker } from '../lib/track';
 
 type B = { en: string; bn: string };
 
@@ -74,6 +75,8 @@ export function ProPage() {
   const [busy, setBusy] = useState<PlanId | null>(null);
   const [error, setError] = useState('');
 
+  useEffect(() => track('view_pro'), []);
+
   const title = t({ en: 'HereWeGrow Pro', bn: 'HereWeGrow প্রো' });
   const intro = t({
     en: 'Everything you need for a job-winning CV, in one pass. Pay once by bKash or Nagad. No auto-renewal.',
@@ -97,6 +100,7 @@ export function ProPage() {
   };
 
   const takeTrial = async () => {
+    track('pro_click', { plan: 'trial' });
     if (!promo?.ok || promo.kind !== 'trial') return;
     if (!user) {
       openLogin();
@@ -117,6 +121,7 @@ export function ProPage() {
   const discount = promo?.ok && promo.kind === 'discount' ? promo : null;
 
   const buy = async (id: PlanId) => {
+    track('pro_click', { plan: id });
     setError('');
     if (!user) {
       setPending(id);
@@ -125,7 +130,7 @@ export function ProPage() {
     }
     setBusy(id);
     try {
-      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, lang, promo: discount?.code }) });
+      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, lang, promo: discount?.code, vid: tracker.vid() }) });
       const d = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string };
       if (d.ok && d.paymentUrl) {
         window.location.href = d.paymentUrl;

@@ -9,6 +9,7 @@ import { useCart } from '../lib/cart';
 import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
+import { track } from '../lib/track';
 import { NotFound } from './Policies';
 
 const thumb = (id: string) => `/templates/${id}/thumb.webp`;
@@ -242,6 +243,9 @@ export function TemplateDetail({ id }: { id: string }) {
   useEffect(() => {
     if (tpl) setPageMeta(title, desc, `/templates/${tpl.id}`);
   }, [tpl, title, desc]);
+  useEffect(() => {
+    if (tpl) track('view_template', { id: tpl.id });
+  }, [tpl]);
 
   if (!tpl) return <NotFound />;
 

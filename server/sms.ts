@@ -16,7 +16,10 @@ export const toInternational = (local: string) => `88${local}`;
 export function bulkSmsBd(env: SmsEnv, fetchFn: typeof fetch = fetch): SmsProvider {
   return {
     async send(to, message) {
-      if (!env.SMS_API_KEY || !env.SMS_SENDER_ID) return false;
+      if (!env.SMS_API_KEY || !env.SMS_SENDER_ID) {
+        console.error('sms not configured', { hasKey: !!env.SMS_API_KEY, hasSender: !!env.SMS_SENDER_ID });
+        return false;
+      }
       try {
         const res = await fetchFn('http://bulksmsbd.net/api/smsapi', {
           method: 'POST',
@@ -28,9 +31,14 @@ export function bulkSmsBd(env: SmsEnv, fetchFn: typeof fetch = fetch): SmsProvid
             message,
           }),
         });
-        const data = (await res.json().catch(() => ({}))) as { response_code?: number };
-        return res.ok && data.response_code === 202;
-      } catch {
+        const data = (await res.json().catch(() => ({}))) as { response_code?: number; error_message?: string };
+        const ok = res.ok && data.response_code === 202;
+        // Provider codes only (never the key or the number), so a failure can be diagnosed from the Worker logs:
+        // 1002 sender id invalid, 1005 internal, 1007 balance, 1032 IP not whitelisted, and so on.
+        if (!ok) console.error('sms send failed', { httpStatus: res.status, code: data.response_code, message: data.error_message });
+        return ok;
+      } catch (e) {
+        console.error('sms send error', e instanceof Error ? e.message : 'unknown');
         return false;
       }
     },

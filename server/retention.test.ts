@@ -50,6 +50,16 @@ describe('rollupOld', () => {
     expect(await rollup(db, dayOf(89))).toEqual([]);
   });
 
+  it('keeps events exactly keepDays old and rolls up the day before', async () => {
+    const db = fakeD1();
+    await recordEvent(db, input({ vid: 'k', sid: 'k1' }), ctx(ago(90)));
+    await recordEvent(db, input({ vid: 'r', sid: 'r1' }), ctx(ago(91)));
+    expect(await rollupOld(db, NOW)).toEqual({ days: 1, deleted: 1 });
+    expect(await count(db, 'SELECT COUNT(*) AS n FROM events WHERE day = ?', dayOf(90))).toBe(1);
+    expect(await rollup(db, dayOf(90))).toEqual([]);
+    expect((await rollup(db, dayOf(91))).length).toBeGreaterThan(0);
+  });
+
   it('is idempotent: a second run does not change totals', async () => {
     const db = fakeD1();
     await seedOld(db, 95);

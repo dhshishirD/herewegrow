@@ -369,7 +369,7 @@ export function AdminDashboardPage() {
             <Kpi label="Bounce" value={o.bounceRate === null ? '—' : `${Math.round(o.bounceRate * 100)}%`} />
             <Kpi label="Pages / session" value={o.pagesPerSession.toFixed(1)} />
           </div>
-          {o.approximate && <p className="mt-2 text-xs text-muted">Includes rolled-up days (older than 90 days): visitor totals are approximate.</p>}
+          {o.approximate && <p className="mt-2 text-xs text-muted">Includes rolled-up days (older than 90 days): visitor counts, bounce rate and paid attribution are approximate or unavailable for those days.</p>}
 
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Kpi label="Revenue today" value={taka(data.revenue.today)} />

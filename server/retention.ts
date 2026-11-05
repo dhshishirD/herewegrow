@@ -24,6 +24,7 @@ function rollupStatements(db: D1Like, day: string): D1Statement[] {
       `SELECT ?1, 'event', name, COUNT(*) FROM events WHERE type = 'event' AND name IS NOT NULL AND name != 'purchase' AND day = ?1 GROUP BY name`,
     ),
     upsert(`SELECT ?1, 'purchase', '*', COUNT(*) FROM events WHERE name = 'purchase' AND day = ?1 HAVING COUNT(*) > 0`),
+    // Sessions are per day: a session that crosses Dhaka midnight counts once on each day.
     upsert(
       `SELECT ?1, 'visitors', '*', COUNT(DISTINCT vid) FROM events WHERE type = 'pageview' AND day = ?1
        UNION ALL SELECT ?1, 'sessions', '*', COUNT(DISTINCT CASE WHEN sid != '' THEN sid END) FROM events WHERE type = 'pageview' AND day = ?1
@@ -51,6 +52,7 @@ export async function rollupOld(db: D1Like, now: number = Date.now(), keepDays =
         .first();
       if (!done) await db.batch(rollupStatements(db, day));
       let dayDeleted = 0;
+      let complete = false;
       for (;;) {
         const r = await db
           .prepare('DELETE FROM events WHERE id IN (SELECT id FROM events WHERE day = ? LIMIT ?)')
@@ -58,10 +60,13 @@ export async function rollupOld(db: D1Like, now: number = Date.now(), keepDays =
           .run();
         const n = r.meta?.changes ?? 0;
         dayDeleted += n;
-        if (n < batch) break;
+        if (n < batch) {
+          complete = r.meta?.changes !== undefined; // an unreported count is not proof the day is empty
+          break;
+        }
       }
-      days++;
       deleted += dayDeleted;
+      if (complete) days++;
     } catch (e) {
       console.error('rollup failed for', day, e);
     }

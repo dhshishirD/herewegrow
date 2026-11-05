@@ -18,7 +18,9 @@ function setup(over: Partial<Parameters<typeof createTracker>[0]> = {}) {
     search: '?utm_source=fb&utm_medium=cpc&utm_campaign=spring',
     ...over,
   };
-  return { tracker: createTracker(deps), sent, advance: (ms: number) => void (t += ms) };
+  const tracker = createTracker(deps);
+  if (!over.noTrack) tracker.ready();
+  return { tracker, sent, deps, advance: (ms: number) => void (t += ms) };
 }
 
 describe('createTracker', () => {
@@ -82,5 +84,67 @@ describe('createTracker', () => {
     const { tracker } = setup({ send: () => { throw new Error('boom'); } });
     expect(() => tracker.pageview('/a')).not.toThrow();
     expect(() => tracker.event('e')).not.toThrow();
+  });
+
+  it('event before pageview still sends ref/utm exactly once, on the first hit', () => {
+    const { tracker, sent } = setup();
+    tracker.event('view_service');
+    tracker.pageview('/services');
+    tracker.event('again');
+    expect(sent[0]).toMatchObject({ type: 'event', ref: 'https://google.com/search', utmSource: 'fb' });
+    expect(sent[1].ref).toBeUndefined();
+    expect(sent[2].utmSource).toBeUndefined();
+  });
+
+  it('holds hits until ready, then sends the pageview first', () => {
+    const { tracker, sent } = setup({ noTrack: false });
+    const t2 = createTracker({ storage: mem(), session: mem(), send: (b) => void sent.push(b as Record<string, unknown>), now: () => 1, referrer: 'r', search: '' });
+    t2.event('view_pro');
+    t2.pageview('/pro');
+    expect(sent).toHaveLength(0);
+    t2.ready();
+    expect(sent.map((s) => s.type)).toEqual(['pageview', 'event']);
+    expect(sent[0].ref).toBe('r');
+    void tracker;
+  });
+
+  it('drops queued hits when disabled before ready', () => {
+    const sent: object[] = [];
+    const t = createTracker({ storage: mem(), session: mem(), send: (b) => void sent.push(b), now: () => 1, referrer: '', search: '' });
+    t.event('view_pro');
+    t.pageview('/pro');
+    t.disable();
+    t.ready();
+    t.event('later');
+    expect(sent).toHaveLength(0);
+  });
+
+  it('caps the queue at 50', () => {
+    const sent: object[] = [];
+    const t = createTracker({ storage: mem(), session: mem(), send: (b) => void sent.push(b), now: () => 1, referrer: '', search: '' });
+    for (let i = 0; i < 80; i++) t.event('e');
+    t.ready();
+    expect(sent).toHaveLength(50);
+  });
+
+  it('noTrack starts disabled', () => {
+    const { tracker, sent } = setup({ noTrack: true });
+    tracker.ready();
+    tracker.pageview('/a');
+    tracker.event('e');
+    expect(sent).toHaveLength(0);
+  });
+
+  it('persists vid and sid across tracker instances', () => {
+    const storage = mem();
+    const session = mem();
+    const a = setup({ storage, session });
+    a.tracker.pageview('/a');
+    const b = setup({ storage, session });
+    b.tracker.pageview('/b');
+    expect(b.sent[0].vid).toBe(a.sent[0].vid);
+    expect(storage.getItem('hwg_vid')).toBe(a.sent[0].vid);
+    expect(b.sent[0].sid).toBe(a.sent[0].sid);
+    expect(b.sent[0].ref).toBeUndefined();
   });
 });

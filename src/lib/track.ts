@@ -11,11 +11,14 @@ export interface TrackerDeps {
   referrer: string;
   search: string;
   gtag?: (...a: unknown[]) => void;
+  /** Opt-out: start disabled. */
+  noTrack?: boolean;
 }
 
 const IDLE_MS = 30 * 60_000;
 const VID_KEY = 'hwg_vid';
 const SID_KEY = 'hwg_sid';
+const QUEUE_CAP = 50;
 
 const uuid = () =>
   typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
@@ -38,9 +41,12 @@ const write = (s: Store | null, k: string, v: string) => {
 };
 
 export function createTracker(deps: TrackerDeps) {
-  let disabled = false;
+  let disabled = !!deps.noTrack;
+  let ready = false;
   let memVid: string | null = null;
-  let memSession: { sid: string; last: number } | null = null;
+  let memSession: { sid: string; last: number; attr: boolean } | null = null;
+  type Item = { kind: 'pageview' | 'event'; path: string; name?: string; meta?: Meta };
+  let queue: Item[] = [];
 
   const vid = (): string => {
     const stored = read(deps.storage, VID_KEY);
@@ -52,24 +58,23 @@ export function createTracker(deps: TrackerDeps) {
     return memVid;
   };
 
-  /** Current session id, rolling it after 30 minutes idle. `fresh` is true when this call started a session. */
-  const session = (): { sid: string; fresh: boolean } => {
+  /** Current session, rolling it after 30 minutes idle. `attr` is true until ref/utm have gone out for it. */
+  const session = () => {
     const now = deps.now();
     let cur = memSession;
     try {
       const raw = read(deps.session, SID_KEY);
       if (raw) {
-        const p = JSON.parse(raw) as { sid?: unknown; last?: unknown };
-        if (typeof p.sid === 'string' && typeof p.last === 'number') cur = { sid: p.sid, last: p.last };
+        const p = JSON.parse(raw) as { sid?: unknown; last?: unknown; attr?: unknown };
+        if (typeof p.sid === 'string' && typeof p.last === 'number') cur = { sid: p.sid, last: p.last, attr: p.attr === true };
       }
     } catch {
       /* ignore corrupt value */
     }
-    const fresh = !cur || now - cur.last > IDLE_MS;
-    const next = fresh ? { sid: uuid(), last: now } : { sid: cur!.sid, last: now };
+    const next = !cur || now - cur.last > IDLE_MS ? { sid: uuid(), last: now, attr: false } : { ...cur, last: now };
     memSession = next;
     write(deps.session, SID_KEY, JSON.stringify(next));
-    return { sid: next.sid, fresh };
+    return next;
   };
 
   const post = (body: Record<string, unknown>) => {
@@ -80,47 +85,74 @@ export function createTracker(deps: TrackerDeps) {
     }
   };
 
+  /** Build and send one hit; the first hit of a session carries ref/utm. */
+  const emit = (it: Item) => {
+    const ses = session();
+    const body: Record<string, unknown> = { vid: vid(), sid: ses.sid, type: it.kind, path: it.path };
+    if (it.kind === 'event') {
+      body.name = it.name;
+      if (it.meta) body.meta = it.meta;
+    }
+    if (!ses.attr) {
+      const q = new URLSearchParams(deps.search);
+      if (deps.referrer) body.ref = deps.referrer;
+      for (const [k, p] of [['utmSource', 'utm_source'], ['utmMedium', 'utm_medium'], ['utmCampaign', 'utm_campaign']] as const) {
+        const v = q.get(p);
+        if (v) body[k] = v;
+      }
+      write(deps.session, SID_KEY, JSON.stringify({ ...ses, attr: true }));
+      memSession = { ...ses, attr: true };
+    }
+    post(body);
+    if (it.kind === 'event') {
+      try {
+        deps.gtag?.('event', it.name, it.meta);
+      } catch {
+        /* ignore */
+      }
+    }
+  };
+
+  const handle = (it: Item) => {
+    try {
+      if (disabled) return;
+      if (!ready) {
+        if (queue.length < QUEUE_CAP) queue.push(it);
+        return;
+      }
+      emit(it);
+    } catch {
+      /* never throw */
+    }
+  };
+
+  const here = () => (typeof window !== 'undefined' ? window.location.pathname || '/' : '/');
+
   return {
     vid,
+    /** Stop tracking for good (admin, opt-out) and drop anything queued. */
     disable() {
       disabled = true;
+      queue = [];
+    },
+    /** Auth state is known: send what was queued (page views first, so the first hit carries ref/utm). */
+    ready() {
+      try {
+        ready = true;
+        const q = queue;
+        queue = [];
+        if (disabled) return;
+        for (const it of q.filter((i) => i.kind === 'pageview')) handle(it);
+        for (const it of q.filter((i) => i.kind === 'event')) handle(it);
+      } catch {
+        /* never throw */
+      }
     },
     pageview(path: string) {
-      try {
-        if (disabled) return;
-        const { sid, fresh } = session();
-        const body: Record<string, unknown> = { vid: vid(), sid, type: 'pageview', path };
-        if (fresh) {
-          const q = new URLSearchParams(deps.search);
-          if (deps.referrer) body.ref = deps.referrer;
-          const s = q.get('utm_source');
-          const m = q.get('utm_medium');
-          const c = q.get('utm_campaign');
-          if (s) body.utmSource = s;
-          if (m) body.utmMedium = m;
-          if (c) body.utmCampaign = c;
-        }
-        post(body);
-      } catch {
-        /* never throw */
-      }
+      handle({ kind: 'pageview', path });
     },
     event(name: string, meta?: Meta) {
-      try {
-        if (disabled) return;
-        const { sid } = session();
-        const path = typeof window !== 'undefined' ? window.location.pathname || '/' : '/';
-        const body: Record<string, unknown> = { vid: vid(), sid, type: 'event', name, path };
-        if (meta) body.meta = meta;
-        post(body);
-        try {
-          deps.gtag?.('event', name, meta);
-        } catch {
-          /* ignore */
-        }
-      } catch {
-        /* never throw */
-      }
+      handle({ kind: 'event', name, meta, path: here() });
     },
   };
 }
@@ -144,13 +176,8 @@ export const tracker = createTracker({
   now: () => Date.now(),
   referrer: browser ? document.referrer : '',
   search: browser ? window.location.search : '',
+  noTrack: browser ? safe(() => window.localStorage)?.getItem('hwg_noTrack') === '1' : false,
   gtag: browser ? (...a) => (window as unknown as { gtag?: (...x: unknown[]) => void }).gtag?.(...a) : undefined,
 });
-
-try {
-  if (browser && window.localStorage.getItem('hwg_noTrack') === '1') tracker.disable();
-} catch {
-  /* ignore */
-}
 
 export const track = (name: string, meta?: Meta) => tracker.event(name, meta);

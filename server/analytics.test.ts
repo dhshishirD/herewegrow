@@ -36,6 +36,12 @@ describe('parseTrack', () => {
     expect(t.utmSource).toBe('fb');
     expect(t.name).toBeNull();
   });
+  it('rejects reserved server-only event names such as purchase', () => {
+    expect(parseTrack({ ...valid, type: 'event', name: 'purchase' })).toBeNull();
+    expect(parseTrack({ ...valid, type: 'event', name: 'Purchase' })).toBeNull();
+    expect(parseTrack({ ...valid, type: 'pageview', name: 'purchase' })).toBeNull();
+    expect(parseTrack({ ...valid, type: 'event', name: 'checkout_click' })).not.toBeNull();
+  });
   it('accepts string meta', () => {
     expect(parseTrack({ ...valid, meta: 'hi' })!.meta).toBe('hi');
   });
@@ -144,6 +150,12 @@ describe('handleTrack', () => {
     expect(await count(env)).toBe(120);
     await handleTrack(req(valid, { ip: '198.51.100.2' }), env);
     expect(await count(env)).toBe(121);
+  });
+  it('stores nothing for a forged purchase beacon', async () => {
+    const env = setup();
+    const forged = { ...valid, type: 'event', name: 'purchase', meta: { amount: 9999, source: 'facebook' } };
+    expect((await handleTrack(req(forged), env)).status).toBe(204);
+    expect(await count(env)).toBe(0);
   });
   it('drops events from admins', async () => {
     const env = setup();

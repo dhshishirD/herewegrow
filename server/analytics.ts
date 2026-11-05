@@ -42,7 +42,13 @@ function metaString(v: unknown): string | null {
   return s ? s.slice(0, 300) : null;
 }
 
-/** Validate and trim a beacon body. Null when it is not a usable event. */
+/** Event names only the server may write (e.g. purchase from the verify path). A beacon using one is dropped. */
+export const RESERVED_EVENT_NAMES: ReadonlySet<string> = new Set(['purchase']);
+
+/** Real purchase rows always carry this dedupe key prefix; stats count only those, never a forged name. */
+export const PURCHASE_KEY_SQL = "dedupe_key LIKE 'purchase:%'";
+
+/** Validate and trim a beacon body. Null when it is not a usable event or uses a reserved name. */
 export function parseTrack(body: unknown): TrackInput | null {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return null;
   const b = body as Record<string, unknown>;
@@ -50,11 +56,13 @@ export function parseTrack(body: unknown): TrackInput | null {
   const path = str(b.path, 200);
   if (!vid || !path || !path.startsWith('/')) return null;
   if (b.type !== 'pageview' && b.type !== 'event') return null;
+  const name = str(b.name, 60);
+  if (name && RESERVED_EVENT_NAMES.has(name.trim().toLowerCase())) return null;
   return {
     vid,
     sid: str(b.sid, 64) ?? '',
     type: b.type,
-    name: str(b.name, 60),
+    name,
     path,
     ref: str(b.ref, 300),
     utmSource: utm(b.utmSource),

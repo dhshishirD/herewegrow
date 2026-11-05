@@ -2,7 +2,7 @@
 // Rollup rows per day: visitors|sessions|pageviews (key '*'), page (key path), source (key 'source|medium|campaign', n = visitors),
 // event (key name, n = count), purchase (key '*', n = count). The pageviews/'*' row is the marker that a day is rolled up.
 import type { D1Like, D1Statement } from './cf';
-import { dhakaDay } from './analytics';
+import { dhakaDay, PURCHASE_KEY_SQL } from './analytics';
 
 const DAY_MS = 86_400_000;
 
@@ -23,7 +23,7 @@ function rollupStatements(db: D1Like, day: string): D1Statement[] {
     upsert(
       `SELECT ?1, 'event', name, COUNT(*) FROM events WHERE type = 'event' AND name IS NOT NULL AND name != 'purchase' AND day = ?1 GROUP BY name`,
     ),
-    upsert(`SELECT ?1, 'purchase', '*', COUNT(*) FROM events WHERE name = 'purchase' AND day = ?1 HAVING COUNT(*) > 0`),
+    upsert(`SELECT ?1, 'purchase', '*', COUNT(*) FROM events WHERE name = 'purchase' AND ${PURCHASE_KEY_SQL} AND day = ?1 HAVING COUNT(*) > 0`),
     // Sessions are per day: a session that crosses Dhaka midnight counts once on each day.
     upsert(
       `SELECT ?1, 'visitors', '*', COUNT(DISTINCT vid) FROM events WHERE type = 'pageview' AND day = ?1

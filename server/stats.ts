@@ -1,7 +1,7 @@
 // Dashboard queries over the first-party `events` table. Days are Asia/Dhaka calendar days (YYYY-MM-DD), ranges inclusive.
 // Page and session counts use pageview rows only; server-side events (sid = '', path = '') only show up under actions.
 import type { D1Like } from './cf';
-import { dhakaDay } from './analytics';
+import { dhakaDay, PURCHASE_KEY_SQL } from './analytics';
 
 export interface Range {
   from: string;
@@ -175,7 +175,7 @@ export const sources = (db: D1Like, r: Range) =>
      buys AS (
        SELECT COALESCE(json_extract(meta, '$.source'), 'direct') AS source, COALESCE(json_extract(meta, '$.medium'), '') AS medium,
               COALESCE(json_extract(meta, '$.campaign'), '') AS campaign, COUNT(*) AS paid
-       FROM events WHERE name = 'purchase' AND json_valid(meta) AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY source, medium, campaign)
+       FROM events WHERE name = 'purchase' AND ${PURCHASE_KEY_SQL} AND json_valid(meta) AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY source, medium, campaign)
      SELECT * FROM (
        SELECT vis.source, vis.medium, vis.campaign, vis.visitors, COALESCE(buys.paid, 0) AS paid
        FROM vis LEFT JOIN buys ON buys.source = vis.source AND buys.medium = vis.medium AND buys.campaign = vis.campaign
@@ -209,7 +209,7 @@ export async function funnel(db: D1Like, r: Range) {
       { key: 'visit' as const, visitors: await count("type = 'pageview'") },
       { key: 'viewed' as const, visitors: await count(`type = 'event' AND name IN (${marks(FUNNEL_VIEWED)})`, ...FUNNEL_VIEWED) },
       { key: 'order_started' as const, visitors: await count(`type = 'event' AND name IN (${marks(FUNNEL_STARTED)})`, ...FUNNEL_STARTED) },
-      { key: 'paid' as const, visitors: await count("type = 'event' AND name = 'purchase'") },
+      { key: 'paid' as const, visitors: await count(`type = 'event' AND name = 'purchase' AND ${PURCHASE_KEY_SQL}`) },
     ],
   };
 }
@@ -264,13 +264,13 @@ export async function audience(db: D1Like, r: Range) {
   return { devices, countries, newVsReturning: { new: total - returning, returning } };
 }
 
-/** Rolled-up days add their per-name counts (visitors are not rolled up, so 0 for those days). */
+/** Rolled-up days add their per-name counts (visitors are not rolled up, so 0 for those days). A 'purchase' row counts only if server-written. */
 export const actions = (db: D1Like, r: Range) =>
   rows<{ name: string; n: number; visitors: number }>(
     db,
     `SELECT name, SUM(n) AS n, SUM(visitors) AS visitors FROM (
        SELECT name, COUNT(*) AS n, COUNT(DISTINCT vid) AS visitors FROM events
-       WHERE type = 'event' AND name IS NOT NULL AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY name
+       WHERE type = 'event' AND name IS NOT NULL AND (name != 'purchase' OR ${PURCHASE_KEY_SQL}) AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY name
        UNION ALL
        SELECT CASE metric WHEN 'purchase' THEN 'purchase' ELSE key END, SUM(n), 0 FROM daily_rollup
        WHERE metric IN ('event', 'purchase') AND day BETWEEN ? AND ? GROUP BY metric, key)

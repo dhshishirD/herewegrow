@@ -25,7 +25,7 @@ async function seedOld(db: ReturnType<typeof fakeD1>, days: number) {
   await recordEvent(db, input({ vid: 'b', sid: 's2', path: '/' }), ctx(ago(days, 2)));
   await recordEvent(db, input({ vid: 'b', sid: 's2', type: 'event', name: 'cta_click', path: '/' }), ctx(ago(days, 3)));
   await recordEvent(db, input({ vid: 'b', sid: 's2', type: 'event', name: 'cta_click', path: '/' }), ctx(ago(days, 4)));
-  await recordServerEvent(db, { name: 'purchase', vid: 'a', userId: null, dedupeKey: `p-${days}`, ts: ago(days, 5) });
+  await recordServerEvent(db, { name: 'purchase', vid: 'a', userId: null, dedupeKey: `purchase:p-${days}`, ts: ago(days, 5) });
 }
 
 describe('rollupOld', () => {
@@ -194,5 +194,17 @@ describe('stats over rolled-up days', () => {
       { name: 'cta_click', n: 4, visitors: 1 },
       { name: 'purchase', n: 2, visitors: 1 }, // rolled-up day adds count only
     ]);
+  });
+});
+
+describe('rollup ignores forged purchase rows', () => {
+  it('counts only purchases with a purchase: dedupe key', async () => {
+    const db = fakeD1();
+    await seedOld(db, 91);
+    await db.prepare("INSERT INTO events (ts, day, vid, sid, type, name, path) VALUES (?, ?, 'x', 'sx', 'event', 'purchase', '/x')").bind(ago(91, 6), dayOf(91)).run();
+    await rollupOld(db, NOW);
+    const rows = await rollup(db, dayOf(91));
+    expect(rows).toContainEqual({ metric: 'purchase', key: '*', n: 1 });
+    expect(rows.some((r) => r.metric === 'event' && r.key === 'purchase')).toBe(false);
   });
 });

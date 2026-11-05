@@ -153,7 +153,7 @@ describe('actions', () => {
     await recordEvent(db, input({ vid: 'v1', type: 'event', name: 'cta_click' }), ctx(D1));
     await recordEvent(db, input({ vid: 'v1', type: 'event', name: 'cta_click' }), ctx(D1 + MIN));
     await recordEvent(db, input({ vid: 'v2', type: 'event', name: 'cta_click' }), ctx(D1 + MIN));
-    await recordServerEvent(db, { name: 'purchase', vid: null, userId: 'u1', dedupeKey: 'p1', ts: D1 });
+    await recordServerEvent(db, { name: 'purchase', vid: null, userId: 'u1', dedupeKey: 'purchase:p1', ts: D1 });
     await recordEvent(db, input({ vid: 'v1' }), ctx(D1));
     expect(await actions(db, { from: '2026-11-04', to: '2026-11-04' })).toEqual([
       { name: 'cta_click', n: 3, visitors: 2 },
@@ -197,7 +197,7 @@ describe('sources paid', () => {
     const db = fakeD1();
     await recordEvent(db, input({ vid: 'v1', sid: 's1', utmSource: 'facebook', utmMedium: 'cpc', utmCampaign: 'eid' }), ctx(D1));
     await recordEvent(db, input({ vid: 'v2', sid: 's2' }), ctx(D1));
-    const buy = (k: string, meta: Record<string, unknown>, ts = D1) => recordServerEvent(db, { name: 'purchase', vid: 'v1', userId: null, dedupeKey: k, meta, ts });
+    const buy = (k: string, meta: Record<string, unknown>, ts = D1) => recordServerEvent(db, { name: 'purchase', vid: 'v1', userId: null, dedupeKey: `purchase:${k}`, meta, ts });
     await buy('1', { amount: 199, product: 'x', source: 'facebook', medium: 'cpc', campaign: 'eid' });
     await buy('2', { amount: 199, product: 'x', source: 'facebook', medium: 'cpc', campaign: 'eid' });
     await buy('3', { amount: 199, product: 'x', source: 'direct', medium: '', campaign: '' });
@@ -235,5 +235,26 @@ describe('revenue', () => {
     await db.prepare("INSERT INTO pass_grants (order_id, user_id, plan_id, days, granted_at) VALUES ('g1','u1','pro-30',30,?)").bind(now - MIN).run();
     await db.prepare("INSERT INTO pass_grants (order_id, user_id, plan_id, days, granted_at) VALUES ('g2','u1','pro-30',30,?)").bind(now - 9 * 86_400_000).run();
     expect(await revenue(db, now)).toEqual({ today: 150, week: 370, proActivations: 1, orders: 4 });
+  });
+});
+
+describe('forged purchase rows (no purchase: dedupe key)', () => {
+  it('are not counted by funnel, sources.paid or actions', async () => {
+    const db = fakeD1();
+    await recordEvent(db, input({ vid: 'f', sid: 'sf', utmSource: 'facebook' }), ctx(D1));
+    // what a forged beacon would have produced before parseTrack rejected the name
+    await db
+      .prepare("INSERT INTO events (ts, day, vid, sid, type, name, path, meta) VALUES (?, '2026-11-04', 'f', 'sf', 'event', 'purchase', '/x', ?)")
+      .bind(D1 + MIN, JSON.stringify({ amount: 999, product: 'x', source: 'facebook', medium: '', campaign: '' }))
+      .run();
+    const r = { from: '2026-11-04', to: '2026-11-04' };
+    expect((await funnel(db, r)).steps.find((x) => x.key === 'paid')!.visitors).toBe(0);
+    expect(await sources(db, r)).toEqual([{ source: 'facebook', medium: '', campaign: '', visitors: 1, paid: 0 }]);
+    expect((await actions(db, r)).some((a) => a.name === 'purchase')).toBe(false);
+    // a real one is counted
+    await recordServerEvent(db, { name: 'purchase', vid: 'f', userId: null, dedupeKey: 'purchase:real', ts: D1 + 2 * MIN, meta: { amount: 1, product: 'x', source: 'facebook', medium: '', campaign: '' } });
+    expect((await funnel(db, r)).steps.find((x) => x.key === 'paid')!.visitors).toBe(1);
+    expect(await sources(db, r)).toEqual([{ source: 'facebook', medium: '', campaign: '', visitors: 1, paid: 1 }]);
+    expect(await actions(db, r)).toContainEqual({ name: 'purchase', n: 1, visitors: 1 });
   });
 });

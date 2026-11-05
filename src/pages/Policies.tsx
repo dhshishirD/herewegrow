@@ -103,7 +103,22 @@ export function TermsPage() {
 
 export function NotFound() {
   const { t } = useLang();
-  useEffect(() => setPageMeta(t({ en: 'Page not found', bn: 'পেজ পাওয়া যায়নি' }), '', window.location.pathname), [t]);
+  useEffect(() => {
+    setPageMeta(t({ en: 'Page not found', bn: 'পেজ পাওয়া যায়নি' }), '', window.location.pathname);
+    // The server answers every unknown URL with the app shell (200), so tell search engines this is not a real page and
+    // keep a made-up URL from becoming its own canonical.
+    const robots = document.createElement('meta');
+    robots.name = 'robots';
+    robots.content = 'noindex';
+    document.head.appendChild(robots);
+    const canonical = document.head.querySelector('link[rel="canonical"]');
+    const href = canonical?.getAttribute('href') ?? null;
+    canonical?.removeAttribute('href');
+    return () => {
+      robots.remove();
+      if (href) canonical?.setAttribute('href', href);
+    };
+  }, [t]);
   return (
     <section className="wrap max-w-2xl py-20">
       <h1 className="text-4xl font-bold">{t({ en: 'This page does not exist', bn: 'এই পেজটি নেই' })}</h1>

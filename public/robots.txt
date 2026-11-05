@@ -4,6 +4,7 @@ Disallow: /payment/
 Disallow: /api/
 Disallow: /admin
 Disallow: /order
+Disallow: /account
 
 Sitemap: https://herewegrow.pro/sitemap.xml
 Sitemap: https://herewegrow.pro/sitemap-careers.xml

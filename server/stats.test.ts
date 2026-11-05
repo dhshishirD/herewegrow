@@ -58,7 +58,7 @@ describe('overview', () => {
 
   it('is all zeros for an empty range', async () => {
     const o = await overview(fakeD1(), { from: '2026-11-04', to: '2026-11-04' });
-    expect(o).toEqual({ visitors: 0, sessions: 0, pageviews: 0, bounceRate: 0, pagesPerSession: 0, daily: [] });
+    expect(o).toEqual({ visitors: 0, sessions: 0, pageviews: 0, bounceRate: 0, pagesPerSession: 0, approximate: false, daily: [] });
   });
 });
 

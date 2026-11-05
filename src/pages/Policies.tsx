@@ -55,6 +55,14 @@ export function PrivacyPage() {
             { en: 'We use Google Analytics to count visits to this site.', bn: 'সাইটের ভিজিট গণনার জন্য আমরা Google Analytics ব্যবহার করি।' },
           ],
         },
+        {
+          h: { en: 'Analytics and contact form', bn: 'অ্যানালিটিক্স ও যোগাযোগ ফর্ম' },
+          p: [
+            { en: 'We run our own simple analytics: which pages are viewed and which buttons are used. It uses a random ID kept in your browser, with no cookies. We do not store your IP address, only your country and device type. Raw records are kept for 90 days, after which only daily totals remain.', bn: 'আমরা নিজস্ব সহজ অ্যানালিটিক্স চালাই: কোন পেজ দেখা হয় ও কোন বাটন ব্যবহার হয়। এতে আপনার ব্রাউজারে রাখা একটি এলোমেলো আইডি ব্যবহার হয়, কোনো কুকি নয়। আমরা আপনার আইপি অ্যাড্রেস রাখি না, শুধু দেশ ও ডিভাইসের ধরন রাখি। মূল রেকর্ড ৯০ দিন থাকে, তারপর শুধু দৈনিক মোট সংখ্যা থাকে।' },
+            { en: 'Details you send through the contact form are used only to reply to you.', bn: 'যোগাযোগ ফর্মে আপনার দেওয়া তথ্য শুধু আপনাকে উত্তর দিতে ব্যবহার হয়।' },
+            { en: `To have your analytics ID or contact messages deleted, message ${SUPPORT_WHATSAPP_DISPLAY} on WhatsApp.`, bn: `আপনার অ্যানালিটিক্স আইডি বা যোগাযোগের মেসেজ মুছতে হোয়াটসঅ্যাপে ${SUPPORT_WHATSAPP_DISPLAY} নম্বরে জানান।` },
+          ],
+        },
       ]}
     />
   );

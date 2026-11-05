@@ -271,7 +271,7 @@ describe('GET /api/admin/stats/*', () => {
     const { call, cookie, admin } = await setup();
     const c = await cookie(admin.id);
     expect(await (await call('/api/admin/stats/overview?preset=7d', { cookie: c })).json()).toEqual({
-      ok: true, visitors: 0, sessions: 0, pageviews: 0, bounceRate: 0, pagesPerSession: 0, daily: [],
+      ok: true, visitors: 0, sessions: 0, pageviews: 0, bounceRate: 0, pagesPerSession: 0, approximate: false, daily: [],
     });
     expect(await (await call('/api/admin/stats/sources?preset=7d', { cookie: c })).json()).toEqual({ ok: true, sources: [] });
     expect(await (await call('/api/admin/stats/live', { cookie: c })).json()).toEqual({ ok: true, count: 0, visitors: [], newMessages: 0 });

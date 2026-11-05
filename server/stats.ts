@@ -40,6 +40,10 @@ export function parseRange(params: URLSearchParams, now: number = Date.now()): R
 const rows = async <T>(db: D1Like, sql: string, ...binds: unknown[]): Promise<T[]> =>
   ((await db.prepare(sql).bind(...binds).all<T>()).results ?? []) as T[];
 
+// A day with a pageviews/'*' row in daily_rollup has been rolled up (see retention.ts). Its figures come from the rollup,
+// never from leftover events, so a day is counted once and there is no gap between crossing the horizon and the cron running.
+const NOT_ROLLED = "day NOT IN (SELECT day FROM daily_rollup WHERE metric = 'pageviews' AND key = '*')";
+
 /** Visitors with a hit in the last 5 minutes, each with the last page they were on. */
 export async function liveNow(db: D1Like, now: number = Date.now()): Promise<{ count: number; visitors: { page: string; agoSec: number }[] }> {
   const r = await rows<{ path: string; ts: number }>(
@@ -50,45 +54,76 @@ export async function liveNow(db: D1Like, now: number = Date.now()): Promise<{ c
   return { count: r.length, visitors: r.map((v) => ({ page: v.path, agoSec: Math.max(0, Math.round((now - v.ts) / 1000)) })) };
 }
 
+/**
+ * Totals and daily rows. Days already rolled up come from daily_rollup: their sessions/pageviews are exact, but visitors
+ * are summed per day, so a multi-day figure over such days is approximate (`approximate: true`). Bounce is not rolled up,
+ * so bounceRate covers only days that still have events and is null when every day in the range is rolled up.
+ */
 export async function overview(db: D1Like, r: Range) {
-  const totals = await db
+  const live = await db
     .prepare(
       `SELECT COUNT(DISTINCT vid) AS visitors, COUNT(DISTINCT CASE WHEN sid != '' THEN sid END) AS sessions, COUNT(*) AS pageviews
-       FROM events WHERE type = 'pageview' AND day BETWEEN ? AND ?`,
+       FROM events WHERE type = 'pageview' AND day BETWEEN ? AND ? AND ${NOT_ROLLED}`,
     )
     .bind(r.from, r.to)
     .first<{ visitors: number; sessions: number; pageviews: number }>();
   const bounce = await db
     .prepare(
-      `SELECT COUNT(*) AS n FROM (SELECT sid FROM events WHERE type = 'pageview' AND sid != '' AND day BETWEEN ? AND ? GROUP BY sid HAVING COUNT(*) = 1)`,
+      `SELECT COUNT(*) AS n FROM (SELECT sid FROM events WHERE type = 'pageview' AND sid != '' AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY sid HAVING COUNT(*) = 1)`,
     )
     .bind(r.from, r.to)
     .first<{ n: number }>();
-  const daily = await rows<{ day: string; visitors: number; pageviews: number }>(
+  const rolled = await rows<{ day: string; metric: string; n: number }>(
     db,
-    `SELECT day, COUNT(DISTINCT vid) AS visitors, COUNT(*) AS pageviews FROM events
-     WHERE type = 'pageview' AND day BETWEEN ? AND ? GROUP BY day ORDER BY day`,
+    `SELECT day, metric, n FROM daily_rollup WHERE key = '*' AND metric IN ('visitors', 'sessions', 'pageviews') AND day BETWEEN ? AND ?`,
     r.from,
     r.to,
   );
-  const visitors = totals?.visitors ?? 0;
-  const sessions = totals?.sessions ?? 0;
-  const pageviews = totals?.pageviews ?? 0;
+  const liveDaily = await rows<{ day: string; visitors: number; pageviews: number }>(
+    db,
+    `SELECT day, COUNT(DISTINCT vid) AS visitors, COUNT(*) AS pageviews FROM events
+     WHERE type = 'pageview' AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY day`,
+    r.from,
+    r.to,
+  );
+  const byDay = new Map<string, { day: string; visitors: number; pageviews: number }>(liveDaily.map((d) => [d.day, d]));
+  let rVisitors = 0;
+  let rSessions = 0;
+  let rPageviews = 0;
+  for (const x of rolled) {
+    const d = byDay.get(x.day) ?? { day: x.day, visitors: 0, pageviews: 0 };
+    byDay.set(x.day, d);
+    if (x.metric === 'visitors') { d.visitors = x.n; rVisitors += x.n; }
+    else if (x.metric === 'pageviews') { d.pageviews = x.n; rPageviews += x.n; }
+    else rSessions += x.n;
+  }
+  const rolledDays = rolled.filter((x) => x.metric === 'pageviews').length;
+  const liveSessions = live?.sessions ?? 0;
+  const sessions = liveSessions + rSessions;
+  const pageviews = (live?.pageviews ?? 0) + rPageviews;
   return {
-    visitors,
+    visitors: (live?.visitors ?? 0) + rVisitors,
     sessions,
     pageviews,
-    bounceRate: sessions ? (bounce?.n ?? 0) / sessions : 0,
+    bounceRate: rolledDays > 0 && liveSessions === 0 ? null : liveSessions ? (bounce?.n ?? 0) / liveSessions : 0,
     pagesPerSession: sessions ? pageviews / sessions : 0,
-    daily,
+    approximate: rolledDays > 0,
+    daily: [...byDay.values()].sort((a, b) => (a.day < b.day ? -1 : 1)),
   };
 }
 
+/** Views include rolled-up days; visitors are only known for days that still have events (0 for rolled-up days). */
 export const topPages = (db: D1Like, r: Range) =>
   rows<{ path: string; views: number; visitors: number }>(
     db,
-    `SELECT path, COUNT(*) AS views, COUNT(DISTINCT vid) AS visitors FROM events
-     WHERE type = 'pageview' AND day BETWEEN ? AND ? GROUP BY path ORDER BY views DESC, path LIMIT ${LIMIT}`,
+    `SELECT path, SUM(views) AS views, SUM(visitors) AS visitors FROM (
+       SELECT path, COUNT(*) AS views, COUNT(DISTINCT vid) AS visitors FROM events
+       WHERE type = 'pageview' AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY path
+       UNION ALL
+       SELECT key, SUM(n), 0 FROM daily_rollup WHERE metric = 'page' AND day BETWEEN ? AND ? GROUP BY key)
+     GROUP BY path ORDER BY views DESC, path LIMIT ${LIMIT}`,
+    r.from,
+    r.to,
     r.from,
     r.to,
   );
@@ -106,25 +141,35 @@ export const entryPages = (db: D1Like, r: Range) =>
 
 /** One row per session: its first pageview in the range. Ref/utm are only sent on a session's first hit, so attribution must come from here. */
 export const SESSION_FIRST_SQL = `SELECT sid, vid, utm_source, utm_medium, utm_campaign, ref_host, MIN(ts) AS ts
-  FROM events WHERE type = 'pageview' AND sid != '' AND day BETWEEN ? AND ? GROUP BY sid`;
+  FROM events WHERE type = 'pageview' AND sid != '' AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY sid`;
 
 /**
  * Visitors per source, attributed per session: utm_source, else the referrer host, else direct.
  * `paid` counts purchase events in the range whose first-touch source/medium/campaign (stored in meta) match the row.
  * A source with purchases but no visitors in the range still gets a row (visitors 0).
+ * Rolled-up days contribute visitors from daily_rollup (summed per day, so approximate); their purchases are not
+ * attributable to a source (the rollup keeps only an overall purchase count), so `paid` covers days with events only.
  */
 export const sources = (db: D1Like, r: Range) =>
   rows<{ source: string; medium: string; campaign: string; visitors: number; paid: number }>(
     db,
     `WITH session_first AS (${SESSION_FIRST_SQL}),
+     rolled AS (
+       SELECT key, SUM(n) AS visitors FROM daily_rollup WHERE metric = 'source' AND day BETWEEN ? AND ? GROUP BY key),
+     rolled_split AS (
+       SELECT substr(key, 1, instr(key, '|') - 1) AS source, substr(key, instr(key, '|') + 1) AS rest, visitors FROM rolled),
      vis AS (
-       SELECT COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_medium, '') AS medium, COALESCE(utm_campaign, '') AS campaign,
-              COUNT(DISTINCT vid) AS visitors
-       FROM session_first GROUP BY source, medium, campaign),
+       SELECT source, medium, campaign, SUM(visitors) AS visitors FROM (
+         SELECT COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_medium, '') AS medium, COALESCE(utm_campaign, '') AS campaign,
+                COUNT(DISTINCT vid) AS visitors
+         FROM session_first GROUP BY source, medium, campaign
+         UNION ALL
+         SELECT source, substr(rest, 1, instr(rest, '|') - 1), substr(rest, instr(rest, '|') + 1), visitors FROM rolled_split)
+       GROUP BY source, medium, campaign),
      buys AS (
        SELECT COALESCE(json_extract(meta, '$.source'), 'direct') AS source, COALESCE(json_extract(meta, '$.medium'), '') AS medium,
               COALESCE(json_extract(meta, '$.campaign'), '') AS campaign, COUNT(*) AS paid
-       FROM events WHERE name = 'purchase' AND json_valid(meta) AND day BETWEEN ? AND ? GROUP BY source, medium, campaign)
+       FROM events WHERE name = 'purchase' AND json_valid(meta) AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY source, medium, campaign)
      SELECT * FROM (
        SELECT vis.source, vis.medium, vis.campaign, vis.visitors, COALESCE(buys.paid, 0) AS paid
        FROM vis LEFT JOIN buys ON buys.source = vis.source AND buys.medium = vis.medium AND buys.campaign = vis.campaign
@@ -132,6 +177,8 @@ export const sources = (db: D1Like, r: Range) =>
        SELECT b.source, b.medium, b.campaign, 0, b.paid FROM buys b
        WHERE NOT EXISTS (SELECT 1 FROM vis WHERE vis.source = b.source AND vis.medium = b.medium AND vis.campaign = b.campaign))
      ORDER BY visitors DESC, paid DESC, source LIMIT 30`,
+    r.from,
+    r.to,
     r.from,
     r.to,
     r.from,
@@ -211,11 +258,19 @@ export async function audience(db: D1Like, r: Range) {
   return { devices, countries, newVsReturning: { new: total - returning, returning } };
 }
 
+/** Rolled-up days add their per-name counts (visitors are not rolled up, so 0 for those days). */
 export const actions = (db: D1Like, r: Range) =>
   rows<{ name: string; n: number; visitors: number }>(
     db,
-    `SELECT name, COUNT(*) AS n, COUNT(DISTINCT vid) AS visitors FROM events
-     WHERE type = 'event' AND name IS NOT NULL AND day BETWEEN ? AND ? GROUP BY name ORDER BY n DESC, name LIMIT 50`,
+    `SELECT name, SUM(n) AS n, SUM(visitors) AS visitors FROM (
+       SELECT name, COUNT(*) AS n, COUNT(DISTINCT vid) AS visitors FROM events
+       WHERE type = 'event' AND name IS NOT NULL AND day BETWEEN ? AND ? AND ${NOT_ROLLED} GROUP BY name
+       UNION ALL
+       SELECT CASE metric WHEN 'purchase' THEN 'purchase' ELSE key END, SUM(n), 0 FROM daily_rollup
+       WHERE metric IN ('event', 'purchase') AND day BETWEEN ? AND ? GROUP BY metric, key)
+     GROUP BY name ORDER BY n DESC, name LIMIT 50`,
+    r.from,
+    r.to,
     r.from,
     r.to,
   );

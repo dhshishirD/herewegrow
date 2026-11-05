@@ -14,7 +14,7 @@ const PRESETS: { id: Preset; label: string }[] = [
   { id: '30d', label: '30 days' },
 ];
 
-interface Overview { visitors: number; sessions: number; pageviews: number; bounceRate: number; pagesPerSession: number; daily: { day: string; visitors: number; pageviews: number }[] }
+interface Overview { visitors: number; sessions: number; pageviews: number; bounceRate: number | null; pagesPerSession: number; approximate: boolean; daily: { day: string; visitors: number; pageviews: number }[] }
 interface Pages { topPages: { path: string; views: number; visitors: number }[]; entryPages: { path: string; sessions: number }[] }
 interface Sources { sources: { source: string; medium: string; campaign: string; visitors: number; paid: number }[] }
 interface Funnel { steps: { key: 'visit' | 'viewed' | 'order_started' | 'paid'; visitors: number }[] }
@@ -366,9 +366,10 @@ export function AdminDashboardPage() {
             <Kpi label="Visitors" value={String(o.visitors)} />
             <Kpi label="Sessions" value={String(o.sessions)} />
             <Kpi label="Page views" value={String(o.pageviews)} />
-            <Kpi label="Bounce" value={`${Math.round(o.bounceRate * 100)}%`} />
+            <Kpi label="Bounce" value={o.bounceRate === null ? '—' : `${Math.round(o.bounceRate * 100)}%`} />
             <Kpi label="Pages / session" value={o.pagesPerSession.toFixed(1)} />
           </div>
+          {o.approximate && <p className="mt-2 text-xs text-muted">Includes rolled-up days (older than 90 days): visitor totals are approximate.</p>}
 
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Kpi label="Revenue today" value={taka(data.revenue.today)} />

@@ -228,7 +228,7 @@ export async function revenue(db: D1Like, now: number = Date.now()) {
   const end = todayStart + DAY_MS;
   const money = await db
     .prepare(
-      `SELECT COALESCE(SUM(CASE WHEN paid_at >= ? THEN amount_bdt END), 0) AS today, COALESCE(SUM(amount_bdt), 0) AS week, COUNT(*) AS orders
+      `SELECT COALESCE(SUM(CASE WHEN paid_at >= ? THEN amount_bdt END), 0) AS today, COALESCE(SUM(amount_bdt), 0) AS week, COUNT(CASE WHEN amount_bdt > 0 THEN 1 END) AS orders
        FROM orders WHERE status = 'paid' AND paid_at >= ? AND paid_at < ?`,
     )
     .bind(todayStart, weekStart, end)

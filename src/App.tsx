@@ -22,6 +22,7 @@ import { PhotoResizer } from './pages/PhotoResizer';
 import { ProPage } from './pages/Pro';
 import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
+import { AdminManualPage } from './pages/AdminManual';
 import { AdminPromosPage } from './pages/AdminPromos';
 import { capturePromoParam } from './lib/promo';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
@@ -56,6 +57,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/admin': AdminDashboardPage,
   '/admin/careers': AdminCareersPage,
   '/admin/promos': AdminPromosPage,
+  '/admin/manual': AdminManualPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
   '/contact': ContactPage,

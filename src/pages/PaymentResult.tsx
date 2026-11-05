@@ -61,7 +61,7 @@ export function PaymentSuccess() {
         <div>
           <h1 className="text-4xl font-bold text-leaf">{t({ en: 'Pro is active', bn: 'প্রো চালু হয়েছে' })}</h1>
           <p className="mt-3 text-lg">
-            {t(plan.name)}, {taka(state.data.amount ?? plan.price, lang)}.{' '}
+            {t(plan.name)}{state.data.free ? '' : `, ${taka(state.data.amount ?? plan.price, lang)}`}.{' '}
             {state.data.proUntil
               ? t({
                   en: `Your Pro runs until ${new Date(state.data.proUntil).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`,
@@ -79,9 +79,11 @@ export function PaymentSuccess() {
 
       {state.kind === 'done' && state.data.status === 'paid' && product && (
         <div>
-          <h1 className="text-4xl font-bold text-leaf">{t({ en: 'Payment received', bn: 'পেমেন্ট পেয়েছি' })}</h1>
+          <h1 className="text-4xl font-bold text-leaf">
+            {state.data.free ? t({ en: 'Access granted', bn: 'অ্যাক্সেস দেওয়া হয়েছে' }) : t({ en: 'Payment received', bn: 'পেমেন্ট পেয়েছি' })}
+          </h1>
           <p className="mt-3 text-lg">
-            {t(product.name)}, {taka(state.data.amount ?? product.price, lang)}.{' '}
+            {t(product.name)}{state.data.free ? '' : `, ${taka(state.data.amount ?? product.price, lang)}`}.{' '}
             {t({ en: 'Keep this reference:', bn: 'এই রেফারেন্সটি রাখুন:' })} <strong className="break-all">{ref}</strong>
           </p>
           {downloads.length > 0 ? (

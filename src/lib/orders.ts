@@ -42,6 +42,8 @@ export interface VerifyResponse {
   downloads?: { file: string; url: string; bytes: number }[];
   /** Pro passes: the account's new Pro end date (Unix ms). */
   proUntil?: number | null;
+  /** Set when an admin granted this at no charge. */
+  free?: boolean;
 }
 
 export async function verifyInvoice(invoiceId: string): Promise<VerifyResponse> {

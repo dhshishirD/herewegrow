@@ -3,8 +3,8 @@
 // Paths, referrers and utm values come from visitors, so they are only ever rendered as React text.
 
 import { useEffect, useState, type ReactNode } from 'react';
+import { AdminShell, Badge, Card } from '../components/AdminShell';
 import { useAuth } from '../lib/auth';
-import { Link } from '../lib/router';
 import { dropOff } from '../lib/funnel';
 
 type Preset = 'today' | 'yesterday' | '7d' | '30d';
@@ -75,23 +75,35 @@ function fillDays(data: Overview['daily']): Overview['daily'] {
 
 function Bars({ data: raw }: { data: Overview['daily'] }) {
   const data = fillDays(raw);
-  if (data.length === 0) return <p className="text-muted">No visits in this range.</p>;
+  if (data.length === 0) return <p className="text-sm text-muted">No visits in this range.</p>;
   const max = Math.max(...data.map((d) => d.pageviews), 1);
   const W = 640;
-  const H = 140;
+  const H = 150;
   const step = W / data.length;
-  const bw = Math.max(2, step * 0.7);
+  const bw = Math.max(2, Math.min(step * 0.62, 36));
   return (
-    <svg viewBox={`0 0 ${W} ${H + 18}`} className="w-full" role="img" aria-label="Page views per day">
+    <svg viewBox={`0 0 ${W} ${H + 20}`} className="w-full" role="img" aria-label="Page views per day">
+      <defs>
+        <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#3b7bf0" />
+          <stop offset="100%" stopColor="#1d5bd8" stopOpacity="0.55" />
+        </linearGradient>
+      </defs>
+      {[0, 0.5, 1].map((f) => (
+        <g key={f}>
+          <line x1="0" x2={W} y1={H - f * H} y2={H - f * H} className="stroke-line" strokeDasharray={f ? '3 4' : undefined} />
+          {f > 0 && <text x="0" y={H - f * H - 4} fontSize="10" className="fill-muted">{Math.round(max * f)}</text>}
+        </g>
+      ))}
       {data.map((d, i) => {
-        const h = (d.pageviews / max) * H;
+        const h = Math.max((d.pageviews / max) * H, d.pageviews ? 2 : 0);
         const x = i * step + (step - bw) / 2;
         return (
           <g key={d.day}>
             <title>{`${d.day}: ${d.pageviews} page views, ${d.visitors} visitors`}</title>
-            <rect x={x} y={H - h} width={bw} height={h} rx={2} className="fill-leaf" />
+            <rect x={x} y={H - h} width={bw} height={h} rx={Math.min(5, bw / 2)} fill="url(#bar)" />
             {(data.length <= 10 || i % Math.ceil(data.length / 8) === 0) && (
-              <text x={x + bw / 2} y={H + 13} textAnchor="middle" fontSize="10" className="fill-muted">{d.day.slice(5)}</text>
+              <text x={x + bw / 2} y={H + 14} textAnchor="middle" fontSize="10" className="fill-muted">{d.day.slice(5)}</text>
             )}
           </g>
         );
@@ -101,27 +113,34 @@ function Bars({ data: raw }: { data: Overview['daily'] }) {
 }
 
 function Table({ title, head, rows, note }: { title: string; head: string[]; rows: ReactNode[][]; note?: string }) {
+  // The first number column drives a soft bar behind each row, so the biggest rows read at a glance.
+  const nums = rows.map((r) => (typeof r[1] === 'number' ? (r[1] as number) : 0));
+  const max = Math.max(...nums, 1);
+  const bars = rows.length > 1 && typeof rows[0]?.[1] === 'number';
   return (
-    <section className="rounded-2xl border border-line bg-white p-4">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      {note && <p className="mt-1 text-xs text-muted">{note}</p>}
+    <Card title={title} note={note}>
       {rows.length === 0 ? (
-        <p className="mt-2 text-sm text-muted">Nothing yet.</p>
+        <p className="text-sm text-muted">Nothing yet.</p>
       ) : (
-        <table className="mt-2 w-full text-sm">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-muted">{head.map((h, i) => <th key={h} className={`py-1 font-medium ${i ? 'text-right' : ''}`}>{h}</th>)}</tr>
+            <tr className="text-left text-xs uppercase tracking-wide text-muted">{head.map((h, i) => <th key={h} className={`pb-2 font-medium ${i ? 'text-right' : ''}`}>{h}</th>)}</tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={i} className="border-t border-line">
-                {r.map((c, j) => <td key={j} className={`py-1 ${j ? 'text-right' : 'max-w-[16rem] truncate'}`}>{c}</td>)}
+              <tr key={i} className="border-t border-line transition hover:bg-mist/60">
+                {r.map((c, j) => (
+                  <td key={j} className={`relative py-2 ${j ? 'text-right tabular-nums' : 'max-w-[16rem] truncate pr-3 font-medium'}`}>
+                    {j === 1 && bars && <span aria-hidden="true" className="absolute inset-y-1.5 right-0 -z-0 rounded-l bg-leaf-soft" style={{ width: `${Math.max(6, (nums[i] / max) * 100)}%` }} />}
+                    <span className="relative">{c}</span>
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>
         </table>
       )}
-    </section>
+    </Card>
   );
 }
 
@@ -130,36 +149,37 @@ function FunnelBars({ steps }: { steps: Funnel['steps'] }) {
   const drops = steps.map((st, i) => (i ? dropOff(steps[i - 1].visitors, st.visitors) : null));
   return (
     <>
-      <ul className="mt-3 space-y-3">
+      <ul className="space-y-4">
         {steps.map((st, i) => {
           const drop = drops[i];
           return (
             <li key={st.key}>
-              <div className="flex justify-between text-sm">
-                <span>{STEP_LABEL[st.key]}</span>
-                <span>
-                  {st.visitors}
-                  {drop === 'exceeds' ? <span className="text-muted"> · —*</span> : drop !== null && <span className="text-muted"> · {drop}% drop-off</span>}
+              <div className="flex items-baseline justify-between gap-3 text-sm">
+                <span className="font-medium">{STEP_LABEL[st.key]}</span>
+                <span className="tabular-nums">
+                  <strong className="text-base">{st.visitors}</strong>
+                  {drop === 'exceeds' ? <span className="ml-2 text-xs text-muted">—*</span> : drop !== null && <span className="ml-2 text-xs text-muted">{drop}% drop-off</span>}
                 </span>
               </div>
-              <div className="mt-1 h-3 rounded bg-line">
-                <div className="h-3 rounded bg-leaf" style={{ width: `${(st.visitors / max) * 100}%` }} />
+              <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-mist">
+                <div className="h-full rounded-full bg-gradient-to-r from-leaf to-saffron transition-[width] duration-500" style={{ width: `${Math.max((st.visitors / max) * 100, st.visitors ? 2 : 0)}%` }} />
               </div>
             </li>
           );
         })}
       </ul>
-      {drops.includes('exceeds') && <p className="mt-2 text-xs text-muted">* Step counts are independent, so a step can exceed the previous one.</p>}
+      {drops.includes('exceeds') && <p className="mt-3 text-xs text-muted">* Step counts are independent, so a step can exceed the previous one.</p>}
     </>
   );
 }
 
 const taka = (n: number) => `৳${n.toLocaleString('en-US')}`;
 
-const Kpi = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-2xl border border-line bg-white p-4">
-    <div className="text-sm text-muted">{label}</div>
-    <div className="mt-1 text-2xl font-bold">{value}</div>
+const Kpi = ({ label, value, accent = 'bg-leaf' }: { label: string; value: string; accent?: string }) => (
+  <div className="relative overflow-hidden rounded-2xl bg-white p-4 shadow-[0_1px_2px_rgb(11_26_51/0.05),0_8px_24px_-12px_rgb(11_26_51/0.18)] ring-1 ring-line/80">
+    <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${accent}`} />
+    <div className="text-xs font-medium uppercase tracking-wide text-muted">{label}</div>
+    <div className="mt-1.5 text-2xl font-bold tracking-tight tabular-nums text-ink sm:text-3xl">{value}</div>
   </div>
 );
 
@@ -168,18 +188,22 @@ const INBOX_TABS: { id: MsgStatus | 'all'; label: string }[] = [
 ];
 const dhakaTime = (ts: number) => new Date(ts).toLocaleString('en-GB', { timeZone: 'Asia/Dhaka', dateStyle: 'medium', timeStyle: 'short' });
 
+const STATUS_TONE: Record<MsgStatus, 'amber' | 'green' | 'slate'> = { new: 'amber', replied: 'green', closed: 'slate' };
+
 function MessageCard({ m, onSave, busy }: { m: Msg; onSave: (id: string, status: MsgStatus, note: string) => void; busy: boolean }) {
   const [note, setNote] = useState(m.note ?? '');
   return (
-    <li className="rounded-xl border border-line p-3">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <span className="font-semibold">{m.name} · {m.phone}</span>
-        <span className="text-xs text-muted">{dhakaTime(m.createdAt)} · {m.status}</span>
+    <li className="rounded-xl border border-line bg-white p-4 transition hover:border-leaf/40">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="flex items-center gap-2 font-semibold">
+          {m.name} <span className="font-normal text-muted">{m.phone}</span>
+        </span>
+        <span className="flex items-center gap-2 text-xs text-muted">{dhakaTime(m.createdAt)} <Badge tone={STATUS_TONE[m.status]}>{m.status}</Badge></span>
       </div>
       <p className="mt-1 text-xs text-muted">Page: {m.page ?? '-'} · Source: {m.utmSource ?? '-'}{m.email ? ` · ${m.email}` : ''}</p>
-      <p className="mt-2 whitespace-pre-wrap break-words text-sm">{m.message}</p>
-      <textarea className="field mt-2" rows={2} maxLength={500} placeholder="Note" aria-label="Note" value={note} onChange={(e) => setNote(e.target.value)} />
-      <div className="mt-2 flex flex-wrap gap-2">
+      <p className="mt-3 whitespace-pre-wrap break-words rounded-lg bg-mist/70 px-3 py-2 text-sm">{m.message}</p>
+      <textarea className="field mt-3" rows={2} maxLength={500} placeholder="Note" aria-label="Note" value={note} onChange={(e) => setNote(e.target.value)} />
+      <div className="mt-3 flex flex-wrap gap-2">
         {m.status !== 'replied' && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => onSave(m.id, 'replied', note)}>Replied</button>}
         {m.status !== 'closed' && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => onSave(m.id, 'closed', note)}>Closed</button>}
         {m.status !== 'new' && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => onSave(m.id, 'new', note)}>Reopen</button>}
@@ -224,25 +248,27 @@ function Inbox({ newMessages }: { newMessages: number }) {
   };
 
   return (
-    <section className="mt-6 rounded-2xl border border-line bg-white p-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold">
-          Messages
-          {newMessages > 0 && <span className="ml-2 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white" aria-label={`${newMessages} new`}>{newMessages}</span>}
-        </h2>
-        <div className="flex gap-2">
-          {INBOX_TABS.map((x) => (
-            <button key={x.id} type="button" aria-pressed={tab === x.id} className={`btn ${tab === x.id ? 'btn-primary' : 'btn-quiet'}`} onClick={() => setTab(x.id)}>{x.label}</button>
-          ))}
+    <Card
+      className="mt-5"
+      title="Messages"
+      aside={
+        <div className="flex flex-wrap items-center gap-2">
+          {newMessages > 0 && <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white" aria-label={`${newMessages} new`}>{newMessages} new</span>}
+          <div role="group" aria-label="Filter messages" className="flex gap-1 rounded-xl bg-mist p-1">
+            {INBOX_TABS.map((x) => (
+              <button key={x.id} type="button" aria-pressed={tab === x.id} className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${tab === x.id ? 'bg-white text-leaf shadow-sm' : 'text-muted hover:text-ink'}`} onClick={() => setTab(x.id)}>{x.label}</button>
+            ))}
+          </div>
         </div>
-      </div>
-      {error && <p role="alert" className="mt-2 text-sm text-red-800">{error}</p>}
-      {!messages && !error && <p className="mt-2 text-sm text-muted">Loading…</p>}
-      {messages && messages.length === 0 && <p className="mt-2 text-sm text-muted">No messages.</p>}
+      }
+    >
+      {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
+      {!messages && !error && <p className="text-sm text-muted">Loading…</p>}
+      {messages && messages.length === 0 && <p className="text-sm text-muted">No messages.</p>}
       {messages && messages.length > 0 && (
-        <ul className="mt-3 space-y-3">{messages.map((m) => <MessageCard key={`${m.id}:${m.status}:${m.note ?? ''}`} m={m} onSave={save} busy={busy} />)}</ul>
+        <ul className="space-y-3">{messages.map((m) => <MessageCard key={`${m.id}:${m.status}:${m.note ?? ''}`} m={m} onSave={save} busy={busy} />)}</ul>
       )}
-    </section>
+    </Card>
   );
 }
 
@@ -334,72 +360,81 @@ export function AdminDashboardPage() {
   }
 
   const o = data?.overview;
-  return (
-    <div className="wrap max-w-5xl py-12">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className="text-3xl font-bold">Analytics</h1>
-        <nav className="flex gap-4 text-sm">
-          <Link href="/admin/careers" className="underline">Career Hub</Link>
-          <Link href="/admin/promos" className="underline">Promo codes</Link>
-        </nav>
+  const livePill = (
+    <div className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-2.5 ring-1 ring-white/20 backdrop-blur" aria-live="polite">
+      <span className="relative flex h-2.5 w-2.5">
+        {live && live.count > 0 && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-saffron opacity-75" />}
+        <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${live && live.count > 0 ? 'bg-saffron' : 'bg-white/40'}`} />
+      </span>
+      <div className="leading-tight">
+        <div className="text-2xl font-bold tabular-nums">{live ? live.count : liveError ? '–' : '…'}</div>
+        <div className="text-xs text-white/70">{liveError ? 'live count unavailable' : 'on the site now'}</div>
       </div>
+    </div>
+  );
 
-      <section className="mt-6 rounded-2xl border border-line bg-white p-4">
-        <h2 className="text-lg font-semibold">Live now: {live ? live.count : liveError ? 'unavailable' : '…'}</h2>
-        {liveError && <p role="alert" className="mt-2 text-sm text-red-800">{liveError}</p>}
-        {live && live.visitors.length > 0 && (
-          <ul className="mt-2 text-sm text-muted">
-            {live.visitors.slice(0, 10).map((v, i) => <li key={i}><span className="text-ink">{v.page}</span> · {v.agoSec}s ago</li>)}
+  return (
+    <AdminShell active="/admin" title="Analytics" subtitle="Who is visiting, what they do, and what it earns." actions={livePill}>
+      {liveError && <div role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{liveError}</div>}
+
+      <Card title="Right now" aside={<span className="text-xs text-muted">last 5 minutes</span>}>
+        {live && live.visitors.length > 0 ? (
+          <ul className="grid gap-x-8 gap-y-1.5 text-sm sm:grid-cols-2">
+            {live.visitors.slice(0, 10).map((v, i) => (
+              <li key={i} className="flex items-baseline justify-between gap-3 border-b border-line/70 pb-1.5">
+                <span className="truncate font-medium text-ink">{v.page}</span>
+                <span className="shrink-0 text-xs text-muted">{v.agoSec}s ago</span>
+              </li>
+            ))}
           </ul>
+        ) : (
+          <p className="text-sm text-muted">{live ? 'No one on the site right now.' : '…'}</p>
         )}
-      </section>
+      </Card>
 
       <Inbox newMessages={live?.newMessages ?? 0} />
 
-      <div className="mt-6 flex flex-wrap items-end gap-2">
-        {PRESETS.map((p) => (
-          <button key={p.id} type="button" className={`btn ${preset === p.id ? 'btn-primary' : 'btn-quiet'}`} onClick={() => setPreset(p.id)}>{p.label}</button>
-        ))}
-        <label className="ml-2 text-sm">From
-          <input type="date" className="field mt-1" value={custom.from} onChange={(e) => { setCustom({ ...custom, from: e.target.value }); setPreset(null); }} />
+      <div className="mt-8 flex flex-wrap items-end gap-3">
+        <div role="group" aria-label="Date range" className="flex gap-1 rounded-xl bg-white p-1 shadow-sm ring-1 ring-line/80">
+          {PRESETS.map((p) => (
+            <button key={p.id} type="button" aria-pressed={preset === p.id} className={`rounded-lg px-3.5 py-2 text-sm font-semibold transition ${preset === p.id ? 'bg-leaf text-white shadow' : 'text-muted hover:bg-mist hover:text-ink'}`} onClick={() => setPreset(p.id)}>{p.label}</button>
+          ))}
+        </div>
+        <label className="text-xs font-medium text-muted">From
+          <input type="date" className="field mt-1 !min-h-[2.5rem] !py-1.5 text-sm" value={custom.from} onChange={(e) => { setCustom({ ...custom, from: e.target.value }); setPreset(null); }} />
         </label>
-        <label className="text-sm">To
-          <input type="date" className="field mt-1" value={custom.to} onChange={(e) => { setCustom({ ...custom, to: e.target.value }); setPreset(null); }} />
+        <label className="text-xs font-medium text-muted">To
+          <input type="date" className="field mt-1 !min-h-[2.5rem] !py-1.5 text-sm" value={custom.to} onChange={(e) => { setCustom({ ...custom, to: e.target.value }); setPreset(null); }} />
         </label>
       </div>
 
-      {error && <div role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">{error}</div>}
+      {error && <div role="alert" className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</div>}
       {!data && !error && query && <p className="mt-4 text-muted">Loading…</p>}
 
       {o && data && (
         <>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
             <Kpi label="Visitors" value={String(o.visitors)} />
             <Kpi label="Sessions" value={String(o.sessions)} />
             <Kpi label="Page views" value={String(o.pageviews)} />
-            <Kpi label="Bounce" value={o.bounceRate === null ? '—' : `${Math.round(o.bounceRate * 100)}%`} />
-            <Kpi label="Pages / session" value={o.pagesPerSession.toFixed(1)} />
+            <Kpi label="Bounce" value={o.bounceRate === null ? '—' : `${Math.round(o.bounceRate * 100)}%`} accent="bg-saffron" />
+            <Kpi label="Pages / session" value={o.pagesPerSession.toFixed(1)} accent="bg-saffron" />
           </div>
           {o.approximate && <p className="mt-2 text-xs text-muted">Includes rolled-up days (older than 90 days): visitor counts, bounce rate and paid attribution are approximate or unavailable for those days.</p>}
 
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Kpi label="Revenue today" value={taka(data.revenue.today)} />
-            <Kpi label="Revenue, last 7 days" value={taka(data.revenue.week)} />
-            <Kpi label="Paid orders (incl. Pro), 7 days" value={String(data.revenue.orders)} />
-            <Kpi label="Pro activations, last 7 days" value={String(data.revenue.proActivations)} />
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Kpi label="Revenue today" value={taka(data.revenue.today)} accent="bg-gold" />
+            <Kpi label="Revenue, last 7 days" value={taka(data.revenue.week)} accent="bg-gold" />
+            <Kpi label="Paid orders (incl. Pro), 7 days" value={String(data.revenue.orders)} accent="bg-gold" />
+            <Kpi label="Pro activations, last 7 days" value={String(data.revenue.proActivations)} accent="bg-gold" />
           </div>
 
-          <section className="mt-6 rounded-2xl border border-line bg-white p-4">
-            <h2 className="text-lg font-semibold">Funnel</h2>
-            <FunnelBars steps={data.funnel.steps} />
-          </section>
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            <Card title="Page views per day"><Bars data={o.daily} /></Card>
+            <Card title="Funnel"><FunnelBars steps={data.funnel.steps} /></Card>
+          </div>
 
-          <section className="mt-6 rounded-2xl border border-line bg-white p-4">
-            <h2 className="text-lg font-semibold">Page views per day</h2>
-            <Bars data={o.daily} />
-          </section>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
             <Table title="Top pages" head={['Page', 'Views', 'Visitors']} rows={data.pages.topPages.map((p) => [p.path, p.views, p.visitors])} />
             <Table title="Entry pages" head={['Page', 'Sessions']} rows={data.pages.entryPages.map((p) => [p.path, p.sessions])} />
             <Table
@@ -415,6 +450,6 @@ export function AdminDashboardPage() {
           </div>
         </>
       )}
-    </div>
+    </AdminShell>
   );
 }

@@ -9,6 +9,7 @@ import { getSessionUser, type User } from './auth';
 import { trackPurchase } from './analytics';
 import { downloadLinks } from './downloads';
 import { grantPass, recordOrder } from './entitlements';
+import { findManualGrant, isManualInvoice } from './manualAccess';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
 import { checkPromo, lookupPromo, normalizeCode, priceWith, recordRedemption, type Promo, type PromoError } from './promo';
 import { activePlan, claimTemplate } from './templatePerks';
@@ -184,6 +185,15 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
   const body = (await request.json().catch(() => ({}))) as { invoiceId?: unknown };
   const invoiceId = typeof body.invoiceId === 'string' ? body.invoiceId.trim().slice(0, 80) : '';
   if (!invoiceId) return json({ ok: false, error: 'invoice' }, 400);
+
+  // Invoice numbers an admin made by hand (manual approval or free grant) are answered from our own records.
+  if (isManualInvoice(invoiceId)) {
+    const g = env.DB ? await findManualGrant(env.DB, invoiceId).catch(() => null) : null;
+    if (!g) return json({ ok: true, status: 'unpaid', invoiceId, productId: null, amount: 0, downloads: [] });
+    const product = findProduct(g.productId);
+    const downloads = product ? await downloadLinks(env, invoiceId, product) : [];
+    return json({ ok: true, status: 'paid', invoiceId, productId: g.productId, amount: g.amount, name: null, method: 'manual', downloads });
+  }
 
   try {
     const { data, httpStatus } = await callGateway(env, 'verify-payment', { invoice_id: invoiceId });

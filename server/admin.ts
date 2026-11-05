@@ -3,6 +3,7 @@
 import { CONTACT_STATUSES, countNewContacts, listContacts, MAX_NOTE, setContactStatus, type ContactStatus } from './contact';
 import { getSessionUser, type AuthEnv, type User } from './auth';
 import { publishRole, unpublishRole } from './careers';
+import { createManualGrant, listManualGrants, type ManualInput } from './manualAccess';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
 import { MAX_PACK_BYTES, saveRolePack, validateRolePack } from './rolePack';
@@ -93,6 +94,16 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
     const live = await db.prepare("SELECT 1 AS live FROM roles WHERE id = ? AND status = 'published'").bind(saved.id).first();
     if (live) await publishRole(env, saved.id);
     return json({ ok: true, id: saved.id, created: saved.created, slug: checked.pack.slug });
+  }
+
+  if (pathname === '/api/admin/manual') {
+    if (request.method === 'GET') return json({ ok: true, grants: await listManualGrants(db) });
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const body = (await request.json().catch(() => ({}))) as ManualInput;
+    const r = await createManualGrant(db, admin.id, body);
+    if (r.ok) return json({ ok: true, grant: r.grant, proUntil: r.proUntil, belowPrice: r.belowPrice });
+    if (r.error === 'duplicate') return json({ ok: false, error: 'duplicate', grant: r.grant }, 409);
+    return json({ ok: false, error: 'invalid', errors: r.errors }, 400);
   }
 
   if (pathname === '/api/admin/promos') {

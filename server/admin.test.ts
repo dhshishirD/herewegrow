@@ -330,3 +330,43 @@ describe('contact inbox admin routes', () => {
     expect(live).toMatchObject({ count: 0, newMessages: 2 });
   });
 });
+
+describe('/api/admin/manual', () => {
+  const body = { kind: 'paid', phone: '01912345678', productId: 'pro-7', amount: 49, reference: 'TRX12345AB', note: 'bKash SMS seen' };
+
+  it('is closed to signed-out visitors and to non-admin members, for reading and writing', async () => {
+    const { call, cookie, member, db } = await setup();
+    expect((await call('/api/admin/manual')).status).toBe(401);
+    expect((await call('/api/admin/manual', { method: 'POST', body })).status).toBe(401);
+    const c = await cookie(member.id);
+    expect((await call('/api/admin/manual', { cookie: c })).status).toBe(403);
+    expect((await call('/api/admin/manual', { method: 'POST', cookie: c, body })).status).toBe(403);
+    expect((await db.prepare('SELECT COUNT(*) AS n FROM manual_grants').first<{ n: number }>())?.n).toBe(0);
+  });
+
+  it('refuses a cross-site POST', async () => {
+    const { call, cookie, admin } = await setup();
+    const res = await call('/api/admin/manual', { method: 'POST', cookie: await cookie(admin.id), body, origin: 'https://evil.example' });
+    expect(res.status).toBe(403);
+  });
+
+  it('lets an admin approve, lists it with their id, and answers 409 for the same transaction id', async () => {
+    const { call, cookie, admin, db } = await setup();
+    const c = await cookie(admin.id);
+    const ok = await call('/api/admin/manual', { method: 'POST', cookie: c, body });
+    expect(ok.status).toBe(200);
+    expect(((await ok.json()) as { proUntil: number }).proUntil).toBeGreaterThan(0);
+    expect((await call('/api/admin/manual', { method: 'POST', cookie: c, body })).status).toBe(409);
+    const list = (await (await call('/api/admin/manual', { cookie: c })).json()) as { grants: { adminId: string }[] };
+    expect(list.grants).toHaveLength(1);
+    expect(list.grants[0].adminId).toBe(admin.id);
+    expect((await db.prepare('SELECT COUNT(*) AS n FROM pass_grants').first<{ n: number }>())?.n).toBe(1);
+  });
+
+  it('answers 400 with messages for bad input', async () => {
+    const { call, cookie, admin } = await setup();
+    const res = await call('/api/admin/manual', { method: 'POST', cookie: await cookie(admin.id), body: { ...body, phone: 'x', note: '' } });
+    expect(res.status).toBe(400);
+    expect(((await res.json()) as { errors: string[] }).errors.length).toBeGreaterThan(0);
+  });
+});

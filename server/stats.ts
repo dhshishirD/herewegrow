@@ -45,16 +45,16 @@ const rows = async <T>(db: D1Like, sql: string, ...binds: unknown[]): Promise<T[
 const NOT_ROLLED = "day NOT IN (SELECT day FROM daily_rollup WHERE metric = 'pageviews' AND key = '*')";
 
 /**
- * Visitors with a hit in the last 5 minutes, each with the last page they were on. There is no ts-only index (it cost a
- * write per event), so the scan is limited to today and yesterday (Dhaka) through events_day; yesterday covers a window
- * that crosses Dhaka midnight.
+ * Visitors with a hit in the last 5 minutes, each with the last page they were on. There is no ts index (it cost a write
+ * per event), so the scan is bounded by rowid instead: ids grow with time, so only the newest LIVE_SCAN_ROWS rows are read
+ * per call no matter how big the table is. That keeps the 15 s dashboard poll cheap on the D1 Free read quota.
  */
+const LIVE_SCAN_ROWS = 3000;
 export async function liveNow(db: D1Like, now: number = Date.now()): Promise<{ count: number; visitors: { page: string; agoSec: number }[] }> {
   const r = await rows<{ path: string; ts: number }>(
     db,
-    "SELECT path, MAX(ts) AS ts FROM events WHERE day IN (?, ?) AND ts >= ? AND vid IS NOT NULL AND path != '' GROUP BY vid ORDER BY ts DESC",
-    dhakaDay(now),
-    dhakaDay(now - LIVE_WINDOW_MS),
+    "SELECT path, MAX(ts) AS ts FROM events WHERE id > (SELECT COALESCE(MAX(id), 0) - ? FROM events) AND ts >= ? AND vid IS NOT NULL AND path != '' GROUP BY vid ORDER BY ts DESC",
+    LIVE_SCAN_ROWS,
     now - LIVE_WINDOW_MS,
   );
   return { count: r.length, visitors: r.map((v) => ({ page: v.path, agoSec: Math.max(0, Math.round((now - v.ts) / 1000)) })) };

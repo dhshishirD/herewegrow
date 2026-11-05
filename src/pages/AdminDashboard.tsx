@@ -263,7 +263,7 @@ export function AdminDashboardPage() {
     let stopped = false;
     let inFlight = false;
     const poll = async () => {
-      if (inFlight) return;
+      if (inFlight || document.hidden) return;
       inFlight = true;
       const r = await get<Live>('/api/admin/stats/live');
       inFlight = false;
@@ -278,9 +278,12 @@ export function AdminDashboardPage() {
     };
     void poll();
     const t = setInterval(() => void poll(), 15_000);
+    const onVisible = () => void poll();
+    document.addEventListener('visibilitychange', onVisible);
     return () => {
       stopped = true;
       clearInterval(t);
+      document.removeEventListener('visibilitychange', onVisible);
     };
   }, [isAdmin]);
 

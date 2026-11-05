@@ -255,14 +255,17 @@ export async function audience(db: D1Like, r: Range) {
     r.from,
     r.to,
   );
-  // Returning = first seen on a day before the range.
+  // Returning = first seen on a day before the range. Only visitors with a pageview in the range are looked at; each one's
+  // first hit is MIN(ts) on the events(vid, ts) index, so this does not scan every event up to `to`.
+  const fromStart = Date.parse(`${r.from}T00:00:00Z`) - DHAKA_OFFSET_MS;
   const nr = await db
     .prepare(
       `SELECT COUNT(*) AS total, COALESCE(SUM(first < ?), 0) AS back FROM
-         (SELECT MIN(day) AS first FROM events WHERE vid IS NOT NULL AND day <= ? GROUP BY vid
-          HAVING SUM(type = 'pageview' AND day >= ?) > 0)`,
+         (SELECT MIN(ts) AS first FROM events
+          WHERE vid IN (SELECT DISTINCT vid FROM events WHERE type = 'pageview' AND vid IS NOT NULL AND day BETWEEN ? AND ?)
+          GROUP BY vid)`,
     )
-    .bind(r.from, r.to, r.from)
+    .bind(fromStart, r.from, r.to)
     .first<{ total: number; back: number }>();
   const total = nr?.total ?? 0;
   const returning = nr?.back ?? 0;

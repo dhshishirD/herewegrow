@@ -3,6 +3,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { useLang } from '../lib/lang';
+import { setPageMeta } from '../lib/seo';
 import { usePath } from '../lib/router';
 import { track, tracker } from '../lib/track';
 import { whatsappLink } from '../lib/whatsapp';
@@ -138,6 +139,7 @@ export function ContactWidget() {
 
 export function ContactPage() {
   const { t } = useLang();
+  useEffect(() => setPageMeta('Contact us', 'Leave your number and a short message. We will get back to you.', '/contact'), []);
   return (
     <div className="wrap max-w-lg py-14">
       <h1 className="text-4xl font-bold">{t({ en: 'Contact us', bn: 'যোগাযোগ' })}</h1>

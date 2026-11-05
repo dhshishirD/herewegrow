@@ -33,6 +33,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'About HereWeGrow and Career Solutions | CV expert in Bangladesh',
     description: '৫ বছরের অভিজ্ঞ সিভি কনসালট্যান্ট দেলোয়ার হাসান শিশির (ইংরেজিতে বিএ, এমএ, শাবিপ্রবি)। হাজারো সিভি, লিংকডইন ও বিডিজবস প্রোফাইল। Meet the CV expert behind HereWeGrow.',
   },
+  '/contact': {
+    title: 'যোগাযোগ করুন | Contact HereWeGrow',
+    description: 'সিভি, টেমপ্লেট বা অর্ডার নিয়ে প্রশ্ন? নাম, ফোন নম্বর ও ছোট একটি বার্তা দিন, আমরা যোগাযোগ করব। Contact HereWeGrow by message or WhatsApp.',
+  },
   '/guides': {
     title: 'ক্যারিয়ার গাইড: সিভি ফরম্যাট, টেলিটক আবেদন ও চাকরির টিপস | HereWeGrow',
     description: 'বাংলায় চাকরির গাইড: ব্যাংক জবের সিভি ফরম্যাট, ফ্রেশারের সিভি, ATS-ফ্রেন্ডলি সিভি, টেলিটকে ছবি ও স্বাক্ষরের সাইজ এবং সিভির সাধারণ ভুল।',

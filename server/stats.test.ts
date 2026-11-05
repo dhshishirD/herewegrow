@@ -145,6 +145,16 @@ describe('audience', () => {
     expect(a.devices).toEqual(expect.arrayContaining([{ device: 'desktop', visitors: 1 }, { device: 'mobile', visitors: 1 }]));
     expect(a.countries).toEqual(expect.arrayContaining([{ country: 'US', visitors: 1 }, { country: 'BD', visitors: 1 }]));
   });
+
+  it('ignores visitors not seen in the range and later hits, and counts an earlier non-pageview event as first seen', async () => {
+    const db = fakeD1();
+    await recordEvent(db, input({ vid: 'gone', sid: 'g1' }), ctx(D1)); // only before the range
+    await recordEvent(db, input({ vid: 'ev', sid: 'e1', type: 'event', name: 'cta_click' }), ctx(D1)); // event before
+    await recordEvent(db, input({ vid: 'ev', sid: 'e2' }), ctx(D2));
+    await recordEvent(db, input({ vid: 'new', sid: 'n1' }), ctx(D2));
+    await recordEvent(db, input({ vid: 'new', sid: 'n2' }), ctx(D2 + 24 * 3_600_000)); // after the range
+    expect((await audience(db, { from: '2026-11-05', to: '2026-11-05' })).newVsReturning).toEqual({ new: 1, returning: 1 });
+  });
 });
 
 describe('actions', () => {

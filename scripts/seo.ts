@@ -147,6 +147,16 @@ function pages(): Page[] {
       priority: 0.6,
     },
     {
+      path: '/contact',
+      ...seo('/contact'),
+      body: '<h1>যোগাযোগ</h1><p>আপনার নম্বর ও একটি ছোট বার্তা দিন। আমরা যোগাযোগ করব।</p><p>Leave your number and a short message. We will get back to you.</p>',
+      jsonLd: [
+        { '@type': 'ContactPage', name: 'Contact HereWeGrow', url: `${SITE}/contact`, about: { '@id': `${SITE}/#org` } },
+        crumbs([['HereWeGrow', '/'], ['Contact', '/contact']]),
+      ],
+      priority: 0.5,
+    },
+    {
       path: '/pro',
       ...seo('/pro'),
       body: `<h1>HereWeGrow Pro</h1><p>মার্কছাড়া PDF ও Word, ${bn(PRO_DESIGN_COUNT)}টি প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ ও টেমপ্লেটে ছাড়।</p><ul>${PLANS.map((p) => `<li>${esc(p.name.bn)} (${esc(p.name.en)}): ৳${p.price}</li>`).join('')}</ul>`,

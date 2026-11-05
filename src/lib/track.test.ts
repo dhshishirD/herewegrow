@@ -80,6 +80,23 @@ describe('createTracker', () => {
     expect(sent[0].sid).toBe(sent[1].sid);
   });
 
+  it('works when storage setItem throws (quota exceeded), keeping in-memory ids', () => {
+    const full = () => {
+      const m = mem();
+      return { getItem: m.getItem, setItem: () => { throw new DOMException('quota', 'QuotaExceededError'); } };
+    };
+    const { tracker, sent, advance } = setup({ storage: full(), session: full() });
+    expect(() => tracker.pageview('/a')).not.toThrow();
+    advance(60_000);
+    expect(() => tracker.event('cta_click')).not.toThrow();
+    expect(sent).toHaveLength(2);
+    expect(sent[0].vid).toBeTruthy();
+    expect(sent[1].vid).toBe(sent[0].vid);
+    expect(sent[1].sid).toBe(sent[0].sid);
+    expect(sent[1].utmSource).toBeUndefined(); // ref/utm still go out only once
+    expect(tracker.vid()).toBe(sent[0].vid);
+  });
+
   it('never throws when send throws', () => {
     const { tracker } = setup({ send: () => { throw new Error('boom'); } });
     expect(() => tracker.pageview('/a')).not.toThrow();

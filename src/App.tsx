@@ -6,6 +6,7 @@ import { AuthProvider } from './lib/auth';
 import { PageTracker } from './components/PageTracker';
 import { LoginModal } from './components/LoginModal';
 import { AccountPage } from './pages/Account';
+import { ContactPage, ContactWidget } from './components/ContactWidget';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
@@ -57,6 +58,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/admin/promos': AdminPromosPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
+  '/contact': ContactPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,
 };
@@ -89,6 +91,7 @@ export default function App() {
         <Footer />
         <CartDrawer />
         <LoginModal />
+        <ContactWidget />
       </CheckoutProvider>
       </CartProvider>
       </AuthProvider>

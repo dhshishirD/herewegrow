@@ -7,6 +7,7 @@ import { careersSitemap, serveCareerPage } from '../server/careers';
 import { serveCareersIndex } from '../server/careerIndex';
 import { handlePromo } from '../server/promoHandlers';
 import { handleAuth } from '../server/authHandlers';
+import { handleContact } from '../server/contact';
 import { handleTrack } from '../server/analyticsHandlers';
 import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
@@ -30,6 +31,7 @@ export default {
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);
       if (pathname === '/api/t' && request.method === 'POST') return handleTrack(request, env);
       if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+      if (pathname === '/api/contact') return handleContact(request, env);
       if (pathname === '/api/checkout') return handleCheckout(request, env);
       if (pathname === '/api/claim') return handleClaim(request, env);
       if (pathname === '/api/verify') return handleVerify(request, env);

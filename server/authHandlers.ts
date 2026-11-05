@@ -8,9 +8,9 @@ import {
 import { googleConfigured, googleFinish, googleStartUrl, safeNext } from './google';
 import { isAllowedOrigin, json } from './paymently';
 
-const clientIp = (r: Request) => r.headers.get('CF-Connecting-IP') ?? 'unknown';
+export const clientIp = (r: Request) => r.headers.get('CF-Connecting-IP') ?? 'unknown';
 
-async function turnstileOk(env: AuthEnv, token: unknown, ip: string): Promise<boolean> {
+export async function turnstileOk(env: AuthEnv, token: unknown, ip: string): Promise<boolean> {
   if (!env.TURNSTILE_SECRET) return true; // not enabled yet
   if (typeof token !== 'string' || !token) return false;
   const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {

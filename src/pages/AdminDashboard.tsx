@@ -21,7 +21,9 @@ interface Funnel { steps: { key: 'visit' | 'viewed' | 'order_started' | 'paid'; 
 interface Revenue { today: number; week: number; proActivations: number; orders: number }
 interface Audience { devices: { device: string; visitors: number }[]; countries: { country: string; visitors: number }[]; newVsReturning: { new: number; returning: number } }
 interface Actions { actions: { name: string; n: number; visitors: number }[] }
-interface Live { count: number; visitors: { page: string; agoSec: number }[] }
+interface Live { count: number; visitors: { page: string; agoSec: number }[]; newMessages?: number }
+type MsgStatus = 'new' | 'replied' | 'closed';
+interface Msg { id: string; createdAt: number; name: string; phone: string; email: string | null; message: string; page: string | null; utmSource: string | null; status: MsgStatus; note: string | null }
 
 const STEP_LABEL: Record<Funnel['steps'][number]['key'], string> = {
   visit: 'Visited',
@@ -153,6 +155,89 @@ const Kpi = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
+const INBOX_TABS: { id: MsgStatus | 'all'; label: string }[] = [
+  { id: 'all', label: 'All' }, { id: 'new', label: 'New' }, { id: 'replied', label: 'Replied' }, { id: 'closed', label: 'Closed' },
+];
+const dhakaTime = (ts: number) => new Date(ts).toLocaleString('en-GB', { timeZone: 'Asia/Dhaka', dateStyle: 'medium', timeStyle: 'short' });
+
+function MessageCard({ m, onSave, busy }: { m: Msg; onSave: (id: string, status: MsgStatus, note: string) => void; busy: boolean }) {
+  const [note, setNote] = useState(m.note ?? '');
+  return (
+    <li className="rounded-xl border border-line p-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <span className="font-semibold">{m.name} · {m.phone}</span>
+        <span className="text-xs text-muted">{dhakaTime(m.createdAt)} · {m.status}</span>
+      </div>
+      <p className="mt-1 text-xs text-muted">Page: {m.page ?? '-'} · Source: {m.utmSource ?? '-'}{m.email ? ` · ${m.email}` : ''}</p>
+      <p className="mt-2 whitespace-pre-wrap break-words text-sm">{m.message}</p>
+      <textarea className="field mt-2" rows={2} maxLength={500} placeholder="Note" aria-label="Note" value={note} onChange={(e) => setNote(e.target.value)} />
+      <div className="mt-2 flex flex-wrap gap-2">
+        {m.status !== 'replied' && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => onSave(m.id, 'replied', note)}>Replied</button>}
+        {m.status !== 'closed' && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => onSave(m.id, 'closed', note)}>Closed</button>}
+        {m.status !== 'new' && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => onSave(m.id, 'new', note)}>Reopen</button>}
+        <a className="btn btn-primary" href={`https://wa.me/88${m.phone}`} target="_blank" rel="noreferrer">Reply on WhatsApp</a>
+      </div>
+    </li>
+  );
+}
+
+function Inbox({ newMessages }: { newMessages: number }) {
+  const [tab, setTab] = useState<MsgStatus | 'all'>('all');
+  const [messages, setMessages] = useState<Msg[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [reload, setReload] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    setMessages(null);
+    setError(null);
+    void get<{ messages: Msg[] }>(`/api/admin/contacts${tab === 'all' ? '' : `?status=${tab}`}`).then((r) => {
+      if (cancelled) return;
+      if (r.ok) setMessages(r.data.messages);
+      else setError(fail(r.error));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, reload]);
+
+  const save = async (id: string, status: MsgStatus, note: string) => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/contacts/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status, note }) });
+      if (res.ok) setReload((n) => n + 1);
+      else setError(res.status === 401 ? MESSAGES.login : res.status === 403 ? MESSAGES.forbidden : `Could not save (http ${res.status}).`);
+    } catch {
+      setError(MESSAGES.network);
+    }
+    setBusy(false);
+  };
+
+  return (
+    <section className="mt-6 rounded-2xl border border-line bg-white p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-lg font-semibold">
+          Messages
+          {newMessages > 0 && <span className="ml-2 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white" aria-label={`${newMessages} new`}>{newMessages}</span>}
+        </h2>
+        <div className="flex gap-2">
+          {INBOX_TABS.map((x) => (
+            <button key={x.id} type="button" className={`btn ${tab === x.id ? 'btn-primary' : 'btn-quiet'}`} onClick={() => setTab(x.id)}>{x.label}</button>
+          ))}
+        </div>
+      </div>
+      {error && <p role="alert" className="mt-2 text-sm text-red-800">{error}</p>}
+      {!messages && !error && <p className="mt-2 text-sm text-muted">Loading…</p>}
+      {messages && messages.length === 0 && <p className="mt-2 text-sm text-muted">No messages.</p>}
+      {messages && messages.length > 0 && (
+        <ul className="mt-3 space-y-3">{messages.map((m) => <MessageCard key={`${m.id}:${m.status}:${m.note ?? ''}`} m={m} onSave={save} busy={busy} />)}</ul>
+      )}
+    </section>
+  );
+}
+
 export function AdminDashboardPage() {
   const { user, ready, openLogin } = useAuth();
   const [preset, setPreset] = useState<Preset | null>('7d');
@@ -257,6 +342,8 @@ export function AdminDashboardPage() {
           </ul>
         )}
       </section>
+
+      <Inbox newMessages={live?.newMessages ?? 0} />
 
       <div className="mt-6 flex flex-wrap items-end gap-2">
         {PRESETS.map((p) => (

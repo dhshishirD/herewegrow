@@ -274,7 +274,7 @@ describe('GET /api/admin/stats/*', () => {
       ok: true, visitors: 0, sessions: 0, pageviews: 0, bounceRate: 0, pagesPerSession: 0, daily: [],
     });
     expect(await (await call('/api/admin/stats/sources?preset=7d', { cookie: c })).json()).toEqual({ ok: true, sources: [] });
-    expect(await (await call('/api/admin/stats/live', { cookie: c })).json()).toEqual({ ok: true, count: 0, visitors: [] });
+    expect(await (await call('/api/admin/stats/live', { cookie: c })).json()).toEqual({ ok: true, count: 0, visitors: [], newMessages: 0 });
     expect(await (await call('/api/admin/stats/revenue', { cookie: c })).json()).toEqual({ ok: true, today: 0, week: 0, proActivations: 0, orders: 0 });
     expect(((await (await call('/api/admin/stats/funnel?preset=7d', { cookie: c })).json()) as { steps: unknown[] }).steps).toHaveLength(4);
   });
@@ -284,5 +284,49 @@ describe('GET /api/admin/stats/*', () => {
     const res = await call('/api/admin/stats/overview?from=x&to=y', { cookie: await cookie(admin.id) });
     expect(res.status).toBe(400);
     expect(await res.json()).toEqual({ error: 'range' });
+  });
+});
+
+describe('contact inbox admin routes', () => {
+  const addMsg = (db: ReturnType<typeof fakeD1>, id: string, at: number, status = 'new') =>
+    db.prepare('INSERT INTO contact_messages (id, created_at, name, phone, message, status) VALUES (?, ?, ?, ?, ?, ?)').bind(id, at, 'N', '01712345678', '<script>alert(1)</script>', status).run();
+
+  it('list is 401 anonymous, 403 non-admin, 200 admin newest first with filter', async () => {
+    const { call, cookie, member, admin, db } = await setup();
+    await addMsg(db, 'a', 1);
+    await addMsg(db, 'b', 2, 'closed');
+    expect((await call('/api/admin/contacts')).status).toBe(401);
+    expect((await call('/api/admin/contacts', { cookie: await cookie(member.id) })).status).toBe(403);
+    const c = await cookie(admin.id);
+    const all = (await (await call('/api/admin/contacts', { cookie: c })).json()) as { ok: boolean; messages: { id: string; message: string }[] };
+    expect(all.ok).toBe(true);
+    expect(all.messages.map((m) => m.id)).toEqual(['b', 'a']);
+    expect(all.messages[0].message).toBe('<script>alert(1)</script>');
+    const closed = (await (await call('/api/admin/contacts?status=closed', { cookie: c })).json()) as { messages: { id: string }[] };
+    expect(closed.messages.map((m) => m.id)).toEqual(['b']);
+    expect((await call('/api/admin/contacts?status=bogus', { cookie: c })).status).toBe(400);
+  });
+
+  it('POST updates status and note; 404 unknown id; 400 bad status or long note; 403 member', async () => {
+    const { call, cookie, member, admin, db } = await setup();
+    await addMsg(db, 'a', 1);
+    const c = await cookie(admin.id);
+    expect((await call('/api/admin/contacts/a', { method: 'POST', cookie: await cookie(member.id), body: { status: 'closed' } })).status).toBe(403);
+    expect((await call('/api/admin/contacts/a', { method: 'POST', cookie: c, body: { status: 'replied', note: 'sent quote' } })).status).toBe(200);
+    const row = (await db.prepare('SELECT status, note FROM contact_messages WHERE id = ?').bind('a').first())!;
+    expect(row).toEqual({ status: 'replied', note: 'sent quote' });
+    expect((await call('/api/admin/contacts/nope', { method: 'POST', cookie: c, body: { status: 'closed' } })).status).toBe(404);
+    expect((await call('/api/admin/contacts/a', { method: 'POST', cookie: c, body: { status: 'weird' } })).status).toBe(400);
+    expect((await call('/api/admin/contacts/a', { method: 'POST', cookie: c, body: { status: 'closed', note: 'x'.repeat(501) } })).status).toBe(400);
+    expect((await call('/api/admin/contacts/a', { method: 'POST', cookie: c, body: { status: 'closed' }, origin: 'https://evil.example' })).status).toBe(403);
+  });
+
+  it('live includes newMessages counting only new', async () => {
+    const { call, cookie, admin, db } = await setup();
+    await addMsg(db, 'a', 1);
+    await addMsg(db, 'b', 2);
+    await addMsg(db, 'c', 3, 'replied');
+    const live = (await (await call('/api/admin/stats/live', { cookie: await cookie(admin.id) })).json()) as { newMessages: number; count: number };
+    expect(live).toMatchObject({ count: 0, newMessages: 2 });
   });
 });

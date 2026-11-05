@@ -22,7 +22,7 @@ export const dhakaDay = (ts: number): string => new Date(ts + DHAKA_OFFSET_MS).t
 const str = (v: unknown, max: number): string | null => (typeof v === 'string' && v ? v.slice(0, max) : null);
 
 /** Lowercase, keep [a-z0-9_.-], collapse the rest to "-", max 40 chars. */
-function utm(v: unknown): string | null {
+export function utm(v: unknown): string | null {
   if (typeof v !== 'string') return null;
   const s = v.toLowerCase().replace(/[^a-z0-9_.-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
   return s || null;

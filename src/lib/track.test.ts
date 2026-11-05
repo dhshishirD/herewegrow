@@ -148,3 +148,21 @@ describe('createTracker', () => {
     expect(b.sent[0].ref).toBeUndefined();
   });
 });
+
+describe('tracker.source', () => {
+  it('prefers utm_source, else referrer host, else null', () => {
+    expect(setup().tracker.source()).toBe('fb');
+    expect(setup({ search: '' }).tracker.source()).toBe('google.com');
+    expect(setup({ search: '', referrer: '' }).tracker.source()).toBeNull();
+    expect(setup({ search: '', referrer: 'not a url' }).tracker.source()).toBeNull();
+  });
+
+  it('keeps the first-touch source after the first hit and never throws', () => {
+    const { tracker } = setup();
+    tracker.pageview('/a');
+    tracker.pageview('/b');
+    expect(tracker.source()).toBe('fb');
+    const broken = createTracker({ ...setup().deps, storage: { getItem: () => { throw new Error('x'); }, setItem: () => { throw new Error('x'); } }, session: null, search: undefined as unknown as string });
+    expect(() => broken.source()).not.toThrow();
+  });
+});

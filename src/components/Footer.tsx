@@ -37,6 +37,7 @@ export function Footer() {
               </a>
             </li>
             <li><Link className="hover:text-white hover:underline underline-offset-4" href="/order">{t({ en: 'Download your files again', bn: 'আবার ফাইল ডাউনলোড' })}</Link></li>
+            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/contact">{t({ en: 'Send us a message', bn: 'আমাদের মেসেজ পাঠান' })}</Link></li>
             <li className="text-white/70">{t({ en: 'Every day, 9am to 11pm', bn: 'প্রতিদিন সকাল ৯টা থেকে রাত ১১টা' })}</li>
           </ul>
         </div>

@@ -126,10 +126,22 @@ export function createTracker(deps: TrackerDeps) {
     }
   };
 
+  /** First-touch source of this page load: utm_source if present, else the referrer host. Never throws. */
+  const source = (): string | null => {
+    try {
+      const u = new URLSearchParams(deps.search).get('utm_source');
+      if (u) return u;
+      return deps.referrer ? new URL(deps.referrer).hostname || null : null;
+    } catch {
+      return null;
+    }
+  };
+
   const here = () => (typeof window !== 'undefined' ? window.location.pathname || '/' : '/');
 
   return {
     vid,
+    source,
     /** Stop tracking for good (admin, opt-out) and drop anything queued. */
     disable() {
       disabled = true;

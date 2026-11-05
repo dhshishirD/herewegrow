@@ -192,9 +192,14 @@ export const sources = (db: D1Like, r: Range) =>
   );
 
 const FUNNEL_VIEWED = ['view_service', 'view_template', 'view_pro'];
-const FUNNEL_STARTED = ['order_start', 'checkout_click'];
+// Started = a checkout button press (templates/services in Checkout.tsx, Pro passes in Pro.tsx). The /order
+// re-download lookup (redownload_lookup) is not an order start.
+const FUNNEL_STARTED = ['checkout_click'];
 
-/** Distinct visitors reaching each step in the range: any pageview, a view_* event, an order start/checkout click, a purchase. */
+/**
+ * Distinct visitors reaching each step in the range: any pageview, a view_* event, a checkout click, a server-written purchase.
+ * Steps are counted independently (not nested), so a step can exceed the one before it (e.g. a purchase without a vid match).
+ */
 export async function funnel(db: D1Like, r: Range) {
   const count = async (where: string, ...names: string[]) =>
     (

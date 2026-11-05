@@ -117,7 +117,7 @@
 **Interfaces:**
 - Consumes: `recordServerEvent` (Task 1); `CheckoutBody` gains `vid?: unknown` (string <= 64 chars, sanitised with the existing `clean`); payment `metadata` gains `vid`.
 - Produces (`server/stats.ts`):
-  - `funnel(db, r): Promise<{ steps: { key: 'visit'|'viewed'|'order_started'|'paid'; visitors: number }[] }>` (viewed = any of `view_service|view_template|view_pro`; order_started = `order_start` or `checkout_click`; paid = `purchase`)
+  - `funnel(db, r): Promise<{ steps: { key: 'visit'|'viewed'|'order_started'|'paid'; visitors: number }[] }>` (viewed = any of `view_service|view_template|view_pro`; order_started = `checkout_click` (final review: `order_start` renamed `redownload_lookup` and dropped from the funnel; Pro emits `checkout_click`); paid = `purchase` rows with a `purchase:` dedupe key)
   - `revenue(db, now?): Promise<{ today: number; week: number; proActivations: number; orders: number }>` from `orders` (`amount_bdt`, `paid_at`, Dhaka day) and `pass_grants`
   - `sources` gains `paid: number` per source using the purchase event's `meta.source`
 - Route: `GET /api/admin/stats/funnel`, `GET /api/admin/stats/revenue`.

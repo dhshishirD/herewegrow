@@ -129,6 +129,7 @@ export function ProPage() {
       return;
     }
     setBusy(id);
+    track('checkout_click', { product: id });
     try {
       const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, lang, promo: discount?.code, vid: tracker.vid() }) });
       const d = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string };

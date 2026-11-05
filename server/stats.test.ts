@@ -163,15 +163,16 @@ describe('actions', () => {
 });
 
 describe('funnel', () => {
-  it('counts each visitor once per step and takes viewed/started from any of their event names', async () => {
+  it('counts each visitor once per step; viewed from any view_* event, started from checkout_click only', async () => {
     const db = fakeD1();
     const ev = (vid: string, name: string, t: number) => recordEvent(db, input({ vid, sid: `s-${vid}`, type: 'event', name, path: '/x' }), ctx(D1 + t));
     for (const v of ['a', 'b', 'c']) await recordEvent(db, input({ vid: v, sid: `s-${v}` }), ctx(D1));
     await recordEvent(db, input({ vid: 'a', sid: 's-a2' }), ctx(D1 + MIN));
     await ev('a', 'view_pro', 1); await ev('a', 'view_template', 2); await ev('a', 'view_template', 3);
     await ev('b', 'view_service', 1);
-    await ev('a', 'checkout_click', 4); await ev('a', 'order_start', 5);
-    await ev('b', 'order_start', 4);
+    await ev('a', 'checkout_click', 4); await ev('a', 'checkout_click', 5);
+    // the /order re-download lookup is an action, not an order start
+    await ev('b', 'redownload_lookup', 4); await ev('c', 'order_start', 4);
     await recordServerEvent(db, { name: 'purchase', vid: 'a', userId: null, dedupeKey: 'purchase:1', ts: D1 + 6 * MIN });
     await recordServerEvent(db, { name: 'purchase', vid: 'a', userId: null, dedupeKey: 'purchase:2', ts: D1 + 7 * MIN });
     // outside the range
@@ -180,7 +181,7 @@ describe('funnel', () => {
       steps: [
         { key: 'visit', visitors: 3 },
         { key: 'viewed', visitors: 2 },
-        { key: 'order_started', visitors: 2 },
+        { key: 'order_started', visitors: 1 },
         { key: 'paid', visitors: 1 },
       ],
     });

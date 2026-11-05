@@ -60,7 +60,7 @@ export function OrderPage() {
         <div>
           <form onSubmit={submit} className="rounded-2xl bg-white p-6 ring-1 ring-line sm:p-8">
             <label className="label" htmlFor="inv">{t({ en: 'Invoice number', bn: 'ইনভয়েস নম্বর' })}</label>
-            <input id="inv" className="field" value={invoice} onChange={(e) => { if (!started.current) { started.current = true; track('order_start'); } setInvoice(e.target.value); }} autoComplete="off" spellCheck={false} maxLength={80}
+            <input id="inv" className="field" value={invoice} onChange={(e) => { if (!started.current) { started.current = true; track('redownload_lookup'); } setInvoice(e.target.value); }} autoComplete="off" spellCheck={false} maxLength={80}
               placeholder={t({ en: 'From your payment page or SMS', bn: 'পেমেন্ট পেজ বা এসএমএস থেকে' })} />
             <button type="submit" className="btn btn-primary mt-4 w-full" disabled={state.kind === 'checking' || !invoice.trim()}>
               {state.kind === 'checking' ? t({ en: 'Checking…', bn: 'যাচাই হচ্ছে…' }) : t({ en: 'Get my files', bn: 'ফাইল নিন' })}

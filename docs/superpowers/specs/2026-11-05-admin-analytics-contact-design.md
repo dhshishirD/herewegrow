@@ -35,7 +35,7 @@ Times are Unix ms. Index writes count toward D1 write limits (see Risks), so the
 Server: origin check; drop bots by User-Agent pattern; validate/trim every field; `country` from `request.cf`; `device` (mobile/desktop/tablet) from User-Agent; `ref_host` = host of referrer only; per-`vid` cap of 300 events per Dhaka day, counted in D1 on `events_vid_ts` (no KV writes on this path: Cloudflare Free allows 1,000 KV writes a day for the whole account and login/checkout need them); a best-effort in-memory limit of 120 events per IP per minute per Worker isolate (IP never stored); always answer `204` so the tracker never blocks the page. Failures are logged, never shown.
 
 ### Events tracked
-`pageview` (every route change) · `view_service`, `view_template`, `view_pro` · `order_start`, `checkout_click` · `cta_whatsapp_click` · `login_success` · `cv_export` · `contact_submit` · `pro_click`.
+`pageview` (every route change) · `view_service`, `view_template`, `view_pro` · `checkout_click` (template/service checkout and Pro pass purchase, right before the payment request) · `redownload_lookup` (the /order "get my files again" form; an action, not a funnel step) · `cta_whatsapp_click` · `login_success` · `cv_export` · `contact_submit` · `pro_click`.
 `purchase` is written **server-side** inside the existing verify/grant path (amount, product, source from the original visit), so ad-blockers cannot hide a sale. Duplicate verify calls write one event (keyed by order id).
 
 ### Client
@@ -52,7 +52,7 @@ All routes under `/api/admin/*` reuse `requireAdmin` + origin check. Pages link 
 - **Sources:** referrer host, `utm_source/medium/campaign`, with visitors, orders started and paid per source (this is the ad view).
 - **Audience:** device split, country, new vs returning (`vid` first seen).
 - **Actions:** counts per event name; click to see recent occurrences.
-- **Funnel:** visitors → viewed service/template/pro → order started → paid, with drop-off per step.
+- **Funnel:** visitors → viewed service/template/pro → started an order (`checkout_click`) → paid (server-written `purchase`), with drop-off per step. Steps are independent counts, so a step can exceed the one before; the dashboard then shows "—" instead of a drop-off.
 - **Inbox:** unread badge on the dashboard header.
 - **Revenue today / this week** from paid orders, plus Pro activations.
 Ranges older than 90 days read from `daily_rollup`; recent ranges read from `events`.

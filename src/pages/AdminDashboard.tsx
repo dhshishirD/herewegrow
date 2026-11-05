@@ -5,6 +5,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useAuth } from '../lib/auth';
 import { Link } from '../lib/router';
+import { dropOff } from '../lib/funnel';
 
 type Preset = 'today' | 'yesterday' | '7d' | '30d';
 const PRESETS: { id: Preset; label: string }[] = [
@@ -99,10 +100,11 @@ function Bars({ data: raw }: { data: Overview['daily'] }) {
   );
 }
 
-function Table({ title, head, rows }: { title: string; head: string[]; rows: ReactNode[][] }) {
+function Table({ title, head, rows, note }: { title: string; head: string[]; rows: ReactNode[][]; note?: string }) {
   return (
     <section className="rounded-2xl border border-line bg-white p-4">
       <h2 className="text-lg font-semibold">{title}</h2>
+      {note && <p className="mt-1 text-xs text-muted">{note}</p>}
       {rows.length === 0 ? (
         <p className="mt-2 text-sm text-muted">Nothing yet.</p>
       ) : (
@@ -125,24 +127,30 @@ function Table({ title, head, rows }: { title: string; head: string[]; rows: Rea
 
 function FunnelBars({ steps }: { steps: Funnel['steps'] }) {
   const max = Math.max(...steps.map((x) => x.visitors), 1);
+  const drops = steps.map((st, i) => (i ? dropOff(steps[i - 1].visitors, st.visitors) : null));
   return (
-    <ul className="mt-3 space-y-3">
-      {steps.map((st, i) => {
-        const prev = i ? steps[i - 1].visitors : 0;
-        const drop = i && prev > 0 ? Math.max(0, Math.round((1 - st.visitors / prev) * 100)) : null;
-        return (
-          <li key={st.key}>
-            <div className="flex justify-between text-sm">
-              <span>{STEP_LABEL[st.key]}</span>
-              <span>{st.visitors}{drop !== null && <span className="text-muted"> · {drop}% drop-off</span>}</span>
-            </div>
-            <div className="mt-1 h-3 rounded bg-line">
-              <div className="h-3 rounded bg-leaf" style={{ width: `${(st.visitors / max) * 100}%` }} />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <ul className="mt-3 space-y-3">
+        {steps.map((st, i) => {
+          const drop = drops[i];
+          return (
+            <li key={st.key}>
+              <div className="flex justify-between text-sm">
+                <span>{STEP_LABEL[st.key]}</span>
+                <span>
+                  {st.visitors}
+                  {drop === 'exceeds' ? <span className="text-muted"> · —*</span> : drop !== null && <span className="text-muted"> · {drop}% drop-off</span>}
+                </span>
+              </div>
+              <div className="mt-1 h-3 rounded bg-line">
+                <div className="h-3 rounded bg-leaf" style={{ width: `${(st.visitors / max) * 100}%` }} />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {drops.includes('exceeds') && <p className="mt-2 text-xs text-muted">* Step counts are independent, so a step can exceed the previous one.</p>}
+    </>
   );
 }
 
@@ -391,7 +399,12 @@ export function AdminDashboardPage() {
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Table title="Top pages" head={['Page', 'Views', 'Visitors']} rows={data.pages.topPages.map((p) => [p.path, p.views, p.visitors])} />
             <Table title="Entry pages" head={['Page', 'Sessions']} rows={data.pages.entryPages.map((p) => [p.path, p.sessions])} />
-            <Table title="Sources" head={['Source', 'Medium', 'Campaign', 'Visitors', 'Paid']} rows={data.sources.sources.map((s) => [s.source, s.medium || '-', s.campaign || '-', s.visitors, s.paid])} />
+            <Table
+              title="Sources"
+              head={['Source', 'Medium', 'Campaign', 'Visitors', 'Paid']}
+              rows={data.sources.sources.map((s) => [s.source, s.medium || '-', s.campaign || '-', s.visitors, s.paid])}
+              note="Visitors = sessions' entry source within the range; Paid = buyers' first-touch source — not a conversion rate."
+            />
             <Table title="Actions" head={['Action', 'Count', 'Visitors']} rows={data.actions.actions.map((a) => [a.name, a.n, a.visitors])} />
             <Table title="Devices" head={['Device', 'Visitors']} rows={data.audience.devices.map((d) => [d.device, d.visitors])} />
             <Table title="Countries" head={['Country', 'Visitors']} rows={data.audience.countries.map((c) => [c.country, c.visitors])} />

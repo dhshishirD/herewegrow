@@ -26,3 +26,15 @@ describe('security headers', () => {
     expect(r.headers.get('Location')).toBe('/x');
   });
 });
+
+describe('public/_headers (static pages)', () => {
+  it('carries the same CSP and basic headers as the Worker', async () => {
+    const { readFileSync } = await import('node:fs');
+    const file = readFileSync(new URL('../public/_headers', import.meta.url), 'utf8');
+    expect(file).toContain(`Content-Security-Policy: ${CSP}`);
+    const probe = withSecurityHeaders(new Response('x'));
+    for (const name of ['X-Content-Type-Options', 'X-Frame-Options', 'Referrer-Policy', 'Permissions-Policy', 'Strict-Transport-Security', 'Cross-Origin-Opener-Policy']) {
+      expect(file).toContain(`${name}: ${probe.headers.get(name)}`);
+    }
+  });
+});

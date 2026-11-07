@@ -263,7 +263,13 @@ export function BuilderPage() {
   const { t, lang } = useLang();
   const [state, setState] = useState<BuilderState>(() => loadState() ?? { data: emptyCv(), design: 'classic', accent: ACCENTS[0] });
   const [open, setOpen] = useState<string>('import');
-  const [view, setView] = useState<'edit' | 'preview'>('edit');
+  // Phones show one step at a time (fill the form, pick a design, download); wide screens show form and preview together
+  const [view, setView] = useState<'edit' | 'design' | 'download'>('edit');
+  const goStep = (v: 'edit' | 'design' | 'download') => {
+    setView(v);
+    track('builder_step', { step: v });
+    window.scrollTo({ top: 0 });
+  };
   const [importMsg, setImportMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [importing, setImporting] = useState(false);
   const [newSection, setNewSection] = useState('');
@@ -484,17 +490,30 @@ export function BuilderPage() {
   return (
     <>
       <div className="no-print">
+        <div className="md:hidden border-b border-line bg-mist">
+          <div className="wrap py-3">
+            <p className="font-display text-2xl font-semibold">{title}</p>
+          </div>
+        </div>
+        <div className="max-md:hidden">
         <PageHead crumbs={[{ href: '/tools', label: { en: 'Free tools', bn: 'ফ্রি টুলস' } }, { href: '/builder', label: { en: 'CV builder', bn: 'সিভি বিল্ডার' } }]} title={title} intro={intro} />
+        </div>
 
         {/* Toolbar */}
         <div className="sticky top-[4.25rem] z-20 border-b border-line bg-paper/95 backdrop-blur max-md:top-[7.6rem]">
-          <div className="wrap flex flex-wrap items-center gap-3 py-3">
-            <label className="md:hidden">
-              <span className="sr-only">{t({ en: 'Design', bn: 'ডিজাইন' })}</span>
-              <select className="field !min-h-10 !w-auto !py-1.5 text-sm font-semibold" value={state.design} onChange={(e) => pickDesign(e.target.value as DesignId)}>
-                {DESIGNS.map((x) => <option key={x.id} value={x.id}>{t(x.name)}{x.pro && !pro ? ' · Pro' : ''}</option>)}
-              </select>
-            </label>
+          {/* Phone: three steps, one at a time */}
+          <div className="wrap md:hidden" role="tablist" aria-label={t({ en: 'Steps', bn: 'ধাপ' })}>
+            <div className="grid grid-cols-3 gap-1.5 py-2">
+              {([['edit', { en: 'Fill form', bn: 'ফর্ম ফিলআপ' }], ['design', { en: 'Design', bn: 'ডিজাইন' }], ['download', { en: 'Download', bn: 'ডাউনলোড' }]] as const).map(([v, label], i) => (
+                <button key={v} type="button" role="tab" aria-selected={view === v} onClick={() => goStep(v)}
+                  className={`flex min-h-11 items-center justify-center gap-1.5 rounded-full px-2 text-sm font-semibold ${view === v ? 'bg-leaf text-white' : 'bg-leaf-soft text-leaf-dark'}`}>
+                  <span className={`grid h-5 w-5 place-items-center rounded-full text-xs ${view === v ? 'bg-white text-leaf' : 'bg-white'}`}>{i + 1}</span>
+                  {t(label)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="wrap flex flex-wrap items-center gap-3 py-3 max-md:hidden">
             <FontPicker value={state.font} onChange={(font) => setState((s) => ({ ...s, font }))} t={t} />
             <div role="radiogroup" aria-label={t({ en: 'Colour', bn: 'রং' })} className="flex gap-1.5">
               {ACCENTS.map((c) => (
@@ -504,13 +523,6 @@ export function BuilderPage() {
             </div>
             <MarginControl margins={state.margins} onChange={(margins) => setState((s) => ({ ...s, margins }))} t={t} />
             <div className="ml-auto flex items-center gap-2">
-              <div className="flex rounded-lg bg-mist p-1 md:hidden">
-                {(['edit', 'preview'] as const).map((v) => (
-                  <button key={v} type="button" onClick={() => setView(v)} className={`rounded-md px-3 py-1.5 text-sm font-semibold ${view === v ? 'bg-white shadow-sm' : ''}`}>
-                    {v === 'edit' ? t({ en: 'Edit', bn: 'এডিট' }) : t({ en: 'Preview', bn: 'প্রিভিউ' })}
-                  </button>
-                ))}
-              </div>
               <button type="button" onClick={downloadWord} disabled={wordBusy} className="btn btn-quiet bg-white !min-h-10" title={t({ en: 'Editable Word file, Classic layout', bn: 'এডিটযোগ্য Word ফাইল, ক্লাসিক লেআউট' })}>
                 {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : 'Word'}
               </button>
@@ -523,14 +535,14 @@ export function BuilderPage() {
 
         <div className="wrap grid grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           {/* Form */}
-          <div className={`min-w-0 space-y-3 ${view === 'preview' ? 'max-md:hidden' : ''}`}>
+          <div className={`min-w-0 space-y-3 ${view !== 'edit' ? 'max-md:hidden' : ''}`}>
             {/* Saved CVs */}
-            <section className="rounded-2xl bg-white p-5 ring-1 ring-line">
+            <section className="rounded-2xl bg-white p-5 ring-1 ring-line max-md:p-4">
               {!user ? (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-display text-lg font-semibold">{t({ en: 'Save your CV online', bn: 'সিভি অনলাইনে সেভ করুন' })}</p>
-                    <p className="mt-1 text-sm text-muted">{t({ en: 'Log in with your phone number to keep your CV safe and open it on any device.', bn: 'ফোন নম্বর দিয়ে লগইন করুন: সিভি নিরাপদ থাকবে, যেকোনো ডিভাইসে খুলতে পারবেন।' })}</p>
+                    <p className="mt-1 text-sm text-muted max-md:hidden">{t({ en: 'Log in with your phone number to keep your CV safe and open it on any device.', bn: 'ফোন নম্বর দিয়ে লগইন করুন: সিভি নিরাপদ থাকবে, যেকোনো ডিভাইসে খুলতে পারবেন।' })}</p>
                   </div>
                   <button type="button" className="btn btn-quiet bg-white !min-h-10" onClick={openLogin}>{t({ en: 'Log in', bn: 'লগইন' })}</button>
                 </div>
@@ -779,6 +791,10 @@ export function BuilderPage() {
               </ol>
             </Section>
 
+            <button type="button" className="btn btn-primary w-full md:hidden" onClick={() => goStep('design')}>
+              {t({ en: 'Next: pick a design →', bn: 'পরের ধাপ: ডিজাইন বেছে নিন →' })}
+            </button>
+
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm text-muted">
               <span>{t({ en: 'Saved on this device as you type.', bn: 'লেখার সাথে সাথে এই ডিভাইসে সেভ হচ্ছে।' })}</span>
               <button type="button" className="text-alert underline underline-offset-4" onClick={() => { if (window.confirm(t({ en: 'Clear everything and start again?', bn: 'সব মুছে নতুন করে শুরু করবেন?' }))) set(emptyCv()); }}>
@@ -790,13 +806,31 @@ export function BuilderPage() {
           {/* Preview */}
           <div className={`min-w-0 ${view === 'edit' ? 'max-md:hidden' : ''}`}>
             <div className="md:sticky md:top-36">
+              <div className={view === 'download' ? 'max-md:hidden' : ''}>
               <div className="mb-3 flex items-baseline justify-between gap-3">
                 <p className="font-display text-lg font-semibold">{t({ en: 'Choose a design', bn: 'ডিজাইন বেছে নিন' })}</p>
                 <p className="truncate text-sm text-muted">{t(DESIGNS.find((x) => x.id === state.design)?.note ?? DESIGNS[0].note)}</p>
               </div>
               <DesignGallery state={state} pro={pro} onPick={pickDesign} t={t} />
+              {/* Phone only: colour, font and margins live here, next to the design, not in the toolbar */}
+              <div className="mb-4 space-y-3 rounded-2xl bg-white p-4 ring-1 ring-line md:hidden">
+                <div>
+                  <p className="label">{t({ en: 'Colour', bn: 'রং' })}</p>
+                  <div role="radiogroup" aria-label={t({ en: 'Colour', bn: 'রং' })} className="flex flex-wrap gap-3">
+                    {ACCENTS.map((c) => (
+                      <button key={c} type="button" role="radio" aria-checked={state.accent === c} aria-label={c} onClick={() => setState((s) => ({ ...s, accent: c }))}
+                        className={`h-10 w-10 rounded-full ring-offset-2 ${state.accent === c ? 'ring-2 ring-ink' : ''}`} style={{ background: c }} />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <FontPicker value={state.font} onChange={(font) => setState((s) => ({ ...s, font }))} t={t} />
+                  <MarginControl margins={state.margins} onChange={(margins) => setState((s) => ({ ...s, margins }))} t={t} />
+                </div>
+              </div>
+              </div>
               {!isEmpty && (
-                <div className="mb-4 flex items-start gap-4 rounded-2xl bg-white p-4 ring-1 ring-line">
+                <div className={`mb-4 flex items-start gap-4 rounded-2xl bg-white p-4 ring-1 ring-line ${view !== 'download' ? 'max-md:hidden' : ''}`}>
                   <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-full font-display text-xl font-semibold ${score.score >= 80 ? 'bg-leaf-soft text-leaf-dark' : score.score >= 60 ? 'bg-gold-soft text-gold' : 'bg-alert/10 text-alert'}`}
                     aria-label={t({ en: `CV score ${score.score} out of 100`, bn: `সিভি স্কোর ১০০-এর মধ্যে ${num(String(score.score), 'bn')}` })}>
                     {num(String(score.score), lang)}
@@ -807,6 +841,16 @@ export function BuilderPage() {
                       {failing.map((c) => <li key={c.id}>{t(c.fix)}</li>)}
                     </ul>
                   </div>
+                </div>
+              )}
+              {view === 'download' && (
+                <div className="mb-4 grid gap-2 md:hidden">
+                  <button type="button" onClick={download} className="btn btn-primary !min-h-12 w-full text-[1.05rem]">
+                    {needPro && <span aria-hidden="true">🔒 </span>}{t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}
+                  </button>
+                  <button type="button" onClick={downloadWord} disabled={wordBusy} className="btn btn-quiet w-full bg-white !min-h-12">
+                    {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : t({ en: 'Download Word (editable)', bn: 'Word ডাউনলোড (এডিটযোগ্য)' })}
+                  </button>
                 </div>
               )}
               {pages > 1 && (
@@ -828,7 +872,12 @@ export function BuilderPage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 rounded-2xl bg-white p-5 ring-1 ring-line">
+              {view === 'design' && (
+                <button type="button" className="btn btn-primary mt-4 w-full md:hidden" onClick={() => goStep('download')}>
+                  {t({ en: 'Next: download my CV →', bn: 'পরের ধাপ: সিভি ডাউনলোড →' })}
+                </button>
+              )}
+              <div className={`mt-4 rounded-2xl bg-white p-5 ring-1 ring-line ${view !== 'download' ? 'max-md:hidden' : ''}`}>
                 <p className="font-semibold">{t({ en: 'Want an expert to check it?', bn: 'বিশেষজ্ঞকে দিয়ে যাচাই করাতে চান?' })}</p>
                 <p className="mt-1 text-sm text-muted">{t({ en: 'Download the PDF, then get written feedback on every section for ৳199.', bn: 'PDF ডাউনলোড করে ৳১৯৯-এ প্রতিটি অংশের লিখিত মতামত নিন।' })}</p>
                 <Link href="/services" className="btn btn-quiet mt-3 bg-white !min-h-10">{t({ en: 'CV review ৳199', bn: 'সিভি রিভিউ ৳১৯৯' })}</Link>

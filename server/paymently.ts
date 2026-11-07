@@ -18,6 +18,10 @@ export interface Env extends AuthEnv {
 export interface R2BucketLike {
   get(key: string): Promise<{ body: ReadableStream; size: number; httpEtag: string } | null>;
   head(key: string): Promise<{ size: number } | null>;
+  /** Only the backup job writes; the real R2 binding has all of these. */
+  put?(key: string, value: string): Promise<unknown>;
+  list?(options: { prefix: string }): Promise<{ objects: { key: string }[] }>;
+  delete?(keys: string | string[]): Promise<void>;
 }
 
 const DEFAULT_BASE = 'https://herewegrow.paymently.io/api';

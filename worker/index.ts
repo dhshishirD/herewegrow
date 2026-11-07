@@ -13,6 +13,8 @@ import { handleCvs } from '../server/cvs';
 import { handleDownload } from '../server/downloads';
 import { sendReminders } from '../server/entitlements';
 import { rollupOld } from '../server/retention';
+import { weeklyBackup } from '../server/backup';
+import { withSecurityHeaders } from '../server/securityHeaders';
 import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
 
@@ -20,8 +22,7 @@ interface WorkerEnv extends Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
 }
 
-export default {
-  async fetch(request: Request, env: WorkerEnv): Promise<Response> {
+async function handle(request: Request, env: WorkerEnv): Promise<Response> {
     const { pathname } = new URL(request.url);
 
     if (pathname.startsWith('/api/')) {
@@ -48,6 +49,11 @@ export default {
     }
 
     return env.ASSETS.fetch(request);
+}
+
+export default {
+  async fetch(request: Request, env: WorkerEnv): Promise<Response> {
+    return withSecurityHeaders(await handle(request, env));
   },
 
   /** Daily Cron Trigger (wrangler.toml): Pro renewal reminders by SMS, and the 90-day analytics rollup. Independent: one failing does not stop the other. */
@@ -62,6 +68,11 @@ export default {
       rollupOld(env.DB)
         .then((r) => console.log('analytics rollup', r))
         .catch((e) => console.error('analytics rollup failed', e)),
+    );
+    ctx.waitUntil(
+      weeklyBackup(env.DB, env.FILES)
+        .then((r) => console.log('d1 backup', r))
+        .catch((e) => console.error('d1 backup failed', e)),
     );
   },
 };

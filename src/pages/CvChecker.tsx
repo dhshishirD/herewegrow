@@ -4,7 +4,9 @@ import { findProduct } from '../../shared/catalog';
 import { useCheckout } from '../components/Checkout';
 import { analyzeCv, type Analysis } from '../lib/cvAnalysis';
 import { num, taka, useLang } from '../lib/lang';
+import { navigate } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
+import { track } from '../lib/track';
 
 type Mode = 'pdf' | 'text';
 
@@ -16,6 +18,9 @@ export function CvChecker() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Analysis | null>(null);
+  const [cvText, setCvText] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [drag, setDrag] = useState(false);
   const review = findProduct('cv-review');
 
   useEffect(() => {
@@ -42,10 +47,14 @@ export function CvChecker() {
       return;
     }
     setBusy(true);
+    setFileName(file.name);
     try {
       const { readPdf } = await import('../lib/pdfText');
       const { text, layout } = await readPdf(file);
-      setResult(analyzeCv(text, layout));
+      const r = analyzeCv(text, layout);
+      setCvText(text);
+      setResult(r);
+      track('checker_score', { score: r.score });
     } catch {
       setError(t({ en: 'This PDF could not be read. It may be password-protected. Try pasting the text instead.', bn: 'PDF-টি পড়া যায়নি। হয়তো পাসওয়ার্ড দেওয়া। টেক্সট পেস্ট করে চেষ্টা করুন।' }));
     }
@@ -58,7 +67,15 @@ export function CvChecker() {
       setError(t({ en: 'Paste your whole CV, at least a few paragraphs.', bn: 'পুরো সিভি পেস্ট করুন, অন্তত কয়েক অনুচ্ছেদ।' }));
       return;
     }
-    setResult(analyzeCv(pasted, { fromPdf: false, splitRowShare: 0 }));
+    const r = analyzeCv(pasted, { fromPdf: false, splitRowShare: 0 });
+    setCvText(pasted);
+    setResult(r);
+    track('checker_score', { score: r.score });
+  };
+
+  const openInBuilder = () => {
+    try { sessionStorage.setItem('hwg_checker_text', cvText); } catch { /* storage blocked: the builder opens empty */ }
+    navigate('/builder?from=checker');
   };
 
   const failed = result?.checks.filter((c) => !c.pass) ?? [];
@@ -97,8 +114,18 @@ export function CvChecker() {
           {mode === 'pdf' ? (
             <div className="mt-6">
               <label className="label" htmlFor="cv-file">{t({ en: 'Your CV as a PDF', bn: 'আপনার সিভি (PDF)' })}</label>
-              <input id="cv-file" type="file" accept="application/pdf,.pdf" disabled={busy} onChange={(e) => onPdf(e.target.files?.[0])}
-                className="block w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-leaf file:px-4 file:py-2.5 file:font-semibold file:text-white hover:file:bg-leaf-dark" />
+              <label
+                htmlFor="cv-file"
+                onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+                onDragLeave={() => setDrag(false)}
+                onDrop={(e) => { e.preventDefault(); setDrag(false); onPdf(e.dataTransfer.files?.[0]); }}
+                className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors focus-within:ring-2 focus-within:ring-leaf ${drag ? 'border-leaf bg-leaf-soft' : 'border-line bg-mist hover:border-leaf'}`}
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-9 w-9 text-leaf"><path d="M12 16V4m0 0L7 9m5-5l5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                <span className="font-display text-lg font-semibold">{busy ? t({ en: 'Reading your CV…', bn: 'সিভি পড়া হচ্ছে…' }) : t({ en: 'Drop your PDF here, or tap to choose', bn: 'PDF এখানে ফেলুন, অথবা চেপে বেছে নিন' })}</span>
+                <span className="text-sm text-muted">{fileName || t({ en: 'PDF up to 8 MB', bn: '৮ MB পর্যন্ত PDF' })}</span>
+                <input id="cv-file" type="file" accept="application/pdf,.pdf" disabled={busy} onChange={(e) => onPdf(e.target.files?.[0])} className="sr-only" />
+              </label>
               <p className="mt-2 text-sm text-muted">
                 {t({ en: 'Use the same PDF you send to employers.', bn: 'নিয়োগকর্তাকে যে PDF পাঠান, সেটিই দিন।' })}
               </p>
@@ -125,8 +152,20 @@ export function CvChecker() {
 
         <div aria-live="polite">
           {!result ? (
-            <div className="rounded-2xl border-2 border-dashed border-line p-10 text-center text-muted">
-              {t({ en: 'Your score and fixes will appear here.', bn: 'আপনার স্কোর ও সংশোধন এখানে দেখাবে।' })}
+            <div className="rounded-2xl border border-line p-6" aria-label={t({ en: 'Example result', bn: 'উদাহরণ ফল' })}>
+              <p className="text-sm font-semibold uppercase tracking-wide text-muted">{t({ en: 'Example result', bn: 'উদাহরণ ফল' })}</p>
+              <div className="mt-3 flex items-end gap-4 border-b border-line pb-4">
+                <p className="font-display text-6xl font-bold leading-none text-gold">{num(64, lang)}</p>
+                <p className="pb-1 text-muted">{t({ en: 'out of 100. Good start, but recruiters may pass over it.', bn: '১০০-এর মধ্যে। ভালো শুরু, তবে রিক্রুটাররা এড়িয়ে যেতে পারেন।' })}</p>
+              </div>
+              <ul className="mt-4 space-y-3">
+                {[
+                  { en: 'Add a short summary at the top', bn: 'উপরে ছোট একটি সামারি যোগ করুন' },
+                  { en: 'Put numbers in your job points (200 students, 30% growth)', bn: 'কাজের বিবরণে সংখ্যা দিন (২০০ ছাত্র, ৩০% বৃদ্ধি)' },
+                  { en: 'Add your LinkedIn link next to your email', bn: 'ইমেইলের পাশে LinkedIn লিংক যোগ করুন' },
+                ].map((x) => <li key={x.en} className="border-l-[3px] border-gold pl-4 text-muted">{t(x)}</li>)}
+              </ul>
+              <p className="mt-4 text-sm text-muted">{t({ en: 'Upload your CV on the left to see your own score and fixes.', bn: 'আপনার নিজের স্কোর ও সংশোধন দেখতে বাঁ দিকে সিভি দিন।' })}</p>
             </div>
           ) : (
             <div>
@@ -162,6 +201,19 @@ export function CvChecker() {
                   </ul>
                 </div>
               )}
+
+              <div className="mt-8 rounded-2xl bg-leaf-soft p-6">
+                <p className="font-display text-xl font-bold text-leaf-dark">{t({ en: 'Fix it yourself, free', bn: 'নিজেই ঠিক করুন, ফ্রি' })}</p>
+                <p className="mt-1 text-leaf-dark/80">
+                  {t({
+                    en: 'Open this CV in the builder. Your details are filled in, so you only fix the points above and download.',
+                    bn: 'এই সিভি বিল্ডারে খুলুন। আপনার তথ্য আগে থেকেই বসানো থাকবে, শুধু উপরের বিষয়গুলো ঠিক করে ডাউনলোড করুন।',
+                  })}
+                </p>
+                <button type="button" className="btn btn-primary mt-4" onClick={openInBuilder}>
+                  {t({ en: 'Open in the CV builder', bn: 'সিভি বিল্ডারে খুলুন' })}
+                </button>
+              </div>
 
               {review && (
                 <div className="mt-8 rounded-2xl bg-leaf-dark p-6 text-white">

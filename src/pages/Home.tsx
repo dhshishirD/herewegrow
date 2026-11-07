@@ -12,6 +12,7 @@ import { track } from '../lib/track';
 import { FAQ, STEPS } from '../content/faq';
 import { FaqList } from './CatalogPages';
 import { ExpertSection, ReviewsSection } from '../components/Expert';
+import { BuilderHero } from '../components/BuilderHero';
 import { Showcase } from '../components/Showcase';
 
 const FEATURED = ['ats-banking-standard-bd', 'creative-modern-executive-2page', 'ats-graduate-standard-single-page', 'creative-finance-accountant-2page'];
@@ -90,35 +91,38 @@ export function Home() {
 
   return (
     <>
-      {/* Hero: the promise on the left, a shortlisted stack of real CVs on the right */}
+      {/* Hero: the CV builder is the main product. Promise and one big button on the left, a self-building CV on the right */}
       <section className="relative overflow-hidden border-b border-line bg-paper">
         <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0" />
-        <div className="wrap relative grid items-center gap-14 pt-12 pb-16 md:grid-cols-[1.1fr_1fr] md:py-20">
+        <div className="wrap relative grid items-center gap-12 pt-10 pb-16 md:grid-cols-[1.1fr_1fr] md:py-20">
           <div className="hero-copy">
             <p className="inline-flex items-center gap-2 rounded-full bg-leaf-soft px-3.5 py-1 text-sm font-semibold text-leaf-dark">
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-leaf" />
-              {t({ en: 'Made for job seekers in Bangladesh', bn: 'বাংলাদেশের চাকরিপ্রার্থীদের জন্য' })}
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 text-leaf" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2" /><path d="M11 18.5h2" /></svg>
+              {t({ en: 'No laptop needed. Works on your phone', bn: 'ল্যাপটপ লাগবে না, ফোনেই হবে' })}
             </p>
-            <h1 className="mt-6 text-[2.75rem] leading-[1.12] sm:text-5xl lg:text-[3.75rem]">
-              {t({ en: 'Your CV, profiles and job tools. One place.', bn: 'সিভি, প্রোফাইল ও জব টুলস। এক জায়গায়।' })}
+            <h1 className="mt-6 text-[2.5rem] leading-[1.14] sm:text-5xl lg:text-[3.5rem]">
+              {t({ en: 'Build a professional CV in minutes. Free to start.', bn: 'কয়েক মিনিটেই বানান প্রফেশনাল সিভি। শুরু ফ্রি।' })}
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted sm:text-xl">
+            <p className="mt-5 max-w-xl text-lg text-muted sm:text-xl">
               {t({
-                en: 'Get an expert-written CV, download a ready Word template, build one free online, or polish your LinkedIn and BDJobs profiles. Pay in taka.',
-                bn: 'বিশেষজ্ঞের লেখা সিভি নিন, রেডি Word টেমপ্লেট নামান, ফ্রিতে অনলাইনে বানান, অথবা লিংকডইন ও বিডিজবস প্রোফাইল সাজান। টাকায় পেমেন্ট।',
+                en: 'Fill the form, pick a design, download your CV. No sign-up to start, and it looks right on any phone.',
+                bn: 'ফর্ম পূরণ করুন, ডিজাইন বেছে নিন, সিভি ডাউনলোড করুন। শুরু করতে সাইন-আপ লাগে না, যেকোনো ফোনে সুন্দরভাবে চলে।',
               })}
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Link href="/templates" className="btn btn-primary !px-6 text-[1.05rem]">
-                {t({ en: `Templates from ${taka(SINGLE_TEMPLATE_PRICE, 'en')}`, bn: `টেমপ্লেট ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} থেকে` })}
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Link href="/builder" onClick={() => track('cta_click', { where: 'hero_builder' })} className="btn btn-primary !px-7 text-[1.1rem]">
+                {t({ en: 'Build my CV free', bn: 'ফ্রি সিভি বানান' })}
               </Link>
-              <Link href="/services" className="btn btn-quiet bg-white !px-6 text-[1.05rem]">
-                {t({ en: 'Get my CV written', bn: 'সিভি লিখিয়ে নিন' })}
+              <Link href="/services" onClick={() => track('cta_click', { where: 'hero_services' })} className="font-display font-semibold text-leaf underline decoration-saffron decoration-2 underline-offset-[6px] hover:decoration-leaf">
+                {t({ en: 'Or get it written for you', bn: 'অথবা লিখিয়ে নিন' })}
               </Link>
             </div>
-
+            <p className="mt-4 text-sm text-muted">
+              {t({ en: 'Prefer a ready Word file? ', bn: 'রেডি Word ফাইল চান? ' })}
+              <Link href="/templates" className="font-semibold text-leaf underline underline-offset-4">{t({ en: `Templates from ${taka(SINGLE_TEMPLATE_PRICE, 'en')}`, bn: `টেমপ্লেট ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} থেকে` })}</Link>
+            </p>
           </div>
-          <ShortlistStack />
+          <BuilderHero />
         </div>
       </section>
 
@@ -350,23 +354,5 @@ export function Home() {
         </div>
       </section>
     </>
-  );
-}
-
-/** Three real templates in a loose stack, the top one stamped as shortlisted. */
-function ShortlistStack() {
-  const { t } = useLang();
-  const ids = ['creative-sales-executive-2page', 'ats-classic-professional-2page', 'creative-medical-doctor-2column'];
-  return (
-    <figure className="hero-stack relative mx-auto aspect-[4/4.3] w-full max-w-[29rem]" aria-label={t({ en: 'CV templates, one marked shortlisted', bn: 'সিভি টেমপ্লেট, একটি বাছাই হয়েছে' })}>
-      <img src={`/templates/${ids[0]}/thumb.webp`} alt="" width={420} height={594} className="absolute left-[2%] top-[9%] w-[54%] -rotate-[8deg] rounded-sm bg-white shadow-lg ring-1 ring-line" />
-      <img src={`/templates/${ids[2]}/thumb.webp`} alt="" width={420} height={594} className="absolute right-[1%] top-[5%] w-[54%] rotate-[7deg] rounded-sm bg-white shadow-lg ring-1 ring-line" />
-      <img src={`/templates/${ids[1]}/page-1.webp`} alt="" width={900} height={1273} fetchPriority="high"
-        className="absolute left-1/2 top-0 w-[62%] -translate-x-1/2 rounded-sm bg-white shadow-[0_30px_60px_-20px_rgb(14_59_46/0.45)] ring-1 ring-line" />
-      <div className="hero-stamp absolute bottom-[16%] right-[6%] rotate-[-9deg] rounded-lg border-[3px] border-saffron bg-paper/95 px-4 py-2 text-center shadow-md">
-        <p className="font-display text-xl font-bold leading-tight text-gold sm:text-2xl">{t({ en: 'Shortlisted', bn: 'বাছাই হয়েছে' })}</p>
-        <p className="text-xs font-semibold text-gold/80">{t({ en: 'Call for interview', bn: 'ইন্টারভিউয়ের ডাক' })}</p>
-      </div>
-    </figure>
   );
 }

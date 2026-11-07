@@ -122,16 +122,10 @@
   background-size: 44px 44px;
   mask-image: radial-gradient(ellipse 80% 70% at 70% 40%, #000 30%, transparent 75%);
 }
-.hero-stack > img { animation: stack-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-.hero-stack > img:nth-child(2) { animation-delay: 0.08s; }
-.hero-stack > img:nth-child(3) { animation-delay: 0.16s; }
-.hero-stamp { animation: stamp-in 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 0.75s both; }
 .cart-sheet { animation: sheet-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes sheet-in { from { translate: 100% 0; } }
 .cart-sheet-up { animation: sheet-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes sheet-up { from { opacity: 0; translate: 0 24px; } }
-@keyframes stack-in { from { opacity: 0; translate: 0 24px; } }
-@keyframes stamp-in { from { opacity: 0; scale: 1.6; } }
 
 /* Service cards: soft layered shadow, lift on hover; the featured one is a deep forest card with a saffron edge */
 .svc-card {
@@ -256,6 +250,47 @@
   /* Free downloads: a small footer on every page (Pro removes it) */
   #cv-print .cv-watermark { display: block; position: fixed; bottom: 4mm; right: 8mm; z-index: 2; font: 600 7.5pt/1 "Inter Variable", Arial, sans-serif; color: #94a3b8; background: rgba(255,255,255,.85); padding: 1mm 2mm; border-radius: 1mm; }
 }
+
+/* Builder hero: one 11s loop. Every piece is hidden at the start and visible from its own moment until the end,
+   so with reduced motion (animation: none) the finished CV simply shows. Only opacity, transform and colour move. */
+.bh { --bh-t: 11s; }
+.bh-step, .bh-num { transition: none; }
+.bh-step { background: var(--color-leaf-soft); color: var(--color-leaf-dark); }
+.bh-num { background: #fff; color: var(--color-leaf); }
+.bh-step-1 { animation: bh-chip-1 var(--bh-t) infinite both; }
+.bh-step-2 { animation: bh-chip-2 var(--bh-t) infinite both; }
+.bh-step-3 { animation: bh-chip-3 var(--bh-t) infinite both; }
+@keyframes bh-chip-1 { 0%, 31% { background: var(--color-leaf); color: #fff; } 34%, 100% { background: var(--color-leaf-soft); color: var(--color-leaf-dark); } }
+@keyframes bh-chip-2 { 0%, 31% { background: var(--color-leaf-soft); color: var(--color-leaf-dark); } 34%, 64% { background: var(--color-leaf); color: #fff; } 67%, 100% { background: var(--color-leaf-soft); color: var(--color-leaf-dark); } }
+@keyframes bh-chip-3 { 0%, 64% { background: var(--color-leaf-soft); color: var(--color-leaf-dark); } 67%, 95% { background: var(--color-leaf); color: #fff; } 99%, 100% { background: var(--color-leaf-soft); color: var(--color-leaf-dark); } }
+.bh-fill { animation: bh-fill-a var(--bh-t) infinite both; }
+.bh-fill-2 { animation-name: bh-fill-b; }
+.bh-fill-3 { animation-name: bh-fill-c; }
+@keyframes bh-fill-a { 0%, 3% { transform: scaleX(0); } 10%, 92% { transform: scaleX(1); } 99%, 100% { transform: scaleX(0); } }
+@keyframes bh-fill-b { 0%, 10% { transform: scaleX(0); } 17%, 92% { transform: scaleX(0.82); } 99%, 100% { transform: scaleX(0); } }
+@keyframes bh-fill-c { 0%, 17% { transform: scaleX(0); } 25%, 92% { transform: scaleX(0.95); } 99%, 100% { transform: scaleX(0); } }
+.bh-side { background: var(--color-leaf); animation: bh-side var(--bh-t) infinite both; }
+@keyframes bh-side { 0%, 3% { opacity: 0; } 8% { opacity: 1; background: var(--color-leaf); } 42% { background: var(--color-leaf); } 50%, 62% { background: #1f2933; } 70%, 92% { background: var(--color-gold); } 99%, 100% { opacity: 0; } }
+.bh-side-lines { animation: bh-show-c var(--bh-t) infinite both; }
+.bh-l1 { animation: bh-show-a var(--bh-t) infinite both; }
+.bh-l2 { animation: bh-show-b var(--bh-t) infinite both; }
+.bh-l3 { animation: bh-show-c var(--bh-t) infinite both; }
+.bh-l4 { animation: bh-show-d var(--bh-t) infinite both; }
+@keyframes bh-show-a { 0%, 4% { opacity: 0; translate: 0 6px; } 10%, 92% { opacity: 1; translate: 0 0; } 99%, 100% { opacity: 0; } }
+@keyframes bh-show-b { 0%, 11% { opacity: 0; translate: 0 6px; } 17%, 92% { opacity: 1; translate: 0 0; } 99%, 100% { opacity: 0; } }
+@keyframes bh-show-c { 0%, 19% { opacity: 0; translate: 0 6px; } 26%, 92% { opacity: 1; translate: 0 0; } 99%, 100% { opacity: 0; } }
+@keyframes bh-show-d { 0%, 28% { opacity: 0; translate: 0 6px; } 34%, 92% { opacity: 1; translate: 0 0; } 99%, 100% { opacity: 0; } }
+.bh-dot-1 { background: var(--color-leaf); }
+.bh-dot-2 { background: #1f2933; }
+.bh-dot-3 { background: var(--color-gold); }
+.bh-dot { animation: bh-dot var(--bh-t) infinite both; }
+.bh-dot-2 { animation-name: bh-dot-b; }
+.bh-dot-3 { animation-name: bh-dot-c; }
+@keyframes bh-dot { 0%, 35% { box-shadow: 0 0 0 0 transparent; } 40%, 48% { box-shadow: 0 0 0 3px rgb(29 91 216 / 0.35); } 52%, 100% { box-shadow: 0 0 0 0 transparent; } }
+@keyframes bh-dot-b { 0%, 47% { box-shadow: 0 0 0 0 transparent; } 52%, 60% { box-shadow: 0 0 0 3px rgb(31 41 51 / 0.35); } 64%, 100% { box-shadow: 0 0 0 0 transparent; } }
+@keyframes bh-dot-c { 0%, 59% { box-shadow: 0 0 0 0 transparent; } 64%, 90% { box-shadow: 0 0 0 3px rgb(15 118 110 / 0.35); } 99%, 100% { box-shadow: 0 0 0 0 transparent; } }
+.bh-ready { animation: bh-ready var(--bh-t) infinite both; }
+@keyframes bh-ready { 0%, 74% { opacity: 0; scale: 1.5; } 80%, 92% { opacity: 1; scale: 1; } 99%, 100% { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }

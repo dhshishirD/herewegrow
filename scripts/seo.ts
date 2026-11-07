@@ -103,7 +103,7 @@ function pages(): Page[] {
     {
       path: '/tools',
       ...seo('/tools'),
-      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li></ul>`,
+      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li></ul>`,
       priority: 0.7,
     },
     {
@@ -125,6 +125,13 @@ function pages(): Page[] {
       ...seo('/tools/photo-signature-resizer'),
       body: '<h1>ছবি ও স্বাক্ষর রিসাইজার</h1><p>ছবি 300×300, স্বাক্ষর 300×80।</p>',
       jsonLd: [{ '@type': 'WebApplication', name: 'Teletalk photo and signature resizer', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
+      priority: 0.9,
+    },
+    {
+      path: '/tools/application-letter',
+      ...seo('/tools/application-letter'),
+      body: '<h1>আবেদনপত্র জেনারেটর</h1><p>সরকারি ও বেসরকারি চাকরির আবেদনপত্র, বাংলা ও ইংরেজিতে।</p>',
+      jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow application letter generator', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
       priority: 0.9,
     },
     {

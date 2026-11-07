@@ -19,6 +19,7 @@ import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
+import { ApplicationLetter } from './pages/ApplicationLetter';
 import { ProPage } from './pages/Pro';
 import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
@@ -50,6 +51,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/tools/cv-checker': CvChecker,
   '/builder': LazyBuilder,
   '/tools/photo-signature-resizer': PhotoResizer,
+  '/tools/application-letter': ApplicationLetter,
   '/payment/success': PaymentSuccess,
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,

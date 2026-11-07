@@ -175,6 +175,17 @@ export function ToolsPage() {
       },
       cta: { en: 'Resize a photo', bn: 'ছবি রিসাইজ করুন' },
     },
+    {
+      href: '/tools/application-letter',
+      badge: <span className="font-display text-xl font-semibold text-leaf">✉</span>,
+      tone: 'bg-leaf-soft',
+      name: { en: 'Application letter generator', bn: 'আবেদনপত্র জেনারেটর' },
+      body: {
+        en: 'A neat application letter for a government or private job, in Bangla or English. Edit, copy or download as Word.',
+        bn: 'সরকারি বা বেসরকারি চাকরির গোছানো আবেদনপত্র, বাংলা বা ইংরেজিতে। এডিট, কপি বা Word-এ ডাউনলোড করুন।',
+      },
+      cta: { en: 'Write a letter', bn: 'চিঠি লিখুন' },
+    },
   ];
 
   return (

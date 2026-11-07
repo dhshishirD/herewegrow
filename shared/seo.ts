@@ -65,6 +65,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'ফ্রি সিভি চেকার: ATS স্কোর | Free CV checker and ATS score | HereWeGrow',
     description: 'আপনার সিভি PDF আপলোড করে ১০০-এর মধ্যে স্কোর ও সংশোধনের তালিকা পান। Free ATS CV checker for Bangladeshi job seekers. ফাইল আপনার ব্রাউজারেই থাকে।',
   },
+  '/tools/application-letter': {
+    title: 'ফ্রি আবেদনপত্র জেনারেটর (বাংলা ও ইংরেজি) | Job application letter generator | HereWeGrow',
+    description: 'সরকারি বা বেসরকারি চাকরির আবেদনপত্র মিনিটেই লিখুন, কপি করুন বা Word ফাইল নামান। Free job application letter generator in Bangla and English.',
+  },
   '/tools/photo-signature-resizer': {
     title: 'টেলিটক ছবি ও স্বাক্ষর রিসাইজ (300×300, 300×80) | Teletalk photo resizer | HereWeGrow',
     description: 'সরকারি চাকরির আবেদনে টেলিটকের মাপে ছবি 300×300 (১০০ KB) ও স্বাক্ষর 300×80 (৬০ KB) এক ক্লিকে। Free Teletalk photo and signature resizer.',

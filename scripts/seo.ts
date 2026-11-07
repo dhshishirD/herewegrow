@@ -103,7 +103,7 @@ function pages(): Page[] {
     {
       path: '/tools',
       ...seo('/tools'),
-      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li></ul>`,
+      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li></ul>`,
       priority: 0.7,
     },
     {
@@ -132,6 +132,13 @@ function pages(): Page[] {
       ...seo('/tools/application-letter'),
       body: '<h1>আবেদনপত্র জেনারেটর</h1><p>সরকারি ও বেসরকারি চাকরির আবেদনপত্র, বাংলা ও ইংরেজিতে।</p>',
       jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow application letter generator', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
+      priority: 0.9,
+    },
+    {
+      path: '/tools/job-match',
+      ...seo('/tools/job-match'),
+      body: '<h1>সিভি বনাম চাকরির বিজ্ঞাপন ম্যাচ</h1><p>বিজ্ঞাপনের মূল শব্দের কতটা আপনার সিভিতে আছে, তা দেখুন।</p>',
+      jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow CV job match checker', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
       priority: 0.9,
     },
     {

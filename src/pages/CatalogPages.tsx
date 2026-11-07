@@ -186,6 +186,17 @@ export function ToolsPage() {
       },
       cta: { en: 'Write a letter', bn: 'চিঠি লিখুন' },
     },
+    {
+      href: '/tools/job-match',
+      badge: <span className="font-display text-xl font-semibold text-gold">%</span>,
+      tone: 'bg-gold-soft',
+      name: { en: 'CV vs job ad match', bn: 'সিভি বনাম বিজ্ঞাপন ম্যাচ' },
+      body: {
+        en: 'Paste a job ad and your CV. See which key words your CV is missing before you apply.',
+        bn: 'চাকরির বিজ্ঞাপন ও সিভি দিন। আবেদনের আগে দেখুন সিভিতে কোন মূল শব্দ বাদ পড়েছে।',
+      },
+      cta: { en: 'Check the match', bn: 'ম্যাচ দেখুন' },
+    },
   ];
 
   return (

@@ -15,6 +15,7 @@ import {
   newTraining,
   normalise,
   sampleCv,
+  fresherCv,
   saveState,
   uid,
   type BuilderState,
@@ -29,6 +30,7 @@ import {
   type DesignId,
   type HeadingLang,
 } from '../builder/model';
+import { SummaryHelper } from '../builder/SummaryHelper';
 import { PageHead } from '../components/PageHead';
 import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
@@ -643,6 +645,7 @@ export function BuilderPage() {
                   <input type="file" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="sr-only"
                     onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void onImport(f); }} />
                 </label>
+                {isEmpty && <button type="button" className="btn btn-quiet bg-white" onClick={() => { set(fresherCv()); setOpen('education'); track('fresher_start'); }}>{t({ en: 'I have no job experience yet', bn: 'এখনও চাকরির অভিজ্ঞতা নেই' })}</button>}
                 {isEmpty && <button type="button" className="btn btn-quiet bg-white" onClick={() => set(sampleCv())}>{t({ en: 'Or see an example', bn: 'অথবা উদাহরণ দেখুন' })}</button>}
               </div>
               {importMsg && <p role="status" className={`mt-3 rounded-lg px-4 py-3 text-sm ${importMsg.ok ? 'bg-white text-ink' : 'bg-alert/10 text-alert'}`}>{importMsg.text}</p>}
@@ -673,6 +676,7 @@ export function BuilderPage() {
               <Area label={t({ en: 'Two or three lines about you', bn: 'আপনার সম্পর্কে দুই-তিন লাইন' })} value={d.summary} onChange={(v) => set({ summary: v })} rows={4}
                 placeholder="Finance graduate with 2 years of customer service experience..."
                 hint={t({ en: 'Say what you studied or do, one or two results, and the role you want. Skip “to work in a challenging environment”.', bn: 'কী পড়েছেন বা করেন, এক-দুটি অর্জন, আর কোন পদ চান লিখুন। “challenging environment” ধরনের মুখস্থ লাইন বাদ দিন।' })} />
+              <SummaryHelper d={d} t={t} onUse={(text) => set({ summary: text })} />
             </Section>
 
             <Section title={sectionName('experience')} open={open === 'experience'} onToggle={() => toggle('experience')} count={d.experience.length}>

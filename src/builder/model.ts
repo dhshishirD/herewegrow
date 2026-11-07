@@ -287,3 +287,17 @@ export function saveState(s: BuilderState) {
 export const lines = (s: string) => s.split('\n').map((x) => x.replace(/^[•\-–*]\s*/, '').trim()).filter(Boolean);
 /** Skills: one per line if written that way, otherwise separated by commas. */
 export const list = (s: string) => (s.includes('\n') ? s.split('\n') : s.split(/[,;]/)).map((x) => x.replace(/^[•\-–*]\s*/, '').trim()).filter(Boolean);
+
+/** A starting point for someone with no job history yet: education first, then projects and activities, work experience last. */
+export const fresherCv = (): CvData => {
+  const projects = uid();
+  const activities = uid();
+  return {
+    ...emptyCv(),
+    custom: [
+      { id: projects, title: 'Projects', items: [newCustomItem()] },
+      { id: activities, title: 'Extracurricular Activities', items: [newCustomItem()] },
+    ],
+    order: ['summary', 'education', `custom:${projects}`, 'skills', `custom:${activities}`, 'training', 'experience', 'personal', 'references'],
+  };
+};

@@ -4,6 +4,8 @@ import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { whatsappLink } from '../lib/whatsapp';
 import { track } from '../lib/track';
+import { pixelPurchase } from '../lib/pixel';
+import { tracker } from '../lib/track';
 import { DownloadButtons } from '../components/Downloads';
 import { productFor, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 import { takeCartPending, useCart } from '../lib/cart';
@@ -27,6 +29,7 @@ export function PaymentSuccess() {
     if (!invoiceId) return;
     verifyInvoice(invoiceId)
       .then((data) => {
+        if (data.ok && data.status === 'paid' && !data.free && !tracker.isDisabled()) pixelPurchase(data.amount ?? findPlan(data.productId ?? '')?.price ?? 0, invoiceId);
         if (data.ok && data.status === 'paid' && findPlan(data.productId ?? '')) {
           void refresh(); // the header and Builder see Pro straight away
         } else if (data.ok && data.status === 'paid' && data.productId) {

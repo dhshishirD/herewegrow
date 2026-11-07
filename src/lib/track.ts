@@ -1,4 +1,5 @@
 // First-party analytics client. No cookies; never throws.
+import { pixelEvent, pixelOff } from './pixel';
 
 type Store = Pick<Storage, 'getItem' | 'setItem'>;
 type Meta = Record<string, string | number>;
@@ -146,7 +147,9 @@ export function createTracker(deps: TrackerDeps) {
     disable() {
       disabled = true;
       queue = [];
+      pixelOff();
     },
+    isDisabled: () => disabled,
     /** Auth state is known: send what was queued (page views first, so the first hit carries ref/utm). */
     ready() {
       try {
@@ -179,6 +182,21 @@ const safe = (f: () => Store): Store | null => {
 
 const browser = typeof window !== 'undefined';
 
+/** Visit /?notrack=1 once on a device to stop counting it (your own phone, a tester); /?notrack=0 turns counting back on. */
+const GA_ID = 'G-B1NGMCD68C';
+export function applyOptOutParam(search: string, storage: Store & Partial<Pick<Storage, 'removeItem'>> | null): boolean {
+  try {
+    const v = new URLSearchParams(search).get('notrack');
+    if (v === '1') storage?.setItem('hwg_noTrack', '1');
+    else if (v === '0') storage?.removeItem?.('hwg_noTrack');
+    return storage?.getItem('hwg_noTrack') === '1';
+  } catch {
+    return false;
+  }
+}
+const optedOut = browser ? applyOptOutParam(window.location.search, safe(() => window.localStorage)) : false;
+if (browser && optedOut) (window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`] = true;
+
 export const tracker = createTracker({
   storage: browser ? safe(() => window.localStorage) : null,
   session: browser ? safe(() => window.sessionStorage) : null,
@@ -188,8 +206,11 @@ export const tracker = createTracker({
   now: () => Date.now(),
   referrer: browser ? document.referrer : '',
   search: browser ? window.location.search : '',
-  noTrack: browser ? safe(() => window.localStorage)?.getItem('hwg_noTrack') === '1' : false,
+  noTrack: optedOut,
   gtag: browser ? (...a) => (window as unknown as { gtag?: (...x: unknown[]) => void }).gtag?.(...a) : undefined,
 });
 
-export const track = (name: string, meta?: Meta) => tracker.event(name, meta);
+export const track = (name: string, meta?: Meta) => {
+  tracker.event(name, meta);
+  pixelEvent(name, meta);
+};

@@ -397,14 +397,19 @@ export function BuilderPage() {
     setImporting(true);
     setImportMsg(null);
     try {
-      const text = await readCvFile(file);
+      await importText(await readCvFile(file));
+    } catch (err) {
+      showImportError(err);
+    }
+    setImporting(false);
+  };
+
+  /** Fills the form from CV text; shared by file upload and "open in builder" from the CV checker. */
+  const importText = async (text: string) => {
       if (text.replace(/\s/g, '').length < 40) throw new ImportError('empty');
       const { data, found } = parseCv(text);
       const hasContent = d.name || d.experience.length || d.education.length;
-      if (hasContent && !window.confirm(t({ en: 'Replace what you have typed with the uploaded CV?', bn: 'আপনার লেখা তথ্যের জায়গায় আপলোড করা সিভি বসাবেন?' }))) {
-        setImporting(false);
-        return;
-      }
+      if (hasContent && !window.confirm(t({ en: 'Replace what you have typed with the uploaded CV?', bn: 'আপনার লেখা তথ্যের জায়গায় আপলোড করা সিভি বসাবেন?' }))) return;
       setState((s) => ({ ...s, data: normalise({ ...data, photo: s.data.photo }) }));
       const counts = found.filter((f) => f.includes(':')).map((f) => f.split(':')).filter(([, n]) => /^\d+$/.test(n));
       const parts = [
@@ -422,7 +427,9 @@ export function BuilderPage() {
         }),
       });
       setOpen('contact');
-    } catch (err) {
+  };
+
+  const showImportError = (err: unknown) => {
       const code = err instanceof ImportError ? err.code : 'read';
       const msg: Record<string, { en: string; bn: string }> = {
         doc: { en: 'Old .doc files cannot be read here. Open it in Word and save as .docx or PDF, then upload again.', bn: 'পুরনো .doc ফাইল এখানে পড়া যায় না। Word-এ খুলে .docx বা PDF হিসেবে সেভ করে আবার আপলোড করুন।' },
@@ -431,9 +438,18 @@ export function BuilderPage() {
         read: { en: 'This file could not be read. Try saving it again as PDF or .docx.', bn: 'ফাইলটি পড়া যায়নি। আবার PDF বা .docx হিসেবে সেভ করে চেষ্টা করুন।' },
       };
       setImportMsg({ ok: false, text: t(msg[code]) });
-    }
-    setImporting(false);
   };
+
+  // "Open in the CV builder" from the CV checker hands over the CV text it already read
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('from') !== 'checker') return;
+    let text: string | null = null;
+    try { text = sessionStorage.getItem('hwg_checker_text'); sessionStorage.removeItem('hwg_checker_text'); } catch { /* storage blocked */ }
+    if (!text) return;
+    track('checker_to_builder');
+    importText(text).catch(showImportError);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [wordBusy, setWordBusy] = useState(false);
   const downloadWord = async () => {

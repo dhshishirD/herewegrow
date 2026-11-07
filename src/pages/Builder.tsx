@@ -345,6 +345,17 @@ export function BuilderPage() {
   const d = state.data;
   const score = useMemo(() => analyzeCv(cvText(d), { fromPdf: false, splitRowShare: 0 }), [d]);
   const set = (patch: Partial<CvData>) => setState((s) => ({ ...s, data: { ...s.data, ...patch } }));
+
+  // Funnel: opened the builder, then typed or imported something (once each)
+  const startedRef = useRef(false);
+  const initialData = useRef(JSON.stringify(state.data));
+  useEffect(() => track('builder_open'), []);
+  useEffect(() => {
+    if (!startedRef.current && JSON.stringify(state.data) !== initialData.current) {
+      startedRef.current = true;
+      track('builder_start');
+    }
+  }, [state.data]);
   const toggle = (id: string) => setOpen((cur) => (cur === id ? '' : id));
   const upd = <K extends ListKey>(key: K, id: string, patch: Partial<CvData[K][number]>) =>
     set({ [key]: (d[key] as { id: string }[]).map((x) => (x.id === id ? { ...x, ...patch } : x)) } as Partial<CvData>);
@@ -437,8 +448,14 @@ export function BuilderPage() {
 
   const needPro = !pro && isProDesign(state.design);
   const [gate, setGate] = useState(false);
-  const askPro = () => setGate(true);
-  const pickDesign = (id: DesignId) => setState((s) => ({ ...s, design: id }));
+  const askPro = () => {
+    track('paywall_view', { design: state.design });
+    setGate(true);
+  };
+  const pickDesign = (id: DesignId) => {
+    track('design_pick', { design: id });
+    setState((s) => ({ ...s, design: id }));
+  };
 
   const saveToAccount = async () => {
     if (!user) return openLogin();

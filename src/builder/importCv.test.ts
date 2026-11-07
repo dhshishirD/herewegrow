@@ -93,3 +93,63 @@ ismail-scw@sust.edu`;
     expect(r.data.order[r.data.order.length - 1]).toBe('references');
   });
 });
+
+describe('importing a PDF whose headings are in small caps', () => {
+  const PDF = `NAME SURNAME
+Development Officer
++8801700000000 | a@b.com | Sylhet, Bangladesh
+
+P ROFESSIONAL S UMMARY
+Development-focused professional with experience in youth leadership and communication.
+
+E DUCATION
+M.A. in English Language and Literature
+Example University, Bangladesh 2024 – 2025
+
+W ORK E XPERIENCE
+Assistant Director
+Example Coaching Centre
+December 2021 – December 2023
+• Managed administrative operations
+
+P ROFESSIONAL D EVELOPMENT
+Public Speaking Certification, Example Institute 2024
+
+I NTERNATIONAL E XPOSURE
+• Delegation Visit, China, June 2025
+
+L ANGUAGES
+Bengali – Native
+English – Professional Fluent
+
+R EFERENCES
+Dr. First Referee
+Professor
+Department of English
+Example University, Sylhet
++8801711000001
+first@example.com
+Dr. Second Referee
+Professor
+VOLUNTEERING
+Example University, Sylhet
++8801711000002
+second@example.com
+`;
+  const { data } = parseCv(PDF);
+
+  it('joins the stray capital so the headings are recognised', () => {
+    expect(data.education.length).toBeGreaterThan(0);
+    expect(data.training.length).toBeGreaterThan(0);
+    expect(data.summary).toContain('youth leadership');
+    expect(data.languages).toContain('Bengali');
+    expect(data.custom.map((c) => c.title)).not.toContain('E Ducation');
+    expect(data.custom.map((c) => c.title)).not.toContain('R Eferences');
+  });
+
+  it('keeps both referees whole, even when a heading lands in the middle of the second one', () => {
+    expect(data.references).toHaveLength(2);
+    expect(data.references[1]).toMatchObject({ name: 'Dr. Second Referee', phone: '+8801711000002', email: 'second@example.com' });
+    expect(data.references[1].org).toContain('Example University');
+  });
+});

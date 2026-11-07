@@ -117,7 +117,7 @@ export function ContactWidget() {
 
   return (
     <>
-      <button type="button" className="no-print btn btn-primary fixed bottom-4 left-4 z-30 shadow-lg" onClick={() => setOpen(true)}>
+      <button type="button" className={`no-print btn btn-primary fixed bottom-4 left-4 z-30 shadow-lg ${path.startsWith('/builder') ? 'max-md:!min-h-9 max-md:!px-3 max-md:bottom-3 max-md:left-3 max-md:text-sm' : ''}`} onClick={() => setOpen(true)}>
         {t({ en: 'Message us', bn: 'মেসেজ করুন' })}
       </button>
       {open && (

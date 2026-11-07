@@ -69,6 +69,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'ফ্রি আবেদনপত্র জেনারেটর (বাংলা ও ইংরেজি) | Job application letter generator | HereWeGrow',
     description: 'সরকারি বা বেসরকারি চাকরির আবেদনপত্র মিনিটেই লিখুন, কপি করুন বা Word ফাইল নামান। Free job application letter generator in Bangla and English.',
   },
+  '/tools/job-match': {
+    title: 'সিভি বনাম চাকরির বিজ্ঞাপন ম্যাচ চেকার | Free CV job match checker | HereWeGrow',
+    description: 'চাকরির বিজ্ঞাপন ও সিভি দিয়ে দেখুন কোন কীওয়ার্ড বাদ পড়েছে। Free tool to match your CV against a job ad, in your browser.',
+  },
   '/tools/photo-signature-resizer': {
     title: 'টেলিটক ছবি ও স্বাক্ষর রিসাইজ (300×300, 300×80) | Teletalk photo resizer | HereWeGrow',
     description: 'সরকারি চাকরির আবেদনে টেলিটকের মাপে ছবি 300×300 (১০০ KB) ও স্বাক্ষর 300×80 (৬০ KB) এক ক্লিকে। Free Teletalk photo and signature resizer.',

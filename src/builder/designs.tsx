@@ -582,6 +582,94 @@ function Fresher({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
+/* ── Banner (Pro): colour band with the name, photo over its edge, light side column ── */
+
+function Banner({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const Rule = () => <span style={{ display: 'block', width: 52, height: 3, background: accent, marginTop: 4 }} />;
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 15, fontWeight: 700, color: '#374151', margin: '22px 0 8px' }}>{children}<Rule /></h2>
+  );
+  const T: Theme = {
+    Title: ({ children }) => <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 17, fontWeight: 700, color: '#374151', margin: '22px 0 9px' }}>{children}<Rule /></h2>,
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 11 }}>
+        <strong style={{ fontSize: 13.5 }}>{title}</strong>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {date && <div style={{ color: GREY, fontStyle: 'italic', fontSize: 12 }}>{date}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ background: accent, color: '#fff', padding: `${my(40)} ${mx(40)} 34px 290px`, minHeight: 150, boxSizing: 'border-box' }}>
+        <h1 style={{ fontFamily: SERIF, fontSize: 36, fontWeight: 600, margin: 0, lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+        {d.headline && <p style={{ margin: '8px 0 0', fontSize: 15, opacity: 0.92, letterSpacing: '0.03em' }}>{d.headline}</p>}
+      </header>
+      <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr' }}>
+        <aside className="cv-pad" style={{ padding: `${my(26)} 22px 0 ${mx(28)}`, position: 'relative', zIndex: 1 }}>
+          {d.photo && <img src={d.photo} alt="" style={{ width: 176, height: 196, objectFit: 'cover', display: 'block', marginTop: -92, marginBottom: 6, border: `3px solid ${accent}`, background: '#fff' }} />}
+          <Side>{L.contact}</Side>
+          {contactLine(d).map((c) => <p key={c} style={{ margin: '0 0 6px', wordBreak: 'break-word' }}>{c}</p>)}
+          {showSkills && d.skills && (<><Side>{L.skills}</Side><ul style={{ margin: 0, paddingLeft: 16, listStyle: 'disc' }}>{list(d.skills).map((s) => <li key={s} style={{ marginBottom: 3 }}>{s}</li>)}</ul></>)}
+          {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+          {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px' }}><span style={{ color: GREY, fontSize: 11 }}>{a}</span><br />{b}</p>)}</>)}
+          {showRefs && (<><Side>{L.references}</Side>{d.references.map((r) => (
+            <p key={r.id} style={{ margin: '0 0 10px', wordBreak: 'break-word' }}>
+              <strong>{r.name}</strong>{[r.title, r.org].filter(Boolean).map((x) => <span key={x}><br />{x}</span>)}
+              {(r.phone || r.email) && <span style={{ color: GREY }}><br />{[r.phone, r.email].filter(Boolean).join(', ')}</span>}
+            </p>
+          ))}</>)}
+        </aside>
+        <main className="cv-pad" style={{ padding: `${my(14)} ${mx(40)} 0 ${mx(20)}` }}>
+          {d.order.filter((k) => !['skills', 'personal', 'references'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+/* ── Bars (Pro): one column, full-width section bars, dates on a tinted line ── */
+
+function Bars({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 14.5, fontWeight: 700, textAlign: 'center', color: '#fff', background: accent, padding: '3px 10px', margin: '14px 0 8px' }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ background: `${accent}1f`, padding: '2px 8px' }}>
+          {date && <div style={{ fontWeight: 600, fontSize: 12 }}>{date}</div>}
+          <strong>{title}</strong>
+          {sub && <div>{sub}</div>}
+        </div>
+        {children && <div style={{ padding: '2px 8px 0' }}>{children}</div>}
+      </div>
+    ),
+  };
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ padding: `${my(34)} ${mx(46)} 0` }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 22, paddingBottom: 12, borderBottom: '3px solid #111827' }}>
+          {d.photo && <img src={d.photo} alt="" style={{ width: 104, height: 104, borderRadius: '50%', objectFit: 'cover', border: `3px solid ${accent}` }} />}
+          <div style={{ minWidth: 0 }}>
+            <h1 style={{ fontFamily: 'inherit', fontSize: 24, fontWeight: 700, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
+            <p style={{ margin: '4px 0 0', fontSize: 12 }}>{contactLine(d).join('   |   ')}</p>
+          </div>
+        </div>
+        {d.headline && <p style={{ margin: '12px 0 0', background: `${accent}1f`, textAlign: 'center', fontWeight: 700, fontSize: 16, padding: '5px 10px' }}>{d.headline}</p>}
+      </header>
+      <div className="cv-pad" style={{ padding: `0 ${mx(46)} ${my(40)}` }}>
+        {d.order.map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+      </div>
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
@@ -598,6 +686,8 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font }
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {
+  if (design === 'banner') return <Banner d={d} accent={accent} L={L} />;
+  if (design === 'bars') return <Bars d={d} accent={accent} L={L} />;
   if (design === 'pulse') return <Pulse d={d} accent={accent} L={L} />;
   if (design === 'bold') return <Bold d={d} accent={accent} L={L} />;
   if (design === 'fresher') return <Fresher d={d} accent={accent} L={L} />;

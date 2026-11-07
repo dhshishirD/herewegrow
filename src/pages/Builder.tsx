@@ -32,6 +32,7 @@ import {
 import { PageHead } from '../components/PageHead';
 import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
+import { presetFor } from '../../shared/templatePresets';
 import { analyzeCv } from '../lib/cvAnalysis';
 import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
 import { num, useLang } from '../lib/lang';
@@ -261,7 +262,13 @@ function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: bo
 
 export function BuilderPage() {
   const { t, lang } = useLang();
-  const [state, setState] = useState<BuilderState>(() => loadState() ?? { data: emptyCv(), design: 'classic', accent: ACCENTS[0] });
+  // /builder?template=<id> opens the builder with that template's design and colour
+  const tplId = useRef(new URLSearchParams(window.location.search).get('template')).current;
+  const [state, setState] = useState<BuilderState>(() => {
+    const base = loadState() ?? { data: emptyCv(), design: 'classic' as DesignId, accent: ACCENTS[0] };
+    const p = presetFor(tplId);
+    return p ? { ...base, design: p.design, accent: p.accent } : base;
+  });
   const [open, setOpen] = useState<string>('import');
   // Phones show one step at a time (fill the form, pick a design, download); wide screens show form and preview together
   const [view, setView] = useState<'edit' | 'design' | 'download'>('edit');
@@ -350,6 +357,7 @@ export function BuilderPage() {
   const startedRef = useRef(false);
   const initialData = useRef(JSON.stringify(state.data));
   useEffect(() => track('builder_open'), []);
+  useEffect(() => { if (presetFor(tplId)) track('template_use', { id: tplId ?? '' }); }, [tplId]);
   useEffect(() => {
     if (!startedRef.current && JSON.stringify(state.data) !== initialData.current) {
       startedRef.current = true;

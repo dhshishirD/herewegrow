@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PRODUCTS, findProduct } from '../../shared/catalog';
+import { presetFor } from '../../shared/templatePresets';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
 import { PackGrid } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
@@ -314,6 +315,11 @@ export function TemplateDetail({ id }: { id: string }) {
               <button type="button" className="btn btn-primary mt-5 w-full" onClick={() => order(`tpl-${tpl.id}`)}>
                 {t({ en: `Buy for ${taka(SINGLE_TEMPLATE_PRICE, 'en')}`, bn: `${taka(SINGLE_TEMPLATE_PRICE, 'bn')}-এ কিনুন` })}
               </button>
+              {presetFor(tpl.id) && (
+                <Link href={`/builder?template=${tpl.id}`} className="btn btn-quiet mt-3 w-full text-center">
+                  {t({ en: 'Or build it online with your details, free to try', bn: 'অথবা নিজের তথ্য দিয়ে অনলাইনেই বানান, ফ্রি ট্রাই' })}
+                </Link>
+              )}
               <div className="mt-3"><AddToCart id={tpl.id} /></div>
               <p className="mt-2 text-center text-sm text-muted">{t({ en: 'Buying more than one? Add to cart: up to 35% off each.', bn: 'একাধিক কিনবেন? কার্টে যোগ করুন: প্রতিটিতে ৩৫% পর্যন্ত ছাড়।' })}</p>
             </div>

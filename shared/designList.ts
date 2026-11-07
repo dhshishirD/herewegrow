@@ -1,7 +1,7 @@
 // CV builder designs: ids, names and which need Pro. No layout code here, so the
 // build-time SEO pages can use it too. The layouts live in src/builder/designs.tsx.
 
-export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite';
+export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite' | 'banner' | 'bars';
 
 export interface DesignInfo {
   id: DesignId;
@@ -25,6 +25,8 @@ export const DESIGN_LIST: DesignInfo[] = [
   { id: 'bold', name: { en: 'Bold', bn: 'বোল্ড' }, note: { en: 'Strong name, colour edge and section labels', bn: 'বড় নাম, রঙিন কিনারা ও সেকশন লেবেল' }, pro: true, photo: true },
   { id: 'fresher', name: { en: 'Fresher', bn: 'ফ্রেশার' }, note: { en: 'Skills up top, compact, for first jobs', bn: 'স্কিল উপরে, কম্প্যাক্ট, প্রথম চাকরির জন্য' }, pro: true, photo: true },
   { id: 'graphite', name: { en: 'Graphite', bn: 'গ্রাফাইট' }, note: { en: 'Dark charcoal sidebar, serious and sharp', bn: 'গাঢ় চারকোল সাইডবার, গম্ভীর ও ধারালো' }, pro: true, photo: true },
+  { id: 'banner', name: { en: 'Banner', bn: 'ব্যানার' }, note: { en: 'Colour band with your name, photo and clean side column', bn: 'রঙিন ব্যানারে নাম, ছবি ও পরিষ্কার সাইড কলাম' }, pro: true, photo: true },
+  { id: 'bars', name: { en: 'Bars (ATS)', bn: 'বার্স (ATS)' }, note: { en: 'Full-width section bars, one column, for banks and corporates', bn: 'পুরো প্রস্থের সেকশন বার, এক কলাম, ব্যাংক ও কর্পোরেটের জন্য' }, pro: true, photo: true },
 ];
 
 export const DESIGN_IDS = DESIGN_LIST.map((d) => d.id);

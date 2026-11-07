@@ -111,6 +111,12 @@ function headingOf(line: string): { key: Key; title?: string } | null {
   return null;
 }
 
+/** Small-caps headings come out of PDFs as "E DUCATION" or "P ROFESSIONAL S UMMARY": join the stray capital back on. */
+export const joinSmallCaps = (line: string) => {
+  if (line.length > 48 || line !== line.toUpperCase() || !/\p{L}/u.test(line)) return line;
+  return line.replace(/(^|\s)(\p{Lu})\s+(?=\p{Lu}{2,}(?:\s|$))/gu, '$1$2');
+};
+
 const stripBullet = (s: string) => s.replace(BULLET, '').trim();
 const isBullet = (s: string) => BULLET.test(s);
 
@@ -132,10 +138,11 @@ export function parseCv(raw: string): ImportResult {
   // Split into sections by heading lines.
   const blocks: { key: Key | 'header'; title?: string; lines: string[] }[] = [{ key: 'header', lines: [] }];
   for (const line of allLines) {
-    let h = headingOf(line);
+    const head = joinSmallCaps(line);
+    let h = headingOf(head);
     // After the first real heading, an unrecognised ALL-CAPS line starts its own section instead of joining the one above
     if (!h && blocks.length > 1) {
-      const title = unknownHeading(line);
+      const title = unknownHeading(head);
       if (title) h = { key: 'custom', title };
     }
     if (h) blocks.push({ key: h.key, title: h.title, lines: [] });

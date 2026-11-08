@@ -1,7 +1,7 @@
 import { findFont } from './fonts';
 // Builds an editable Word (.docx) version of the CV in the browser.
 // Loaded only when someone asks for a Word file, so the builder page stays light.
-// Sidebar designs (Modern, Graphite, Corporate, Pulse) come out as a real two-column Word table with a
+// Sidebar designs (Modern, Graphite, Corporate, Pulse, Banner) come out as a real two-column Word table with a
 // shaded sidebar, so the file matches the preview. Every other design uses the one-column layout,
 // which is the easiest to edit and ATS-safe.
 
@@ -56,7 +56,7 @@ function dataUrlBytes(url: string): Uint8Array {
 
 const imageType = (url: string): 'jpg' | 'png' | 'gif' => (/^data:image\/png/i.test(url) ? 'png' : /^data:image\/gif/i.test(url) ? 'gif' : 'jpg');
 
-/** How a sidebar design looks in Word. Mirrors Modern, Graphite, Corporate and Pulse in designs.tsx. */
+/** How a sidebar design looks in Word. Mirrors Modern, Graphite, Corporate, Pulse and Banner in designs.tsx. */
 interface SidebarSpec {
   side: 'left' | 'right';
   widthPx: number;
@@ -67,8 +67,12 @@ interface SidebarSpec {
   muted: string;
   /** Whether references sit in the sidebar (Modern, Graphite, Pulse) or stay in the main column (Corporate). */
   refs: boolean;
-  /** Corporate and Pulse underline their sidebar headings. */
+  /** Corporate, Pulse and Banner underline their sidebar headings. */
   rule: boolean;
+  /** Banner only: colour of the full-width band above both columns, which holds the name and headline. */
+  band?: string;
+  /** Colour of the heading underline when it is not the heading colour (Banner uses the accent). */
+  ruleColor?: string;
 }
 
 export function sidebarSpec(design: DesignId, accent: string): SidebarSpec | null {
@@ -77,6 +81,7 @@ export function sidebarSpec(design: DesignId, accent: string): SidebarSpec | nul
   if (design === 'graphite') return { side: 'left', widthPx: 250, fill: '1F2933', text: 'FFFFFF', head: 'FFFFFF', muted: 'CBD2D9', refs: true, rule: false };
   if (design === 'corporate') return { side: 'right', widthPx: 236, fill: tint(a, 0.07), text: '1F2933', head: a, muted: '52606D', refs: false, rule: true };
   if (design === 'pulse') return { side: 'right', widthPx: 236, fill: tint(a, 0.06), text: '1F2933', head: a, muted: '52606D', refs: true, rule: false };
+  if (design === 'banner') return { side: 'left', widthPx: 250, fill: 'FFFFFF', text: '1F2933', head: '374151', muted: '52606D', refs: true, rule: true, band: a, ruleColor: a };
   return null;
 }
 
@@ -92,7 +97,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const sideW = side ? side.widthPx * PX : 0;
   // Width of the column the main text lives in, used for right-aligned dates
   const SIDE_PAD = 26 * PX;
-  const mainPadL = side?.side === 'left' ? 40 * PX : marginX;
+  const mainPadL = side?.side === 'left' ? (side.band ? 20 : 40) * PX : marginX;
   const mainPadR = side?.side === 'right' ? 34 * PX : marginX;
   const CONTENT = side ? A4.width - sideW - mainPadL - mainPadR : A4.width - marginX * 2;
 
@@ -207,7 +212,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
     const sh = (text: string) =>
       new Paragraph({
         spacing: { before: 280, after: 100 },
-        ...(side.rule ? { border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: side.head, space: 3 } } } : {}),
+        ...(side.rule ? { border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: side.ruleColor ?? side.head, space: 3 } } } : {}),
         children: [new TextRun({ text: (state.headings ?? 'en') === 'en' ? text.toUpperCase() : text, bold: true, color: side.head, size: 20 })],
       });
     const sp = (text: string, o: { muted?: boolean; bold?: boolean } = {}) =>
@@ -240,10 +245,15 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
     }
 
     const main: Paragraph[] = [];
-    main.push(new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: d.name || 'Your Name', bold: true, size: 56, color: '111827' })] }));
-    if (d.headline) main.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: d.headline, bold: true, color: accent, size: 26 })] }));
-    if (!d.hidden.includes('summary') && d.summary) main.push(new Paragraph({ spacing: { before: 120, after: 80 }, children: [new TextRun({ text: d.summary, color: '374151' })] }));
-    sections(main, ['summary', 'skills', 'personal', ...(side.refs ? ['references'] : [])]);
+    if (side.band) {
+      // Banner: the name sits in the band, and the summary is an ordinary section in the main column
+      sections(main, ['skills', 'personal', 'references']);
+    } else {
+      main.push(new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: d.name || 'Your Name', bold: true, size: 56, color: '111827' })] }));
+      if (d.headline) main.push(new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: d.headline, bold: true, color: accent, size: 26 })] }));
+      if (!d.hidden.includes('summary') && d.summary) main.push(new Paragraph({ spacing: { before: 120, after: 80 }, children: [new TextRun({ text: d.summary, color: '374151' })] }));
+      sections(main, ['summary', 'skills', 'personal', ...(side.refs ? ['references'] : [])]);
+    }
 
     const mainW = A4.width - sideW;
     const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
@@ -261,15 +271,32 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       margins: { top: 300, bottom: 300, left: mainPadL, right: mainPadR },
       children: main,
     });
+    // Banner: one full-width coloured row on top, the name starting where the main column starts
+    const bandRow = side.band
+      ? [new TableRow({
+          height: { value: 150 * PX, rule: HeightRule.ATLEAST },
+          children: [new TableCell({
+            columnSpan: 2,
+            width: { size: A4.width, type: WidthType.DXA },
+            shading: { type: ShadingType.CLEAR, color: 'auto', fill: side.band },
+            borders: cellBorders,
+            margins: { top: 500, bottom: 34 * PX, left: sideW + 20 * PX, right: marginX },
+            children: [
+              new Paragraph({ spacing: { after: 100 }, children: [new TextRun({ text: d.name || 'Your Name', bold: true, size: 72, color: 'FFFFFF' })] }),
+              ...(d.headline ? [new Paragraph({ children: [new TextRun({ text: d.headline, color: 'FFFFFF', size: 30 })] })] : []),
+            ],
+          })],
+        })]
+      : [];
     children = [
       new Table({
         width: { size: A4.width, type: WidthType.DXA },
         columnWidths: side.side === 'left' ? [sideW, mainW] : [mainW, sideW],
         layout: TableLayoutType.FIXED,
         borders: TableBorders.NONE,
-        rows: [new TableRow({
+        rows: [...bandRow, new TableRow({
           // Tall enough that the sidebar colour fills page one; a longer CV just flows onto page two
-          height: { value: A4.height - marginY * 2 - 900, rule: HeightRule.ATLEAST },
+          ...(side.band ? {} : { height: { value: A4.height - marginY * 2 - 900, rule: HeightRule.ATLEAST } }),
           children: side.side === 'left' ? [sideCell, mainCell] : [mainCell, sideCell],
         })],
       }),

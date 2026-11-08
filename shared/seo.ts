@@ -73,6 +73,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'ফ্রি আবেদনপত্র জেনারেটর (বাংলা ও ইংরেজি) | Job application letter generator | HereWeGrow',
     description: 'সরকারি বা বেসরকারি চাকরির আবেদনপত্র মিনিটেই লিখুন, কপি করুন বা Word ফাইল নামান। Free job application letter generator in Bangla and English.',
   },
+  '/tools/scam-shield': {
+    title: 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার | Fake job circular checker Bangladesh | HereWeGrow',
+    description: 'চাকরির বিজ্ঞপ্তি বা মেসেজ পেস্ট করে লাল পতাকা দেখুন: আগে টাকা চাওয়া, বিকাশে পেমেন্ট, ইন্টারভিউ ছাড়া চাকরি। Free fake job and overseas job scam checker for Bangladesh.',
+  },
   '/tools/job-match': {
     title: 'সিভি বনাম চাকরির বিজ্ঞাপন ম্যাচ চেকার | Free CV job match checker | HereWeGrow',
     description: 'চাকরির বিজ্ঞাপন ও সিভি দিয়ে দেখুন কোন কীওয়ার্ড বাদ পড়েছে। Free tool to match your CV against a job ad, in your browser.',

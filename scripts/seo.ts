@@ -104,7 +104,7 @@ function pages(): Page[] {
     {
       path: '/tools',
       ...seo('/tools'),
-      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li></ul>`,
+      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li><li>${link('/tools/scam-shield', 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার')}</li></ul>`,
       priority: 0.7,
     },
     {
@@ -140,6 +140,13 @@ function pages(): Page[] {
       ...seo('/tools/job-match'),
       body: '<h1>সিভি বনাম চাকরির বিজ্ঞাপন ম্যাচ</h1><p>বিজ্ঞাপনের মূল শব্দের কতটা আপনার সিভিতে আছে, তা দেখুন।</p>',
       jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow CV job match checker', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
+      priority: 0.9,
+    },
+    {
+      path: '/tools/scam-shield',
+      ...seo('/tools/scam-shield'),
+      body: '<h1>ভুয়া চাকরির বিজ্ঞপ্তি চেকার</h1><p>চাকরির বিজ্ঞপ্তি বা মেসেজ পেস্ট করে আগে টাকা চাওয়া, বিকাশে পেমেন্ট, ইন্টারভিউ ছাড়া চাকরির মতো লাল পতাকা দেখুন। লেখাটি আপনার ব্রাউজারেই থাকে।</p>',
+      jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow fake job checker', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
       priority: 0.9,
     },
     {

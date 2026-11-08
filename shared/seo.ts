@@ -57,6 +57,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: `বিডিজবস প্রোফাইল আপডেট ও সেটআপ সার্ভিস (৳${price('bdjobs-profile')}) | BDJobs profile service | HereWeGrow`,
     description: `বিডিজবস প্রোফাইল ১০০% সম্পূর্ণ: ক্যারিয়ার সামারি, স্কিল, অভিজ্ঞতা ও জব ক্যাটাগরি, ২৪ ঘণ্টায়। মাত্র ৳${price('bdjobs-profile')}। BDJobs profile update and setup by CV experts, ready for 1-click apply.`,
   },
+  '/cv-for-gulf-jobs': {
+    title: 'গাল্ফ চাকরির সিভি ফরম্যাট (সৌদি, আমিরাত, কাতার) | Gulf CV format for Bangladeshis | HereWeGrow',
+    description: 'গাল্ফে চাকরির আবেদনের সিভি: ছবি, জাতীয়তা ও ব্যক্তিগত তথ্যসহ পরিষ্কার এক পাতা, ফোনেই বানান, PDF ডাউনলোড, শুরু বিনামূল্যে। Free Gulf CV maker for Saudi, UAE and Qatar jobs.',
+  },
   '/pro': {
     title: 'HereWeGrow Pro: মার্কছাড়া সিভি ডাউনলোড ও প্রিমিয়াম ডিজাইন | Pro CV builder | HereWeGrow',
     description: '৳৪৯ থেকে প্রো পাস: মার্কছাড়া PDF ও Word, প্রিমিয়াম সিভি ডিজাইন, অনলাইনে সিভি সেভ ও টেমপ্লেটে ছাড়। বিকাশ বা নগদে একবার পেমেন্ট, নিজে থেকে নবায়ন নেই।',

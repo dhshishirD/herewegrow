@@ -35,6 +35,7 @@ import { PageHead } from '../components/PageHead';
 import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
 import { presetFor } from '../../shared/templatePresets';
+import { abroadPreset } from '../../shared/abroadPresets';
 import { analyzeCv } from '../lib/cvAnalysis';
 import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
 import { num, useLang } from '../lib/lang';
@@ -266,10 +267,14 @@ export function BuilderPage() {
   const { t, lang } = useLang();
   // /builder?template=<id> opens the builder with that template's design and colour
   const tplId = useRef(new URLSearchParams(window.location.search).get('template')).current;
+  // /builder?preset=gulf opens the builder with the design and personal details an abroad CV needs
+  const abroadId = useRef(new URLSearchParams(window.location.search).get('preset')).current;
   const [state, setState] = useState<BuilderState>(() => {
     const base = loadState() ?? { data: emptyCv(), design: 'classic' as DesignId, accent: ACCENTS[0] };
     const p = presetFor(tplId);
-    return p ? { ...base, design: p.design, accent: p.accent } : base;
+    if (p) return { ...base, design: p.design, accent: p.accent };
+    const a = abroadPreset(abroadId);
+    return a ? { ...base, design: a.design, accent: a.accent, data: { ...base.data, showPersonal: a.showPersonal } } : base;
   });
   const [open, setOpen] = useState<string>('import');
   // Phones show one step at a time (fill the form, pick a design, download); wide screens show form and preview together
@@ -360,6 +365,7 @@ export function BuilderPage() {
   const initialData = useRef(JSON.stringify(state.data));
   useEffect(() => track('builder_open'), []);
   useEffect(() => { if (presetFor(tplId)) track('template_use', { id: tplId ?? '' }); }, [tplId]);
+  useEffect(() => { if (abroadPreset(abroadId)) track('abroad_preset_use', { id: abroadId ?? '' }); }, [abroadId]);
   useEffect(() => {
     if (!startedRef.current && JSON.stringify(state.data) !== initialData.current) {
       startedRef.current = true;

@@ -39,6 +39,8 @@ const LazyBuilder = () => (
 
 const Landing = lazy(() => import('./pages/ProfileLanding'));
 const LinkedInPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="linkedin" /></Suspense>;
+const Abroad = lazy(() => import('./pages/AbroadLanding'));
+const GulfPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Abroad kind="gulf" /></Suspense>;
 const BdjobsPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="bdjobs" /></Suspense>;
 
 const ROUTES: Record<string, () => JSX.Element> = {
@@ -64,6 +66,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/admin/manual': AdminManualPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
+  '/cv-for-gulf-jobs': GulfPage,
   '/contact': ContactPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,

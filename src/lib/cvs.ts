@@ -28,7 +28,8 @@ export const cvTitle = (s: BuilderState) => [s.data.name, s.data.headline].filte
 
 export const listCvs = () => call('/api/cvs', { method: 'GET' }, (d) => ({ cvs: d.cvs as CvSummary[], limit: d.limit as number }));
 export const loadCv = (id: string) => call(`/api/cvs/${id}`, { method: 'GET' }, (d) => (d.cv as { state: BuilderState }).state);
-export const createCv = (s: BuilderState) => call('/api/cvs', { method: 'POST', body: JSON.stringify({ title: cvTitle(s), state: s }) }, (d) => d.id as string);
+export const createCv = (s: BuilderState, title?: string) =>
+  call('/api/cvs', { method: 'POST', body: JSON.stringify({ title: title ?? cvTitle(s), state: s }) }, (d) => d.id as string);
 export const updateCv = (id: string, s: BuilderState) =>
   call(`/api/cvs/${id}`, { method: 'PUT', body: JSON.stringify({ title: cvTitle(s), state: s }) }, (d) => d.id as string);
 export const deleteCv = (id: string) => call(`/api/cvs/${id}`, { method: 'DELETE' }, () => true);

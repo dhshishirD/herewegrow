@@ -40,13 +40,51 @@ describe('Word export layouts', () => {
     expect(xml.indexOf('Rahim Uddin')).toBeLessThan(xml.indexOf('<w:tc>', xml.indexOf('w:gridSpan') + 1));
   });
 
-  it.each(['classic', 'executive', 'elegant'])('%s stays one column (no table)', async (id) => {
+  it.each(['classic', 'executive'])('%s stays one column (no table)', async (id) => {
     const xml = await documentXml(id as BuilderState['design']);
     expect(xml).not.toContain('<w:tbl>');
   });
 
+  it('elegant has a coloured band row above the sections', async () => {
+    const xml = await documentXml('elegant');
+    expect(xml).toContain('w:fill="1D4ED8"');
+    expect((xml.match(/<w:tr>/g) ?? []).length).toBe(2);
+    expect(xml).toContain('w:pBdr'); // rule beside each entry
+  });
+
+  it('bold has an accent strip cell beside the content', async () => {
+    const xml = await documentXml('bold');
+    expect(xml).toContain('<w:tbl>');
+    expect(xml).toContain('w:fill="1D4ED8"');
+    expect(xml).toContain('w:caps');
+  });
+
+  it('minimal puts each section label in its own table row', async () => {
+    const xml = await documentXml('minimal');
+    const rows = (xml.match(/<w:tr>/g) ?? []).length;
+    expect(rows).toBeGreaterThanOrEqual(5);
+    expect(xml).toContain('PROFILE');
+  });
+
+  it('timeline, fresher and bars follow their preview', async () => {
+    const timeline = await documentXml('timeline');
+    expect(timeline).toContain('<w:tbl>'); // header table with the heavy rule
+    expect(timeline).toContain('■');
+    const fresher = await documentXml('fresher');
+    expect(fresher).not.toContain('<w:tbl>');
+    expect(fresher).toContain('w:shd'); // skill tags
+    const bars = await documentXml('bars');
+    expect(bars).toContain('w:shd'); // section bars
+    expect(bars).toContain('<w:jc w:val="center"/>');
+  });
+
   it('works with an empty CV on a sidebar design', async () => {
     const blob = await buildDocx({ data: emptyCv(), design: 'modern', accent: '#1d4ed8' });
+    expect(blob.size).toBeGreaterThan(1000);
+  });
+
+  it.each(DESIGN_LIST.map((x) => x.id))('%s builds from an empty CV', async (id) => {
+    const blob = await buildDocx({ data: emptyCv(), design: id, accent: '#1d4ed8' });
     expect(blob.size).toBeGreaterThan(1000);
   });
 });

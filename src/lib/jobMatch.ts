@@ -16,7 +16,7 @@ export interface MatchResult {
 
 const STOP = new Set(`a an the and or of to in on at for with by from as is are be will can must should may we you your our their this that these those it its
 job jobs apply applicants applicant candidate candidates company vacancy position post posts required requirement requirements responsibilities responsibility
-looking seeking join team work working years year experience experienced preferred plus including include etc also such well good strong ability able
+looking seeking join team work working years year experience experienced preferred plus including include etc also such well good strong ability able skill skills
 before after until within january february march april may june july august september october november december proficiency proficient senior junior executive officer
 deadline salary benefits benefit age bangladesh bangladeshi dhaka location department
 এবং ও বা এর এই সেই যে যা জন্য থেকে করে করা হবে হয় হয়েছে একটি একজন সকল সব আছে থাকতে থাকবে পদ পদের পদে আবেদন আবেদনের প্রার্থী প্রার্থীর

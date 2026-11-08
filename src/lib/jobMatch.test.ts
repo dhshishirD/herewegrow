@@ -35,3 +35,10 @@ describe('matchCv keywords', () => {
     expect(terms).not.toContain('before');
   });
 });
+
+describe('matchCv label words', () => {
+  it('does not treat the word "skills" as a keyword', () => {
+    const r = matchCv('x', 'Requirements: Excel. Skills: Tally, budgeting. Must have communication.');
+    expect(r.keywords.map((k) => k.term.toLowerCase())).not.toContain('skills');
+  });
+});

@@ -31,6 +31,8 @@ import {
   type HeadingLang,
 } from '../builder/model';
 import { SummaryHelper } from '../builder/SummaryHelper';
+import { JobTailor, type CopyResult } from '../builder/JobTailor';
+import { addSkill } from '../builder/tailor';
 import { PageHead } from '../components/PageHead';
 import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
@@ -499,6 +501,21 @@ export function BuilderPage() {
       void refreshList();
     } else setSync(r.error === 'limit' ? 'limit' : 'error');
   };
+  // Tailor panel: keeps a separate saved copy for one job and opens it, so the first CV stays as it was.
+  const saveJobCopy = async (title: string): Promise<CopyResult> => {
+    if (!user) {
+      openLogin();
+      return 'login';
+    }
+    const r = await createCv(state, title);
+    if (r.ok) {
+      setCvId(r.value);
+      setSync('saved');
+      void refreshList();
+      return 'ok';
+    }
+    return r.error === 'limit' ? 'limit' : 'error';
+  };
   const openSaved = async (id: string) => {
     if (id === cvId) return;
     if (!cvId && !isEmpty && !window.confirm(t({ en: 'Open this CV? The one on screen is not saved to your account and will be replaced.', bn: 'এই সিভি খুলবেন? স্ক্রিনের সিভিটি অ্যাকাউন্টে সেভ করা নেই, এটি বদলে যাবে।' }))) return;
@@ -683,6 +700,10 @@ export function BuilderPage() {
                 placeholder="Finance graduate with 2 years of customer service experience..."
                 hint={t({ en: 'Say what you studied or do, one or two results, and the role you want. Skip “to work in a challenging environment”.', bn: 'কী পড়েছেন বা করেন, এক-দুটি অর্জন, আর কোন পদ চান লিখুন। “challenging environment” ধরনের মুখস্থ লাইন বাদ দিন।' })} />
               <SummaryHelper d={d} t={t} onUse={(text) => set({ summary: text })} />
+            </Section>
+
+            <Section title={t({ en: 'Tailor for a job', bn: 'চাকরির জন্য মানিয়ে নিন' })} open={open === 'tailor'} onToggle={() => toggle('tailor')}>
+              <JobTailor cv={cvText(d)} name={d.name} lang={lang} t={t} onAddSkill={(term) => set({ skills: addSkill(d.skills, term) })} onSaveCopy={saveJobCopy} />
             </Section>
 
             <Section title={sectionName('experience')} open={open === 'experience'} onToggle={() => toggle('experience')} count={d.experience.length}>

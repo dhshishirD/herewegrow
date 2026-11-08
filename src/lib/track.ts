@@ -183,7 +183,7 @@ const safe = (f: () => Store): Store | null => {
 const browser = typeof window !== 'undefined';
 
 /** Visit /?notrack=1 once on a device to stop counting it (your own phone, a tester); /?notrack=0 turns counting back on. */
-const GA_ID = 'G-B1NGMCD68C';
+const GA_ID = 'G-PNRFDGWDBF';
 export function applyOptOutParam(search: string, storage: Store & Partial<Pick<Storage, 'removeItem'>> | null): boolean {
   try {
     const v = new URLSearchParams(search).get('notrack');

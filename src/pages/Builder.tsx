@@ -130,7 +130,7 @@ async function photoToDataUrl(file: File): Promise<string> {
 function cvText(d: CvData) {
   const parts = [d.name, d.headline, d.phone, d.email, d.location, d.linkedin];
   if (d.summary) parts.push('Professional Summary', d.summary);
-  if (d.experience.length) parts.push('Work Experience', ...d.experience.flatMap((e) => [e.role, e.org, e.start, e.end, e.bullets]));
+  if (d.experience.length) parts.push('Work Experience', ...d.experience.flatMap((e) => [e.role, e.org, [e.start, e.current ? 'Present' : e.end].filter(Boolean).join(' – '), e.bullets]));
   if (d.education.length) parts.push('Education', ...d.education.flatMap((e) => [degreeLine(e.degree, e.major), e.institution, e.result, e.year, e.details]));
   if (d.skills) parts.push('Skills', list(d.skills).join(', '));
   if (d.languages) parts.push('Languages', d.languages);

@@ -7,7 +7,7 @@ describe('matchCv', () => {
   it('finds keywords present in the CV and lists the rest as missing', () => {
     const r = matchCv('Analyst. Built reporting dashboards in Excel and SQL.', AD);
     expect(r.found.map((k) => stem(k.term))).toEqual(expect.arrayContaining(['excel', 'sql', 'report']));
-    expect(r.missing.map((k) => k.term.toLowerCase())).toEqual(expect.arrayContaining(['power']));
+    expect(r.missing.map((k) => k.term.toLowerCase())).toEqual(expect.arrayContaining(['power bi']));
     expect(r.score).toBeGreaterThan(0);
     expect(r.score).toBeLessThan(100);
   });
@@ -27,10 +27,10 @@ describe('matchCv', () => {
 });
 
 describe('matchCv keywords', () => {
-  it('keeps short capitalised terms like BI and drops dates and filler', () => {
+  it('treats Power BI as one skill and drops dates and filler', () => {
     const r = matchCv('x', 'Requirements: Power BI and Excel. Apply before 30 November. Proficiency in SQL.');
     const terms = r.keywords.map((k) => k.term);
-    expect(terms).toEqual(expect.arrayContaining(['BI', 'Power', 'Excel', 'SQL']));
+    expect(terms).toEqual(expect.arrayContaining(['Power BI', 'Excel', 'SQL']));
     expect(terms).not.toContain('November');
     expect(terms).not.toContain('before');
   });

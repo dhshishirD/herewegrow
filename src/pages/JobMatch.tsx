@@ -1,3 +1,4 @@
+import { MatchRequirements } from '../components/MatchRequirements';
 import { PageHead, TOOLS_CRUMB } from '../components/PageHead';
 import { useEffect, useState } from 'react';
 import { matchCv, type MatchResult } from '../lib/jobMatch';
@@ -106,13 +107,19 @@ export function JobMatch() {
                 <p className={`font-display text-7xl font-bold leading-none ${tone}`}>{num(result.score, lang)}%</p>
                 <p className="pb-1 text-muted">{t({ en: 'of the ad’s key words are in your CV.', bn: 'বিজ্ঞাপনের মূল শব্দের এতটা আপনার সিভিতে আছে।' })}</p>
               </div>
+              <MatchRequirements items={result.requirements} t={t} lang={lang} />
               {result.missing.length > 0 && (
                 <div className="mt-5">
                   <h2 className="text-xl">{t({ en: 'Missing from your CV', bn: 'আপনার সিভিতে নেই' })}</h2>
                   <ul className="mt-3 flex flex-wrap gap-2">
-                    {result.missing.map((k) => <li key={k.term} className="rounded-full bg-gold-soft px-3 py-1 text-sm font-semibold">{k.term}</li>)}
+                    {result.missing.map((k) => (
+                      <li key={k.term} title={k.seenAs ? t({ en: `Written in the ad as: ${k.seenAs}`, bn: `বিজ্ঞাপনে লেখা: ${k.seenAs}` }) : undefined}
+                        className={`rounded-full px-3 py-1 text-sm font-semibold ${k.must ? 'bg-gold-soft ring-1 ring-gold' : 'bg-mist'}`}>
+                        {k.term}{k.must ? ' ★' : ''}
+                      </li>
+                    ))}
                   </ul>
-                  <p className="mt-3 text-sm text-muted">{t({ en: 'Add a word only if it is true for you: in your summary, skills or a job entry.', bn: 'শব্দটি আপনার ক্ষেত্রে সত্য হলেই যোগ করুন: সারসংক্ষেপ, দক্ষতা বা কাজের বিবরণে।' })}</p>
+                  <p className="mt-3 text-sm text-muted">{t({ en: '★ means the ad lists it as a requirement. Add a word only if it is true for you: in your summary, skills or a job entry.', bn: '★ মানে বিজ্ঞাপনে এটি শর্ত হিসেবে আছে। শব্দটি আপনার ক্ষেত্রে সত্য হলেই যোগ করুন: সারসংক্ষেপ, দক্ষতা বা কাজের বিবরণে।' })}</p>
                 </div>
               )}
               {result.found.length > 0 && (
@@ -123,7 +130,7 @@ export function JobMatch() {
                   </ul>
                 </div>
               )}
-              <p className="mt-5 text-sm text-muted">{t({ en: 'This is a keyword guide, not a hiring verdict. Similar words with different endings may be counted as different.', bn: 'এটি কীওয়ার্ডের একটি দিকনির্দেশ, নিয়োগের রায় নয়। একই অর্থের ভিন্ন রূপের শব্দ আলাদা গণ্য হতে পারে।' })}</p>
+              <p className="mt-5 text-sm text-muted">{t({ en: 'This is a keyword guide, not a hiring verdict. Similar words with different endings may be counted as different.', bn: 'কী যোগ করবেন তার একটি দিকনির্দেশ, নিয়োগের রায় নয়। অস্বাভাবিকভাবে লেখা দক্ষতা ধরা নাও পড়তে পারে।' })}</p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link href="/builder" className="btn btn-primary">{t({ en: 'Edit my CV in the builder', bn: 'বিল্ডারে সিভি ঠিক করুন' })}</Link>
                 <Link href="/services" className="btn btn-quiet">{t({ en: 'Have an expert tailor it', bn: 'বিশেষজ্ঞকে দিয়ে মানিয়ে নিন' })}</Link>

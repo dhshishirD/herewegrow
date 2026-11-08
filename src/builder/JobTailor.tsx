@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { MatchRequirements } from '../components/MatchRequirements';
 import { matchCv } from '../lib/jobMatch';
 import { num } from '../lib/lang';
 import { track } from '../lib/track';
@@ -57,14 +58,15 @@ export function JobTailor({ cv, name, lang, t, onAddSkill, onSaveCopy }: {
             <p className={`font-display text-5xl font-bold leading-none ${tone}`}>{num(r.score, lang)}%</p>
             <p className="pb-1 text-sm text-muted">{t({ en: 'of the ad’s key words are in your CV', bn: 'বিজ্ঞাপনের মূল শব্দের এতটা আপনার সিভিতে আছে' })}</p>
           </div>
+          <MatchRequirements items={r.requirements} t={t} lang={lang} />
           {r.missing.length > 0 ? (
             <div className="mt-3">
               <h3 className="text-base font-semibold">{t({ en: 'Missing. Tap to add to your skills if true:', bn: 'নেই। সত্য হলে ট্যাপ করে দক্ষতায় যোগ করুন:' })}</h3>
               <ul className="mt-2 flex flex-wrap gap-2">
                 {r.missing.map((k) => (
                   <li key={k.term}>
-                    <button type="button" className="rounded-full bg-gold-soft px-3 py-1 text-sm font-semibold" onClick={() => { onAddSkill(k.term); track('tailor_add_term'); }}>
-                      + {k.term}
+                    <button type="button" className={`rounded-full px-3 py-1 text-sm font-semibold ${k.must ? 'bg-gold-soft ring-1 ring-gold' : 'bg-mist'}`} onClick={() => { onAddSkill(k.term); track('tailor_add_term'); }}>
+                      + {k.term}{k.must ? ' ★' : ''}
                     </button>
                   </li>
                 ))}

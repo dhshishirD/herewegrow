@@ -197,6 +197,17 @@ export function ToolsPage() {
       },
       cta: { en: 'Check the match', bn: 'ম্যাচ দেখুন' },
     },
+    {
+      href: '/tools/scam-shield',
+      badge: <span className="font-display text-xl font-semibold text-alert">!</span>,
+      tone: 'bg-alert/10',
+      name: { en: 'Fake job checker', bn: 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার' },
+      body: {
+        en: 'Paste a job circular or message. See red flags like fees, bKash payments, no interview and risky countries.',
+        bn: 'চাকরির বিজ্ঞপ্তি বা মেসেজ পেস্ট করুন। ফি, বিকাশে টাকা, ইন্টারভিউ ছাড়া চাকরি ও ঝুঁকিপূর্ণ দেশের মতো লাল পতাকা দেখুন।',
+      },
+      cta: { en: 'Check a job offer', bn: 'অফার চেক করুন' },
+    },
   ];
 
   return (

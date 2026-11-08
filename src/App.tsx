@@ -21,6 +21,7 @@ import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
 import { ApplicationLetter } from './pages/ApplicationLetter';
 import { JobMatch } from './pages/JobMatch';
+import { ScamShield } from './pages/ScamShield';
 import { ProPage } from './pages/Pro';
 import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
@@ -56,6 +57,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/tools/photo-signature-resizer': PhotoResizer,
   '/tools/application-letter': ApplicationLetter,
   '/tools/job-match': JobMatch,
+  '/tools/scam-shield': ScamShield,
   '/payment/success': PaymentSuccess,
   '/payment/cancel': PaymentCancel,
   '/account': AccountPage,

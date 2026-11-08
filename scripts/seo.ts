@@ -9,6 +9,7 @@ import type { Plugin } from 'vite';
 import { PRODUCTS } from '../shared/catalog';
 import { GUIDES, type Block } from '../shared/guides';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
+import { ABROAD_PAGES } from '../shared/abroadPages';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
@@ -220,6 +221,32 @@ function pages(): Page[] {
         priority: 0.9,
       };
     }),
+    ...Object.values(ABROAD_PAGES).map((ap): Page => ({
+      path: ap.path,
+      ...seo(ap.path),
+      body: `<h1>${esc(ap.title.bn)}</h1><p>${esc(ap.lead.bn)}</p><p>${esc(ap.lead.en)}</p><ol>${ap.expect.map((e) => `<li><strong>${esc(e.title.bn)}</strong> ${esc(e.body.bn)}</li>`).join('')}</ol><ul>${ap.safety.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><p>${link(`/builder?preset=${ap.presetId}`, 'বিনামূল্যে সিভি বানান')} · ${link('/pro', 'Pro')} · ${link('/services', 'সিভি রাইটিং')}</p><ul>${ap.faq.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><p>সর্বশেষ যাচাই ${esc(ap.lastChecked)}</p>`,
+      jsonLd: [
+        {
+          '@type': 'Article',
+          headline: ap.title.en,
+          alternativeHeadline: ap.title.bn,
+          description: ap.lead.en,
+          inLanguage: ['bn', 'en'],
+          datePublished: ap.lastChecked,
+          dateModified: ap.lastChecked,
+          mainEntityOfPage: `${SITE}${ap.path}`,
+          image: `${SITE}/og.jpg`,
+          author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about` },
+          publisher: { '@id': `${SITE}/#org` },
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: ap.faq.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })),
+        },
+        crumbs([['HereWeGrow', '/'], ['CV builder', '/builder'], [ap.eyebrow.en, ap.path]]),
+      ],
+      priority: 0.9,
+    })),
     { path: '/privacy', title: 'Privacy | HereWeGrow', description: 'How HereWeGrow handles your information.', body: '<h1>Privacy</h1>', priority: 0.3 },
     { path: '/terms', title: 'Terms | HereWeGrow', description: 'Terms for HereWeGrow services and templates.', body: '<h1>Terms</h1>', priority: 0.3 },
   ];

@@ -15,6 +15,7 @@ import { ServicesPage, ToolsPage } from './pages/CatalogPages';
 import { AboutPage } from './pages/About';
 import { CvChecker } from './pages/CvChecker';
 import { OrderPage } from './pages/Order';
+import { BlogPage, BlogPostPage } from './pages/Blog';
 import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
@@ -50,6 +51,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/about': AboutPage,
   '/order': OrderPage,
   '/guides': GuidesPage,
+  '/blog': BlogPage,
   '/templates': TemplatesPage,
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,
@@ -80,6 +82,8 @@ function Page() {
   if (tpl) return <TemplateDetail key={path} id={tpl[1]} />;
   const guide = path.match(/^\/guides\/([a-z0-9-]+)$/);
   if (guide) return <GuidePage key={path} slug={guide[1]} />;
+  const post = path.match(/^\/blog\/([a-z0-9-]+)$/);
+  if (post) return <BlogPostPage key={path} slug={post[1]} />;
   const Component = ROUTES[path] ?? NotFound;
   return <Component key={path} />;
 }

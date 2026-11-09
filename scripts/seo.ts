@@ -6,7 +6,9 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
+import { renderMarkdown } from '../shared/blogParse';
 import { PRODUCTS } from '../shared/catalog';
+import { loadLivePosts } from './blog';
 import { GUIDES, type Block } from '../shared/guides';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
 import { ABROAD_PAGES } from '../shared/abroadPages';
@@ -31,6 +33,7 @@ interface Page {
   jsonLd?: unknown[];
   priority: number;
   images?: string[];
+  lastmod?: string;
 }
 
 const ORG = {
@@ -297,6 +300,44 @@ function pages(): Page[] {
     });
   }
 
+  const posts = loadLivePosts();
+  const liveSlugs = new Set(posts.map((p) => p.slug));
+  if (posts.length) list.push({
+    path: '/blog',
+    ...seo('/blog'),
+    body: `<h1>ব্লগ: সিভি ও চাকরির গাইড</h1><ul>${posts.map((p) => `<li>${link(`/blog/${p.slug}`, p.title)}: ${esc(p.metaDescription)}</li>`).join('')}</ul>`,
+    jsonLd: [crumbs([['HereWeGrow', '/'], ['Blog', '/blog']])],
+    priority: 0.8,
+    lastmod: posts[0]?.publishDate,
+  });
+  for (const post of posts) {
+    const url = `${SITE}/blog/${post.slug}`;
+    list.push({
+      path: `/blog/${post.slug}`,
+      title: post.metaTitle.includes('HereWeGrow') ? post.metaTitle : `${post.metaTitle} | HereWeGrow`,
+      description: post.metaDescription,
+      body: `<article lang="bn"><h1>${esc(post.title)}</h1>${renderMarkdown(post.body, { liveSlugs })}</article>`,
+      jsonLd: [
+        {
+          '@type': 'Article',
+          headline: post.title,
+          description: post.metaDescription,
+          inLanguage: 'bn',
+          datePublished: post.publishDate,
+          dateModified: post.publishDate,
+          mainEntityOfPage: url,
+          image: `${SITE}/og.jpg`,
+          keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(', '),
+          author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about` },
+          publisher: { '@id': `${SITE}/#org` },
+        },
+        crumbs([['HereWeGrow', '/'], ['Blog', '/blog'], [post.title, `/blog/${post.slug}`]]),
+      ],
+      priority: 0.8,
+      lastmod: post.publishDate,
+    });
+  }
+
   for (const t of TEMPLATES) {
     const sector = SECTORS.find((s) => s.id === t.sector)!;
     const style = t.style === 'ats' ? { en: 'ATS-friendly', bn: 'ATS-ফ্রেন্ডলি' } : { en: 'designed', bn: 'ডিজাইনড' };
@@ -371,7 +412,7 @@ function sitemap(list: Page[]): string {
   const urls = list
     .map((p) => {
       const imgs = (p.images ?? []).map((i) => `<image:image><image:loc>${i}</image:loc></image:image>`).join('');
-      return `  <url><loc>${SITE}${p.path}</loc><lastmod>${TODAY}</lastmod><priority>${p.priority.toFixed(1)}</priority>${imgs}</url>`;
+      return `  <url><loc>${SITE}${p.path}</loc><lastmod>${p.lastmod ?? TODAY}</lastmod><priority>${p.priority.toFixed(1)}</priority>${imgs}</url>`;
     })
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;

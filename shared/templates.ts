@@ -3,6 +3,8 @@
 // The Word file is stored privately in the R2 bucket under its id, e.g. "<id>.docx".
 
 import type { Bilingual } from './catalog';
+import { LIBRARY_TEMPLATES } from './templatesLibrary';
+export { LIBRARY_TEMPLATES };
 
 export type TemplateStyle = 'ats' | 'designed';
 export type Sector = 'fresher' | 'banking' | 'corporate' | 'teaching' | 'engineering' | 'sales' | 'medical' | 'other';
@@ -15,7 +17,35 @@ export interface Template {
   sector: Sector;
   pages: number;
   title: Bilingual;
+  /** Library templates (second batch): true. The first 39 are "core". */
+  lib?: boolean;
+  /** Preview pages we have images for. Defaults to all pages. */
+  shown?: number;
+  /** Source category from the library manifest (modern, europass, student ...). */
+  cat?: string;
+  /** Browse category (fresher, modern, professional ...). */
+  hub?: string;
+  prof?: string;
+  color?: string;
+  photo?: boolean;
 }
+
+/** Browse categories, shown as chips on the Templates page. */
+export const CATEGORIES: { id: string; name: Bilingual }[] = [
+  { id: 'modern', name: { en: 'Modern', bn: 'মডার্ন' } },
+  { id: 'professional', name: { en: 'Professional', bn: 'প্রফেশনাল' } },
+  { id: 'simple', name: { en: 'Simple', bn: 'সিম্পল' } },
+  { id: 'fresher', name: { en: 'Fresher and student', bn: 'ফ্রেশার ও স্টুডেন্ট' } },
+  { id: 'europass', name: { en: 'Europass', bn: 'ইউরোপাস' } },
+  { id: 'marriage-biodata', name: { en: 'Marriage biodata', bn: 'বিয়ের বায়োডাটা' } },
+  { id: 'job-biodata', name: { en: 'Job biodata', bn: 'চাকরির বায়োডাটা' } },
+  { id: 'teacher', name: { en: 'Teacher', bn: 'শিক্ষক' } },
+  { id: 'nurse', name: { en: 'Nurse and doctor', bn: 'নার্স ও ডাক্তার' } },
+  { id: 'it', name: { en: 'IT', bn: 'আইটি' } },
+  { id: 'graphic-designer', name: { en: 'Designer', bn: 'ডিজাইনার' } },
+  { id: 'creative', name: { en: 'Creative', bn: 'ক্রিয়েটিভ' } },
+  { id: 'other', name: { en: 'Country-wise', bn: 'দেশভিত্তিক' } },
+];
 
 export const SECTORS: { id: Sector; name: Bilingual }[] = [
   { id: 'fresher', name: { en: 'Fresher', bn: 'ফ্রেশার' } },
@@ -28,7 +58,8 @@ export const SECTORS: { id: Sector; name: Bilingual }[] = [
   { id: 'other', name: { en: 'Other jobs', bn: 'অন্যান্য' } },
 ];
 
-export const TEMPLATES: Template[] = [
+/** The first 39 templates (the Best 40 collection and the sector packs are built from these only). */
+export const CORE_TEMPLATES: Template[] = [
   { id: 'ats-academic-teaching-2page', file: 'ATS_Academic_Teaching_2Page.docx', style: 'ats', sector: 'teaching', pages: 2, title: { en: 'Academic and teaching CV', bn: 'শিক্ষকতা ও একাডেমিক সিভি' } },
   { id: 'ats-banking-senior-executive', file: 'ATS_Banking_Senior_Executive.docx', style: 'ats', sector: 'banking', pages: 2, title: { en: 'Senior bank officer CV', bn: 'সিনিয়র ব্যাংক কর্মকর্তা সিভি' } },
   { id: 'ats-banking-standard-bd', file: 'ATS_Banking_Standard_BD.docx', style: 'ats', sector: 'banking', pages: 2, title: { en: 'Bank job CV, Bangladesh format', bn: 'ব্যাংক জব সিভি, বাংলাদেশি ফরম্যাট' } },
@@ -70,7 +101,23 @@ export const TEMPLATES: Template[] = [
   { id: 'creative-sales-standard-2page', file: 'Creative_Sales_Standard_2Page.docx', style: 'designed', sector: 'sales', pages: 2, title: { en: 'Sales CV', bn: 'সেলস সিভি' } },
 ];
 
+/** All templates: the core 39 plus the 200 library templates. */
+export const TEMPLATES: Template[] = [...CORE_TEMPLATES, ...LIBRARY_TEMPLATES];
+
 /** Price of one template, in BDT. */
-export const SINGLE_TEMPLATE_PRICE = 39;
+export const SINGLE_TEMPLATE_PRICE = 29;
+
+/** Category of any template. Core templates are placed by sector and style. */
+export function hubOf(t: Template): string {
+  if (t.hub) return t.hub;
+  if (t.sector === 'fresher') return 'fresher';
+  if (t.sector === 'teaching') return 'teacher';
+  if (t.sector === 'medical') return 'nurse';
+  if (t.sector === 'engineering') return 'professional';
+  return t.style === 'ats' ? 'professional' : 'modern';
+}
+
+/** How many preview pages have an image. */
+export const shownPages = (t: Template) => t.shown ?? t.pages;
 
 export const findTemplate = (id: string) => TEMPLATES.find((t) => t.id === id);

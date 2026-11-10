@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PRODUCTS, findProduct } from '../../shared/catalog';
 import { presetFor } from '../../shared/templatePresets';
-import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
+import { CATEGORIES, SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, hubOf, shownPages, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
 import { PackGrid } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
 import { PageHead } from '../components/PageHead';
@@ -13,6 +13,7 @@ import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
 import { NotFound } from './Policies';
 
+const PAGE_SIZE = 24;
 const thumb = (id: string) => `/templates/${id}/thumb.webp`;
 const pageImg = (id: string, n: number) => `/templates/${id}/page-${n}.webp`;
 
@@ -107,6 +108,9 @@ export function TemplatesPage() {
   const order = useCheckout();
   const [style, setStyle] = useState<StyleFilter>('all');
   const [sector, setSector] = useState<Sector | 'all'>('all');
+  const [category, setCategory] = useState<string>('all');
+  const [query, setQuery] = useState('');
+  const [shownCount, setShownCount] = useState(PAGE_SIZE);
 
   const title = t({ en: 'CV templates you can edit in Word', bn: 'Word-এ এডিট করার মতো সিভি টেমপ্লেট' });
   const intro = t({
@@ -115,10 +119,22 @@ export function TemplatesPage() {
   });
   useEffect(() => setPageMeta(title, intro, '/templates'), [title, intro]);
 
-  const list = useMemo(
-    () => TEMPLATES.filter((x) => (style === 'all' || x.style === style) && (sector === 'all' || x.sector === sector)),
-    [style, sector],
-  );
+  const list = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return TEMPLATES.filter(
+      (x) =>
+        (style === 'all' || x.style === style) &&
+        (sector === 'all' || x.sector === sector) &&
+        (category === 'all' || hubOf(x) === category) &&
+        (!q || `${x.title.en} ${x.title.bn} ${x.prof ?? ''}`.toLowerCase().includes(q)),
+    );
+  }, [style, sector, category, query]);
+  useEffect(() => setShownCount(PAGE_SIZE), [style, sector, category, query]);
+  const catCount = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const x of TEMPLATES) m.set(hubOf(x), (m.get(hubOf(x)) ?? 0) + 1);
+    return m;
+  }, []);
 
   const chip = (active: boolean) =>
     `rounded-full px-4 py-1.5 font-display font-semibold transition-colors ${active ? 'bg-ink text-white' : 'bg-white text-ink ring-1 ring-line hover:ring-leaf hover:text-leaf'}`;
@@ -138,12 +154,12 @@ export function TemplatesPage() {
               <p className="font-display text-lg font-semibold">{t({ en: 'Need more than one?', bn: 'একাধিক লাগবে?' })}</p>
               <p className="mt-1 text-muted">
                 {t({
-                  en: `Get all 40 for ${taka(best.price, 'en')}, less than ৳7 each.`,
-                  bn: `৪০টিই নিন ${taka(best.price, 'bn')}-এ, প্রতিটি ৳৭-এরও কম।`,
+                  en: `Get the best 40 for ${taka(best.price, 'en')}, less than ৳5 each.`,
+                  bn: `সেরা ৪০টি নিন ${taka(best.price, 'bn')}-এ, প্রতিটি ৳৫-এরও কম।`,
                 })}
               </p>
               <button type="button" className="btn btn-primary mt-4 w-full" onClick={() => order(best.id)}>
-                {t({ en: `Buy all 40 for ${taka(best.price, 'en')}`, bn: `${taka(best.price, 'bn')}-এ ৪০টিই কিনুন` })}
+                {t({ en: `Buy the best 40 for ${taka(best.price, 'en')}`, bn: `${taka(best.price, 'bn')}-এ সেরা ৪০টি কিনুন` })}
               </button>
             </div>
           )
@@ -154,7 +170,7 @@ export function TemplatesPage() {
         <div className="grid gap-5 rounded-2xl bg-white p-6 ring-1 ring-line md:grid-cols-[1fr_1.6fr] md:items-center">
           <div>
             <h2 id="ladder-title" className="font-display text-2xl">{t({ en: 'The more you pick, the less each costs', bn: 'যত বেশি নেবেন, প্রতিটির দাম তত কম' })}</h2>
-            <p className="mt-1 text-muted">{t({ en: 'Add any templates to your cart, from any sector. The discount applies to every one, and all 40 never cost more than ৳249.', bn: 'যেকোনো খাতের যেকোনো টেমপ্লেট কার্টে যোগ করুন। ছাড় প্রতিটিতে প্রযোজ্য, আর ৪০টির দাম কখনও ৳২৪৯-এর বেশি নয়।' })}</p>
+            <p className="mt-1 text-muted">{t({ en: 'Add any templates to your cart, from any sector. The discount applies to every one, and the best 40 never cost more than ৳199.', bn: 'যেকোনো খাতের যেকোনো টেমপ্লেট কার্টে যোগ করুন। ছাড় প্রতিটিতে প্রযোজ্য, আর সেরা ৪০টির দাম কখনও ৳১৯৯-এর বেশি নয়।' })}</p>
           </div>
           <DiscountLadder />
         </div>
@@ -167,6 +183,24 @@ export function TemplatesPage() {
             {(['all', 'ats', 'designed'] as StyleFilter[]).map((s) => (
               <button key={s} type="button" aria-pressed={style === s} className={chip(style === s)} onClick={() => setStyle(s)}>
                 {s === 'all' ? t({ en: 'All styles', bn: 'সব স্টাইল' }) : t(STYLE_LABEL[s])}
+              </button>
+            ))}
+          </div>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t({ en: 'Search templates: teacher, bank, engineer, fresher ...', bn: 'টেমপ্লেট খুঁজুন: শিক্ষক, ব্যাংক, ইঞ্জিনিয়ার, ফ্রেশার ...' })}
+            aria-label={t({ en: 'Search templates', bn: 'টেমপ্লেট খুঁজুন' })}
+            className="w-full max-w-md rounded-full bg-white px-5 py-2.5 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-leaf"
+          />
+          <div role="group" aria-label={t({ en: 'Category', bn: 'ক্যাটাগরি' })} className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+            <button type="button" aria-pressed={category === 'all'} className={`${chip(category === 'all')} shrink-0`} onClick={() => setCategory('all')}>
+              {t({ en: `All (${TEMPLATES.length})`, bn: `সব (${num(String(TEMPLATES.length), 'bn')})` })}
+            </button>
+            {CATEGORIES.filter((c) => catCount.get(c.id)).map((c) => (
+              <button key={c.id} type="button" aria-pressed={category === c.id} className={`${chip(category === c.id)} shrink-0`} onClick={() => setCategory(c.id)}>
+                {t(c.name)} ({num(String(catCount.get(c.id)), lang)})
               </button>
             ))}
           </div>
@@ -190,7 +224,7 @@ export function TemplatesPage() {
           {list.length > 1 && (
             <button type="button" className="font-display font-semibold text-leaf underline decoration-2 underline-offset-[6px] hover:text-leaf-dark"
               onClick={() => { addMany(list.map((x) => x.id)); setOpen(true); }}>
-              {style === 'all' && sector === 'all'
+              {style === 'all' && sector === 'all' && category === 'all' && !query
                 ? t({ en: `Add all ${list.length} to cart`, bn: `সব ${num(String(list.length), 'bn')}টি কার্টে যোগ করুন` })
                 : t({ en: `Add these ${list.length} to cart`, bn: `এই ${num(String(list.length), 'bn')}টি কার্টে যোগ করুন` })}
             </button>
@@ -198,12 +232,22 @@ export function TemplatesPage() {
         </div>
         {list.length > 0 ? (
           <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4">
-            {list.map((tpl) => <TemplateCard key={tpl.id} tpl={tpl} />)}
+            {list.slice(0, shownCount).map((tpl) => <TemplateCard key={tpl.id} tpl={tpl} />)}
           </ul>
+        ) : null}
+        {list.length > shownCount && (
+          <div className="mt-8 text-center">
+            <button type="button" className="btn btn-quiet" onClick={() => setShownCount((n) => n + PAGE_SIZE)}>
+              {t({ en: `Show more (${list.length - shownCount} left)`, bn: `আরও দেখুন (${num(String(list.length - shownCount), 'bn')}টি বাকি)` })}
+            </button>
+          </div>
+        )}
+        {list.length > 0 ? (
+          <></>
         ) : (
           <div className="mt-3 rounded-2xl bg-mist p-8">
-            <p className="font-display text-lg font-semibold">{t({ en: 'No template matches both filters.', bn: 'দুটি ফিল্টারের সাথে মেলে এমন টেমপ্লেট নেই।' })}</p>
-            <button type="button" className="btn btn-quiet mt-4" onClick={() => { setStyle('all'); setSector('all'); }}>
+            <p className="font-display text-lg font-semibold">{t({ en: 'No template matches these filters.', bn: 'এই ফিল্টারের সাথে মেলে এমন টেমপ্লেট নেই।' })}</p>
+            <button type="button" className="btn btn-quiet mt-4" onClick={() => { setStyle('all'); setSector('all'); setCategory('all'); setQuery(''); }}>
               {t({ en: 'Show all templates', bn: 'সব টেমপ্লেট দেখুন' })}
             </button>
           </div>
@@ -252,7 +296,7 @@ export function TemplateDetail({ id }: { id: string }) {
 
   const sectorName = SECTORS.find((s) => s.id === tpl.sector)?.name;
   const packs = PRODUCTS.filter((p) => p.kind === 'pack' && p.templates?.includes(tpl.id)).sort((a, b) => a.price - b.price);
-  const related = TEMPLATES.filter((x) => x.sector === tpl.sector && x.id !== tpl.id).slice(0, 4);
+  const related = TEMPLATES.filter((x) => hubOf(x) === hubOf(tpl) && x.id !== tpl.id).slice(0, 4);
 
   return (
     <>
@@ -268,7 +312,7 @@ export function TemplateDetail({ id }: { id: string }) {
 
       <section className="wrap grid gap-10 py-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="order-2 space-y-6 rounded-2xl bg-mist p-4 sm:p-8 lg:order-1">
-          {Array.from({ length: tpl.pages }, (_, i) => (
+          {Array.from({ length: shownPages(tpl) }, (_, i) => (
             <figure key={i}>
               <img
                 src={pageImg(tpl.id, i + 1)}
@@ -279,9 +323,9 @@ export function TemplateDetail({ id }: { id: string }) {
                 decoding="async"
                 className="h-auto w-full bg-white shadow-md"
               />
-              {tpl.pages > 1 && (
+              {shownPages(tpl) > 1 && (
                 <figcaption className="mt-2 text-center text-sm text-muted">
-                  {t({ en: `Page ${i + 1} of ${tpl.pages}`, bn: `পৃষ্ঠা ${num(String(i + 1), 'bn')} / ${num(String(tpl.pages), 'bn')}` })}
+                  {t({ en: `Page ${i + 1} of ${shownPages(tpl)}`, bn: `পৃষ্ঠা ${num(String(i + 1), 'bn')} / ${num(String(shownPages(tpl)), 'bn')}` })}
                 </figcaption>
               )}
             </figure>

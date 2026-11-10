@@ -1,5 +1,5 @@
 // Single source of truth for everything HereWeGrow sells.
-import { SINGLE_TEMPLATE_PRICE, TEMPLATES, type Sector } from './templates';
+import { CORE_TEMPLATES, LIBRARY_TEMPLATES, SINGLE_TEMPLATE_PRICE, TEMPLATES, type Sector } from './templates';
 
 // The browser reads it to show prices; the server reads it to set the amount
 // charged, so a price can never be changed from the browser.
@@ -32,7 +32,8 @@ export interface Product {
   templates?: string[];
 }
 
-const inSector = (sector: Sector) => TEMPLATES.filter((t) => t.sector === sector).map((t) => t.id);
+// Sector packs and Best 40 are built from the core 39 only: their zip files in R2 hold exactly those.
+const inSector = (sector: Sector) => CORE_TEMPLATES.filter((t) => t.sector === sector).map((t) => t.id);
 const instant = { en: 'Instant download after payment', bn: 'পেমেন্টের পরই সাথে সাথে ডাউনলোড' };
 const bnDigits = (n: number) => String(n).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
 
@@ -48,7 +49,35 @@ function sectorPack(id: string, sector: Sector, name: Bilingual, summary: Biling
       { en: `${n} editable Word templates`, bn: `${bnDigits(n)}টি এডিটযোগ্য Word টেমপ্লেট` },
       { en: 'ATS and designed styles, labelled', bn: 'ATS ও ডিজাইনড স্টাইল, আলাদা চিহ্নিত' },
     ],
-    price: 99,
+    price: 79,
+    delivery: instant,
+    files: [`${id}.zip`],
+    templates,
+  };
+}
+
+/** Library packs: bigger groups cost a little more, still far below buying one by one. */
+const LIB_PACKS: { hub: string; price: number; name: Bilingual; summary: Bilingual }[] = [
+  { hub: 'modern', price: 149, name: { en: 'Modern CV library', bn: 'মডার্ন সিভি লাইব্রেরি' }, summary: { en: 'Designed modern CV templates for every kind of job.', bn: 'সব ধরনের চাকরির জন্য ডিজাইনড মডার্ন সিভি টেমপ্লেট।' } },
+  { hub: 'professional', price: 149, name: { en: 'Professional CV library', bn: 'প্রফেশনাল সিভি লাইব্রেরি' }, summary: { en: 'Formats for experienced job seekers in engineering, banking, sales and management.', bn: 'ইঞ্জিনিয়ারিং, ব্যাংকিং, সেলস ও ম্যানেজমেন্টে অভিজ্ঞদের জন্য ফরম্যাট।' } },
+  { hub: 'europass', price: 99, name: { en: 'Europass-style CV pack', bn: 'ইউরোপাস স্টাইল সিভি প্যাক' }, summary: { en: 'Europass-style CVs for jobs and study abroad.', bn: 'বিদেশে চাকরি ও পড়াশোনার জন্য ইউরোপাস স্টাইল সিভি।' } },
+  { hub: 'fresher', price: 79, name: { en: 'Fresher and student CV library', bn: 'ফ্রেশার ও স্টুডেন্ট সিভি লাইব্রেরি' }, summary: { en: 'Clean CVs for your first job, internship or higher study.', bn: 'প্রথম চাকরি, ইন্টার্নশিপ বা উচ্চশিক্ষার জন্য পরিচ্ছন্ন সিভি।' } },
+  { hub: 'simple', price: 79, name: { en: 'Simple CV pack', bn: 'সিম্পল সিভি প্যাক' }, summary: { en: 'Plain, easy-to-edit CV formats that work for any job.', bn: 'যেকোনো চাকরির জন্য সাধারণ, সহজে এডিটযোগ্য সিভি ফরম্যাট।' } },
+];
+
+function libPack(hub: string, name: Bilingual, summary: Bilingual, price: number): Product {
+  const templates = LIBRARY_TEMPLATES.filter((t) => t.hub === hub).map((t) => t.id);
+  const id = `pack-lib-${hub}`;
+  return {
+    id,
+    kind: 'pack',
+    name,
+    summary,
+    includes: [
+      { en: `${templates.length} editable Word templates`, bn: `${bnDigits(templates.length)}টি এডিটযোগ্য Word টেমপ্লেট` },
+      { en: 'Sample text and photo space, ready to edit', bn: 'নমুনা লেখা ও ছবির জায়গা, এডিটের জন্য তৈরি' },
+    ],
+    price,
     delivery: instant,
     files: [`${id}.zip`],
     templates,
@@ -247,6 +276,8 @@ export const PRODUCTS: Product[] = [
     en: 'For sales, marketing, content and customer service roles.',
     bn: 'সেলস, মার্কেটিং, কনটেন্ট ও কাস্টমার সার্ভিসের পদের জন্য।',
   }),
+  // Library category packs (the 200 library templates). Zip files: pack-lib-<category>.zip in R2.
+  ...LIB_PACKS.map((p) => libPack(p.hub, p.name, p.summary, p.price)),
   {
     id: 'pack-best-40',
     kind: 'pack',
@@ -256,11 +287,11 @@ export const PRODUCTS: Product[] = [
       { en: '40 editable Word templates', bn: '৪০টি এডিটযোগ্য Word টেমপ্লেট' },
       { en: 'ATS and designed styles, labelled', bn: 'ATS ও ডিজাইনড স্টাইল, আলাদা চিহ্নিত' },
     ],
-    price: 249,
+    price: 199,
     delivery: instant,
     featured: true,
     files: ['pack-best-40.zip'],
-    templates: TEMPLATES.map((t) => t.id),
+    templates: CORE_TEMPLATES.map((t) => t.id),
   },
   {
     id: 'pack-library',

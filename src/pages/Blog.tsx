@@ -1,6 +1,6 @@
-import { useEffect, useMemo, type MouseEvent } from 'react';
-import posts from 'virtual:blog-posts';
-import { renderMarkdown, type Post } from '../../shared/blogParse';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { renderMarkdown } from '../../shared/blogParse';
+import type { PublicPost } from '../../shared/blogSeo';
 import { PageHead } from '../components/PageHead';
 import { EXPERT } from '../content/expert';
 import { num, useLang } from '../lib/lang';
@@ -9,12 +9,74 @@ import { setPageMeta } from '../lib/seo';
 import { NotFound } from './Policies';
 
 const BLOG_CRUMB = { href: '/blog', label: { en: 'Blog', bn: 'ব্লগ' } };
-const liveSlugs: ReadonlySet<string> = new Set(posts.map((p) => p.slug));
+interface Boot {
+  posts: PublicPost[];
+  post?: PublicPost;
+  liveSlugs: string[];
+}
+
+// Posts come from the database. The Worker puts the first page's data in the page itself
+// (#blog-boot) so it shows at once; later pages fetch /api/blog/*.
+function bootData(): Boot | null {
+  try {
+    const el = document.getElementById('blog-boot');
+    return el?.textContent ? (JSON.parse(el.textContent) as Boot) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function getJson<T>(url: string): Promise<{ status: number; data: T | null }> {
+  try {
+    const res = await fetch(url);
+    return { status: res.status, data: res.ok ? ((await res.json()) as T) : null };
+  } catch {
+    return { status: 0, data: null };
+  }
+}
+
+type Load<T> = { state: 'loading' } | { state: 'error' } | { state: 'missing' } | { state: 'ok'; value: T };
+
+function useBlogList(): Load<{ posts: PublicPost[]; liveSlugs: string[] }> {
+  const [r, set] = useState<Load<{ posts: PublicPost[]; liveSlugs: string[] }>>(() => {
+    const b = bootData();
+    return b ? { state: 'ok', value: { posts: b.posts, liveSlugs: b.liveSlugs } } : { state: 'loading' };
+  });
+  useEffect(() => {
+    if (r.state === 'ok') return;
+    let live = true;
+    void getJson<{ posts: PublicPost[]; liveSlugs: string[] }>('/api/blog/posts').then(({ data }) => {
+      if (live) set(data ? { state: 'ok', value: data } : { state: 'error' });
+    });
+    return () => {
+      live = false;
+    };
+  }, [r.state]);
+  return r;
+}
+
+function useBlogPost(slug: string): Load<{ post: PublicPost; liveSlugs: string[] }> {
+  const [r, set] = useState<Load<{ post: PublicPost; liveSlugs: string[] }>>(() => {
+    const b = bootData();
+    return b?.post?.slug === slug ? { state: 'ok', value: { post: b.post, liveSlugs: b.liveSlugs } } : { state: 'loading' };
+  });
+  useEffect(() => {
+    if (r.state === 'ok') return;
+    let live = true;
+    void getJson<{ post: PublicPost; liveSlugs: string[] }>(`/api/blog/posts/${slug}`).then(({ status, data }) => {
+      if (live) set(data ? { state: 'ok', value: data } : { state: status === 404 ? 'missing' : 'error' });
+    });
+    return () => {
+      live = false;
+    };
+  }, [slug, r.state]);
+  return r;
+}
 
 const dateLabel = (iso: string, lang: 'en' | 'bn') =>
   new Date(iso).toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-function minutes(p: Post, t: (x: { en: string; bn: string }) => string, lang: 'en' | 'bn') {
+function minutes(p: PublicPost, t: (x: { en: string; bn: string }) => string, lang: 'en' | 'bn') {
   return t({ en: `${p.minutes} min read`, bn: `${num(String(p.minutes), lang)} মিনিটে পড়ুন` });
 }
 
@@ -26,12 +88,16 @@ export function BlogPage() {
     bn: 'সিভি, দরখাস্ত, আবেদন ও ইন্টারভিউয়ের কাজের গাইড, নমুনা ও চেকলিস্টসহ।',
   });
   useEffect(() => setPageMeta(title, intro, '/blog'), [title, intro]);
+  const list = useBlogList();
+  const posts = list.state === 'ok' ? list.value.posts : [];
 
   return (
     <>
       <PageHead crumbs={[]} title={title} intro={intro} />
       <section className="wrap py-14">
-        {posts.length === 0 && <p className="text-muted">{t({ en: 'The first posts are coming soon.', bn: 'প্রথম পোস্টগুলো শিগগিরই আসছে।' })}</p>}
+        {list.state === 'loading' && <p className="text-muted">…</p>}
+        {list.state === 'error' && <p className="text-muted">{t({ en: 'Posts could not be loaded. Please try again in a minute.', bn: 'পোস্ট লোড হয়নি। এক মিনিট পর আবার চেষ্টা করুন।' })}</p>}
+        {list.state === 'ok' && posts.length === 0 && <p className="text-muted">{t({ en: 'The first posts are coming soon.', bn: 'প্রথম পোস্টগুলো শিগগিরই আসছে।' })}</p>}
         <ul className="grid gap-6 md:grid-cols-2">
           {posts.map((p) => (
             <li key={p.slug}>
@@ -53,13 +119,17 @@ export function BlogPage() {
 
 export function BlogPostPage({ slug }: { slug: string }) {
   const { t, lang } = useLang();
-  const post = posts.find((p) => p.slug === slug);
-  const html = useMemo(() => (post ? renderMarkdown(post.body, { liveSlugs }) : ''), [post]);
+  const loaded = useBlogPost(slug);
+  const list = useBlogList();
+  const post = loaded.state === 'ok' ? loaded.value.post : undefined;
+  const html = useMemo(() => (post && loaded.state === 'ok' ? renderMarkdown(post.body ?? '', { liveSlugs: new Set(loaded.value.liveSlugs) }) : ''), [post, loaded]);
   useEffect(() => {
     if (post) setPageMeta(post.metaTitle, post.metaDescription, `/blog/${post.slug}`);
   }, [post]);
-  if (!post) return <NotFound />;
-  const more = posts.filter((x) => x.slug !== post.slug).slice(0, 3);
+  if (loaded.state === 'missing') return <NotFound />;
+  if (loaded.state === 'loading') return <div className="wrap py-24 text-muted">…</div>;
+  if (!post) return <div className="wrap max-w-lg py-24 text-muted">{t({ en: 'This post could not be loaded. Please try again in a minute.', bn: 'পোস্টটি লোড হয়নি। এক মিনিট পর আবার চেষ্টা করুন।' })}</div>;
+  const more = (list.state === 'ok' ? list.value.posts : []).filter((x) => x.slug !== post.slug).slice(0, 3);
 
   // The body is plain HTML, so same-site links are handled here to keep page changes instant.
   const onClick = (e: MouseEvent<HTMLElement>) => {

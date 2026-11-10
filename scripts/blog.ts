@@ -1,15 +1,15 @@
-// Blog build step. Reads content/blog/*.md and hands the posts that are live today to the app as
-// the virtual module "virtual:blog-posts". A post whose publishDate is still in the future is not
-// in the bundle, the sitemap or the pre-built pages. The daily deploy (see
-// .github/workflows/daily-publish.yml) rebuilds the site so a post appears on its date.
+// Blog build step. Posts live in the database (see server/blogDb.ts). The markdown files in
+// content/blog/ are only a starting set: the build writes them, with their text, to a private
+// file (admin-blog-seed.json). The Worker never serves that file to the public (wrangler.toml
+// run_worker_first); the admin "Import posts from files" button reads it once to fill the database.
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Plugin } from 'vite';
-import { dhakaToday, parsePost, publishedPosts, type Post } from '../shared/blogParse';
-import { toIndexEntry } from '../shared/blogAdmin';
+import { parsePost, type Post } from '../shared/blogParse';
 
 const DIR = join(process.cwd(), 'content', 'blog');
+export const SEED_FILE = 'admin-blog-seed.json';
 
 export function loadAllPosts(dir = DIR): Post[] {
   const posts = readdirSync(dir)
@@ -23,35 +23,12 @@ export function loadAllPosts(dir = DIR): Post[] {
   return posts;
 }
 
-/** Live posts for a production build (set BLOG_TODAY=2026-11-22 to preview a later date); every post while developing, so drafts can be previewed. */
-export function loadLivePosts(onlyLive = true): Post[] {
-  const posts = loadAllPosts();
-  return onlyLive ? publishedPosts(posts, process.env.BLOG_TODAY || dhakaToday()) : posts.sort((a, b) => b.publishDate.localeCompare(a.publishDate));
-}
-
-const ID = 'virtual:blog-posts';
-export const ADMIN_INDEX = 'admin-blog-index.json';
-
-export function blogData(): Plugin {
-  let serving = false;
+export function blogSeed(): Plugin {
   return {
-    name: 'hwg-blog-data',
-    configResolved(c) {
-      serving = c.command === 'serve';
-    },
-    resolveId(id) {
-      return id === ID ? `\0${ID}` : undefined;
-    },
-    load(id) {
-      if (id !== `\0${ID}`) return undefined;
-      this.addWatchFile(DIR);
-      return `export default ${JSON.stringify(loadLivePosts(!serving))}`;
-    },
-    // Every post file, scheduled ones too, without bodies. The Worker never serves this file to the
-    // public (wrangler.toml run_worker_first); it reads it only for a signed-in admin.
+    name: 'hwg-blog-seed',
+    apply: 'build',
     generateBundle() {
-      const index = loadAllPosts().map(toIndexEntry);
-      this.emitFile({ type: 'asset', fileName: ADMIN_INDEX, source: JSON.stringify(index) });
+      this.emitFile({ type: 'asset', fileName: SEED_FILE, source: JSON.stringify(loadAllPosts()) });
     },
   };
 }

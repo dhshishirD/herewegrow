@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS blog_posts (id TEXT PRIMARY KEY, slug TEXT NOT NULL UNIQUE, title TEXT NOT NULL, meta_title TEXT NOT NULL, meta_description TEXT NOT NULL, primary_keyword TEXT NOT NULL DEFAULT '', secondary_keywords TEXT NOT NULL DEFAULT '[]', author TEXT NOT NULL DEFAULT '', cta TEXT NOT NULL DEFAULT '', body_md TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','ready','scheduled','unpublished')), publish_at INTEGER, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_live ON blog_posts(status, publish_at);
+CREATE TABLE IF NOT EXISTS blog_revisions (id INTEGER PRIMARY KEY AUTOINCREMENT, post_id TEXT NOT NULL, saved_at INTEGER NOT NULL, actor TEXT, note TEXT, snapshot TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS idx_blog_revisions_post ON blog_revisions(post_id, saved_at);
+CREATE TABLE IF NOT EXISTS blog_audit (id INTEGER PRIMARY KEY AUTOINCREMENT, at INTEGER NOT NULL, actor TEXT, post_id TEXT, action TEXT NOT NULL, detail TEXT);

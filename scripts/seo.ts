@@ -6,9 +6,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
-import { renderMarkdown } from '../shared/blogParse';
+import { esc, renderPage } from '../shared/pageHtml';
 import { PRODUCTS } from '../shared/catalog';
-import { loadLivePosts } from './blog';
 import { GUIDES, type Block } from '../shared/guides';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
 import { ABROAD_PAGES } from '../shared/abroadPages';
@@ -21,7 +20,6 @@ const SITE = 'https://herewegrow.pro';
 const TODAY = new Date().toISOString().slice(0, 10);
 const bn = (n: number | string) => String(n).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
 const seo = (path: string) => routeSeo(path)!;
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 interface Page {
   path: string;
@@ -300,44 +298,6 @@ function pages(): Page[] {
     });
   }
 
-  const posts = loadLivePosts();
-  const liveSlugs = new Set(posts.map((p) => p.slug));
-  if (posts.length) list.push({
-    path: '/blog',
-    ...seo('/blog'),
-    body: `<h1>ব্লগ: সিভি ও চাকরির গাইড</h1><ul>${posts.map((p) => `<li>${link(`/blog/${p.slug}`, p.title)}: ${esc(p.metaDescription)}</li>`).join('')}</ul>`,
-    jsonLd: [crumbs([['HereWeGrow', '/'], ['Blog', '/blog']])],
-    priority: 0.8,
-    lastmod: posts[0]?.publishDate,
-  });
-  for (const post of posts) {
-    const url = `${SITE}/blog/${post.slug}`;
-    list.push({
-      path: `/blog/${post.slug}`,
-      title: post.metaTitle.includes('HereWeGrow') ? post.metaTitle : `${post.metaTitle} | HereWeGrow`,
-      description: post.metaDescription,
-      body: `<article lang="bn"><h1>${esc(post.title)}</h1>${renderMarkdown(post.body, { liveSlugs })}</article>`,
-      jsonLd: [
-        {
-          '@type': 'Article',
-          headline: post.title,
-          description: post.metaDescription,
-          inLanguage: 'bn',
-          datePublished: post.publishDate,
-          dateModified: post.publishDate,
-          mainEntityOfPage: url,
-          image: `${SITE}/og.jpg`,
-          keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(', '),
-          author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about` },
-          publisher: { '@id': `${SITE}/#org` },
-        },
-        crumbs([['HereWeGrow', '/'], ['Blog', '/blog'], [post.title, `/blog/${post.slug}`]]),
-      ],
-      priority: 0.8,
-      lastmod: post.publishDate,
-    });
-  }
-
   for (const t of TEMPLATES) {
     const sector = SECTORS.find((s) => s.id === t.sector)!;
     const style = t.style === 'ats' ? { en: 'ATS-friendly', bn: 'ATS-ফ্রেন্ডলি' } : { en: 'designed', bn: 'ডিজাইনড' };
@@ -387,27 +347,6 @@ function pages(): Page[] {
   return list;
 }
 
-function render(template: string, p: Page): string {
-  const url = `${SITE}${p.path}`;
-  const image = p.image ?? `${SITE}/og.jpg`;
-  const ld = p.jsonLd?.length
-    ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': p.jsonLd }).replace(/</g, '\\u003c')}</script>`
-    : '';
-  let html = template
-    .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(p.title)}</title>`)
-    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${esc(p.description)}" />`)
-    .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${esc(p.title)}" />`)
-    .replace(/<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${esc(p.description)}" />`)
-    .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${url}" />`)
-    .replace(/<meta property="og:image"[^>]*>/, `<meta property="og:image" content="${image}" />`)
-    .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${url}" />`);
-  html = html.replace(
-    '</head>',
-    `    <meta property="og:locale" content="bn_BD" />\n    <meta property="og:locale:alternate" content="en_US" />\n    <meta name="twitter:card" content="summary_large_image" />\n    ${ld}\n  </head>`,
-  );
-  return html.replace('<div id="root"></div>', `<div id="root"><main class="wrap" style="padding:2rem 1.25rem">${p.body}</main></div>`);
-}
-
 function sitemap(list: Page[]): string {
   const urls = list
     .map((p) => {
@@ -428,12 +367,14 @@ export function seoPages(): Plugin {
     },
     closeBundle() {
       const template = readFileSync(join(outDir, 'index.html'), 'utf8');
+      // The empty shell, kept so the Worker can build blog pages from it (blog posts live in the database).
+      writeFileSync(join(outDir, 'blog-shell.txt'), template);
       const list = pages();
       for (const p of list) {
         // "/templates/x" is written as templates/x.html so it is served without a trailing-slash redirect.
         const file = p.path === '/' ? join(outDir, 'index.html') : join(outDir, `${p.path}.html`);
         mkdirSync(dirname(file), { recursive: true });
-        writeFileSync(file, render(template, p));
+        writeFileSync(file, renderPage(template, p));
       }
       writeFileSync(join(outDir, 'sitemap.xml'), sitemap(list));
     },

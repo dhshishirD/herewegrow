@@ -1,47 +1,53 @@
 import { describe, expect, it } from 'vitest';
 import { parsePost } from './blogParse';
-import { BUFFER_TARGET, summarize, toIndexEntry } from './blogAdmin';
+import { BUFFER_TARGET, summarize, toIndexEntry, type BlogStatus } from './blogAdmin';
 
-const post = (id: string, date: string, body = 'বডি '.repeat(700), extra = '') =>
-  parsePost(
-    `---\nid: ${id}\ntitle: "শিরোনাম ${id}"\nslug: post-${id.toLowerCase()}\npublishDate: ${date}\nauthor: লেখক\nprimaryKeyword: কীওয়ার্ড\nmetaTitle: "মেটা ${id}"\nmetaDescription: "${'ড'.repeat(120)}"\ncta: Builder\n${extra}---\n${body}`,
-    `${id}.md`,
+const DAY = 86_400_000;
+const NOW = Date.UTC(2026, 10, 23, 5); // 23 Nov 2026, 11:00 Bangladesh
+const at = (date: string, hourDhaka = 9) => Date.parse(`${date}T00:00:00Z`) + (hourDhaka - 6) * 3600_000;
+
+const entry = (id: string, status: BlogStatus, publishAt: number | null, body = 'বডি '.repeat(700)) =>
+  toIndexEntry(
+    parsePost(`---\nid: ${id}\ntitle: "শিরোনাম ${id}"\nslug: post-${id.toLowerCase()}\npublishDate: 2026-11-22\nauthor: লেখক\nprimaryKeyword: কীওয়ার্ড\nmetaTitle: "মেটা ${id}"\nmetaDescription: "${'ড'.repeat(120)}"\ncta: Builder\n---\n${body}`, `${id}.md`),
+    status,
+    publishAt,
   );
 
 describe('summarize', () => {
-  it('splits live and scheduled by date and counts the buffer', () => {
-    const s = summarize([post('P001', '2026-11-22'), post('P002', '2026-11-24'), post('P003', '2026-11-26')].map(toIndexEntry), '2026-11-23');
-    expect(s.live).toBe(1);
-    expect(s.scheduled).toBe(2);
-    expect(s.bufferShort).toBe(BUFFER_TARGET - 2);
-    expect(s.lastScheduled).toBe('2026-11-26');
-    expect(s.rows.map((r) => [r.id, r.status])).toEqual([['P001', 'live'], ['P002', 'scheduled'], ['P003', 'scheduled']]);
-    expect(s.rows[1].daysUntil).toBe(1);
+  it('a scheduled post is live once its time has come, scheduled before', () => {
+    const s = summarize([entry('P001', 'scheduled', at('2026-11-22')), entry('P002', 'scheduled', at('2026-11-24')), entry('P003', 'scheduled', NOW)], NOW);
+    expect(s.rows.map((r) => [r.id, r.status])).toEqual([['P001', 'live'], ['P003', 'live'], ['P002', 'scheduled']]);
+    expect(s.live).toBe(2);
+    expect(s.scheduled).toBe(1);
+    expect(s.bufferShort).toBe(BUFFER_TARGET - 1);
+    expect(s.rows[2].daysUntil).toBe(1);
+    expect(s.rows[2].publishTime).toBe('09:00');
   });
 
-  it('a post goes live on its own date', () => {
-    const s = summarize([toIndexEntry(post('P001', '2026-11-22'))], '2026-11-22');
-    expect(s.rows[0].status).toBe('live');
-    expect(s.rows[0].daysUntil).toBe(0);
+  it('drafts and unpublished posts are never live, whatever their time', () => {
+    const s = summarize([entry('P001', 'draft', null), entry('P002', 'ready', at('2026-11-01')), entry('P003', 'unpublished', at('2026-11-01'))], NOW);
+    expect(s.rows.map((r) => r.status).sort()).toEqual(['draft', 'ready', 'unpublished']);
+    expect(s.live).toBe(0);
+    expect(s.drafts).toBe(2);
+    expect(s.unpublished).toBe(1);
+    expect(s.rows.find((r) => r.id === 'P001')!.daysUntil).toBeNull();
   });
 
-  it('flags left-over draft markers as problems, and counts scheduled ones', () => {
-    const bad = post('P002', '2026-12-01', `${'বডি '.repeat(700)}\n⚠ যাচাই লাগবে\n[আপনার ইনপুট: উদাহরণ]`);
-    const s = summarize([toIndexEntry(bad)], '2026-11-10');
+  it('flags left-over draft markers and counts scheduled ones with problems', () => {
+    const s = summarize([entry('P002', 'scheduled', NOW + 8 * DAY, `${'বডি '.repeat(700)}\n⚠ যাচাই লাগবে\n[আপনার ইনপুট: উদাহরণ]`)], NOW);
     expect(s.rows[0].problems[0]).toContain('⚠ চিহ্ন');
     expect(s.rows[0].problems[0]).toContain('[আপনার ইনপুট…]');
     expect(s.scheduledWithProblems).toBe(1);
   });
 
-  it('notes a short post and lists links to posts that have no file yet', () => {
-    const e = toIndexEntry(post('P001', '2026-11-22', 'ছোট লেখা। [দেখুন](/blog/post-p009) এবং [এটাও](/blog/post-p001)।'));
-    const s = summarize([e], '2026-11-10');
+  it('notes a short post and lists links to posts that do not exist yet', () => {
+    const s = summarize([entry('P001', 'scheduled', NOW + DAY, 'ছোট লেখা। [দেখুন](/blog/post-p009) এবং [এটাও](/blog/post-p001)।')], NOW);
     expect(s.rows[0].notes.some((n) => n.includes('ছোট'))).toBe(true);
     expect(s.rows[0].unwrittenLinks).toEqual(['post-p009']);
     expect(s.rows[0].problems).toEqual([]);
   });
 
-  it('body text is not part of the index', () => {
-    expect(Object.keys(toIndexEntry(post('P001', '2026-11-22')))).not.toContain('body');
+  it('the dashboard entry has no body text', () => {
+    expect(Object.keys(entry('P001', 'draft', null))).not.toContain('body');
   });
 });

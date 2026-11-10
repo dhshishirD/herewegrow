@@ -4,6 +4,7 @@
 import { handleCheckout, handleClaim, handleVerify } from '../server/handlers';
 import { handleAdmin } from '../server/admin';
 import { handleAdminBlog } from '../server/blogAdmin';
+import { blogSitemap, handleBlogApi, serveBlog } from '../server/blogPublic';
 import { careersSitemap, serveCareerPage } from '../server/careers';
 import { serveCareersIndex } from '../server/careerIndex';
 import { handlePromo } from '../server/promoHandlers';
@@ -27,8 +28,9 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
     const { pathname } = new URL(request.url);
 
     if (pathname.startsWith('/api/')) {
-      if (pathname === '/api/admin/blog') return handleAdminBlog(request, env);
+      if (pathname === '/api/admin/blog' || pathname.startsWith('/api/admin/blog/')) return handleAdminBlog(request, env, pathname);
       if (pathname.startsWith('/api/admin/')) return handleAdmin(request, env, pathname);
+      if (pathname.startsWith('/api/blog/')) return handleBlogApi(request, env, pathname);
       if (pathname.startsWith('/api/promo/')) return handlePromo(request, env, pathname);
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);
       if (pathname === '/api/cvs' || pathname.startsWith('/api/cvs/')) return handleCvs(request, env, pathname);
@@ -42,12 +44,14 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
       return json({ ok: false, error: 'not_found' }, 404);
     }
 
-    // The post index (with scheduled posts) is for the admin API only; the public gets a 404.
-    if (pathname === '/admin-blog-index.json') return new Response('Not found', { status: 404 });
+    // The starting-posts file is for the admin API only; the public gets a 404.
+    if (pathname === '/admin-blog-seed.json') return new Response('Not found', { status: 404 });
 
     // Career Hub: saved role pages and their sitemap; anything else under /careers/ falls through to the app.
     if (request.method === 'GET' || request.method === 'HEAD') {
       if (pathname === '/sitemap-careers.xml') return careersSitemap(env);
+      if (pathname === '/sitemap-blog.xml') return blogSitemap(env);
+      if (pathname === '/blog' || pathname.startsWith('/blog/')) return serveBlog(request, env, pathname);
       if (pathname === '/careers' || pathname === '/careers/') return serveCareersIndex(env);
       const page = await serveCareerPage(env, pathname);
       if (page) return page;

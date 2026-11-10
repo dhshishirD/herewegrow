@@ -103,6 +103,11 @@ export async function getLive(db: D1Like, slug: string, now: number): Promise<St
   return row ? rowToPost(row) : null;
 }
 
+export async function getAny(db: D1Like, id: string): Promise<StoredPost | null> {
+  const row = await db.prepare(`SELECT ${COLUMNS} FROM blog_posts WHERE id = ?`).bind(id).first<BlogRow>();
+  return row ? rowToPost(row) : null;
+}
+
 export async function listAll(db: D1Like): Promise<StoredPost[]> {
   const { results } = await db.prepare(`SELECT ${COLUMNS} FROM blog_posts ORDER BY id`).all<BlogRow>();
   return (results ?? []).map(rowToPost);

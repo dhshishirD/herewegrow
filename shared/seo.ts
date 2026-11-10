@@ -71,7 +71,7 @@ const STATIC: Record<string, RouteSeo> = {
   },
   '/tools/cv-checker': {
     title: 'ফ্রি সিভি চেকার: ATS স্কোর | Free CV checker and ATS score | HereWeGrow',
-    description: 'আপনার সিভি PDF আপলোড করে ১০০-এর মধ্যে স্কোর ও সংশোধনের তালিকা পান। Free ATS CV checker for Bangladeshi job seekers. ফাইল আপনার ব্রাউজারেই থাকে।',
+    description: 'আপনার সিভি (PDF বা Word) আপলোড করে ১০০-এর মধ্যে স্কোর ও সংশোধনের তালিকা পান। Free ATS CV checker for Bangladeshi job seekers. ফাইল আপনার ব্রাউজারেই থাকে।',
   },
   '/tools/application-letter': {
     title: 'ফ্রি আবেদনপত্র জেনারেটর (বাংলা ও ইংরেজি) | Job application letter generator | HereWeGrow',

@@ -7,6 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Plugin } from 'vite';
 import { dhakaToday, parsePost, publishedPosts, type Post } from '../shared/blogParse';
+import { toIndexEntry } from '../shared/blogAdmin';
 
 const DIR = join(process.cwd(), 'content', 'blog');
 
@@ -29,6 +30,7 @@ export function loadLivePosts(onlyLive = true): Post[] {
 }
 
 const ID = 'virtual:blog-posts';
+export const ADMIN_INDEX = 'admin-blog-index.json';
 
 export function blogData(): Plugin {
   let serving = false;
@@ -44,6 +46,12 @@ export function blogData(): Plugin {
       if (id !== `\0${ID}`) return undefined;
       this.addWatchFile(DIR);
       return `export default ${JSON.stringify(loadLivePosts(!serving))}`;
+    },
+    // Every post file, scheduled ones too, without bodies. The Worker never serves this file to the
+    // public (wrangler.toml run_worker_first); it reads it only for a signed-in admin.
+    generateBundle() {
+      const index = loadAllPosts().map(toIndexEntry);
+      this.emitFile({ type: 'asset', fileName: ADMIN_INDEX, source: JSON.stringify(index) });
     },
   };
 }

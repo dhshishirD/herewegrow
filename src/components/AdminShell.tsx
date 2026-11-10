@@ -9,6 +9,7 @@ const SECTIONS = [
   { href: '/admin/manual', label: 'Manual access' },
   { href: '/admin/careers', label: 'Career Hub' },
   { href: '/admin/promos', label: 'Promo codes' },
+  { href: '/admin/blog', label: 'Blog' },
 ];
 
 export function AdminShell({ active, title, subtitle, actions, children }: { active: string; title: string; subtitle?: string; actions?: ReactNode; children: ReactNode }) {

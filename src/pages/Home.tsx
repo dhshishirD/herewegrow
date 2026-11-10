@@ -20,9 +20,9 @@ const FEATURED = ['ats-banking-standard-bd', 'creative-modern-executive-2page', 
 const PATHS = [
   {
     href: '/templates',
-    price: { en: 'From ৳39', bn: '৳৩৯ থেকে' },
+    price: { en: 'From ৳29', bn: '৳২৯ থেকে' },
     title: { en: 'Do it yourself', bn: 'নিজে করুন' },
-    body: { en: '39 Word templates for bank, corporate, engineering, teaching and more. Download instantly.', bn: 'ব্যাংক, কর্পোরেট, ইঞ্জিনিয়ারিং, শিক্ষকতাসহ ৩৯টি Word টেমপ্লেট। সাথে সাথে ডাউনলোড।' },
+    body: { en: '239 Word templates for bank, corporate, engineering, teaching, fresher and more. Download instantly.', bn: 'ব্যাংক, কর্পোরেট, ইঞ্জিনিয়ারিং, শিক্ষকতা, ফ্রেশারসহ ২৩৯টি Word টেমপ্লেট। সাথে সাথে ডাউনলোড।' },
     cta: { en: 'Browse templates', bn: 'টেমপ্লেট দেখুন' },
   },
   {
@@ -62,7 +62,7 @@ const ICONS: Record<Icon, string> = {
 };
 const SERVICES: { icon: Icon; href: string; price: { en: string; bn: string }; title: { en: string; bn: string }; body: { en: string; bn: string } }[] = [
   { icon: 'pen', href: '/services', price: { en: 'From ৳499', bn: '৳৪৯৯ থেকে' }, title: { en: 'CV writing', bn: 'সিভি রাইটিং' }, body: { en: 'Fresher, experienced or executive CV written for you.', bn: 'ফ্রেশার, অভিজ্ঞ বা এক্সিকিউটিভ সিভি আপনার জন্য লেখা।' } },
-  { icon: 'file', href: '/templates', price: { en: 'From ৳39', bn: '৳৩৯ থেকে' }, title: { en: 'CV templates', bn: 'সিভি টেমপ্লেট' }, body: { en: 'Editable Word designs for every sector.', bn: 'সব খাতের জন্য এডিটযোগ্য Word ডিজাইন।' } },
+  { icon: 'file', href: '/templates', price: { en: 'From ৳29', bn: '৳২৯ থেকে' }, title: { en: 'CV templates', bn: 'সিভি টেমপ্লেট' }, body: { en: 'Editable Word designs for every sector.', bn: 'সব খাতের জন্য এডিটযোগ্য Word ডিজাইন।' } },
   { icon: 'build', href: '/builder', price: { en: 'Free', bn: 'ফ্রি' }, title: { en: 'Online CV builder', bn: 'অনলাইন সিভি বিল্ডার' }, body: { en: 'Fill a form, pick a design, download a PDF.', bn: 'ফর্ম পূরণ করুন, ডিজাইন বেছে নিন, PDF নামান।' } },
   { icon: 'in', href: '/services#profile', price: { en: '৳499', bn: '৳৪৯৯' }, title: { en: 'LinkedIn makeover', bn: 'লিংকডইন মেকওভার' }, body: { en: 'A profile recruiters find and trust.', bn: 'রিক্রুটারদের চোখে পড়ার মতো প্রোফাইল।' } },
   { icon: 'briefcase', href: '/services#profile', price: { en: '৳299', bn: '৳২৯৯' }, title: { en: 'BDJobs profile', bn: 'বিডিজবস প্রোফাইল' }, body: { en: 'Set up so employers can shortlist you.', bn: 'নিয়োগকর্তা যাতে আপনাকে বাছাই করতে পারে।' } },
@@ -227,11 +227,11 @@ export function Home() {
         {best && (
           <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-2xl bg-gold-soft px-6 py-6 sm:flex-row sm:items-center sm:px-8">
             <div>
-              <p className="font-display text-xl text-ink">{t({ en: `All 40 templates for ${taka(best.price, 'en')}`, bn: `৪০টি টেমপ্লেট একসাথে ${taka(best.price, 'bn')}` })}</p>
-              <p className="mt-1 text-muted">{t({ en: 'Every sector, one download, less than ৳7 each.', bn: 'সব খাত, এক ডাউনলোডে, প্রতিটি ৳৭-এরও কম।' })}</p>
+              <p className="font-display text-xl text-ink">{t({ en: `The best 40 templates for ${taka(best.price, 'en')}`, bn: `সেরা ৪০টি টেমপ্লেট একসাথে ${taka(best.price, 'bn')}` })}</p>
+              <p className="mt-1 text-muted">{t({ en: 'Every sector, one download, less than ৳5 each.', bn: 'সব খাত, এক ডাউনলোডে, প্রতিটি ৳৫-এরও কম।' })}</p>
             </div>
             <button type="button" className="btn btn-primary shrink-0" onClick={() => order(best.id)}>
-              {t({ en: 'Get all 40', bn: '৪০টিই নিন' })}
+              {t({ en: 'Get the best 40', bn: 'সেরা ৪০টি নিন' })}
             </button>
           </div>
         )}

@@ -123,7 +123,7 @@ export function ServicesPage() {
           <h2 className="text-3xl sm:text-4xl">{t({ en: 'Before you order', bn: 'অর্ডারের আগে জেনে নিন' })}</h2>
           <p className="mt-4 text-muted">
             {t({ en: 'Prefer to do it yourself? ', bn: 'নিজে করতে চান? ' })}
-            <Link href="/templates" className="font-semibold text-leaf underline underline-offset-4">{t({ en: 'Templates start at ৳39', bn: 'টেমপ্লেট ৳৩৯ থেকে' })}</Link>
+            <Link href="/templates" className="font-semibold text-leaf underline underline-offset-4">{t({ en: 'Templates start at ৳29', bn: 'টেমপ্লেট ৳৩৯ থেকে' })}</Link>
           </p>
         </div>
         <FaqList items={SERVICE_FAQ} />
@@ -227,7 +227,7 @@ export function ToolsPage() {
         <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-leaf-dark px-7 py-8 text-white sm:flex-row sm:items-center">
           <div>
             <p className="font-display text-2xl">{t({ en: 'Need a better CV, not just a score?', bn: 'শুধু স্কোর নয়, ভালো সিভি দরকার?' })}</p>
-            <p className="mt-1 text-white/75">{t({ en: 'Pick a ready template for ৳39, or have an expert write it.', bn: '৳৩৯-এ রেডি টেমপ্লেট নিন, অথবা বিশেষজ্ঞকে দিয়ে লেখান।' })}</p>
+            <p className="mt-1 text-white/75">{t({ en: 'Pick a ready template for ৳29, or have an expert write it.', bn: '৳২৯-এ রেডি টেমপ্লেট নিন, অথবা বিশেষজ্ঞকে দিয়ে লেখান।' })}</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/templates" className="btn bg-saffron text-ink hover:bg-white">{t({ en: 'See templates', bn: 'টেমপ্লেট দেখুন' })}</Link>

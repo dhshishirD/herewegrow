@@ -14,7 +14,10 @@ import { ABROAD_PAGES } from '../shared/abroadPages';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
-import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES } from '../shared/templates';
+import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
+
+/** Library template pages start as noindex,follow and stay out of the sitemap. Set to true after Search Console shows the category pages are indexed (about 2 weeks). */
+const INDEX_LIBRARY_PAGES = false;
 
 const SITE = 'https://herewegrow.pro';
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -32,6 +35,8 @@ interface Page {
   priority: number;
   images?: string[];
   lastmod?: string;
+  /** Keep out of search results and the sitemap. */
+  noindex?: boolean;
 }
 
 const ORG = {
@@ -302,7 +307,7 @@ function pages(): Page[] {
     const sector = SECTORS.find((s) => s.id === t.sector)!;
     const style = t.style === 'ats' ? { en: 'ATS-friendly', bn: 'ATS-ফ্রেন্ডলি' } : { en: 'designed', bn: 'ডিজাইনড' };
     const url = `${SITE}/templates/${t.id}`;
-    const images = Array.from({ length: t.pages }, (_, i) => `${url}/page-${i + 1}.webp`);
+    const images = Array.from({ length: shownPages(t) }, (_, i) => `${url}/page-${i + 1}.webp`);
     list.push({
       path: `/templates/${t.id}`,
       ...seo(`/templates/${t.id}`),
@@ -342,6 +347,7 @@ function pages(): Page[] {
       ],
       priority: 0.8,
       images,
+      noindex: !!t.lib && !INDEX_LIBRARY_PAGES,
     });
   }
   return list;
@@ -349,6 +355,7 @@ function pages(): Page[] {
 
 function sitemap(list: Page[]): string {
   const urls = list
+    .filter((p) => !p.noindex)
     .map((p) => {
       const imgs = (p.images ?? []).map((i) => `<image:image><image:loc>${i}</image:loc></image:image>`).join('');
       return `  <url><loc>${SITE}${p.path}</loc><lastmod>${p.lastmod ?? TODAY}</lastmod><priority>${p.priority.toFixed(1)}</priority>${imgs}</url>`;
@@ -374,7 +381,8 @@ export function seoPages(): Plugin {
         // "/templates/x" is written as templates/x.html so it is served without a trailing-slash redirect.
         const file = p.path === '/' ? join(outDir, 'index.html') : join(outDir, `${p.path}.html`);
         mkdirSync(dirname(file), { recursive: true });
-        writeFileSync(file, renderPage(template, p));
+        const html = renderPage(template, p);
+        writeFileSync(file, p.noindex ? html.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>') : html);
       }
       writeFileSync(join(outDir, 'sitemap.xml'), sitemap(list));
     },

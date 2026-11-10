@@ -2,9 +2,9 @@
 // The browser uses this to show prices; the server uses the same function to set the amount charged.
 //
 // Rules, in order:
-// 1. Each template is ৳39. The more you pick, the bigger the discount on every one (TIERS).
+// 1. Each template is ৳29 (see SINGLE_TEMPLATE_PRICE). The more you pick, the bigger the discount on every one (TIERS).
 // 2. If every template picked is in one sector pack and that pack is cheaper, you get the whole pack.
-// 3. You never pay more than the Best 40 price; at that point you get all 40.
+// 3. If every template picked is among the core 39 and that costs more than Best 40, you get Best 40.
 // The total never goes down when a template is added.
 
 import { findProduct, type Bilingual, type Product } from './catalog';
@@ -21,7 +21,10 @@ export const TIERS: { min: number; off: number }[] = [
   { min: 8, off: 35 },
 ];
 
-const SECTOR_PACKS = ['pack-fresher', 'pack-bank', 'pack-engineering', 'pack-sales'];
+const SECTOR_PACKS = [
+  'pack-fresher', 'pack-bank', 'pack-engineering', 'pack-sales',
+  'pack-lib-modern', 'pack-lib-professional', 'pack-lib-europass', 'pack-lib-fresher', 'pack-lib-simple',
+];
 const ALL_PACK = 'pack-best-40';
 
 export const tierFor = (n: number) => [...TIERS].reverse().find((t) => n >= t.min) ?? TIERS[0];
@@ -62,7 +65,8 @@ export function quoteCart(rawIds: string[]): CartQuote {
     }
   }
   const all = findProduct(ALL_PACK);
-  if (all && count > 0 && all.price <= total) {
+  // Best 40 holds only the core templates, so it replaces a cart only when every pick is inside it.
+  if (all && count > 0 && all.price <= total && ids.every((id) => all.templates?.includes(id))) {
     total = all.price;
     upgrade = all;
   }

@@ -88,7 +88,7 @@ export function CartDrawer() {
         {q.count === 0 ? (
           <div className="flex flex-1 flex-col items-start justify-center gap-4 px-6">
             <p className="font-display text-xl">{t({ en: 'Your cart is empty.', bn: 'আপনার কার্ট খালি।' })}</p>
-            <p className="text-muted">{t({ en: 'Add templates and the price per template goes down: up to 35% off, and never more than ৳249 for all 40.', bn: 'টেমপ্লেট যোগ করুন, যত বেশি নেবেন প্রতিটির দাম তত কমবে: ৩৫% পর্যন্ত ছাড়, আর ৪০টির জন্য কখনও ৳২৪৯-এর বেশি নয়।' })}</p>
+            <p className="text-muted">{t({ en: 'Add templates and the price per template goes down: up to 35% off, and a pack is used automatically when it is cheaper.', bn: 'টেমপ্লেট যোগ করুন, যত বেশি নেবেন প্রতিটির দাম তত কমবে: ৩৫% পর্যন্ত ছাড়, আর প্যাক সস্তা হলে নিজে থেকেই প্যাক ধরা হয়।' })}</p>
             <Link href="/templates" onClick={() => setOpen(false)} className="btn btn-primary">{t({ en: 'Browse templates', bn: 'টেমপ্লেট দেখুন' })}</Link>
           </div>
         ) : (

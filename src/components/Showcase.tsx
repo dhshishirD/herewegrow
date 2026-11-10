@@ -162,7 +162,7 @@ interface Slide {
 
 const SLIDES: Slide[] = [
   {
-    id: 'cv', tab: 'CV', href: '/services', price: { en: 'Written from ৳499 · Templates from ৳39', bn: 'লেখা ৳৪৯৯ থেকে · টেমপ্লেট ৳৩৯ থেকে' },
+    id: 'cv', tab: 'CV', href: '/services', price: { en: 'Written from ৳499 · Templates from ৳29', bn: 'লেখা ৳৪৯৯ থেকে · টেমপ্লেট ৳৩৯ থেকে' },
     title: { en: 'From “Rejected” to shortlisted', bn: '“বাতিল” থেকে শর্টলিস্টে' },
     body: { en: 'A clean, ATS-friendly CV that software can read and recruiters can scan in seconds. Written by experts, or built yourself free.', bn: 'ATS-বান্ধব পরিপাটি সিভি, যা সফটওয়্যার পড়তে পারে আর রিক্রুটার কয়েক সেকেন্ডে বুঝে নেন। বিশেষজ্ঞের লেখা, অথবা ফ্রিতে নিজে বানান।' },
     cta: { en: 'Get my CV done', bn: 'আমার সিভি করিয়ে নিন' }, scene: () => <CvScene />,

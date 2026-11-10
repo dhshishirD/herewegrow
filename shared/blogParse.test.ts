@@ -77,3 +77,33 @@ describe('renderMarkdown', () => {
     expect(r('ফাইল `Name_Role.pdf` <!-- নোট -->')).toBe('<p>ফাইল <code>Name_Role.pdf</code></p>');
   });
 });
+
+describe('renderMarkdown visual blocks', () => {
+  const bar = `:::bar
+title: জরিপ <b>ফল</b>
+note: সূত্র: পরীক্ষা
+unit: %
+বানান ভুল | 79
+ইমেইল | 46
+:::`;
+  it('draws a bar chart with Bangla digits, scaled to the largest value', () => {
+    const html = renderMarkdown(bar, { liveSlugs: live });
+    expect(html).toContain('class="viz"');
+    expect(html).toContain('৭৯%');
+    expect(html).toContain('--v:100');
+    expect(html).toContain('--v:58.2');
+    expect(html).toContain('aria-label="জরিপ &lt;b&gt;ফল&lt;/b&gt;: বানান ভুল ৭৯%, ইমেইল ৪৬%"');
+  });
+  it('escapes every piece of text and never lets raw HTML through', () => {
+    const html = renderMarkdown(`:::bar\n<script>x</script> | 5\n:::`, { liveSlugs: live });
+    expect(html).not.toContain('<script>');
+    expect(html).toContain('&lt;script&gt;');
+  });
+  it('draws stat tiles and skips a block with no usable rows', () => {
+    const html = renderMarkdown(':::stats\n~৬ সেকেন্ড | প্রথম বাছাই\n:::\n\n:::bar\nশুধু লেখা\n:::\n\nশেষ', { liveSlugs: live });
+    expect(html).toContain('<div class="viz-stats">');
+    expect(html).toContain('<b>~৬ সেকেন্ড</b>');
+    expect(html).not.toContain('class="viz"');
+    expect(html).toContain('<p>শেষ</p>');
+  });
+});

@@ -5,6 +5,9 @@
 // Supported markdown: ## and ### headings, paragraphs, - and 1. lists, - [ ] checklists, tables,
 // > quotes, ---, **bold**, *italic*, `code`, [links](/path or https://...). A line that is only
 // **bold** becomes its own paragraph (used for FAQ questions). HTML comments are dropped.
+// Two safe visual blocks, written between ":::bar" / ":::stats" and ":::" lines (see vizBlock below):
+//   :::bar          title: ...   note: ...   unit: %   then one "label | number" row per line
+//   :::stats        one "big text | small text" row per line
 
 export interface PostMeta {
   /** Plan id, e.g. P001. */
@@ -111,6 +114,48 @@ function inline(text: string, opts: RenderOptions): string {
   return s.replace(/\uE000(\d+)\uE001/g, (_, i: string) => codes[Number(i)]);
 }
 
+
+const BN_DIGITS = '০১২৩৪৫৬৭৮৯';
+const bn = (s: string) => s.replace(/\d/g, (d) => BN_DIGITS[Number(d)]);
+
+/** Builds a bar chart or a row of stat tiles from the lines of a ":::bar" / ":::stats" block. Text is escaped; widths are numbers. */
+function vizBlock(kind: 'bar' | 'stats', body: string[], opts: RenderOptions): string {
+  if (kind === 'stats') {
+    const tiles = body
+      .map((l) => l.split('|').map((x) => x.trim()))
+      .filter((c) => c.length >= 2 && c[0] && c[1])
+      .map((c, i) => `<div class="viz-tile" style="--i:${i}"><b>${esc(c[0])}</b><span>${inline(c.slice(1).join(' | '), opts)}</span></div>`);
+    return tiles.length ? `<div class="viz-stats">${tiles.join('')}</div>` : '';
+  }
+  let title = '';
+  let note = '';
+  let unit = '';
+  const rows: { label: string; value: number }[] = [];
+  for (const l of body) {
+    const meta = l.match(/^(title|note|unit):\s*(.*)$/);
+    if (meta) {
+      if (meta[1] === 'title') title = meta[2].trim();
+      else if (meta[1] === 'note') note = meta[2].trim();
+      else unit = meta[2].trim();
+      continue;
+    }
+    const i = l.lastIndexOf('|');
+    const num = i > 0 ? l.slice(i + 1).trim() : '';
+    if (i > 0 && /^\d+(\.\d+)?$/.test(num)) rows.push({ label: l.slice(0, i).trim(), value: Number(num) });
+  }
+  if (!rows.length) return '';
+  const max = Math.max(...rows.map((r) => r.value)) || 1;
+  const aria = `${title ? title + ': ' : ''}${rows.map((r) => `${r.label} ${bn(String(r.value))}${unit}`).join(', ')}`;
+  const bars = rows
+    .map((r, i) => {
+      const w = Math.round((r.value / max) * 1000) / 10;
+      const val = esc(bn(String(r.value)) + unit);
+      return `<div class="viz-row" style="--i:${i}" title="${esc(r.label)}: ${val}"><span class="viz-l">${esc(r.label)}</span><span class="viz-trk"><i class="viz-fill" style="--v:${w}"></i><span class="viz-val">${val}</span></span></div>`;
+    })
+    .join('');
+  return `<figure class="viz" role="img" aria-label="${esc(aria)}">${title ? `<figcaption class="viz-t">${esc(title)}</figcaption>` : ''}${note ? `<figcaption class="viz-s">${esc(note)}</figcaption>` : ''}${bars}</figure>`;
+}
+
 const cells = (line: string) => line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
 
 /** Turns the post body into HTML. Everything is escaped first, so only the tags below can appear. */
@@ -121,6 +166,16 @@ export function renderMarkdown(md: string, opts: RenderOptions): string {
   while (i < lines.length) {
     const line = lines[i];
     if (!line.trim()) { i++; continue; }
+    const block = line.trim().match(/^:::(bar|stats)$/);
+    if (block) {
+      const body: string[] = [];
+      i++;
+      while (i < lines.length && lines[i].trim() !== ':::') body.push(lines[i++].trim());
+      i++; // the closing :::
+      const html = vizBlock(block[1] as 'bar' | 'stats', body, opts);
+      if (html) out.push(html);
+      continue;
+    }
     if (/^# /.test(line)) { i++; continue; } // the page title comes from the front matter
     const h = line.match(/^(#{2,3}) (.+)$/);
     if (h) { out.push(`<h${h[1].length}>${inline(h[2], opts)}</h${h[1].length}>`); i++; continue; }
@@ -162,7 +217,7 @@ export function renderMarkdown(md: string, opts: RenderOptions): string {
     }
     if (/^\*\*[^*]+\*\*$/.test(line.trim())) { out.push(`<p class="q">${inline(line.trim(), opts)}</p>`); i++; continue; }
     const para: string[] = [];
-    while (i < lines.length && lines[i].trim() && !/^(#{1,3} |>|---+$|\s*[-*] |\d+\. |\|)/.test(lines[i]) && !/^\*\*[^*]+\*\*$/.test(lines[i].trim())) para.push(lines[i++].trim());
+    while (i < lines.length && lines[i].trim() && !/^(#{1,3} |>|---+$|\s*[-*] |\d+\. |\||:::)/.test(lines[i]) && !/^\*\*[^*]+\*\*$/.test(lines[i].trim())) para.push(lines[i++].trim());
     if (!para.length) { para.push(line.trim()); i++; }
     out.push(`<p>${inline(para.join(' '), opts)}</p>`);
   }

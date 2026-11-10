@@ -70,9 +70,12 @@ export function parsePost(raw: string, fileName = 'post'): Post {
     metaDescription: str('metaDescription'),
     cta: str('cta'),
     body,
-    minutes: Math.max(1, Math.round(words / 180)),
+    minutes: readMinutes(words),
   };
 }
+
+/** Reading time in minutes for a word count. */
+export const readMinutes = (words: number) => Math.max(1, Math.round(words / 180));
 
 /** Posts whose date has come, newest first. `today` is an ISO date in Bangladesh time. */
 export function publishedPosts<T extends { publishDate: string }>(posts: T[], today: string): T[] {

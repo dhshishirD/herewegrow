@@ -1,29 +1,62 @@
-// GET /api/admin/blog: every blog post file (live and scheduled) with its checks, for the admin Blog page.
-// Admin only. The post list is the private index the build wrote next to the site (admin-blog-index.json);
+// /api/admin/blog*: the admin Blog page. Admin only.
+//   GET  /api/admin/blog        every post with status and checks (or setupNeeded when the tables are missing)
+//   POST /api/admin/blog/setup  create the blog tables (safe to repeat)
+//   POST /api/admin/blog/seed   import the starting posts shipped with the site (never changes existing posts)
+// The starting posts are the private seed file the build wrote next to the site (admin-blog-seed.json);
 // it is read through the asset binding, which the public cannot reach (the Worker answers 404 for that path).
 
-import { dhakaToday } from '../shared/blogParse';
-import { summarize, type BlogIndexEntry } from '../shared/blogAdmin';
+import type { Post } from '../shared/blogParse';
+import { summarize } from '../shared/blogAdmin';
+import { audit, blogTablesExist, listAll, seedPosts, setupBlogTables, toEntry } from './blogDb';
 import { requireAdmin } from './admin';
 import type { AuthEnv } from './auth';
-import { json } from './paymently';
+import { isAllowedOrigin, json } from './paymently';
 
 export interface BlogAdminEnv extends AuthEnv {
   ASSETS?: { fetch: (request: Request) => Promise<Response> };
 }
 
-export async function handleAdminBlog(request: Request, env: BlogAdminEnv, now = Date.now()): Promise<Response> {
-  if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+async function readSeed(request: Request, env: BlogAdminEnv): Promise<Post[] | null> {
+  if (!env.ASSETS) return null;
+  try {
+    const res = await env.ASSETS.fetch(new Request(new URL('/admin-blog-seed.json', request.url)));
+    return res.ok ? ((await res.json()) as Post[]) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function handleAdminBlog(request: Request, env: BlogAdminEnv, pathname: string, now = Date.now()): Promise<Response> {
+  if (request.method !== 'GET' && !isAllowedOrigin(request)) return json({ ok: false, error: 'origin' }, 403);
   const admin = await requireAdmin(env, request);
   if (admin instanceof Response) return admin;
-  if (!env.ASSETS) return json({ ok: false, error: 'config' }, 503);
+  const db = env.DB!;
+  const actor = admin.phone ?? admin.email ?? admin.id;
   try {
-    const res = await env.ASSETS.fetch(new Request(new URL('/admin-blog-index.json', request.url)));
-    if (!res.ok) return json({ ok: false, error: 'index' }, 502);
-    const index = (await res.json()) as BlogIndexEntry[];
-    return json({ ok: true, ...summarize(index, dhakaToday(now)) });
+    if (pathname === '/api/admin/blog') {
+      if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+      if (!(await blogTablesExist(db))) return json({ ok: true, setupNeeded: true });
+      const posts = await listAll(db);
+      const seed = await readSeed(request, env);
+      const have = new Set(posts.map((p) => p.slug));
+      return json({ ok: true, ...summarize(posts.map(toEntry), now), filesPending: seed ? seed.filter((p) => !have.has(p.slug)).length : null });
+    }
+    if (pathname === '/api/admin/blog/setup') {
+      if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+      await setupBlogTables(db);
+      await audit(db, actor, null, 'setup', 'blog tables created', now);
+      return json({ ok: true });
+    }
+    if (pathname === '/api/admin/blog/seed') {
+      if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+      if (!(await blogTablesExist(db))) return json({ ok: false, error: 'setup' }, 409);
+      const seed = await readSeed(request, env);
+      if (!seed) return json({ ok: false, error: 'seed' }, 502);
+      return json({ ok: true, ...(await seedPosts(db, seed, now, actor)) });
+    }
+    return json({ ok: false, error: 'not_found' }, 404);
   } catch (e) {
-    console.error('admin blog failed', e);
-    return json({ ok: false, error: 'index' }, 502);
+    console.error('admin blog failed', pathname, e);
+    return json({ ok: false, error: 'db' }, 500);
   }
 }

@@ -8,3 +8,4 @@ Disallow: /account
 
 Sitemap: https://herewegrow.pro/sitemap.xml
 Sitemap: https://herewegrow.pro/sitemap-careers.xml
+Sitemap: https://herewegrow.pro/sitemap-blog.xml

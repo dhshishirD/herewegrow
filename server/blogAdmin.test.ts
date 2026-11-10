@@ -1,54 +1,64 @@
 import { describe, expect, it } from 'vitest';
+import { parsePost } from '../shared/blogParse';
 import { createSession, userForPhone, SESSION_COOKIE } from './auth';
 import { handleAdminBlog, type BlogAdminEnv } from './blogAdmin';
 import { fakeD1, fakeKV } from './testkit';
 
 const NOW = Date.UTC(2026, 10, 10, 6);
-const entry = (id: string, publishDate: string) => ({
-  id, title: id, slug: id.toLowerCase(), publishDate, author: 'লেখক', primaryKeyword: 'কী', metaTitle: 'মেটা', metaDescription: 'ড'.repeat(120), cta: 'Builder', words: 900, linksTo: [], draftMarkers: [],
-});
+const seedFile = [1, 2].map((n) =>
+  parsePost(`---\nid: P00${n}\ntitle: "শিরোনাম ${n}"\nslug: post-${n}\npublishDate: 2026-11-2${n}\nauthor: লেখক\nprimaryKeyword: কী\nmetaTitle: "মেটা"\nmetaDescription: "বর্ণনা"\ncta: Builder\n---\n${'বডি '.repeat(700)}`, `P00${n}.md`),
+);
 
-const setup = async (index: unknown = [entry('P001', '2026-11-22'), entry('P000', '2026-11-01')]) => {
+const setup = async (withTables: boolean) => {
   const db = fakeD1();
+  if (!withTables) for (const t of ['blog_audit', 'blog_revisions', 'blog_posts']) await db.prepare(`DROP TABLE ${t}`).run();
   const asked: string[] = [];
   const env: BlogAdminEnv = {
     DB: db, KV: fakeKV(), SESSION_SECRET: 's',
-    ASSETS: { fetch: async (r) => { asked.push(new URL(r.url).pathname); return new Response(JSON.stringify(index), { status: index === null ? 404 : 200 }); } },
+    ASSETS: { fetch: async (r) => { asked.push(new URL(r.url).pathname); return new Response(JSON.stringify(seedFile)); } },
   };
   const admin = await userForPhone(db, '01712345678', 'bn', NOW);
   await db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').bind(admin.id).run();
   const member = await userForPhone(db, '01812345678', 'bn', NOW);
-  const call = async (who: { id: string } | null, method = 'GET') => {
+  const call = async (who: { id: string } | null, path = '/api/admin/blog', method = 'GET', origin: string | null = 'https://herewegrow.pro') => {
     const headers: Record<string, string> = {};
     if (who) headers.Cookie = `${SESSION_COOKIE}=${await createSession(env, who.id, NOW)}`;
-    return handleAdminBlog(new Request('https://herewegrow.pro/api/admin/blog', { method, headers }), env, NOW);
+    if (origin) headers.Origin = origin;
+    return handleAdminBlog(new Request(`https://herewegrow.pro${path}`, { method, headers }), env, path, NOW);
   };
   return { admin, member, call, asked };
 };
 
-describe('GET /api/admin/blog', () => {
-  it('signed-out 401, non-admin 403, and the index is never read for them', async () => {
-    const { member, call, asked } = await setup();
+describe('/api/admin/blog', () => {
+  it('signed-out 401, non-admin 403, and nothing is read for them', async () => {
+    const { member, call, asked } = await setup(true);
     expect((await call(null)).status).toBe(401);
     expect((await call(member)).status).toBe(403);
+    expect((await call(member, '/api/admin/blog/seed', 'POST')).status).toBe(403);
     expect(asked).toEqual([]);
   });
 
-  it('gives an admin the posts with live and scheduled status', async () => {
-    const { admin, call, asked } = await setup();
-    const res = await call(admin);
-    const d = (await res.json()) as { ok: boolean; live: number; scheduled: number; rows: Array<{ id: string; status: string }> };
-    expect(res.status).toBe(200);
-    expect(d.live).toBe(1);
-    expect(d.scheduled).toBe(1);
-    expect(d.rows.map((r) => [r.id, r.status])).toEqual([['P000', 'live'], ['P001', 'scheduled']]);
-    expect(asked).toEqual(['/admin-blog-index.json']);
+  it('says setup is needed until the tables exist, then setup, import and the dashboard work in order', async () => {
+    const { admin, call } = await setup(false);
+    expect(await (await call(admin)).json()).toEqual({ ok: true, setupNeeded: true });
+    expect((await call(admin, '/api/admin/blog/seed', 'POST')).status).toBe(409);
+    expect((await call(admin, '/api/admin/blog/setup', 'POST')).status).toBe(200);
+    const before = (await (await call(admin)).json()) as { filesPending: number; rows: unknown[] };
+    expect(before.rows).toEqual([]);
+    expect(before.filesPending).toBe(2);
+    const seeded = (await (await call(admin, '/api/admin/blog/seed', 'POST')).json()) as { added: string[] };
+    expect(seeded.added).toEqual(['P001', 'P002']);
+    const after = (await (await call(admin)).json()) as { filesPending: number; scheduled: number; rows: Array<{ id: string; status: string; publishTime: string }> };
+    expect(after.filesPending).toBe(0);
+    expect(after.scheduled).toBe(2);
+    expect(after.rows.map((r) => [r.id, r.status, r.publishTime])).toEqual([['P001', 'scheduled', '09:00'], ['P002', 'scheduled', '09:00']]);
   });
 
-  it('only GET is allowed, and a missing index is a 502', async () => {
-    const a = await setup();
-    expect((await a.call(a.admin, 'POST')).status).toBe(405);
-    const b = await setup(null);
-    expect((await b.call(b.admin)).status).toBe(502);
+  it('a second import adds nothing, and a post from another site origin is refused', async () => {
+    const { admin, call } = await setup(true);
+    await call(admin, '/api/admin/blog/seed', 'POST');
+    expect(((await (await call(admin, '/api/admin/blog/seed', 'POST')).json()) as { added: string[] }).added).toEqual([]);
+    expect((await call(admin, '/api/admin/blog/seed', 'POST', 'https://evil.example')).status).toBe(403);
+    expect((await call(admin, '/api/admin/blog/setup', 'POST', null)).status).toBe(403);
   });
 });

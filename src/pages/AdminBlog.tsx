@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AdminShell, Card } from '../components/AdminShell';
 import { useAuth } from '../lib/auth';
 import type { BlogSummary, PostRow, RowStatus } from '../../shared/blogAdmin';
+import { BlogEditor } from './AdminBlogEditor';
 
 type Data = (BlogSummary & { filesPending: number | null; setupNeeded?: undefined }) | { setupNeeded: true };
 
@@ -37,6 +38,7 @@ export function AdminBlogPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
@@ -129,7 +131,7 @@ export function AdminBlogPage() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] text-left text-sm">
                 <thead className="text-xs text-muted">
-                  <tr><th className="py-2 pr-3">ID</th><th className="pr-3">শিরোনাম</th><th className="pr-3">সময়</th><th className="pr-3">অবস্থা</th><th>চেক</th></tr>
+                  <tr><th className="py-2 pr-3">ID</th><th className="pr-3">শিরোনাম</th><th className="pr-3">সময়</th><th className="pr-3">অবস্থা</th><th className="pr-3">চেক</th><th /></tr>
                 </thead>
                 <tbody>
                   {summary.rows.map((r) => (
@@ -141,12 +143,13 @@ export function AdminBlogPage() {
                       </td>
                       <td className="whitespace-nowrap pr-3">{when(r)}</td>
                       <td className="pr-3"><Badge tone={STATUS[r.status].tone}>{STATUS[r.status].label}</Badge></td>
-                      <td className="space-y-1">
+                      <td className="space-y-1 pr-3">
                         {r.problems.map((p) => <div key={p}><Badge tone="red">সমস্যা</Badge> <span className="text-xs">{p}</span></div>)}
                         {r.notes.map((n) => <div key={n}><Badge tone="grey">নোট</Badge> <span className="text-xs">{n}</span></div>)}
                         {r.unwrittenLinks.length > 0 && <div><Badge tone="grey">লিংক</Badge> <span className="text-xs">এখনও লেখা হয়নি: {r.unwrittenLinks.join(', ')}</span></div>}
                         {!r.problems.length && !r.notes.length && !r.unwrittenLinks.length && <Badge tone="green">ঠিক আছে</Badge>}
                       </td>
+                      <td><button type="button" className="btn btn-quiet !px-3 !py-1.5 text-xs" onClick={() => setEditing(r.id)}>এডিট</button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -154,6 +157,15 @@ export function AdminBlogPage() {
             </div>
           </Card>
         </div>
+      )}
+      {editing && summary && (
+        <BlogEditor
+          key={editing}
+          id={editing}
+          liveSlugs={new Set(summary.rows.filter((r) => r.status === 'live').map((r) => r.slug))}
+          onClose={() => setEditing(null)}
+          onChanged={() => void load()}
+        />
       )}
     </AdminShell>
   );

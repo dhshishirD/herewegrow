@@ -41,6 +41,17 @@ export function draftMarkers(body: string): string[] {
   return MARKERS.filter(([re]) => re.test(body)).map(([, label]) => label);
 }
 
+/** What must be fixed before a post goes live. */
+export function publishProblems(p: { draftMarkers: string[]; author: string; primaryKeyword: string; metaTitle: string; metaDescription: string }): string[] {
+  const out: string[] = [];
+  if (p.draftMarkers.length) out.push(`খসড়ার চিহ্ন বাকি: ${p.draftMarkers.join(', ')}`);
+  if (!p.author) out.push('লেখকের নাম নেই');
+  if (!p.primaryKeyword) out.push('প্রাইমারি কীওয়ার্ড নেই');
+  if (!p.metaTitle) out.push('মেটা টাইটেল নেই');
+  if (!p.metaDescription) out.push('মেটা ডেসক্রিপশন নেই');
+  return out;
+}
+
 export function toIndexEntry(p: Pick<Post, 'id' | 'title' | 'slug' | 'author' | 'primaryKeyword' | 'metaTitle' | 'metaDescription' | 'cta' | 'body'>, status: BlogStatus, publishAt: number | null): BlogIndexEntry {
   return {
     id: p.id,
@@ -98,11 +109,8 @@ export function summarize(entries: BlogIndexEntry[], now: number): BlogSummary {
   const today = dhakaToday(now);
   const slugs = new Set(entries.map((e) => e.slug));
   const rows: PostRow[] = entries.map((e) => {
-    const problems: string[] = [];
+    const problems = publishProblems(e);
     const notes: string[] = [];
-    if (e.draftMarkers.length) problems.push(`খসড়ার চিহ্ন বাকি: ${e.draftMarkers.join(', ')}`);
-    if (!e.author) problems.push('লেখকের নাম নেই');
-    if (!e.primaryKeyword) problems.push('প্রাইমারি কীওয়ার্ড নেই');
     if (e.metaTitle.length > 70) notes.push(`মেটা টাইটেল বড় (${e.metaTitle.length} অক্ষর)`);
     if (e.metaDescription.length < 70 || e.metaDescription.length > 170) notes.push(`মেটা ডেসক্রিপশন ${e.metaDescription.length} অক্ষর (লক্ষ্য ~১৫৫)`);
     if (e.words < 600) notes.push(`লেখা ছোট (${e.words} শব্দ)`);

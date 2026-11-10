@@ -319,3 +319,21 @@
 .blog-prose table { width: 100%; border-collapse: collapse; font-size: 1rem; line-height: 1.6; }
 .blog-prose th, .blog-prose td { border: 1px solid var(--color-line); padding: 0.65rem 0.9rem; text-align: left; vertical-align: top; }
 .blog-prose th { background: var(--color-mist); font-weight: 600; }
+
+/* Blog visuals: bar chart and stat tiles (":::bar" / ":::stats" blocks in shared/blogParse.ts). Animation is CSS only; the global reduced-motion rule turns it off. */
+.blog-prose .viz { margin: 1.75rem 0 0; padding: 1.1rem 1.25rem; background: var(--color-paper); border: 1px solid var(--color-line); border-radius: 0.9rem; }
+.blog-prose .viz-t { font-weight: 700; font-size: 1.1rem; line-height: 1.4; }
+.blog-prose .viz-s { margin: 0.15rem 0 1rem; color: var(--color-muted); font-size: 0.875rem; line-height: 1.5; }
+.blog-prose .viz-row { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); align-items: center; gap: 0.6rem; padding: 0.3rem 0.3rem; border-radius: 0.4rem; font-size: 0.95rem; line-height: 1.4; }
+.blog-prose .viz-row:hover { background: var(--color-mist); }
+.blog-prose .viz-trk { display: flex; align-items: center; gap: 0.5rem; border-left: 1px solid var(--color-line); min-height: 1.25rem; }
+.blog-prose .viz-fill { display: block; height: 1.25rem; width: calc(var(--v) * 0.86%); background: var(--color-leaf); border-radius: 0 4px 4px 0; animation: viz-grow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i) * 70ms); }
+.blog-prose .viz-val { font-weight: 700; font-size: 0.9rem; animation: viz-fade 0.5s ease both; animation-delay: calc(var(--i) * 70ms + 500ms); }
+.blog-prose .viz-stats { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.75rem; }
+.blog-prose .viz-tile { padding: 0.9rem 1rem; background: var(--color-paper); border: 1px solid var(--color-line); border-radius: 0.9rem; animation: viz-rise 0.6s ease both; animation-delay: calc(var(--i) * 120ms); }
+.blog-prose .viz-tile b { display: block; font-size: 1.6rem; line-height: 1.15; font-weight: 800; color: var(--color-leaf-dark); }
+.blog-prose .viz-tile span { display: block; margin-top: 0.35rem; font-size: 0.875rem; line-height: 1.5; color: var(--color-muted); }
+@keyframes viz-grow { from { width: 0; } }
+@keyframes viz-fade { from { opacity: 0; } }
+@keyframes viz-rise { from { opacity: 0; transform: translateY(8px); } }
+@media (max-width: 540px) { .blog-prose .viz-row { grid-template-columns: 1fr; gap: 0.15rem; } }

@@ -3,6 +3,7 @@
 import { CONTACT_STATUSES, countNewContacts, listContacts, MAX_NOTE, setContactStatus, type ContactStatus } from './contact';
 import { getSessionUser, type AuthEnv, type User } from './auth';
 import { publishRole, unpublishRole } from './careers';
+import { bulkHide, listOverrides, setOverride, templateStats } from './templateAdmin';
 import { createManualGrant, listManualGrants, type ManualInput } from './manualAccess';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
@@ -69,6 +70,26 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
     }
     const found = await setContactStatus(db, contact[1], body.status as ContactStatus, note);
     return found ? json({ ok: true }) : json({ ok: false, error: 'not_found' }, 404);
+  }
+
+  if (pathname === '/api/admin/templates') {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    return json({ ok: true, overrides: await listOverrides(db), stats: await templateStats(db) });
+  }
+
+  if (pathname === '/api/admin/templates/bulk') {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const body = (await request.json().catch(() => ({}))) as { ids?: unknown; hidden?: unknown };
+    if (typeof body.hidden !== 'boolean') return json({ ok: false, error: 'invalid' }, 400);
+    return json({ ok: true, changed: await bulkHide(db, body.ids, body.hidden) });
+  }
+
+  const tpl = /^\/api\/admin\/templates\/([\w-]{1,64})$/.exec(pathname);
+  if (tpl) {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const r = await setOverride(db, tpl[1], await request.json().catch(() => ({})));
+    if (r.ok) return json({ ok: true });
+    return r.error === 'not_found' ? json({ ok: false, error: 'not_found' }, 404) : json({ ok: false, error: 'invalid', errors: r.errors }, 400);
   }
 
   if (pathname === '/api/admin/roles') {

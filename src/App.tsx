@@ -28,6 +28,7 @@ import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
 import { AdminManualPage } from './pages/AdminManual';
 import { AdminPromosPage } from './pages/AdminPromos';
+import { AdminTemplatesPage } from './pages/AdminTemplates';
 import { AdminBlogPage } from './pages/AdminBlog';
 import { capturePromoParam } from './lib/promo';
 import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
@@ -68,6 +69,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/admin': AdminDashboardPage,
   '/admin/careers': AdminCareersPage,
   '/admin/promos': AdminPromosPage,
+  '/admin/templates': AdminTemplatesPage,
   '/admin/blog': AdminBlogPage,
   '/admin/manual': AdminManualPage,
   '/linkedin-profile-optimization': LinkedInPage,

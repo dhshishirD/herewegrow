@@ -2,6 +2,7 @@
 //   GET  /api/admin/blog        every post with status and checks (or setupNeeded when the tables are missing)
 //   POST /api/admin/blog/setup  create the blog tables (safe to repeat)
 //   GET/POST /api/admin/blog/posts/<id>[/<action>]  edit, schedule, reschedule, publish, unpublish (server/blogEdit.ts)
+//   GET  /api/admin/blog/performance?range=7d|30d|all  per-post views, reads, CTA clicks, orders, verdicts and hints (server/blogPerformance.ts)
 //   POST /api/admin/blog/seed   import the starting posts shipped with the site (never changes existing posts)
 // The starting posts are the private seed file the build wrote next to the site (admin-blog-seed.json);
 // it is read through the asset binding, which the public cannot reach (the Worker answers 404 for that path).
@@ -9,6 +10,7 @@
 import type { Post } from '../shared/blogParse';
 import { summarize } from '../shared/blogAdmin';
 import { audit, blogTablesExist, listAll, seedPosts, setupBlogTables, toEntry } from './blogDb';
+import { blogPerformance, type PerfRange } from './blogPerformance';
 import { handlePostRoute } from './blogEdit';
 import { requireAdmin } from './admin';
 import type { AuthEnv } from './auth';
@@ -55,6 +57,13 @@ export async function handleAdminBlog(request: Request, env: BlogAdminEnv, pathn
       const seed = await readSeed(request, env);
       if (!seed) return json({ ok: false, error: 'seed' }, 502);
       return json({ ok: true, ...(await seedPosts(db, seed, now, actor)) });
+    }
+    if (pathname === '/api/admin/blog/performance') {
+      if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+      if (!(await blogTablesExist(db))) return json({ ok: false, error: 'setup' }, 409);
+      const range = new URL(request.url).searchParams.get('range') ?? '30d';
+      if (range !== '7d' && range !== '30d' && range !== 'all') return json({ ok: false, error: 'range' }, 400);
+      return json({ ok: true, ...(await blogPerformance(db, range as PerfRange, now)) });
     }
     const post = /^\/api\/admin\/blog\/posts\/([A-Za-z0-9-]{1,40})(?:\/([a-z-]+))?$/.exec(pathname);
     if (post) {

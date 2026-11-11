@@ -7,6 +7,7 @@ import { AdminShell, Card } from '../components/AdminShell';
 import { useAuth } from '../lib/auth';
 import type { BlogSummary, PostRow, RowStatus } from '../../shared/blogAdmin';
 import { BlogEditor } from './AdminBlogEditor';
+import { pct, PerformanceDrawer, PerformanceSection, usePerformance, VerdictBadge } from './AdminBlogPerformance';
 
 type Data = (BlogSummary & { filesPending: number | null; setupNeeded?: undefined }) | { setupNeeded: true };
 
@@ -39,6 +40,9 @@ export function AdminBlogPage() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
+  const [detail, setDetail] = useState<string | null>(null);
+  const perf = usePerformance(!!user?.isAdmin);
+  const byId = new Map((perf.data?.posts ?? []).map((p) => [p.id, p]));
 
   const load = useCallback(async () => {
     setError(null);
@@ -127,11 +131,13 @@ export function AdminBlogPage() {
             <Card><p className="text-amber-800">শিডিউল্ড {summary.scheduledWithProblems}টি পোস্টে ঠিক করার মতো সমস্যা আছে (নিচে লাল চিহ্ন)।</p></Card>
           )}
 
+          <PerformanceSection perf={perf.data} range={perf.range} setRange={perf.setRange} error={perf.error} onOpen={setDetail} />
+
           <Card title="সব পোস্ট" note={`আজ ${summary.today} (বাংলাদেশ সময়)। শিডিউল্ড পোস্ট নির্ধারিত সময়ে নিজে লাইভ হয়, রিবিল্ড লাগে না।`}>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px] text-left text-sm">
+              <table className="w-full min-w-[1000px] text-left text-sm">
                 <thead className="text-xs text-muted">
-                  <tr><th className="py-2 pr-3">ID</th><th className="pr-3">শিরোনাম</th><th className="pr-3">সময়</th><th className="pr-3">অবস্থা</th><th className="pr-3">চেক</th><th /></tr>
+                  <tr><th className="py-2 pr-3">ID</th><th className="pr-3">শিরোনাম</th><th className="pr-3">সময়</th><th className="pr-3">অবস্থা</th><th className="pr-3">ভিজিটর</th><th className="pr-3">দিনে</th><th className="pr-3">পড়ার হার</th><th className="pr-3">CTA</th><th className="pr-3">অ্যাকশন</th><th className="pr-3">টুল</th><th className="pr-3">অর্ডার</th><th className="pr-3">ফল</th><th className="pr-3">চেক</th><th /></tr>
                 </thead>
                 <tbody>
                   {summary.rows.map((r) => (
@@ -143,6 +149,22 @@ export function AdminBlogPage() {
                       </td>
                       <td className="whitespace-nowrap pr-3">{when(r)}</td>
                       <td className="pr-3"><Badge tone={STATUS[r.status].tone}>{STATUS[r.status].label}</Badge></td>
+                      {(() => {
+                        const p = byId.get(r.id);
+                        if (!p) return <td colSpan={8} className="pr-3 text-xs text-muted">{r.status === 'live' ? (perf.error ? '—' : '…') : '—'}</td>;
+                        return (
+                          <>
+                            <td className="pr-3">{p.counts.views}</td>
+                            <td className="pr-3">{p.rates.viewsPerDay === null ? '—' : p.rates.viewsPerDay.toFixed(1)}</td>
+                            <td className="pr-3">{pct(p.rates.readRate)}</td>
+                            <td className="pr-3">{p.counts.ctaClicks}</td>
+                            <td className="pr-3">{pct(p.rates.actionRate)}</td>
+                            <td className="pr-3">{p.counts.toolStarts}</td>
+                            <td className="pr-3">{p.counts.orders}</td>
+                            <td className="pr-3"><button type="button" onClick={() => setDetail(p.id)}><VerdictBadge p={p} /></button></td>
+                          </>
+                        );
+                      })()}
                       <td className="space-y-1 pr-3">
                         {r.problems.map((p) => <div key={p}><Badge tone="red">সমস্যা</Badge> <span className="text-xs">{p}</span></div>)}
                         {r.notes.map((n) => <div key={n}><Badge tone="grey">নোট</Badge> <span className="text-xs">{n}</span></div>)}
@@ -158,6 +180,7 @@ export function AdminBlogPage() {
           </Card>
         </div>
       )}
+      {detail && byId.get(detail) && <PerformanceDrawer p={byId.get(detail)!} onClose={() => setDetail(null)} />}
       {editing && summary && (
         <BlogEditor
           key={editing}

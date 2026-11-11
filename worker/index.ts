@@ -20,6 +20,7 @@ import { withSecurityHeaders } from '../server/securityHeaders';
 import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
 import { handleTemplateOverrides } from '../server/templatePublic';
+import { redirectForPath } from '../shared/templateTiers';
 
 interface WorkerEnv extends Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -51,6 +52,9 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
 
     // Career Hub: saved role pages and their sitemap; anything else under /careers/ falls through to the app.
     if (request.method === 'GET' || request.method === 'HEAD') {
+      // A retired template page moves for good: 301 to its category (or the template list). The Word file and old orders are untouched.
+      const moved = redirectForPath(pathname);
+      if (moved) return Response.redirect(new URL(moved, request.url).toString(), 301);
       if (pathname === '/sitemap-careers.xml') return careersSitemap(env);
       if (pathname === '/sitemap-blog.xml') return blogSitemap(env);
       if (pathname === '/blog' || pathname.startsWith('/blog/')) return serveBlog(request, env, pathname);

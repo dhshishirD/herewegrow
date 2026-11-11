@@ -15,9 +15,10 @@ import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
+import { canonicalPathFor, isListed, isRetired, isVariant, shouldIndex } from '../shared/templateTiers';
 
-/** Library template pages start as noindex,follow and stay out of the sitemap. Set to true after Search Console shows the category pages are indexed (about 2 weeks). */
-const INDEX_LIBRARY_PAGES = false;
+/** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
+const LISTED_TEMPLATES = TEMPLATES.filter((t) => isListed(t.id));
 
 const SITE = 'https://herewegrow.pro';
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -37,6 +38,8 @@ interface Page {
   lastmod?: string;
   /** Keep out of search results and the sitemap. */
   noindex?: boolean;
+  /** Original page when this one is a variant: out of the sitemap, canonical points at the lead. */
+  canonical?: string;
 }
 
 const ORG = {
@@ -94,18 +97,18 @@ function pages(): Page[] {
     {
       path: '/templates',
       ...seo('/templates'),
-      image: `${SITE}/templates/${TEMPLATES[0].id}/thumb.webp`,
-      body: `<h1>Word-এ এডিট করার মতো সিভি টেমপ্লেট</h1><ul>${TEMPLATES.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><h2>প্যাক</h2><ul>${packs.map((p) => `<li>${esc(p.name.bn)}: ৳${p.price}</li>`).join('')}</ul>`,
+      image: `${SITE}/templates/${LISTED_TEMPLATES[0].id}/thumb.webp`,
+      body: `<h1>Word-এ এডিট করার মতো সিভি টেমপ্লেট</h1><ul>${LISTED_TEMPLATES.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><h2>প্যাক</h2><ul>${packs.map((p) => `<li>${esc(p.name.bn)}: ৳${p.price}</li>`).join('')}</ul>`,
       jsonLd: [
         {
           '@type': 'ItemList',
           name: 'CV templates',
-          itemListElement: TEMPLATES.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/templates/${t.id}`, name: t.title.en })),
+          itemListElement: LISTED_TEMPLATES.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/templates/${t.id}`, name: t.title.en })),
         },
         crumbs([['HereWeGrow', '/'], ['CV templates', '/templates']]),
       ],
       priority: 0.95,
-      images: TEMPLATES.map((t) => `${SITE}/templates/${t.id}/thumb.webp`),
+      images: LISTED_TEMPLATES.map((t) => `${SITE}/templates/${t.id}/thumb.webp`),
     },
     {
       path: '/tools',
@@ -304,6 +307,7 @@ function pages(): Page[] {
   }
 
   for (const t of TEMPLATES) {
+    if (isRetired(t.id)) continue; // no page: the Worker answers 301
     const sector = SECTORS.find((s) => s.id === t.sector)!;
     const style = t.style === 'ats' ? { en: 'ATS-friendly', bn: 'ATS-ফ্রেন্ডলি' } : { en: 'designed', bn: 'ডিজাইনড' };
     const url = `${SITE}/templates/${t.id}`;
@@ -347,7 +351,8 @@ function pages(): Page[] {
       ],
       priority: 0.8,
       images,
-      noindex: !!t.lib && !INDEX_LIBRARY_PAGES,
+      noindex: !shouldIndex(t) || (isVariant(t.id) && !!t.lib),
+      canonical: isVariant(t.id) ? canonicalPathFor(t.id) : undefined,
     });
   }
   return list;
@@ -355,7 +360,7 @@ function pages(): Page[] {
 
 function sitemap(list: Page[]): string {
   const urls = list
-    .filter((p) => !p.noindex)
+    .filter((p) => !p.noindex && (!p.canonical || p.canonical === p.path))
     .map((p) => {
       const imgs = (p.images ?? []).map((i) => `<image:image><image:loc>${i}</image:loc></image:image>`).join('');
       return `  <url><loc>${SITE}${p.path}</loc><lastmod>${p.lastmod ?? TODAY}</lastmod><priority>${p.priority.toFixed(1)}</priority>${imgs}</url>`;

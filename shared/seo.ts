@@ -6,6 +6,7 @@ import { PRODUCTS } from './catalog';
 import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
 import { findGuide } from './guides';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
+import { ON_SALE_COUNT, isVariant, shouldIndex } from './templateTiers';
 
 export interface RouteSeo {
   title: string;
@@ -26,7 +27,7 @@ const STATIC: Record<string, RouteSeo> = {
     description: `নির্দিষ্ট দামে সিভি রাইটিং (৳${price('cv-fresher')} থেকে), সিভি রিভিউ ৳${price('cv-review')}, লিংকডইন প্রোফাইল ৳${price('linkedin-profile')}, বিডিজবস প্রোফাইল ৳${price('bdjobs-profile')}, SOP ও একাডেমিক সিভি। CV writing, LinkedIn and SOP services in Bangladesh.`,
   },
   '/templates': {
-    title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${TEMPLATES.length}+ CV templates Bangladesh | HereWeGrow`,
+    title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${ON_SALE_COUNT}+ CV templates Bangladesh | HereWeGrow`,
     description: `ব্যাংক, কর্পোরেট, ফ্রেশার, ইঞ্জিনিয়ারিং, শিক্ষকতা ও মেডিকেল চাকরির জন্য Word-এ এডিটযোগ্য সিভি ফরম্যাট। প্রতিটি ৳${SINGLE_TEMPLATE_PRICE}, সব ৪০টি ৳${price('pack-best-40')}। Editable CV format for Bangladesh jobs, instant download.`,
   },
   '/about': {
@@ -91,6 +92,21 @@ const STATIC: Record<string, RouteSeo> = {
   },
 };
 
+/** English titles shared by more than one indexable template page. Only those pages get the page count added, so titles stay short and no two match. */
+let sharedTitles: Set<string> | undefined;
+function isSharedTitle(en: string): boolean {
+  if (!sharedTitles) {
+    const seen = new Set<string>();
+    sharedTitles = new Set();
+    for (const t of TEMPLATES) {
+      if (!shouldIndex(t) || isVariant(t.id)) continue;
+      if (seen.has(t.title.en)) sharedTitles.add(t.title.en);
+      seen.add(t.title.en);
+    }
+  }
+  return sharedTitles.has(en);
+}
+
 export function routeSeo(path: string): RouteSeo | undefined {
   if (STATIC[path]) return STATIC[path];
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
@@ -101,8 +117,11 @@ export function routeSeo(path: string): RouteSeo | undefined {
   if (!t) return undefined;
   const sector = SECTORS.find((s) => s.id === t.sector)!;
   const style = t.style === 'ats' ? 'ATS-ফ্রেন্ডলি' : 'ডিজাইনড';
+  const shared = isSharedTitle(t.title.en);
+  const pageTag = shared ? ` (${bn(t.pages)} পৃষ্ঠা)` : '';
+  const pageTagEn = shared ? `, ${t.pages} ${t.pages === 1 ? 'page' : 'pages'}` : '';
   return {
-    title: `${t.title.bn}: Word ফরম্যাট ডাউনলোড | ${t.title.en}, Word template | HereWeGrow`,
+    title: `${t.title.bn}${pageTag}: Word ফরম্যাট ডাউনলোড | ${t.title.en}${pageTagEn}, Word template | HereWeGrow`,
     description: `${t.title.bn}: ${bn(t.pages)} পৃষ্ঠার ${style} সিভি ফরম্যাট, Word-এ এডিট করুন। ${sector.name.bn} চাকরির জন্য। মাত্র ৳${SINGLE_TEMPLATE_PRICE}, বিকাশ/নগদে পেমেন্ট করে সাথে সাথে ডাউনলোড। ${t.title.en}, ${t.pages}-page editable Word CV format for Bangladesh.`,
   };
 }

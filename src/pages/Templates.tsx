@@ -13,6 +13,7 @@ import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
+import { ON_SALE_COUNT, canonicalPathFor, isListed, isRetired, leadOf, shouldIndex, variantsOf } from '../../shared/templateTiers';
 import { NotFound } from './Policies';
 
 const PAGE_SIZE = 24;
@@ -78,7 +79,7 @@ function TemplateCard({ tpl }: { tpl: Template }) {
           <div className="overflow-hidden rounded-xl bg-mist p-3 ring-1 ring-line transition group-hover:-translate-y-1 group-hover:ring-2 group-hover:ring-leaf">
             <img
               src={thumb(tpl.id)}
-              alt=""
+              alt={t(tpl.title)}
               width={420}
               height={594}
               loading="lazy"
@@ -117,8 +118,8 @@ export function TemplatesPage() {
 
   const title = t({ en: 'CV templates you can edit in Word', bn: 'Word-এ এডিট করার মতো সিভি টেমপ্লেট' });
   const intro = t({
-    en: `${all.length} templates made by our CV team. See every page before you buy, pay ${taka(SINGLE_TEMPLATE_PRICE, 'en')} with bKash or Nagad, and download the Word file straight away.`,
-    bn: `আমাদের সিভি টিমের তৈরি ${num(String(all.length), 'bn')}টি টেমপ্লেট। কেনার আগে প্রতিটি পৃষ্ঠা দেখুন, বিকাশ বা নগদে ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} দিন, সাথে সাথে Word ফাইল ডাউনলোড করুন।`,
+    en: `${ON_SALE_COUNT} templates made by our CV team. See every page before you buy, pay ${taka(SINGLE_TEMPLATE_PRICE, 'en')} with bKash or Nagad, and download the Word file straight away.`,
+    bn: `আমাদের সিভি টিমের তৈরি ${num(String(ON_SALE_COUNT), 'bn')}টি টেমপ্লেট। কেনার আগে প্রতিটি পৃষ্ঠা দেখুন, বিকাশ বা নগদে ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} দিন, সাথে সাথে Word ফাইল ডাউনলোড করুন।`,
   });
   useEffect(() => setPageMeta(title, intro, '/templates'), [title, intro]);
 
@@ -276,12 +277,62 @@ export function TemplatesPage() {
   );
 }
 
+/** Share a template page: the phone's own share sheet when there is one, otherwise WhatsApp, Facebook and copy-link. */
+function ShareButton({ id, title }: { id: string; title: string }) {
+  const { t } = useLang();
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const url = `https://herewegrow.pro/templates/${id}`;
+  const text = t({ en: `${title}: editable Word CV template`, bn: `${title}: Word-এ এডিটযোগ্য সিভি টেমপ্লেট` });
+
+  const onShare = async () => {
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title, text, url });
+        track('share_template', { id, via: 'native' });
+        return;
+      } catch (e) {
+        if ((e as Error).name === 'AbortError') return;
+      }
+    }
+    setOpen((o) => !o);
+  };
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      track('share_template', { id, via: 'copy' });
+    } catch {
+      window.prompt(t({ en: 'Copy this link', bn: 'এই লিংকটি কপি করুন' }), url);
+    }
+  };
+  const row = 'rounded-lg px-3 py-1.5 text-sm font-semibold ring-1 ring-line hover:ring-leaf hover:text-leaf';
+  return (
+    <div>
+      <button type="button" className="btn btn-quiet w-full" onClick={onShare} aria-expanded={open}>
+        <svg aria-hidden="true" viewBox="0 0 20 20" className="mr-2 inline h-4 w-4"><path d="M14 7a2.5 2.5 0 1 0-2.4-3.2L7.2 6.4a2.5 2.5 0 1 0 0 4.2l4.4 2.6A2.5 2.5 0 1 0 12 11.6L7.9 9.2c.1-.4.1-.8 0-1.2l4.1-2.4c.5.9 1.1 1.4 2 1.4Z" fill="currentColor" /></svg>
+        {t({ en: 'Share this template', bn: 'টেমপ্লেটটি শেয়ার করুন' })}
+      </button>
+      {open && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          <a className={row} target="_blank" rel="noopener noreferrer" href={`https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`} onClick={() => track('share_template', { id, via: 'whatsapp' })}>WhatsApp</a>
+          <a className={row} target="_blank" rel="noopener noreferrer" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} onClick={() => track('share_template', { id, via: 'facebook' })}>Facebook</a>
+          <button type="button" className={row} onClick={copy}>{copied ? t({ en: 'Link copied', bn: 'লিংক কপি হয়েছে' }) : t({ en: 'Copy link', bn: 'লিংক কপি' })}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function TemplateDetail({ id }: { id: string }) {
   const { t, lang } = useLang();
   const order = useCheckout();
   const { map } = useTemplateOverrides();
   const base = findTemplate(id);
-  const hiddenNow = isHidden(map, id);
+  const hiddenNow = isHidden(map, id) || isRetired(id);
+  const lead = leadOf(id) ? findTemplate(leadOf(id)!) : undefined;
+  const noindexNow = hiddenNow || (!!base && !shouldIndex(base));
   const tpl = base ? applyOverrides([base], map, { keepHidden: true })[0] : undefined;
 
   const title = tpl ? t(tpl.title) : '';
@@ -292,25 +343,26 @@ export function TemplateDetail({ id }: { id: string }) {
       })
     : '';
   useEffect(() => {
-    if (tpl) setPageMeta(title, desc, `/templates/${tpl.id}`);
+    if (tpl) setPageMeta(title, desc, canonicalPathFor(tpl.id));
   }, [tpl, title, desc]);
   useEffect(() => {
     if (tpl) track('view_template', { id: tpl.id });
   }, [tpl]);
   useEffect(() => {
-    if (!hiddenNow) return;
+    if (!noindexNow) return;
     const m = document.createElement('meta');
     m.name = 'robots';
     m.content = 'noindex,follow';
     document.head.appendChild(m);
     return () => m.remove();
-  }, [hiddenNow]);
+  }, [noindexNow]);
 
   if (!tpl) return <NotFound />;
 
   const sectorName = SECTORS.find((s) => s.id === tpl.sector)?.name;
   const packs = PRODUCTS.filter((p) => p.kind === 'pack' && p.templates?.includes(tpl.id)).sort((a, b) => a.price - b.price);
-  const related = applyOverrides(TEMPLATES, map).filter((x) => hubOf(x) === hubOf(tpl) && x.id !== tpl.id).slice(0, 4);
+  const moreLayouts = variantsOf(tpl.id).map((x) => findTemplate(x)).filter((x): x is Template => !!x);
+  const related = applyOverrides(TEMPLATES.filter((x) => isListed(x.id)), map).filter((x) => hubOf(x) === hubOf(tpl) && x.id !== tpl.id).slice(0, 4);
 
   return (
     <>
@@ -390,6 +442,15 @@ export function TemplateDetail({ id }: { id: string }) {
 
             </div>
 
+            <div className="mt-4"><ShareButton id={tpl.id} title={title} /></div>
+
+            {lead && (
+              <p className="mt-4 text-sm text-muted">
+                {t({ en: 'This is another layout of ', bn: 'এটি আরেকটি লেআউট: ' })}
+                <Link href={`/templates/${lead.id}`} className="font-semibold text-leaf underline underline-offset-4">{t(lead.title)}</Link>
+              </p>
+            )}
+
             {packs.length > 0 && (
               <div className="mt-6">
                 <h2 className="font-display text-lg font-bold">{t({ en: 'Also in these packs', bn: 'এই প্যাকগুলোতেও আছে' })}</h2>
@@ -414,6 +475,15 @@ export function TemplateDetail({ id }: { id: string }) {
           </div>
         </aside>
       </section>
+
+      {moreLayouts.length > 0 && (
+        <section className="wrap py-10" aria-labelledby="layouts-title">
+          <h2 id="layouts-title" className="text-2xl font-bold">{t({ en: 'More layouts and colours', bn: 'আরও লেআউট ও রঙ' })}</h2>
+          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-4">
+            {moreLayouts.map((x) => <TemplateCard key={x.id} tpl={x} />)}
+          </ul>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="wrap py-10" aria-labelledby="related-title">

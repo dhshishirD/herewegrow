@@ -15,7 +15,7 @@ import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
-import { canonicalPathFor, isListed, isRetired, isVariant, shouldIndex } from '../shared/templateTiers';
+import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
 const LISTED_TEMPLATES = TEMPLATES.filter((t) => isListed(t.id));
@@ -390,6 +390,8 @@ export function seoPages(): Plugin {
         writeFileSync(file, p.noindex ? html.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>') : html);
       }
       writeFileSync(join(outDir, 'sitemap.xml'), sitemap(list));
+      // Retired template pages: 301 rules applied by Cloudflare before it serves any asset (the Worker is not reached for /templates/*).
+      writeFileSync(join(outDir, '_redirects'), redirectsFile());
     },
   };
 }

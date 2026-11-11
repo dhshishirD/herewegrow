@@ -1,7 +1,12 @@
+import { useState } from 'react';
 import { PRODUCTS, type Product } from '../../shared/catalog';
+import { findTemplate } from '../../shared/templates';
+import { isRetired } from '../../shared/templateTiers';
 import { num, taka, useLang } from '../lib/lang';
+import { Link } from '../lib/router';
+import { track } from '../lib/track';
 import { useCheckout } from './Checkout';
-import { ArrowRight, Clock, Star } from 'lucide-react';
+import { ArrowRight, ChevronDown, Clock, Star } from 'lucide-react';
 import { FeatureList } from './FeatureList';
 
 const services = PRODUCTS.filter((p) => p.kind === 'service');
@@ -82,28 +87,90 @@ function PackCover({ product, label }: { product: Product; label: string }) {
   );
 }
 
-export function PackGrid({ limit }: { limit?: number }) {
+/** What is inside a pack: every template with its preview, each one opening its own page (a template that is no longer sold on its own stays in the pack but has no page to open). */
+function PackContents({ pack }: { pack: Product }) {
+  const { t } = useLang();
+  const items = (pack.templates ?? []).map((id) => findTemplate(id)).filter((x): x is NonNullable<typeof x> => !!x);
+  return (
+    <ul id={`pack-contents-${pack.id}`} className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+      {items.map((tpl) => {
+        const img = (
+          <img
+            src={`/templates/${tpl.id}/thumb.webp`}
+            alt={t(tpl.title)}
+            width={420}
+            height={594}
+            loading="lazy"
+            decoding="async"
+            className="aspect-[210/297] w-full bg-white object-cover object-top shadow-sm"
+          />
+        );
+        return (
+          <li key={tpl.id} className="min-w-0">
+            {isRetired(tpl.id) ? (
+              <div className="rounded-lg bg-mist p-2 ring-1 ring-line">{img}</div>
+            ) : (
+              <Link href={`/templates/${tpl.id}`} className="block rounded-lg bg-mist p-2 ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-2 hover:ring-leaf">
+                {img}
+              </Link>
+            )}
+            <p className="mt-1 line-clamp-2 text-xs text-muted">{t(tpl.title)}</p>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function PackItem({ p }: { p: Product }) {
   const { t, lang } = useLang();
   const order = useCheckout();
-  const list: Product[] = limit ? packs.slice(0, limit) : packs;
-
+  const [open, setOpen] = useState(false);
+  const count = p.templates?.length ?? 0;
   return (
-    <div className="grid gap-x-8 gap-y-2 md:grid-cols-2">
-      {list.map((p) => (
-        <article key={p.id} className="flex gap-6 border-t border-line py-7">
-          <PackCover product={p} label={p.id === 'pack-biodata' ? t({ en: 'Bio', bn: 'বায়ো' }) : p.id === 'pack-library' ? num('300+', lang) : num(p.id === 'pack-best-40' ? '40' : String(p.templates?.length ?? ''), lang)} />
-          <div className="flex-1">
-            <div className="flex items-baseline justify-between gap-3">
-              <h3 className="text-lg font-bold">{t(p.name)}</h3>
-              <p className="font-display text-xl font-bold text-leaf whitespace-nowrap">{taka(p.price, lang)}</p>
-            </div>
-            <p className="mt-1 text-muted">{t(p.summary)}</p>
-            <p className="mt-1 text-sm">{t(p.includes[0])}{lang === 'bn' ? '। ' : '. '}{t(p.delivery)}{lang === 'bn' ? '।' : '.'}</p>
-            <button type="button" className="mt-3 font-display font-semibold text-leaf underline underline-offset-4 decoration-2 hover:text-leaf-dark" onClick={() => order(p.id)}>
+    <article className="border-t border-line py-7">
+      <div className="flex gap-6">
+        <PackCover product={p} label={p.id === 'pack-biodata' ? t({ en: 'Bio', bn: 'বায়ো' }) : p.id === 'pack-library' ? num('300+', lang) : num(p.id === 'pack-best-40' ? '40' : String(count || ''), lang)} />
+        <div className="flex-1">
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="text-lg font-bold">{t(p.name)}</h3>
+            <p className="font-display text-xl font-bold text-leaf whitespace-nowrap">{taka(p.price, lang)}</p>
+          </div>
+          <p className="mt-1 text-muted">{t(p.summary)}</p>
+          <p className="mt-1 text-sm">{t(p.includes[0])}{lang === 'bn' ? '। ' : '. '}{t(p.delivery)}{lang === 'bn' ? '।' : '.'}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <button type="button" className="font-display font-semibold text-leaf underline underline-offset-4 decoration-2 hover:text-leaf-dark" onClick={() => order(p.id)}>
               {t({ en: 'Buy and get files', bn: 'কিনুন ও ফাইল নিন' })}
             </button>
+            {count > 0 && (
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-controls={`pack-contents-${p.id}`}
+                className="inline-flex items-center gap-1 font-display font-semibold text-ink underline underline-offset-4 decoration-2 hover:text-leaf"
+                onClick={() => {
+                  if (!open) track('view_pack_contents', { id: p.id });
+                  setOpen(!open);
+                }}
+              >
+                {open ? t({ en: 'Hide templates', bn: 'টেমপ্লেট লুকান' }) : t({ en: `See the ${count} templates inside`, bn: `ভেতরের ${num(String(count), lang)}টি টেমপ্লেট দেখুন` })}
+                <ChevronDown size={16} aria-hidden="true" className={open ? 'rotate-180' : ''} />
+              </button>
+            )}
           </div>
-        </article>
+        </div>
+      </div>
+      {open && <PackContents pack={p} />}
+    </article>
+  );
+}
+
+export function PackGrid({ limit }: { limit?: number }) {
+  const list: Product[] = limit ? packs.slice(0, limit) : packs;
+  return (
+    <div className="grid items-start gap-x-8 gap-y-0 md:grid-cols-2">
+      {list.map((p) => (
+        <PackItem key={p.id} p={p} />
       ))}
     </div>
   );

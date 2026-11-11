@@ -333,5 +333,5 @@ export const PRODUCTS: Product[] = [
 
 export const findProduct = (id: string): Product | undefined => PRODUCTS.find((p) => p.id === id);
 
-export const SUPPORT_WHATSAPP = '8801981505759';
-export const SUPPORT_WHATSAPP_DISPLAY = '01981-505759';
+export const SUPPORT_WHATSAPP = '8801981505761';
+export const SUPPORT_WHATSAPP_DISPLAY = '01981-505761';

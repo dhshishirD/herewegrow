@@ -77,7 +77,7 @@ function page(status: number, message: string): Response {
   const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Download</title>
 <body style="font-family:system-ui,sans-serif;max-width:32rem;margin:4rem auto;padding:0 1.25rem;color:#15241d">
 <h1 style="font-size:1.5rem">Download problem</h1><p>${message}</p>
-<p><a style="color:#0f6b4c" href="https://wa.me/8801981505759">WhatsApp 01981-505759</a> · <a style="color:#0f6b4c" href="/">herewegrow.pro</a></p></body>`;
+<p><a style="color:#0f6b4c" href="https://wa.me/8801981505761">WhatsApp 01981-505761</a> · <a style="color:#0f6b4c" href="/">herewegrow.pro</a></p></body>`;
   return new Response(html, { status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 }
 

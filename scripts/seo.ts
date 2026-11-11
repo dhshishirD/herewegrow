@@ -49,7 +49,7 @@ const ORG = {
   url: `${SITE}/`,
   logo: `${SITE}/logo.png`,
   areaServed: { '@type': 'Country', name: 'Bangladesh' },
-  contactPoint: { '@type': 'ContactPoint', telephone: '+8801981505759', contactType: 'customer support', availableLanguage: ['Bengali', 'English'] },
+  contactPoint: { '@type': 'ContactPoint', telephone: '+8801981505761', contactType: 'customer support', availableLanguage: ['Bengali', 'English'] },
 };
 
 const crumbs = (items: [string, string][]) => ({

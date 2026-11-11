@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { routeSeo } from './seo';
 import { TEMPLATES, findTemplate } from './templates';
-import { ON_SALE_COUNT, RETIRED, TIER_A, VARIANT_OF, canonicalPathFor, isListed, isRetired, leadOf, redirectForPath, shouldIndex, variantsOf } from './templateTiers';
+import { redirectsFile, ON_SALE_COUNT, RETIRED, TIER_A, VARIANT_OF, canonicalPathFor, isListed, isRetired, leadOf, redirectForPath, shouldIndex, variantsOf } from './templateTiers';
 
 describe('template tiers, variants and retirements', () => {
   it('has the agreed counts', () => {
@@ -59,5 +59,12 @@ describe('template tiers, variants and retirements', () => {
       expect(seen.get(title), `${t.id} shares a title with ${seen.get(title)}`).toBeUndefined();
       seen.set(title, t.id);
     }
+  });
+  it('writes one 301 rule per retired page, with and without the trailing slash', () => {
+    const lines = redirectsFile().trim().split('\n');
+    expect(lines).toHaveLength(78);
+    expect(lines).toContain('/templates/hwg-cv-europass-europass-017 /templates 301');
+    expect(lines).toContain('/templates/hwg-cv-europass-europass-017/ /templates 301');
+    for (const l of lines) expect(l).toMatch(/^\/templates\/[a-z0-9-]+\/? \/templates 301$/);
   });
 });

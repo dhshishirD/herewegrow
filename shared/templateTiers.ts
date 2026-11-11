@@ -210,6 +210,17 @@ export function redirectForPath(pathname: string): string | null {
   return m ? retiredTarget(m[1]) : null;
 }
 
+/** Cloudflare `_redirects` rules for every retired template page (with and without a trailing slash). Static assets answer before the Worker runs, so these must be rules, not Worker code. */
+export function redirectsFile(): string {
+  const lines: string[] = [];
+  for (const id of Object.keys(RETIRED)) {
+    const to = retiredTarget(id);
+    if (!to) continue;
+    lines.push(`/templates/${id} ${to} 301`, `/templates/${id}/ ${to} 301`);
+  }
+  return `${lines.join('\n')}\n`;
+}
+
 /** The page search engines should treat as the original: a variant points at its lead. */
 export const canonicalPathFor = (id: string): string => `/templates/${VARIANT_OF[id] ?? id}`;
 

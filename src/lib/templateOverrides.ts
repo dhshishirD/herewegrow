@@ -2,6 +2,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { applyOverrides, type OverrideMap } from '../../shared/templateOverrides';
 import { TEMPLATES, type Template } from '../../shared/templates';
+import { isListed, tierOf } from '../../shared/templateTiers';
+
+/** Cards for the hub: retired and variant templates are left out, tier A comes first (the catalogue order is kept inside each tier). */
+const LISTED: Template[] = [...TEMPLATES.filter((t) => isListed(t.id))].sort((a, b) => (tierOf(a.id) === 'A' ? 0 : 1) - (tierOf(b.id) === 'A' ? 0 : 1));
 
 let cache: OverrideMap | null = null;
 let pending: Promise<OverrideMap> | null = null;
@@ -36,6 +40,6 @@ export function useTemplateOverrides(): { map: OverrideMap; ready: boolean } {
 /** The template list with the admin's decisions applied (hidden removed, featured first, titles fixed). */
 export function useTemplateList(): { list: Template[]; map: OverrideMap; ready: boolean } {
   const { map, ready } = useTemplateOverrides();
-  const list = useMemo(() => applyOverrides(TEMPLATES, map), [map]);
+  const list = useMemo(() => applyOverrides(LISTED, map), [map]);
   return { list, map, ready };
 }

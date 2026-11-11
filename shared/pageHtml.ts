@@ -14,10 +14,12 @@ export interface HeadPage {
   /** Static fallback content placed inside #root. */
   body: string;
   jsonLd?: unknown[];
+  /** Path of the page search engines should treat as the original (a template variant points at its lead). Defaults to path. */
+  canonical?: string;
 }
 
 export function renderPage(template: string, p: HeadPage): string {
-  const url = `${SITE}${p.path}`;
+  const url = `${SITE}${p.canonical ?? p.path}`;
   const image = p.image ?? `${SITE}/og.jpg`;
   const ld = p.jsonLd?.length
     ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': p.jsonLd }).replace(/</g, '\\u003c')}</script>`

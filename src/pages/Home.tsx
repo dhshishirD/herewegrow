@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { findProduct } from '../../shared/catalog';
 import { GUIDES } from '../../shared/guides';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from '../../shared/templates';
+import { ON_SALE_COUNT, isListed } from '../../shared/templateTiers';
 import { ServiceRateCard } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
 import { num, taka, useLang } from '../lib/lang';
@@ -193,7 +194,7 @@ export function Home() {
             </p>
           </div>
           <Link href="/templates" className="font-display font-semibold text-leaf underline decoration-2 underline-offset-[6px]">
-            {t({ en: `See all ${TEMPLATES.length} templates`, bn: `সব ${num(String(TEMPLATES.length), 'bn')}টি টেমপ্লেট দেখুন` })}
+            {t({ en: `See all ${ON_SALE_COUNT} templates`, bn: `সব ${num(String(ON_SALE_COUNT), 'bn')}টি টেমপ্লেট দেখুন` })}
           </Link>
         </div>
         <ul className="-mx-5 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
@@ -218,7 +219,7 @@ export function Home() {
             {SECTORS.map((sc) => (
               <li key={sc.id}>
                 <Link href="/templates" className="inline-block rounded-full border border-line bg-white px-4 py-2 text-[0.95rem] font-medium transition hover:border-leaf hover:text-leaf">
-                  {t(sc.name)} <span className="text-muted">{num(String(TEMPLATES.filter((x) => x.sector === sc.id).length), lang)}</span>
+                  {t(sc.name)} <span className="text-muted">{num(String(TEMPLATES.filter((x) => x.sector === sc.id && isListed(x.id)).length), lang)}</span>
                 </Link>
               </li>
             ))}

@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { renderMarkdown } from '../../shared/blogParse';
 import type { PublicPost } from '../../shared/blogSeo';
 import { PageHead } from '../components/PageHead';
 import { EXPERT } from '../content/expert';
 import { num, useLang } from '../lib/lang';
 import { Link, navigate } from '../lib/router';
+import { useBlogReadTracking, trackCtaClick } from '../lib/blogTrack';
 import { setPageMeta } from '../lib/seo';
 import { NotFound } from './Policies';
 
@@ -126,6 +127,8 @@ export function BlogPostPage({ slug }: { slug: string }) {
   useEffect(() => {
     if (post) setPageMeta(post.metaTitle, post.metaDescription, `/blog/${post.slug}`);
   }, [post]);
+  const articleRef = useRef<HTMLElement>(null);
+  useBlogReadTracking(post?.slug ?? null, articleRef);
   if (loaded.state === 'missing') return <NotFound />;
   if (loaded.state === 'loading') return <div className="wrap py-24 text-muted">…</div>;
   if (!post) return <div className="wrap max-w-lg py-24 text-muted">{t({ en: 'This post could not be loaded. Please try again in a minute.', bn: 'পোস্টটি লোড হয়নি। এক মিনিট পর আবার চেষ্টা করুন।' })}</div>;
@@ -134,6 +137,7 @@ export function BlogPostPage({ slug }: { slug: string }) {
   // The body is plain HTML, so same-site links are handled here to keep page changes instant.
   const onClick = (e: MouseEvent<HTMLElement>) => {
     const a = (e.target as HTMLElement).closest('a');
+    if (a && articleRef.current) trackCtaClick(post.slug, a, articleRef.current);
     const href = a?.getAttribute('href');
     if (!a || !href?.startsWith('/') || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
@@ -157,7 +161,7 @@ export function BlogPostPage({ slug }: { slug: string }) {
         }
       />
       {/* eslint-disable-next-line */}
-      <article lang="bn" className="blog-prose wrap max-w-3xl py-12 text-lg leading-[1.85]" onClick={onClick} dangerouslySetInnerHTML={{ __html: html }} />
+      <article ref={articleRef} lang="bn" className="blog-prose wrap max-w-3xl py-12 text-lg leading-[1.85]" onClick={onClick} dangerouslySetInnerHTML={{ __html: html }} />
 
       <section className="wrap max-w-3xl pb-6">
         {more.length > 0 && (

@@ -153,11 +153,21 @@ export async function trackPurchase(
       if (first?.ref_host) source = cap(first.ref_host);
     }
   }
+  // The blog post this visitor read last in the 7 days before buying (kept in the event so it survives the 90-day rollup).
+  let post: string | null = null;
+  if (p.vid) {
+    const pv = await db
+      .prepare("SELECT path FROM events WHERE vid = ? AND ts >= ? AND type = 'pageview' AND path LIKE '/blog/%' ORDER BY ts DESC LIMIT 1")
+      .bind(p.vid, Date.now() - 7 * 86_400_000)
+      .first<{ path: string }>();
+    const slug = pv?.path.slice(6).replace(/\/+$/, '') ?? '';
+    if (/^[a-z0-9-]{1,60}$/.test(slug)) post = slug;
+  }
   return recordServerEvent(db, {
     name: 'purchase',
     vid: p.vid || null,
     userId: p.userId,
-    meta: { amount: p.amount, product: p.productId, source, medium, campaign },
+    meta: { amount: p.amount, product: p.productId, source, medium, campaign, ...(post ? { post } : {}) },
     dedupeKey: `purchase:${p.invoiceId}`,
   });
 }

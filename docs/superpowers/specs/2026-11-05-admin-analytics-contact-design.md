@@ -92,3 +92,17 @@ Heatmaps and session replay, A/B testing, email marketing, automatic job matchin
 ## 15. Rollout notes
 - Apply `0005_analytics.sql` in the D1 Console, one statement at a time, after confirming 0003 and 0004 are applied, and **before** deploying the code. Do not use `wrangler d1 migrations apply` for this database (`d1_migrations` is empty because earlier migrations were applied by hand).
 - Recommended: add a Cloudflare WAF rate-limiting rule for `/api/t` (Security → WAF → Rate limiting rules), e.g. path equals `/api/t`, about 60 requests per 10 seconds per IP, action Block. The in-Worker per-IP limit is per isolate and best-effort only; this rule is the real guard against a flood using up D1 writes.
+
+## 16. Blog post performance (Admin → Blog)
+No new table and no migration: it reads `events`, and `daily_rollup` for days already rolled up.
+- **Events (blog post pages only, sent by `src/lib/blogTrack.ts`):**
+  - `blog_exit`, once per view, when the reader leaves (tab hidden, page hide, or route change). Meta `{ s: slug, sc: 0|25|50|75|100, t: visible seconds, capped at 600 }`. `sc` is the furthest scroll mark of the article.
+  - `blog_cta_click`, one per click on a call-to-action link inside the post. Meta `{ s: slug, cta: builder|cv_checker|templates|whatsapp|other, pos: top|middle|end }`. The kind comes from the link target, so no markup changes are needed in posts; links to other posts and outside sites are not CTAs.
+  - Write budget: at most 1 `blog_exit` per view plus 1 write per CTA click. No scroll-milestone events. The per-visitor daily cap and bot/admin filters of `/api/t` apply.
+- **Attribution:** the slug travels in `meta.s` (the route may already have changed when the exit is sent). Tool starts (`builder_start`, `checker_score`) belong to the last blog post the same visitor viewed in the 30 minutes before. Purchases carry `meta.post`: `trackPurchase` stores the last blog post the buyer viewed in the previous 7 days, so it survives the 90-day rollup.
+- **Metrics:** views = unique visitors; engaged read = 30 s visible and 50 % scrolled; read rate = reads / views; CTA rate = CTA clicks / views; action rate = visitors who clicked a CTA or started a tool (once each) / views; views per day since publish.
+- **Rollup:** `daily_rollup` rows `post_view | post_read | post_cta | post_tool | post_act | post_order | post_rev`, key = slug. Scroll histogram, CTA position split and sources are raw-only (last 90 days).
+- **Rules:** all thresholds, the Keep / Fix / Too early / Stop verdict and the Bangla hints are in `shared/blogPerformance.ts` (`RULES`). Too early = under 100 visitors or 14 days live. Keep = read rate at least 40 % and action rate at least 4 %. Verdicts and hints always use all-time counts, so the 7d / 30d / all toggle never changes them.
+- **API:** `GET /api/admin/blog/performance?range=7d|30d|all` (admin only, 5-minute per-isolate cache). Days are Asia/Dhaka.
+- **UI:** top-posts cards, weekly note, table columns, per-post drawer, and a traits comparison that stays hidden until 10 posts are live.
+- **Known limits:** `meta` is client text, so SQL reads it through `json_valid` first; a forged beacon cannot break the dashboard but can add to one post's counts, as with page views. Search Console data is not included yet.

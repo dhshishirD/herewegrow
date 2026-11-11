@@ -15,13 +15,15 @@ import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
+import { readLastmod, resolveLastmod, writeLastmod } from './lastmod';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
 const LISTED_TEMPLATES = TEMPLATES.filter((t) => isListed(t.id));
 
 const SITE = 'https://herewegrow.pro';
-const TODAY = new Date().toISOString().slice(0, 10);
+// Bangladesh day (UTC+6), the same calendar the blog uses.
+const TODAY = new Date(Date.now() + 6 * 3600 * 1000).toISOString().slice(0, 10);
 const bn = (n: number | string) => String(n).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
 const seo = (path: string) => routeSeo(path)!;
 
@@ -36,6 +38,8 @@ interface Page {
   priority: number;
   images?: string[];
   lastmod?: string;
+  /** Day the page was first published, if it has one. Used only the first time the page is seen. */
+  firstDate?: string;
   /** Keep out of search results and the sitemap. */
   noindex?: boolean;
   /** Original page when this one is a variant: out of the sitemap, canonical points at the lead. */
@@ -59,7 +63,7 @@ const crumbs = (items: [string, string][]) => ({
 
 const link = (path: string, text: string) => `<a href="${path}">${esc(text)}</a>`;
 
-function pages(): Page[] {
+export function pages(): Page[] {
   const services = PRODUCTS.filter((p) => p.kind === 'service');
   const packs = PRODUCTS.filter((p) => p.kind === 'pack');
 
@@ -262,6 +266,7 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['CV builder', '/builder'], [ap.eyebrow.en, ap.path]]),
       ],
       priority: 0.9,
+      firstDate: ap.lastChecked,
     })),
     { path: '/privacy', title: 'Privacy | HereWeGrow', description: 'How HereWeGrow handles your information.', body: '<h1>Privacy</h1>', priority: 0.3 },
     { path: '/terms', title: 'Terms | HereWeGrow', description: 'Terms for HereWeGrow services and templates.', body: '<h1>Terms</h1>', priority: 0.3 },
@@ -303,6 +308,7 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['Career guides', '/guides'], [g.title.en, `/guides/${g.slug}`]]),
       ],
       priority: 0.8,
+      firstDate: g.date,
     });
   }
 
@@ -358,7 +364,7 @@ function pages(): Page[] {
   return list;
 }
 
-function sitemap(list: Page[]): string {
+export function sitemap(list: Page[]): string {
   const urls = list
     .filter((p) => !p.noindex && (!p.canonical || p.canonical === p.path))
     .map((p) => {
@@ -389,6 +395,10 @@ export function seoPages(): Plugin {
         const html = renderPage(template, p);
         writeFileSync(file, p.noindex ? html.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>') : html);
       }
+      // Real lastmod: a page's date changes only when its content does (see scripts/lastmod.ts).
+      const { file, dates } = resolveLastmod(readLastmod(), list, TODAY);
+      for (const p of list) p.lastmod = dates[p.path];
+      writeLastmod(file);
       writeFileSync(join(outDir, 'sitemap.xml'), sitemap(list));
       // Retired template pages: 301 rules applied by Cloudflare before it serves any asset (the Worker is not reached for /templates/*).
       writeFileSync(join(outDir, '_redirects'), redirectsFile());

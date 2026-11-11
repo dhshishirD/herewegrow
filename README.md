@@ -51,6 +51,12 @@ npx wrangler dev --var PAYMENT_API_KEY:your-test-key
 
 Admin → Blog shows how each live post performs (visitors, read rate, CTA clicks, tool starts, orders) with a Keep / Fix hint per post. It needs no migration. The blog page sends `blog_exit` (scroll depth and visible seconds, once per view) and `blog_cta_click` events to `/api/t`; purchases carry the blog post the buyer read last (`meta.post`). Thresholds and hints live in `shared/blogPerformance.ts`; details are in section 16 of `docs/superpowers/specs/2026-11-05-admin-analytics-contact-design.md`.
 
+## Search titles and sitemap dates
+
+Titles are at most 60 characters and descriptions at most 155 (`shared/seo.ts`, checked by `scripts/seoLimits.test.ts`). `SEO_REPORT=/tmp/lengths.tsv npx vitest run scripts/seoLimits.test.ts` writes the length of every page to a file.
+
+`sitemap.xml` dates are real: a page's `lastmod` moves only when its title, description, text, structured data or images change. The build keeps `shared/lastmod.json` up to date, so after `npm run build` commit that file together with your change (a test fails if you forget).
+
 ## Deploy
 
 Cloudflare Workers Builds, connected to this repo: build command `npm run build`, deploy command `npx wrangler deploy`. Every push to `main` deploys.

@@ -4,7 +4,7 @@
 import type { Post } from './blogParse';
 import { renderMarkdown } from './blogParse';
 import { SITE, esc, type HeadPage } from './pageHtml';
-import { routeSeo } from './seo';
+import { TITLE_MAX, fit, routeSeo } from './seo';
 
 /** What a visitor may see of a post. */
 export interface PublicPost {
@@ -63,7 +63,7 @@ export function blogPostPage(post: PublicPost, liveSlugs: ReadonlySet<string>): 
   const url = `${SITE}/blog/${post.slug}`;
   return {
     path: `/blog/${post.slug}`,
-    title: post.metaTitle.includes('HereWeGrow') ? post.metaTitle : `${post.metaTitle} | HereWeGrow`,
+    title: post.metaTitle.includes('HereWeGrow') ? post.metaTitle : fit(TITLE_MAX, `${post.metaTitle} | HereWeGrow`, post.metaTitle),
     description: post.metaDescription,
     body: `<article lang="bn"><h1>${esc(post.title)}</h1>${renderMarkdown(post.body ?? '', { liveSlugs })}</article>`,
     jsonLd: [

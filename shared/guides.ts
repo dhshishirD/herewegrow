@@ -13,6 +13,8 @@ export type Block =
 export interface Guide {
   slug: string;
   title: Bilingual;
+  /** Shorter Bangla title for search results (60 characters with the brand); the page heading stays `title`. */
+  seoTitle?: string;
   /** One-line summary, used as the search description. */
   summary: string;
   /** ISO date first published. */
@@ -26,6 +28,7 @@ export interface Guide {
 export const GUIDES: Guide[] = [
   {
     slug: 'teletalk-photo-signature-size',
+    seoTitle: 'টেলিটকে ছবি ও স্বাক্ষরের সাইজ (৩০০×৩০০, ৩০০×৮০)',
     title: {
       bn: 'টেলিটকে আবেদনের ছবি ও স্বাক্ষরের সঠিক সাইজ (৩০০×৩০০ ও ৩০০×৮০)',
       en: 'Teletalk job application photo and signature size (300×300 and 300×80)',

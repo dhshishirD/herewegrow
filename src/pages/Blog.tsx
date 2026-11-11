@@ -104,7 +104,7 @@ export function BlogPage() {
             <li key={p.slug}>
               <Link href={`/blog/${p.slug}`} className="group flex h-full flex-col rounded-2xl bg-white p-7 ring-1 ring-line transition hover:ring-2 hover:ring-leaf">
                 <p className="text-sm text-muted">
-                  <time dateTime={p.publishDate}>{dateLabel(p.publishDate, lang)}</time> · {minutes(p, t, lang)}
+                  {t(EXPERT.name)} · <time dateTime={p.publishDate}>{dateLabel(p.publishDate, lang)}</time> · {minutes(p, t, lang)}
                 </p>
                 <h2 className="mt-2 text-2xl leading-snug group-hover:text-leaf">{p.title}</h2>
                 <p className="mt-3 flex-1 text-muted">{p.metaDescription}</p>

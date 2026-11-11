@@ -70,7 +70,7 @@ function AddToCart({ id, compact = false }: { id: string; compact?: boolean }) {
   );
 }
 
-function TemplateCard({ tpl }: { tpl: Template }) {
+export function TemplateCard({ tpl }: { tpl: Template }) {
   const { t, lang } = useLang();
   return (
     <li className="group">

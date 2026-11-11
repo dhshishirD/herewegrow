@@ -6,6 +6,7 @@ import { PRODUCTS } from './catalog';
 import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
 import { findGuide } from './guides';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
+import { categoryDescription, categoryLive, findCategoryPage } from './categoryPages';
 import { ON_SALE_COUNT, isVariant, shouldIndex } from './templateTiers';
 
 export interface RouteSeo {
@@ -124,6 +125,11 @@ export function routeSeo(path: string): RouteSeo | undefined {
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
   const guide = gm ? findGuide(gm[1]) : undefined;
   if (guide) return { title: fit(TITLE_MAX, `${guide.seoTitle ?? guide.title.bn} | HereWeGrow`, guide.seoTitle ?? guide.title.bn), description: fit(DESC_MAX, guide.summary) };
+  const cm = path.match(/^\/templates\/category\/([a-z0-9-]+)$/);
+  if (cm) {
+    const c = categoryLive(cm[1]) ? findCategoryPage(cm[1]) : undefined;
+    return c ? { title: fit(TITLE_MAX, `${c.title.bn} | Word CV | HereWeGrow`, `${c.title.bn} | HereWeGrow`, c.title.bn), description: fit(DESC_MAX, categoryDescription(c.slug)) } : undefined;
+  }
   const m = path.match(/^\/templates\/([a-z0-9-]+)$/);
   const t = m ? findTemplate(m[1]) : undefined;
   if (!t) return undefined;

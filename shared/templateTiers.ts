@@ -8,10 +8,11 @@
 //
 // Nothing here deletes a Word file, a preview image or an order.
 
+import { categoryLive } from './categoryPages';
 import { TEMPLATES } from './templates';
 
-/** Flip to true when the /templates/category/<slug> pages exist. Until then retired templates redirect to /templates. */
-export const CATEGORY_PAGES_LIVE = false;
+/** Retired templates redirect to their category page when that page exists (see shared/categoryPages.ts), otherwise to /templates. */
+export const CATEGORY_PAGES_LIVE = true;
 
 export type Tier = 'A' | 'B';
 
@@ -217,7 +218,7 @@ export const ON_SALE_COUNT = TEMPLATES.filter((t) => !isRetired(t.id)).length;
 export function retiredTarget(id: string): string | null {
   const cat = RETIRED[id];
   if (!cat) return null;
-  return CATEGORY_PAGES_LIVE ? `/templates/category/${cat}` : '/templates';
+  return CATEGORY_PAGES_LIVE && categoryLive(cat) ? `/templates/category/${cat}` : '/templates';
 }
 
 /** 301 target for a request path, or null when the path is not a retired template page. */

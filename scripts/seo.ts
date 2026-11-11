@@ -14,6 +14,8 @@ import { ABROAD_PAGES } from '../shared/abroadPages';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
+import { CATEGORY_CONTENT } from '../shared/categoryContent';
+import { liveCategoryPages, templatesOfCategory } from '../shared/categoryPages';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
 import { readLastmod, resolveLastmod, writeLastmod } from './lastmod';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
@@ -359,6 +361,32 @@ export function pages(): Page[] {
       images,
       noindex: !shouldIndex(t) || (isVariant(t.id) && !!t.lib),
       canonical: isVariant(t.id) ? canonicalPathFor(t.id) : undefined,
+    });
+  }
+  // Category pages: only those whose text is written (shared/categoryContent.ts).
+  for (const c of liveCategoryPages()) {
+    const content = CATEGORY_CONTENT[c.slug];
+    const tpls = templatesOfCategory(c.slug);
+    const path = `/templates/category/${c.slug}`;
+    list.push({
+      path,
+      ...seo(path),
+      image: `${SITE}/templates/${tpls[0].id}/thumb.webp`,
+      body: `<h1>${esc(c.title.bn)}</h1>${content.intro.map((p) => `<p>${esc(p)}</p>`).join('')}<ul>${tpls.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><h2>সাধারণ প্রশ্ন</h2><ul>${content.faq.map((f) => `<li><strong>${esc(f.q)}</strong> ${esc(f.a)}</li>`).join('')}</ul><p>${link('/templates', 'সব সিভি টেমপ্লেট')}</p>`,
+      jsonLd: [
+        {
+          '@type': 'CollectionPage',
+          name: c.title.bn,
+          alternateName: c.title.en,
+          url: `${SITE}${path}`,
+          inLanguage: 'bn',
+          mainEntity: { '@type': 'ItemList', itemListElement: tpls.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/templates/${t.id}`, name: t.title.en })) },
+        },
+        { '@type': 'FAQPage', mainEntity: content.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+        crumbs([['HereWeGrow', '/'], ['CV templates', '/templates'], [c.title.en, path]]),
+      ],
+      priority: 0.8,
+      images: tpls.slice(0, 12).map((t) => `${SITE}/templates/${t.id}/thumb.webp`),
     });
   }
   return list;

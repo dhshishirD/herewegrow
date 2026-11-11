@@ -41,6 +41,8 @@ const LazyBuilder = () => (
   </Suspense>
 );
 
+const CategoryPage = lazy(() => import('./pages/CategoryPage').then((m) => ({ default: m.CategoryPage })));
+
 const Landing = lazy(() => import('./pages/ProfileLanding'));
 const LinkedInPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="linkedin" /></Suspense>;
 const Abroad = lazy(() => import('./pages/AbroadLanding'));
@@ -82,6 +84,8 @@ const ROUTES: Record<string, () => JSX.Element> = {
 
 function Page() {
   const path = usePath();
+  const cat = path.match(/^\/templates\/category\/([a-z0-9-]+)$/);
+  if (cat) return <Suspense fallback={<div className="min-h-screen" aria-hidden="true" />}><CategoryPage key={path} slug={cat[1]} /></Suspense>;
   const tpl = path.match(/^\/templates\/([a-z0-9-]+)$/);
   if (tpl) return <TemplateDetail key={path} id={tpl[1]} />;
   const guide = path.match(/^\/guides\/([a-z0-9-]+)$/);

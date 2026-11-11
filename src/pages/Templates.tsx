@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { PRODUCTS, findProduct } from '../../shared/catalog';
 import { presetFor } from '../../shared/templatePresets';
+import { applyOverrides, isHidden } from '../../shared/templateOverrides';
+import { useTemplateList, useTemplateOverrides } from '../lib/templateOverrides';
 import { CATEGORIES, SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, hubOf, shownPages, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
 import { PackGrid } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
@@ -110,31 +112,32 @@ export function TemplatesPage() {
   const [sector, setSector] = useState<Sector | 'all'>('all');
   const [category, setCategory] = useState<string>('all');
   const [query, setQuery] = useState('');
+  const { list: all } = useTemplateList();
   const [shownCount, setShownCount] = useState(PAGE_SIZE);
 
   const title = t({ en: 'CV templates you can edit in Word', bn: 'Word-এ এডিট করার মতো সিভি টেমপ্লেট' });
   const intro = t({
-    en: `${TEMPLATES.length} templates made by our CV team. See every page before you buy, pay ${taka(SINGLE_TEMPLATE_PRICE, 'en')} with bKash or Nagad, and download the Word file straight away.`,
-    bn: `আমাদের সিভি টিমের তৈরি ${num(String(TEMPLATES.length), 'bn')}টি টেমপ্লেট। কেনার আগে প্রতিটি পৃষ্ঠা দেখুন, বিকাশ বা নগদে ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} দিন, সাথে সাথে Word ফাইল ডাউনলোড করুন।`,
+    en: `${all.length} templates made by our CV team. See every page before you buy, pay ${taka(SINGLE_TEMPLATE_PRICE, 'en')} with bKash or Nagad, and download the Word file straight away.`,
+    bn: `আমাদের সিভি টিমের তৈরি ${num(String(all.length), 'bn')}টি টেমপ্লেট। কেনার আগে প্রতিটি পৃষ্ঠা দেখুন, বিকাশ বা নগদে ${taka(SINGLE_TEMPLATE_PRICE, 'bn')} দিন, সাথে সাথে Word ফাইল ডাউনলোড করুন।`,
   });
   useEffect(() => setPageMeta(title, intro, '/templates'), [title, intro]);
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return TEMPLATES.filter(
+    return all.filter(
       (x) =>
         (style === 'all' || x.style === style) &&
         (sector === 'all' || x.sector === sector) &&
         (category === 'all' || hubOf(x) === category) &&
         (!q || `${x.title.en} ${x.title.bn} ${x.prof ?? ''}`.toLowerCase().includes(q)),
     );
-  }, [style, sector, category, query]);
+  }, [all, style, sector, category, query]);
   useEffect(() => setShownCount(PAGE_SIZE), [style, sector, category, query]);
   const catCount = useMemo(() => {
     const m = new Map<string, number>();
-    for (const x of TEMPLATES) m.set(hubOf(x), (m.get(hubOf(x)) ?? 0) + 1);
+    for (const x of all) m.set(hubOf(x), (m.get(hubOf(x)) ?? 0) + 1);
     return m;
-  }, []);
+  }, [all]);
 
   const chip = (active: boolean) =>
     `rounded-full px-4 py-1.5 font-display font-semibold transition-colors ${active ? 'bg-ink text-white' : 'bg-white text-ink ring-1 ring-line hover:ring-leaf hover:text-leaf'}`;
@@ -196,7 +199,7 @@ export function TemplatesPage() {
           />
           <div role="group" aria-label={t({ en: 'Category', bn: 'ক্যাটাগরি' })} className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
             <button type="button" aria-pressed={category === 'all'} className={`${chip(category === 'all')} shrink-0`} onClick={() => setCategory('all')}>
-              {t({ en: `All (${TEMPLATES.length})`, bn: `সব (${num(String(TEMPLATES.length), 'bn')})` })}
+              {t({ en: `All (${all.length})`, bn: `সব (${num(String(all.length), 'bn')})` })}
             </button>
             {CATEGORIES.filter((c) => catCount.get(c.id)).map((c) => (
               <button key={c.id} type="button" aria-pressed={category === c.id} className={`${chip(category === c.id)} shrink-0`} onClick={() => setCategory(c.id)}>
@@ -276,7 +279,10 @@ export function TemplatesPage() {
 export function TemplateDetail({ id }: { id: string }) {
   const { t, lang } = useLang();
   const order = useCheckout();
-  const tpl = findTemplate(id);
+  const { map } = useTemplateOverrides();
+  const base = findTemplate(id);
+  const hiddenNow = isHidden(map, id);
+  const tpl = base ? applyOverrides([base], map, { keepHidden: true })[0] : undefined;
 
   const title = tpl ? t(tpl.title) : '';
   const desc = tpl
@@ -291,12 +297,20 @@ export function TemplateDetail({ id }: { id: string }) {
   useEffect(() => {
     if (tpl) track('view_template', { id: tpl.id });
   }, [tpl]);
+  useEffect(() => {
+    if (!hiddenNow) return;
+    const m = document.createElement('meta');
+    m.name = 'robots';
+    m.content = 'noindex,follow';
+    document.head.appendChild(m);
+    return () => m.remove();
+  }, [hiddenNow]);
 
   if (!tpl) return <NotFound />;
 
   const sectorName = SECTORS.find((s) => s.id === tpl.sector)?.name;
   const packs = PRODUCTS.filter((p) => p.kind === 'pack' && p.templates?.includes(tpl.id)).sort((a, b) => a.price - b.price);
-  const related = TEMPLATES.filter((x) => hubOf(x) === hubOf(tpl) && x.id !== tpl.id).slice(0, 4);
+  const related = applyOverrides(TEMPLATES, map).filter((x) => hubOf(x) === hubOf(tpl) && x.id !== tpl.id).slice(0, 4);
 
   return (
     <>
@@ -356,6 +370,12 @@ export function TemplateDetail({ id }: { id: string }) {
                   </li>
                 ))}
               </ul>
+              {hiddenNow ? (
+                <p className="mt-5 rounded-xl bg-mist p-4 text-sm text-muted">
+                  {t({ en: 'This template is no longer on sale. Browse the current templates, or open your order page to download one you already bought.', bn: 'এই টেমপ্লেটটি এখন বিক্রি হচ্ছে না। বর্তমান টেমপ্লেট দেখুন, অথবা আগে কেনা টেমপ্লেট ডাউনলোড করতে অর্ডার পেজ খুলুন।' })}
+                </p>
+              ) : (
+                <>
               <button type="button" className="btn btn-primary mt-5 w-full" onClick={() => order(`tpl-${tpl.id}`)}>
                 {t({ en: `Buy for ${taka(SINGLE_TEMPLATE_PRICE, 'en')}`, bn: `${taka(SINGLE_TEMPLATE_PRICE, 'bn')}-এ কিনুন` })}
               </button>
@@ -365,7 +385,9 @@ export function TemplateDetail({ id }: { id: string }) {
                 </Link>
               )}
               <div className="mt-3"><AddToCart id={tpl.id} /></div>
-              <p className="mt-2 text-center text-sm text-muted">{t({ en: 'Buying more than one? Add to cart: up to 35% off each.', bn: 'একাধিক কিনবেন? কার্টে যোগ করুন: প্রতিটিতে ৩৫% পর্যন্ত ছাড়।' })}</p>
+              <p className="mt-2 text-center text-sm text-muted">{t({ en: 'Buying more than one? Add to cart: up to 35% off each.', bn: 'একাধিক কিনবেন? কার্টে যোগ করুন: প্রতিটিতে ৩৫% পর্যন্ত ছাড়।' })}</p>                </>
+              )}
+
             </div>
 
             {packs.length > 0 && (

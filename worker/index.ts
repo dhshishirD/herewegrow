@@ -19,6 +19,7 @@ import { weeklyBackup } from '../server/backup';
 import { withSecurityHeaders } from '../server/securityHeaders';
 import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
+import { handleTemplateOverrides } from '../server/templatePublic';
 
 interface WorkerEnv extends Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -30,6 +31,7 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
     if (pathname.startsWith('/api/')) {
       if (pathname === '/api/admin/blog' || pathname.startsWith('/api/admin/blog/')) return handleAdminBlog(request, env, pathname);
       if (pathname.startsWith('/api/admin/')) return handleAdmin(request, env, pathname);
+      if (pathname === '/api/template-overrides' && request.method === 'GET') return handleTemplateOverrides(env);
       if (pathname.startsWith('/api/blog/')) return handleBlogApi(request, env, pathname);
       if (pathname.startsWith('/api/promo/')) return handlePromo(request, env, pathname);
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);

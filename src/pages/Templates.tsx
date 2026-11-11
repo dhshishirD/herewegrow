@@ -386,6 +386,7 @@ export function TemplateDetail({ id }: { id: string }) {
                 width={900}
                 height={1273}
                 loading={i === 0 ? 'eager' : 'lazy'}
+                fetchPriority={i === 0 ? 'high' : 'auto'}
                 decoding="async"
                 className="h-auto w-full bg-white shadow-md"
               />

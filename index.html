@@ -18,13 +18,26 @@
     <meta name="theme-color" content="#0b1f3f" />
     <link rel="canonical" href="https://herewegrow.pro/" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PNRFDGWDBF"></script>
+    <!-- Google tag (gtag.js): events are queued at once; the script itself loads after the page, so it never competes with first paint -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-PNRFDGWDBF');
+      (function () {
+        function load() {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-PNRFDGWDBF';
+          document.head.appendChild(s);
+        }
+        function later() {
+          if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 4000 });
+          else setTimeout(load, 2000);
+        }
+        if (document.readyState === 'complete') later();
+        else window.addEventListener('load', later);
+      })();
     </script>
   </head>
   <body>

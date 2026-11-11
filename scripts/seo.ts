@@ -378,7 +378,10 @@ export function seoPages(): Plugin {
       outDir = c.build.outDir;
     },
     closeBundle() {
-      const template = readFileSync(join(outDir, 'index.html'), 'utf8');
+      // Vite lists the stylesheet after the script preloads. The page cannot draw without it, so put it first.
+      const raw = readFileSync(join(outDir, 'index.html'), 'utf8');
+      const css = raw.match(/<link rel="stylesheet"[^>]*>\s*/)?.[0];
+      const template = css ? raw.replace(css, '').replace(/(<script type="module"[^>]*><\/script>)/, `${css.trim()}\n    $1`) : raw;
       // The empty shell, kept so the Worker can build blog pages from it (blog posts live in the database).
       writeFileSync(join(outDir, 'blog-shell.txt'), template);
       const list = pages();

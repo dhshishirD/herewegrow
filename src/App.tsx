@@ -1,38 +1,52 @@
-import { lazy, Suspense, useEffect, type JSX } from 'react';
+import { lazy, Suspense, useEffect, type ComponentType } from 'react';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
 import { AuthProvider } from './lib/auth';
 import { PageTracker } from './components/PageTracker';
 import { LoginModal } from './components/LoginModal';
-import { AccountPage } from './pages/Account';
 import { ContactPage, ContactWidget } from './components/ContactWidget';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { LangProvider } from './lib/lang';
 import { usePath } from './lib/router';
-import { ServicesPage, ToolsPage } from './pages/CatalogPages';
-import { AboutPage } from './pages/About';
-import { CvChecker } from './pages/CvChecker';
-import { OrderPage } from './pages/Order';
-import { BlogPage, BlogPostPage } from './pages/Blog';
-import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
-import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
-import { PhotoResizer } from './pages/PhotoResizer';
-import { ApplicationLetter } from './pages/ApplicationLetter';
-import { JobMatch } from './pages/JobMatch';
-import { ScamShield } from './pages/ScamShield';
-import { ProPage } from './pages/Pro';
-import { AdminDashboardPage } from './pages/AdminDashboard';
-import { AdminCareersPage } from './pages/AdminCareers';
-import { AdminManualPage } from './pages/AdminManual';
-import { AdminPromosPage } from './pages/AdminPromos';
-import { AdminTemplatesPage } from './pages/AdminTemplates';
-import { AdminBlogPage } from './pages/AdminBlog';
 import { capturePromoParam } from './lib/promo';
-import { NotFound, PrivacyPage, TermsPage } from './pages/Policies';
-import { TemplateDetail, TemplatesPage } from './pages/Templates';
+import { NotFound } from './pages/Policies';
+
+// Every page except the home page is its own file, fetched only when a visitor opens it. The home page
+// then loads only what it shows (the builder, admin screens, tools and template pages stay out of it).
+type Props = any; // each page takes its own props (or none); the route table passes the right ones
+function page<M extends Record<string, unknown>>(load: () => Promise<M>, name: keyof M & string) {
+  return lazy(() => load().then((m) => ({ default: m[name] as ComponentType<Props> })));
+}
+const AccountPage = page(() => import('./pages/Account'), 'AccountPage');
+const ServicesPage = page(() => import('./pages/CatalogPages'), 'ServicesPage');
+const ToolsPage = page(() => import('./pages/CatalogPages'), 'ToolsPage');
+const AboutPage = page(() => import('./pages/About'), 'AboutPage');
+const CvChecker = page(() => import('./pages/CvChecker'), 'CvChecker');
+const OrderPage = page(() => import('./pages/Order'), 'OrderPage');
+const BlogPage = page(() => import('./pages/Blog'), 'BlogPage');
+const BlogPostPage = page(() => import('./pages/Blog'), 'BlogPostPage');
+const GuidePage = page(() => import('./pages/Guides'), 'GuidePage');
+const GuidesPage = page(() => import('./pages/Guides'), 'GuidesPage');
+const PaymentSuccess = page(() => import('./pages/PaymentResult'), 'PaymentSuccess');
+const PaymentCancel = page(() => import('./pages/PaymentResult'), 'PaymentCancel');
+const PhotoResizer = page(() => import('./pages/PhotoResizer'), 'PhotoResizer');
+const ApplicationLetter = page(() => import('./pages/ApplicationLetter'), 'ApplicationLetter');
+const JobMatch = page(() => import('./pages/JobMatch'), 'JobMatch');
+const ScamShield = page(() => import('./pages/ScamShield'), 'ScamShield');
+const ProPage = page(() => import('./pages/Pro'), 'ProPage');
+const AdminDashboardPage = page(() => import('./pages/AdminDashboard'), 'AdminDashboardPage');
+const AdminCareersPage = page(() => import('./pages/AdminCareers'), 'AdminCareersPage');
+const AdminManualPage = page(() => import('./pages/AdminManual'), 'AdminManualPage');
+const AdminPromosPage = page(() => import('./pages/AdminPromos'), 'AdminPromosPage');
+const AdminTemplatesPage = page(() => import('./pages/AdminTemplates'), 'AdminTemplatesPage');
+const AdminBlogPage = page(() => import('./pages/AdminBlog'), 'AdminBlogPage');
+const TemplatesPage = page(() => import('./pages/Templates'), 'TemplatesPage');
+const TemplateDetail = page(() => import('./pages/Templates'), 'TemplateDetail');
+const PrivacyPage = page(() => import('./pages/Policies'), 'PrivacyPage');
+const TermsPage = page(() => import('./pages/Policies'), 'TermsPage');
 
 const BuilderPage = lazy(() => import('./pages/Builder').then((m) => ({ default: m.BuilderPage })));
 const LazyBuilder = () => (
@@ -47,7 +61,7 @@ const Abroad = lazy(() => import('./pages/AbroadLanding'));
 const GulfPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Abroad kind="gulf" /></Suspense>;
 const BdjobsPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="bdjobs" /></Suspense>;
 
-const ROUTES: Record<string, () => JSX.Element> = {
+const ROUTES: Record<string, ComponentType> = {
   '/': Home,
   '/services': ServicesPage,
   '/about': AboutPage,
@@ -105,7 +119,9 @@ export default function App() {
         </a>
         <Header />
         <main id="main" className="pb-20">
-          <Page />
+          <Suspense fallback={<div className="min-h-screen" aria-hidden="true" />}>
+            <Page />
+          </Suspense>
         </main>
         <Footer />
         <CartDrawer />

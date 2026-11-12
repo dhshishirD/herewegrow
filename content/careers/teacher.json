@@ -1,0 +1,348 @@
+{
+  "slug": "teacher",
+  "title_en": "Teacher",
+  "title_bn": "শিক্ষক",
+  "field": "Education",
+  "seo_title": "Teacher Career in Bangladesh: Salary, NTRCA, CV (2026)",
+  "seo_desc": "Teacher career in Bangladesh: salary, NTRCA and primary job circular routes, B.Ed, skills, teacher CV format tips and a free skill test. Checked Nov 2026.",
+  "summary": "Teachers work in government primary schools, MPO-listed schools, colleges and madrasas, government institutions, English-medium schools, universities and EdTech. This page explains each route (primary recruitment, NTRCA, PSC and private schools), real pay ranges, the training that raises your grade, a teacher CV guide and a free skill test.",
+  "salary": {
+    "entry": "BDT 12,000 - 30,000 (private schools; govt and MPO on national pay scale)",
+    "mid": "BDT 30,000 - 70,000 (experienced English-medium, lecturer; partly estimate)",
+    "senior": "BDT 75,000 - 100,000+ (British Council circular; top international schools are an estimate)",
+    "note": "Private figures come from recent circulars. Government and MPO pay follows the national pay scale, which changed from 1 July 2026; read the latest notice and circular.",
+    "checked": "2026-11-12"
+  },
+  "benefits": [
+    "Respect in the community",
+    "Long vacations and a daytime schedule",
+    "Pension in government service; retirement and welfare benefits for MPO teachers",
+    "Festival allowance and yearly increments on a fixed scale",
+    "Extra income from exam duties, writing and online teaching where rules allow",
+    "Work with lasting meaning: students remember good teachers for life"
+  ],
+  "companies": [
+    "Government primary schools (Directorate of Primary Education)",
+    "MPO-listed schools, colleges, madrasas and technical institutes (through NTRCA)",
+    "Government high schools and colleges (through the PSC, including the BCS education cadre)",
+    "English-medium and international schools",
+    "Cadet colleges, cantonment and specialised schools",
+    "Public and private universities",
+    "British Council, NGO education programmes",
+    "EdTech and coaching companies"
+  ],
+  "season": [
+    "Government primary recruitment is announced by the Directorate of Primary Education; watch dpe.gov.bd",
+    "NTRCA planned its ninth teacher recruitment exam for December 2026; the system now recommends candidates directly against vacancies",
+    "Private and English-medium schools hire most before the new session: October to December and May to June",
+    "Selection often includes a written test, a demo class and a viva"
+  ],
+  "skills": [
+    {
+      "name": "Subject knowledge",
+      "level": "Core",
+      "tag": "subject"
+    },
+    {
+      "name": "Clear explanation and communication",
+      "level": "Core",
+      "tag": "communication"
+    },
+    {
+      "name": "Classroom management",
+      "level": "Core",
+      "tag": "classroom"
+    },
+    {
+      "name": "Lesson planning",
+      "level": "Core",
+      "tag": "planning"
+    },
+    {
+      "name": "Assessment and feedback",
+      "level": "Important",
+      "tag": "assessment"
+    },
+    {
+      "name": "Spoken and written English",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "ICT: slides, Google Classroom, Zoom",
+      "level": "Important",
+      "tag": "ict"
+    },
+    {
+      "name": "Care for children and inclusion",
+      "level": "Core",
+      "tag": "classroom"
+    },
+    {
+      "name": "Co-curricular skills (debate, sports, art)",
+      "level": "Growing",
+      "tag": "classroom"
+    }
+  ],
+  "gaps_checklist": [
+    "I can write a lesson plan with a clear learning objective",
+    "I can explain one topic in my subject in 5 minutes to a beginner",
+    "I can keep a class of 40 on task without shouting",
+    "I can set a fair test and give useful feedback",
+    "I can run a class with slides or Google Classroom",
+    "I can teach a 10-minute demo lesson in English",
+    "I know which route I am taking: primary, NTRCA, PSC or private",
+    "I have or have planned a B.Ed or other teaching certificate",
+    "My CV shows classes, subjects and results"
+  ],
+  "courses": [
+    {
+      "title": "Free online courses for teachers",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "planning"
+    },
+    {
+      "title": "Teachers' Portal: shared lessons and content",
+      "provider": "Government of Bangladesh",
+      "url": "https://www.teachers.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "ict"
+    },
+    {
+      "title": "TeachingEnglish: lesson plans and courses",
+      "provider": "British Council",
+      "url": "https://www.teachingenglish.org.uk",
+      "is_affiliate": false,
+      "skill_tag": "communication"
+    },
+    {
+      "title": "B.Ed and M.Ed programmes",
+      "provider": "Bangladesh Open University",
+      "url": "https://www.bou.ac.bd",
+      "is_affiliate": false,
+      "skill_tag": "planning"
+    },
+    {
+      "title": "English and exam preparation courses",
+      "provider": "10 Minute School",
+      "url": "https://10minuteschool.com",
+      "is_affiliate": false,
+      "skill_tag": "communication"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a teacher in Bangladesh?",
+      "a": "It depends on the type of institution. Recent circulars show about BDT 12,000-20,000 in small private schools, BDT 20,000-40,000 for experienced English-medium teachers, and BDT 76,600-103,400 for a British Council teacher. Government and MPO teachers are paid by grade on the national pay scale, which changed from July 2026."
+    },
+    {
+      "q": "How do I become a school teacher through NTRCA?",
+      "a": "NTRCA recruits for MPO-listed schools, colleges, madrasas and technical institutes. In 2026 it moved to an exam-based system that recommends candidates directly against vacant posts. The upper age limit is 35. Watch ntrca.gov.bd for the recruitment exam notice."
+    },
+    {
+      "q": "How do I become a government primary school teacher?",
+      "a": "Apply when the Directorate of Primary Education publishes a primary job circular, sit the written test and viva, and complete primary teacher training after joining. Check dpe.gov.bd for the current educational requirement and age limit."
+    },
+    {
+      "q": "Is B.Ed necessary to become a teacher?",
+      "a": "Not always for entry, but it matters. In MPO schools an assistant teacher with a B.Ed is placed on a higher grade than one without, and trained teachers are preferred for promotion and in good private schools."
+    },
+    {
+      "q": "What do English-medium schools look for?",
+      "a": "Fluent English, a strong subject background (O and A Level background is often preferred), classroom experience in a school, and comfort with tools like Google Classroom and Zoom. Many ask for a demo class, and some ask for an IELTS score."
+    },
+    {
+      "q": "What should a teacher CV include (teacher CV format)?",
+      "a": "Subjects and classes taught, number of students, results, training (B.Ed, CELTA), ICT skills and co-curricular work. Keep it to two pages, add a photo if the circular asks, and send a PDF named YourName_Teacher_CV.pdf."
+    },
+    {
+      "q": "What is a good career objective for a teacher?",
+      "a": "One or two lines with your subject and strength: 'English graduate with tutoring experience and strong communication skills seeking an Assistant Teacher position to help students build confidence in English.'"
+    },
+    {
+      "q": "Is the post MPO-listed? Why does it matter?",
+      "a": "MPO-listed teachers receive a government salary share on the national scale. Teachers in non-MPO institutions depend on the school's own income, and some have gone years without regular pay. Ask before you join and get it in writing."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 12 November 2026\n\n> **Quick answer:** A teacher in Bangladesh can work in a government primary school, an MPO-listed school, college or madrasa (through NTRCA), a government high school or college, an English-medium school, a coaching or EdTech company, or a university. Pay ranges from about BDT 12,000 a month in small private schools to BDT 100,000+ in top international schools. Government and MPO pay is changing under the new national pay scale from July 2026.\n\n## Teacher career at a glance\n\n| Question | Short answer |\n|---|---|\n| Biggest employers | Government primary schools (about 384,000 teachers) and MPO-listed schools, colleges and madrasas |\n| Minimum education | Bachelor's degree for secondary teaching; honours/master's in the subject for most good posts |\n| Main routes | DPE primary recruitment · NTRCA exam for MPO posts · PSC/BCS for government schools and colleges · direct application to private schools |\n| NTRCA age limit | 35 years |\n| Training that sets you apart | B.Ed / M.Ed, primary teacher training, CELTA or TESOL for English |\n| Global demand | UNESCO: 44 million more teachers needed worldwide by 2030 |\n\n## What does a teacher do?\n\nA teacher plans lessons, teaches, checks understanding, gives feedback and keeps a safe, orderly classroom. Outside class there is marking, exam duty, parent meetings, co-curricular activities and records. A good teacher's real product is not a finished syllabus but students who can think and behave well.\n\n**A normal day:** assembly, four to six classes, a free period for marking and preparation, then lesson planning for tomorrow. Exam seasons and admission time are the busiest.\n\n> \"My Lord, increase me in knowledge.\" (meaning of Quran 20:114)\n\n## Scope: where this career can take you\n\n- **Government primary school:** assistant teacher to head teacher, then education officer posts.\n- **MPO-listed schools, colleges, madrasas and technical institutes:** assistant teacher, lecturer, instructor; later assistant head, head teacher or principal.\n- **Government high schools and colleges:** through the Public Service Commission, including the BCS general education cadre for college lecturers.\n- **English-medium and international schools:** Cambridge and Edexcel curriculum teaching, coordinators, heads of section.\n- **Cadet colleges, cantonment and specialised schools.**\n- **Universities:** lecturer to professor, with research.\n- **Outside the classroom:** EdTech content and online teaching, teacher training, curriculum and textbook work, NGO education projects, education administration.\n- **Abroad:** international schools in the Gulf and Asia, and English teaching, with the right certificates.\n\n## Salary in Bangladesh (2026 ranges)\n\n| Where | Monthly pay (BDT) | Visual |\n|---|---|---|\n| Small private and kindergarten schools | 12,000 - 20,000 | ██ |\n| MPO-listed and government schools (entry) | national pay scale by grade, plus allowances | |\n| English-medium schools (experienced) | 20,000 - 40,000 and above | ████ |\n| Senior posts in strong schools, college lecturer | 40,000 - 70,000 (estimate) | ███████ |\n| British Council and top international schools (few posts) | 75,000 - 100,000+ | ██████████ |\n\n**How we got these ranges.**\n\n- Recent circulars: an English-medium school in Dhaka offered experienced teachers BDT 20,000-40,000; a private centre offered BDT 12,000-20,000 for an English teacher; the British Council advertised a full-time Teacher of English at BDT 76,600-103,400 gross a month.\n- **Government and MPO pay is in transition.** A new national pay scale took effect from 1 July 2026. Reported starting basics under it include BDT 32,000 for Grade 10 and BDT 44,000 for Grade 9, with allowances being raised in phases. The education ministry has said MPO-listed teachers will also move to the new structure; check the date in the latest notice.\n- **Government primary:** assistant teachers have been on Grade 13, head teachers were upgraded to Grade 10, and the proposal to move assistant teachers to Grade 11 was still pending when we checked.\n- **MPO schools:** assistant teachers are on Grade 11, or Grade 10 with a B.Ed. House rent allowance was raised to 15% of basic by July 2026.\n- The 40,000-70,000 row is our estimate.\n\nThese are ranges, not promises. Always read the circular.\n\n### Who pays the most?\n\nTop international schools, the British Council and well-funded English-medium schools pay the most in cash. Government posts give security, pension and a clear scale. Many teachers also earn from extra classes, exam marking, writing and online courses; follow your institution's rules, because MPO policy bars holding another paid post.\n\n## An honest warning before you join\n\nAsk one question first: **is this post MPO-listed or paid from the school's own fund?** Teachers in non-MPO institutions have gone years with little or no regular salary. Get your pay, increments and status in writing.\n\n## Benefits beyond salary\n\n- Respect in the community that few jobs match.\n- Long vacations and a daytime schedule.\n- Pension in government service; retirement and welfare benefits for MPO teachers.\n- Festival allowance, and annual increments on a fixed scale.\n- Work that stays with you: former students remember good teachers for life.\n\n## Top employers: Bangladesh and the world\n\n**Bangladesh (by type):**\n\n- **Directorate of Primary Education:** 65,567 government primary schools.\n- **MPO-listed institutions through NTRCA:** in 2026 NTRCA moved to an exam-based system that recommends candidates directly against vacancies, with nearly 78,000 posts to fill, and planned its ninth teacher recruitment exam for December 2026.\n- **Government high schools and colleges** through the PSC.\n- **English-medium and international schools** in Dhaka, Chattogram and Sylhet.\n- **Universities**, public and private.\n- **British Council, NGOs' education programmes and EdTech companies.**\n\n**World:** UNESCO and the International Task Force on Teachers estimate that 44 million additional primary and secondary teachers are needed by 2030, and that the share of primary teachers leaving the profession almost doubled between 2015 and 2022. Qualified teachers who speak good English are wanted in many countries.\n\n**A fact worth knowing:** UNESCO data reported in 2026 showed only about 55% of Bangladesh's secondary teachers meeting minimum qualification standards. A trained teacher stands out here.\n\n## Skills schools ask for\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Subject knowledge | You cannot teach what you do not know | █████ |\n| Clear explanation and communication | The core of the job | █████ |\n| Classroom management | No order, no learning | █████ |\n| Lesson planning and assessment | Shows professional training | ████ |\n| Spoken and written English | Required in English-medium schools, valued everywhere | ████ |\n| ICT: slides, Google Classroom, Zoom | Named in many circulars | ████ |\n| Patience and care for children | Parents and heads judge this first | ████ |\n| Co-curricular skills (sports, debate, art) | Helps you get hired | ███ |\n\n*Demand bars are our reading of school circulars, not a statistical survey.*\n\n## Free ways to build these skills\n\n- **Teachers' Portal (শিক্ষক বাতায়ন):** shared lessons and content at [teachers.gov.bd](https://www.teachers.gov.bd).\n- **Muktopaath:** free government online courses at [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **British Council TeachingEnglish:** free lesson plans and courses at [teachingenglish.org.uk](https://www.teachingenglish.org.uk).\n- **Khan Academy:** subject revision at [khanacademy.org](https://www.khanacademy.org).\n- **Practice:** record a 5-minute lesson on your phone every week and watch it.\n\n## Training, certificates and scholarships\n\n| Qualification | Useful for |\n|---|---|\n| B.Ed / M.Ed (Teachers' Training Colleges, universities, Bangladesh Open University) | MPO and government school pay grade and promotion |\n| Primary teacher training (at PTIs after joining) | Government primary teachers |\n| CELTA / TESOL, IELTS score | English teaching, international schools, abroad |\n| PGCE or iPGCE | Senior posts in international schools |\n| MPhil / PhD | College and university careers |\n\n**Scholarships and exchanges (check each official site for current rules):** [Chevening](https://www.chevening.org) · [Commonwealth Scholarships](https://cscuk.fcdo.gov.uk) · [DAAD](https://www.daad.de/en/) · Fulbright programmes for teachers and scholars through the US Embassy in Dhaka · [Erasmus Mundus](https://erasmus-plus.ec.europa.eu) joint master's degrees.\n\n## Long-term career timeline\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-2 | Assistant Teacher / Junior Teacher | Lesson planning, classroom control, marking; start B.Ed |\n| 3-6 | Teacher / Senior Teacher / Lecturer | Results in your subject, co-curricular lead, ICT |\n| 7-12 | Senior Teacher / Coordinator / Assistant Professor | Mentoring new teachers, exam and curriculum work |\n| 12-20 | Assistant Head / Vice-Principal / Head of Department | Administration, parents, budgets |\n| 20+ | Head Teacher / Principal / Professor / Education Officer | Leadership and policy |\n\n*A typical path, not a guarantee.*\n\n## Plan your own path (5-minute worksheet)\n\n1. **My level now:** (student / fresher / ___ years)\n2. **My route:** (government primary / NTRCA-MPO / PSC-BCS / English-medium / university / EdTech)\n3. **My subject and the classes I can teach:** ___\n4. **One training step this year:** (B.Ed / CELTA / IELTS / ICT course)\n5. **Weekly preparation hours and day:** ___ hours on ___\n\nThen take the free skill test on this page.\n\n## Career shifts: where teachers move\n\n- **School → college or university** (with a master's, MPhil or PhD).\n- **Bangla-medium → English-medium or international school** (with English and curriculum training).\n- **Classroom → EdTech** (content creator, online instructor).\n- **Teaching → teacher trainer, curriculum developer or education officer.**\n- **Teaching → NGO education programme or corporate training.**\n\n## Where will you find more peace of mind?\n\nNo survey ranks this, so treat it as a general pattern. Government posts give the most security but often a remote first posting. Private schools can pay faster but may ask for longer hours and offer less job security. Wherever you teach, three habits protect your peace: prepare the lesson the day before, never humiliate a child, and keep fair, written marks.\n\n## Faith and history: the honour of teaching\n\n**The Quran.** The first revealed verses begin with \"Read\" and speak of the Lord who taught by the pen ([96:1-5](https://quran.com/96/1-5)). Allah raises in rank those who believe and those given knowledge ([58:11](https://quran.com/58/11)).\n\n**Hadith.** The Prophet (peace be upon him) said the best of you are those who learn the Quran and teach it (Sahih al-Bukhari 5027). He also said that when a person dies their deeds end except three, one of which is knowledge that benefits others (Sahih Muslim 1631). Every good lesson can be that ongoing charity.\n\n**History.** The Suffah, a shaded platform at the Prophet's Mosque in Madinah, served as an early place of learning. Biographies of the Prophet report that after the Battle of Badr, literate captives could earn their freedom by teaching children of Madinah to read and write. The University of al-Qarawiyyin in Fez, founded in 859 by Fatima al-Fihri, is widely described as the oldest continually operating university.\n\n> \"Education is the most powerful weapon which you can use to change the world.\" (widely attributed to Nelson Mandela)\n\n## Your contribution to the nation\n\nBangladesh has about 1.35 million teachers, and the country's future workforce passes through their classrooms. BANBEIS data show thousands of teachers teaching English and mathematics without having studied those subjects. Every well-prepared subject teacher who joins and stays raises a school's results, especially in villages.\n\n## Your contribution to the world\n\nThe world is short of 44 million teachers. Bangladeshi teachers already work in international schools abroad, teach online across borders, and train the migrant workers and students who go overseas. Good teaching is one of the few skills every country needs.\n\n## If you want to be an entrepreneur\n\n- **Your own batch or small coaching centre** in one subject you are known for.\n- **Online courses** recorded once and sold many times.\n- **A YouTube or Facebook teaching channel** that builds your name.\n- **Guide books, model tests and worksheets.**\n- **A kindergarten or pre-school** (check local government registration rules first).\n\nStart with one class you teach better than anyone nearby.\n\n## Research opportunities\n\n- Needed topics: learning loss and reading skills, English and mathematics teaching, technology in rural classrooms, assessment reform, madrasa and technical education.\n- Where: Institutes of Education and Research (IER), BANBEIS data, NAEM training and research, university education departments.\n- Path: action research in your own classroom → M.Ed thesis → MPhil/PhD.\n\n## Whom to follow and learn from\n\nFollow institutions: [Ministry of Education](https://moedu.gov.bd), [Directorate of Primary Education](https://dpe.gov.bd), [NTRCA](https://ntrca.gov.bd), [BANBEIS](https://banbeis.gov.bd), [UNESCO](https://www.unesco.org) and the British Council. Watch award-winning teachers' lessons on the Teachers' Portal and copy one technique a week.\n\n## Where to find teaching jobs\n\n- **Primary job circular:** [dpe.gov.bd](https://dpe.gov.bd).\n- **NTRCA recruitment exam and vacancies:** [ntrca.gov.bd](https://ntrca.gov.bd).\n- **Government school and college posts:** [bpsc.gov.bd](https://bpsc.gov.bd).\n- **Private and English-medium schools:** [BDJobs](https://www.bdjobs.com) (Education/Training), school websites and newspapers' weekly job pages.\n\n## Teacher CV: what to write\n\nGovernment and NTRCA applications use online forms. Private schools read your CV and often ask for a photo, so follow the circular. A teacher CV should show classes, subjects and results:\n\n| Weak line | Better line |\n|---|---|\n| Taught English. | Taught English to Classes 6-10 (5 sections, 220 students); SSC pass rate in my sections rose from 82% to 94%. |\n| Used multimedia. | Built 40 slide lessons and ran weekly quizzes in Google Classroom. |\n| Took extra activities. | Coached the debate team to the district final. |\n\n*Use only your real, provable figures.*\n\n**Career objective for a teacher (samples):**\n\n- *Fresher:* \"English graduate with tutoring experience and strong communication skills seeking an Assistant Teacher position to help students build confidence in English.\"\n- *Experienced:* \"Mathematics teacher with 6 years in secondary classes and a B.Ed, seeking a Senior Teacher role in an English-medium school.\"\n\nBuild yours free with the HereWeGrow CV Builder and the Teacher CV template.\n\n## Common mistakes in teaching job applications\n\n- A CV with duties and no classes, subjects or results.\n- Counting private tuition as school experience when the circular excludes it.\n- Weak spoken English in the demo class for an English-medium school.\n- No demo lesson prepared. Many schools ask for a 10-minute class.\n- Spelling mistakes in the application; schools reject these first.\n\n## Sources and method\n\nFigures were checked on 12 November 2026. Pay rules for government and MPO teachers are changing, so confirm in the latest government notice.\n\n- UNESCO and the International Task Force on Teachers for Education 2030: [Global Report on Teachers](https://www.teachertaskforce.org/sites/default/files/2025-12/388832eng.pdf); UN News: [Global alert over teacher shortage](https://news.un.org/en/node/1147067)\n- Prothom Alo English: [9th pay scale explained](https://en.prothomalo.com/bangladesh/4gty9kvozo); [MPO teachers and the new pay structure](https://en.prothomalo.com/bangladesh/4q4zvkopa0); [MPO house rent allowance](https://en.prothomalo.com/bangladesh/is8ztlrsnk); [Primary head teachers' Grade 10](https://en.prothomalo.com/youth/education/w015oqvf5w); [Teachers of English and mathematics, BANBEIS 2025](https://en.prothomalo.com/youth/education/47mlj2iw33)\n- bdnews24.com: [Exam-based NTRCA system](https://bdnews24.com/bangladesh/aff382c3515f); [Primary teachers' gathering](https://bdnews24.com/education/175617766b68)\n- Daily Sun: [NTRCA recruitment: key information](https://www.daily-sun.com/bangladesh/886163/ntrca-recruitment-key-information-for-applicants); Jago News: [NTRCA plans changes to recruitment exams](https://www.jagonews24.com/en/education/news/98011)\n- The Daily Observer: [MPO teachers' pay proposals](https://observerbd.com/news/578199); [Minimum-qualified teachers, UNESCO data](https://observerbd.com/news/574902)\n- Bonik Barta: [Number of teachers in Bangladesh](https://en.bonikbarta.com/bangladesh/DrRxmQ7BLKMDPxSx/)\n- The Business Standard: [Non-MPO teachers](https://www.tbsnews.net/bangladesh/education/non-mpo-teachers-struggle-years-unpaid-teaching-affect-education-quality)\n- School and British Council job circulars read 12 November 2026\n\n**How to cite this page:** Shishir, D. H. (2026). *Teacher career in Bangladesh: salary, routes, skills and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/teacher\n\n*This guide gives general career information. It does not promise a job or salary, and it is not religious legal advice.*\n",
+  "growth_plan": {
+    "y1": "Learn to plan and deliver solid lessons, control your classes and mark fairly. Observe two senior teachers a month, build a bank of slides and worksheets, and enrol in a B.Ed or other teaching certificate.",
+    "y2": "Show results in your subject, lead one co-curricular activity, finish your training, and start using regular quizzes and feedback. Record and review your own lessons.",
+    "y3": "Take a responsibility (class teacher, subject coordinator, exam committee), mentor a new teacher, and decide your next step: senior teacher, English-medium move, M.Ed, or a college and university track."
+  },
+  "goal_sheet": [
+    "Month 1: Write lesson plans for every class for one full week",
+    "Month 2: Fix one classroom routine: start, attention signal, end",
+    "Month 3: Build 10 slide lessons and one Google Classroom",
+    "Month 4: Run a short quiz every week and track marks",
+    "Month 5: Apply for B.Ed or a teaching certificate",
+    "Month 6: Record a demo lesson, update your CV and review results with your head teacher"
+  ],
+  "test": [
+    {
+      "skill_tag": "planning",
+      "q": "A good learning objective is:",
+      "options": [
+        "Long and general",
+        "Specific and measurable",
+        "The chapter title",
+        "Secret from students"
+      ],
+      "answer_idx": 1,
+      "explain": "Students and teacher should both know what will be learned and how it will be checked."
+    },
+    {
+      "skill_tag": "planning",
+      "q": "The first step in planning a lesson is to decide:",
+      "options": [
+        "Which jokes to tell",
+        "What students should learn",
+        "How long to talk",
+        "Which page to skip"
+      ],
+      "answer_idx": 1,
+      "explain": "Start from the objective, then choose activities."
+    },
+    {
+      "skill_tag": "assessment",
+      "q": "A quick quiz during the unit to see who needs help is:",
+      "options": [
+        "Summative assessment",
+        "Formative assessment",
+        "An admission test",
+        "A punishment"
+      ],
+      "answer_idx": 1,
+      "explain": "Formative assessment guides teaching while learning is still happening."
+    },
+    {
+      "skill_tag": "assessment",
+      "q": "The final exam at the end of the year is mainly:",
+      "options": [
+        "Formative",
+        "Summative",
+        "Diagnostic",
+        "Optional"
+      ],
+      "answer_idx": 1,
+      "explain": "Summative assessment measures what was learned at the end."
+    },
+    {
+      "skill_tag": "assessment",
+      "q": "The most useful feedback on a student's answer is:",
+      "options": [
+        "'Bad'",
+        "A mark only",
+        "What was right, what to fix and how",
+        "Nothing"
+      ],
+      "answer_idx": 2,
+      "explain": "Specific feedback tells the student what to do next."
+    },
+    {
+      "skill_tag": "classroom",
+      "q": "Two students keep talking while you teach. The best first step is:",
+      "options": [
+        "Shout at them",
+        "Move closer and continue, then speak to them quietly",
+        "Send them out at once",
+        "Ignore it all year"
+      ],
+      "answer_idx": 1,
+      "explain": "Calm, low-key correction keeps the lesson going and respects the students."
+    },
+    {
+      "skill_tag": "classroom",
+      "q": "Physical punishment of students in schools in Bangladesh is:",
+      "options": [
+        "Encouraged",
+        "Allowed for small mistakes",
+        "Prohibited",
+        "Required by rule"
+      ],
+      "answer_idx": 2,
+      "explain": "Corporal punishment in educational institutions is banned."
+    },
+    {
+      "skill_tag": "classroom",
+      "q": "A student with weak eyesight sits at the back. You should:",
+      "options": [
+        "Leave it",
+        "Move the student to the front and check they can read the board",
+        "Tell them to try harder",
+        "Lower their marks"
+      ],
+      "answer_idx": 1,
+      "explain": "Inclusion means removing barriers to learning."
+    },
+    {
+      "skill_tag": "subject",
+      "q": "A student asks a question you cannot answer. You should:",
+      "options": [
+        "Guess confidently",
+        "Say you will check and answer next class, then do it",
+        "Scold the student",
+        "Change the topic"
+      ],
+      "answer_idx": 1,
+      "explain": "Honesty builds trust and models good learning."
+    },
+    {
+      "skill_tag": "communication",
+      "q": "The best way to check that the class understood is to:",
+      "options": [
+        "Ask 'Understood?'",
+        "Ask a few students to explain or solve an example",
+        "Repeat the lecture",
+        "Move to the next chapter"
+      ],
+      "answer_idx": 1,
+      "explain": "Checking with real answers shows what students actually know."
+    },
+    {
+      "skill_tag": "ict",
+      "q": "Google Classroom is mainly used to:",
+      "options": [
+        "Edit videos",
+        "Share materials, assignments and feedback online",
+        "Print certificates",
+        "Take attendance by fingerprint"
+      ],
+      "answer_idx": 1,
+      "explain": "It organises class materials and work online."
+    },
+    {
+      "skill_tag": "planning",
+      "q": "NTRCA is the authority that:",
+      "options": [
+        "Prints textbooks",
+        "Recruits teachers for MPO-listed non-government institutions",
+        "Runs the SSC exam",
+        "Gives university degrees"
+      ],
+      "answer_idx": 1,
+      "explain": "NTRCA tests and recommends teachers for non-government institutions."
+    }
+  ],
+  "cv_template_notes": "Use the HWG Teacher CV. Lead with subject and classes taught, number of students and results. Add training (B.Ed, CELTA), ICT tools and co-curricular work. Add a photo only if the circular asks. Government and NTRCA applications use online forms, so follow those. Keep it to 2 pages. File name: YourName_Teacher_CV.pdf.",
+  "cover_letter_md": "Dear Principal,\n\nI am applying for the post of [Assistant Teacher, subject] advertised on [site/date]. I hold a [degree] in [subject] from [university] and have taught [classes] for [X years / as a tutor]. In my last role [one provable result, e.g. my Class 9 section's pass rate rose from 82% to 94%].\n\nI would be glad to take a demo class at your convenience. My CV is attached.\n\nSincerely,\n[Your name] | [Phone] | [Email]",
+  "interview_qs": [
+    "Tell me about yourself. (Tip: 45 seconds: degree, subject, teaching experience, why this school.)",
+    "Why do you want to be a teacher? (Tip: Give a real reason and one example of helping someone learn.)",
+    "Teach us this topic in five minutes. (Tip: State the objective, give one example, ask one checking question.)",
+    "How do you manage a noisy class? (Tip: Routines, calm voice, movement in the room, seating, clear tasks.)",
+    "How do you help a weak student? (Tip: Find the gap, give smaller steps, extra practice, talk to parents.)",
+    "How do you plan a lesson? (Tip: Objective, starter, explanation, practice, check, homework.)",
+    "How do you assess students besides exams? (Tip: Quizzes, classwork, oral questions, projects.)",
+    "How would you deal with an angry parent? (Tip: Listen, show the records, agree on a plan, follow up.)",
+    "What is your view on physical punishment? (Tip: It is prohibited and harmful; describe positive discipline.)",
+    "Which technology do you use in class? (Tip: Name tools and one lesson where you used them.)",
+    "Which co-curricular activity can you lead? (Tip: Offer one you can really run.)",
+    "Do you give private tuition? (Tip: Answer honestly and say you follow the school's policy.)",
+    "Where do you see yourself in five years? (Tip: Senior teacher or coordinator, with B.Ed or M.Ed done.)",
+    "What is your expected salary? (Tip: Refer to the school's scale and your experience.)",
+    "Do you have any questions for us? (Tip: Ask about class size, training and the demo class feedback.)"
+  ]
+}

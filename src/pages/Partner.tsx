@@ -120,6 +120,7 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
     }
   };
 
+  const setup = !!user && !!me?.hasPass && !me.applied;
   const discount = promo?.ok && promo.kind === 'discount' ? promo : null;
   const priceOf = (list: number) => (discount ? discountedPrice(list, discount) : list);
   const chosen = PARTNER_PLANS.find((p) => p.id === plan)!;
@@ -150,6 +151,11 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
     if (!a.ok) {
       setBusy(false);
       return setError(a.error === 'link' ? t({ en: 'The Facebook link does not look right.', bn: 'ফেসবুক লিংকটি ঠিক মনে হচ্ছে না।' }) : partnerErrorText(a.error, t));
+    }
+    if (setup) {
+      setBusy(false);
+      await reload();
+      return;
     }
     track('partner_checkout_start', { plan });
     track('checkout_click', { product: plan });
@@ -186,6 +192,11 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
     <>
       <PageHead crumbs={[{ href: '/partner', label: { en: 'CV Partner', bn: 'সিভি পার্টনার' } }]} title={title} intro={intro} />
       <section className="wrap max-w-5xl py-10">
+        {setup && (
+          <p role="status" className="mb-8 rounded-xl bg-leaf-soft px-5 py-4 font-semibold text-leaf-dark">
+            {t({ en: 'Your Partner pass is active. Add your name and accept the terms below to open your workspace.', bn: 'আপনার পার্টনার পাস চালু আছে। ওয়ার্কস্পেস খুলতে নিচে নাম লিখে শর্তে টিক দিন।' })}
+          </p>
+        )}
         {ended && (
           <p role="status" className="mb-8 rounded-xl bg-leaf-soft px-5 py-4 font-semibold text-leaf-dark">
             {me?.suspended
@@ -219,6 +230,7 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
           </div>
         </div>
 
+        {!setup && <>
         <h2 id="plans" className="mt-14 text-2xl font-bold">{t({ en: 'Choose your pass', bn: 'আপনার পাস বেছে নিন' })}</h2>
         <div className="mt-2 flex flex-wrap items-end gap-3">
           <div>
@@ -255,6 +267,8 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
           })}
         </div>
 
+        </>}
+
         <div className="mt-8 rounded-2xl bg-white p-5 ring-1 ring-line md:p-6">
           <h2 className="text-xl font-bold">{t({ en: 'Your details', bn: 'আপনার তথ্য' })}</h2>
           <p className="mt-1 text-sm text-muted">{t({ en: 'You log in with your mobile number. Only your name is required.', bn: 'মোবাইল নম্বর দিয়ে লগইন করবেন। শুধু নাম আবশ্যক।' })}</p>
@@ -274,7 +288,9 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
           {showTerms && <div className="mt-3 max-h-72 overflow-auto whitespace-pre-line rounded-lg bg-mist p-4 text-sm">{cleanTerms}</div>}
           {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-red-800">{error}</p>}
           <button type="button" className="btn btn-primary mt-5 w-full !min-h-12 text-[1.05rem] md:w-auto" disabled={busy} onClick={() => void go()}>
-            {busy ? '…' : user
+            {busy ? '…' : setup
+              ? t({ en: 'Open my workspace', bn: 'আমার ওয়ার্কস্পেস খুলুন' })
+              : user
               ? t({ en: `Pay ${taka(priceOf(chosen.price), 'en')} and start`, bn: `${taka(priceOf(chosen.price), 'bn')} পেমেন্ট করে শুরু করুন` })
               : t({ en: 'Log in to continue', bn: 'চালিয়ে যেতে লগইন করুন' })}
           </button>

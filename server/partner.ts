@@ -477,7 +477,11 @@ async function route(request: Request, env: Env, pathname: string): Promise<Resp
 
   const st = await getPartner(db, user.id);
   if (pathname === '/api/partner/me' && method === 'GET') {
-    if (!st) return json({ ok: true, applied: false, name: user.name });
+    if (!st) {
+      // A pass given by hand (admin) or bought before applying: the person only has to finish the short setup form.
+      const pass = await db.prepare("SELECT 1 AS n FROM pass_grants WHERE user_id = ? AND plan_id LIKE 'partner-%' LIMIT 1").bind(user.id).first();
+      return json({ ok: true, applied: false, hasPass: !!pass, name: user.name });
+    }
     const s = await summary(db, st);
     const origin = new URL(request.url).origin;
     const rules = st.rules;

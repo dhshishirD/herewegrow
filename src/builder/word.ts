@@ -165,6 +165,8 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const sideW = side ? side.widthPx * PX : 0;
   // Width of the column the main text lives in, used for right-aligned dates
   const SIDE_PAD = (side?.hdr ? 22 : 26) * PX;
+  /** Header-band designs carry a tall band, so spacing is tighter to keep a normal CV on one page. */
+  const T = side?.hdr ? 0.62 : side?.band ? 0.8 : 1;
   const mainPadL = side?.hdr ? 44 * PX : side?.side === 'left' ? (side.band ? 20 : 40) * PX : marginX;
   const mainPadR = side?.hdr ? 30 * PX : side?.side === 'right' ? 34 * PX : marginX;
   let CONTENT = side ? A4.width - sideW - mainPadL - mainPadR : A4.width - marginX * 2;
@@ -193,27 +195,27 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
     if (side?.hdr) {
       const ruleColor = side.titleRule ?? accent;
       if (side.title === 'bar')
-        return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, indent: { left: 140 }, border: { left: { style: BorderStyle.SINGLE, size: 24, color: ruleColor, space: 6 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
+        return [new Paragraph({ ...keep, spacing: { before: Math.round(260 * T), after: 110 }, indent: { left: 140 }, border: { left: { style: BorderStyle.SINGLE, size: 24, color: ruleColor, space: 6 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
       if (side.title === 'dot')
-        return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, children: [new TextRun({ text: '■  ', color: ruleColor, size: 16 }), new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
+        return [new Paragraph({ ...keep, spacing: { before: Math.round(260 * T), after: 110 }, children: [new TextRun({ text: '■  ', color: ruleColor, size: 16 }), new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
       if (side.title === 'mono')
-        return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, children: [new TextRun({ text: `// ${up(text)}`, bold: true, color: accent, size: 22, font: MONO_WORD })] })];
-      return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: ruleColor, space: 3 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
+        return [new Paragraph({ ...keep, spacing: { before: Math.round(260 * T), after: 110 }, children: [new TextRun({ text: `// ${up(text)}`, bold: true, color: accent, size: 22, font: MONO_WORD })] })];
+      return [new Paragraph({ ...keep, spacing: { before: Math.round(260 * T), after: 110 }, border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: ruleColor, space: 3 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
     }
     if (design === 'elegant')
-      return [new Paragraph({ ...keep, spacing: { before: 280, after: 120 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: 'E5E7EB', space: 3 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 20, characterSpacing: 50 })] })];
+      return [new Paragraph({ ...keep, spacing: { before: Math.round(280 * T), after: 120 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: 'E5E7EB', space: 3 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 20, characterSpacing: 50 })] })];
     if (design === 'minimal') return [];
     if (design === 'timeline')
-      return [new Paragraph({ ...keep, spacing: { before: 300, after: 120 }, children: [new TextRun({ text: '■  ', color: accent, size: 22 }), new TextRun({ text, bold: true, color: '111827', size: 30 })] })];
+      return [new Paragraph({ ...keep, spacing: { before: Math.round(300 * T), after: 120 }, children: [new TextRun({ text: '■  ', color: accent, size: 22 }), new TextRun({ text, bold: true, color: '111827', size: 30 })] })];
     if (design === 'bold')
-      return [new Paragraph({ ...keep, spacing: { before: 260, after: 120 }, children: [new TextRun({ text: ` ${up(text)} `, bold: true, color: 'FFFFFF', size: 20, characterSpacing: 30, shading: shade(accent) })] })];
+      return [new Paragraph({ ...keep, spacing: { before: Math.round(260 * T), after: 120 }, children: [new TextRun({ text: ` ${up(text)} `, bold: true, color: 'FFFFFF', size: 20, characterSpacing: 30, shading: shade(accent) })] })];
     if (design === 'fresher')
-      return [new Paragraph({ ...keep, spacing: { before: 240, after: 100 }, children: [new TextRun({ text: '■  ', color: accent, size: 16 }), new TextRun({ text: up(text), bold: true, color: accent, size: 21, characterSpacing: 20 })] })];
+      return [new Paragraph({ ...keep, spacing: { before: Math.round(240 * T), after: 100 }, children: [new TextRun({ text: '■  ', color: accent, size: 16 }), new TextRun({ text: up(text), bold: true, color: accent, size: 21, characterSpacing: 20 })] })];
     if (design === 'bars')
-      return [new Paragraph({ ...keep, alignment: AlignmentType.CENTER, spacing: { before: 240, after: 120 }, shading: shade(accent), children: [new TextRun({ text, bold: true, color: 'FFFFFF', size: 25 })] })];
+      return [new Paragraph({ ...keep, alignment: AlignmentType.CENTER, spacing: { before: Math.round(240 * T), after: 120 }, shading: shade(accent), children: [new TextRun({ text, bold: true, color: 'FFFFFF', size: 25 })] })];
     return [new Paragraph({
       ...keep,
-      spacing: { before: 240, after: 100 },
+      spacing: { before: Math.round(240 * T), after: 100 },
       border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: accent, space: 2 } },
       children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22 })],
     })];
@@ -319,7 +321,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
         personalTable(out, rows);
       }
     }
-    if (k === 'references' && d.references.length) {
+    if (k === 'references' && d.references.some((r) => r.name || r.title || r.org || r.phone || r.email)) {
       out.push(...heading(L.references));
       for (const r of d.references) referenceBlock(out, r, { muted: grey });
     }
@@ -370,7 +372,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       const photoW = 2300;
       const textW = A4.width - (d.photo ? photoW : 0);
       const white = nameBlock({ nameSize: 58, nameColor: 'FFFFFF', headColor: 'FFFFFF', headWhite: true, sep: '   ·   ', contactColor: 'FFFFFF', contactSize: 19 });
-      const bandCells = [new TableCell({ width: { size: textW, type: WidthType.DXA }, shading: shade(accent), borders: cellBorders, margins: { top: 500, bottom: 420, left: marginX, right: d.photo ? 100 : marginX }, verticalAlign: VerticalAlign.CENTER, children: white })];
+      const bandCells = [new TableCell({ width: { size: textW, type: WidthType.DXA }, shading: shade(accent), borders: cellBorders, margins: { top: Math.round(500 * T), bottom: Math.round(420 * T), left: marginX, right: d.photo ? 100 : marginX }, verticalAlign: VerticalAlign.CENTER, children: white })];
       if (d.photo) bandCells.push(new TableCell({ width: { size: photoW, type: WidthType.DXA }, shading: shade(accent), borders: cellBorders, margins: { top: 300, bottom: 300, left: 0, right: marginX }, verticalAlign: VerticalAlign.CENTER, children: [photoPara(100, A.RIGHT)!] }));
       sections(body, []);
       if (!body.length) body.push(tiny());
@@ -521,7 +523,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
     const mono = side.hdr && side.title === 'mono';
     const sh = (text: string) =>
       new Paragraph({
-        spacing: { before: 280, after: 100 },
+        spacing: { before: Math.round(280 * T), after: 100 },
         ...(side.rule ? { border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: side.ruleColor ?? side.head, space: 3 } } } : {}),
         children: [new TextRun({ text: `${mono ? '// ' : ''}${(state.headings ?? 'en') === 'en' ? text.toUpperCase() : text}`, bold: true, color: side.head, size: 20, font: mono ? MONO_WORD : undefined })],
       });
@@ -564,9 +566,10 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       sideItems.push(sh(L.personal));
       for (const [a, v] of personal) sideItems.push(new Paragraph({ spacing: { after: 70 }, children: [new TextRun({ text: a, color: side.muted, size: 17, break: 0 }), new TextRun({ text: v, color: side.text, size: 20, break: 1 })] }));
     }
-    if (side.refs && !d.hidden.includes('references') && d.references.length) {
+    const refList = d.references.filter((r) => r.name || r.title || r.org || r.phone || r.email);
+    if (side.refs && !d.hidden.includes('references') && refList.length) {
       sideItems.push(sh(L.references));
-      for (const r of d.references) referenceBlock(sideItems, r, { main: side.text, muted: side.muted });
+      for (const r of refList) referenceBlock(sideItems, r, { main: side.text, muted: side.muted });
     }
 
     const main: Paragraph[] = [];
@@ -609,14 +612,14 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       width: { size: sideW, type: WidthType.DXA },
       shading: { type: ShadingType.CLEAR, color: 'auto', fill: side.fill },
       borders: cellBorders,
-      margins: { top: 300, bottom: 300, left: SIDE_PAD, right: SIDE_PAD },
+      margins: { top: Math.round(300 * T), bottom: side.hdr || side.band ? 0 : 300, left: SIDE_PAD, right: SIDE_PAD },
       children: sideItems,
     });
     const mainCell = new TableCell({
       width: { size: mainW, type: WidthType.DXA },
       ...(side.mainFill ? { shading: shade(side.mainFill) } : {}),
       borders: cellBorders,
-      margins: { top: 300, bottom: 300, left: mainPadL, right: mainPadR },
+      margins: { top: Math.round(300 * T), bottom: side.hdr || side.band ? 0 : 300, left: mainPadL, right: mainPadR },
       children: [...lead, ...main],
     });
     // Newer designs: the band holds name, headline, contact and photo across the full width
@@ -664,7 +667,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
         rows: [...bandRow, new TableRow({
           // Tall enough that the sidebar colour fills page one; a longer CV just flows onto page two
           ...(side.hdr
-            ? { height: { value: A4.height - marginY * 2 - HDR_BAND_H - (side.hdr.topBar ? 150 : 0) - 1100, rule: HeightRule.ATLEAST } }
+            ? { height: { value: A4.height - marginY * 2 - HDR_BAND_H - (side.hdr.topBar ? 150 : 0) - 2400, rule: HeightRule.ATLEAST } }
             : side.band ? {} : { height: { value: A4.height - marginY * 2 - 900, rule: HeightRule.ATLEAST } }),
           children: side.side === 'left' ? [sideCell, mainCell] : [mainCell, sideCell],
         })],

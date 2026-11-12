@@ -154,4 +154,11 @@ describe('Word export layouts', () => {
     const blob = await buildDocx({ data: emptyCv(), design: id, accent: '#1d4ed8' });
     expect(blob.size).toBeGreaterThan(1000);
   });
+  it.each(['modern', 'banner', 'office'])('%s: a blank referee does not leave an empty REFERENCES heading', async (id) => {
+    const d = { ...sampleCv(), references: [{ id: 'x', name: '', title: '', org: '', phone: '', email: '', relation: '' }] };
+    const blob = await buildDocx({ data: d, design: id as BuilderState['design'], accent: '#1d4ed8' });
+    const zip = await JSZip.loadAsync(await blob.arrayBuffer());
+    const xml = await zip.file('word/document.xml')!.async('string');
+    expect(xml).not.toContain('REFERENCES');
+  });
 });

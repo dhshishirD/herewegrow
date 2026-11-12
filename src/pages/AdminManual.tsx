@@ -15,6 +15,7 @@ interface Grant {
   createdAt: number;
   kind: Mode;
   phone: string;
+  email?: string | null;
   productId: string;
   productName: string;
   amount: number;
@@ -25,6 +26,8 @@ interface Grant {
 
 interface Draft { mode: Mode; phone: string; productId: string; amount: string; reference: string; note: string }
 
+const prefill = () => { try { return new URLSearchParams(window.location.search).get('contact') ?? ''; } catch { return ''; } };
+const who = (g: { phone: string; email?: string | null }) => g.phone || g.email || '—';
 const EMPTY: Draft = { mode: 'paid', phone: '', productId: PRODUCTS.find((p) => p.kind === 'template')?.id ?? '', amount: '', reference: '', note: '' };
 
 const ORIGIN = 'https://herewegrow.pro';
@@ -37,7 +40,7 @@ const taka = (n: number) => `৳${n.toLocaleString('en-US')}`;
 /** What to send the customer on WhatsApp once access is given. */
 function customerMessage(g: Grant, proUntil: number | null): string {
   if (findPlan(g.productId)) {
-    return `Assalamu alaikum! Your HereWeGrow Pro is active${proUntil ? ` until ${dateOnly(proUntil)}` : ''}. Log in at ${ORIGIN} with ${g.phone} (we send a code by SMS) and the Pro features are ready. Thank you!`;
+    return `Assalamu alaikum! Your HereWeGrow Pro is active${proUntil ? ` until ${dateOnly(proUntil)}` : ''}. Log in at ${ORIGIN} with ${g.phone || g.email}${g.phone ? ' (we send a code by SMS)' : ''} and the Pro features are ready. Thank you!`;
   }
   const product = PRODUCTS.find((p) => p.id === g.productId);
   if (product?.files?.length) {
@@ -50,7 +53,7 @@ const label = 'text-sm font-medium text-ink';
 
 export function AdminManualPage() {
   const { user, ready, openLogin } = useAuth();
-  const [draft, setDraft] = useState<Draft>(EMPTY);
+  const [draft, setDraft] = useState<Draft>(() => ({ ...EMPTY, phone: prefill() }));
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -114,7 +117,7 @@ export function AdminManualPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           kind: draft.mode,
-          phone: draft.phone,
+          contact: draft.phone,
           productId: draft.productId,
           amount: draft.mode === 'paid' ? amountValue : undefined,
           reference: draft.mode === 'paid' ? draft.reference : undefined,
@@ -130,7 +133,7 @@ export function AdminManualPage() {
         await load();
       } else if (res.status === 409 && d.grant) {
         setConfirming(false);
-        setErrors([`This was already approved on ${dhakaTime(d.grant.createdAt)} for ${d.grant.phone} (${d.grant.productName}). Invoice ${d.grant.invoiceId}. Nothing was added.`]);
+        setErrors([`This was already approved on ${dhakaTime(d.grant.createdAt)} for ${who(d.grant)} (${d.grant.productName}). Invoice ${d.grant.invoiceId}. Nothing was added.`]);
       } else if (res.status === 401 || res.status === 403) {
         setErrors(['Session expired or not an admin. Sign in again.']);
       } else {
@@ -173,8 +176,8 @@ export function AdminManualPage() {
           </div>
 
           <form onSubmit={review} className="mt-4 space-y-3">
-            <label className={`${label} block`}>Customer's mobile number
-              <input className="field mt-1" inputMode="numeric" autoComplete="off" placeholder="01XXXXXXXXX" required value={draft.phone} onChange={(e) => set({ phone: e.target.value })} />
+            <label className={`${label} block`}>Customer's mobile number or email
+              <input className="field mt-1" autoComplete="off" placeholder="01XXXXXXXXX or name@gmail.com" required value={draft.phone} onChange={(e) => set({ phone: e.target.value })} />
             </label>
             <label className={`${label} block`}>Product
               <select className="field mt-1" value={draft.productId} onChange={(e) => set({ productId: e.target.value, amount: '' })}>{options}</select>
@@ -226,7 +229,7 @@ export function AdminManualPage() {
 
           {done && (
             <div role="status" className="mt-4 rounded-xl border border-gold/30 bg-gold-soft p-4 text-sm">
-              <p className="font-semibold text-gold">Done: {done.grant.productName} for {done.grant.phone}</p>
+              <p className="font-semibold text-gold">Done: {done.grant.productName} for {who(done.grant)}</p>
               {done.belowPrice && <p className="mt-1 text-amber-800">Saved at {taka(done.grant.amount)}, below the list price.</p>}
               {done.proUntil && <p className="mt-1">Pro now runs until {dateOnly(done.proUntil)}.</p>}
               {done.accountCreated && (
@@ -236,8 +239,8 @@ export function AdminManualPage() {
               )}
               <p className="mt-2 text-muted">Invoice number</p>
               <p className="select-all break-all font-mono text-ink">{done.grant.invoiceId}</p>
-              <a className="btn btn-primary mt-3 w-full" target="_blank" rel="noreferrer" href={`https://wa.me/88${done.grant.phone}?text=${encodeURIComponent(customerMessage(done.grant, done.proUntil))}`}>
-                Message the customer on WhatsApp
+              <a className="btn btn-primary mt-3 w-full" target="_blank" rel="noreferrer" href={done.grant.phone ? `https://wa.me/88${done.grant.phone}?text=${encodeURIComponent(customerMessage(done.grant, done.proUntil))}` : undefined}>
+                {done.grant.phone ? 'Message the customer on WhatsApp' : 'No mobile on this account: tell the customer by email or Facebook'}
               </a>
             </div>
           )}
@@ -260,7 +263,7 @@ export function AdminManualPage() {
                     <tr key={g.id} className="border-t border-line align-top transition hover:bg-mist/60">
                       <td className="whitespace-nowrap px-2 py-2.5 text-muted">{dhakaTime(g.createdAt)}</td>
                       <td className="px-2 py-2.5">
-                        <div className="font-medium">{g.phone}</div>
+                        <div className="font-medium">{who(g)}</div>
                         <div className="mt-0.5 max-w-[12rem] truncate text-xs text-muted" title={g.note}>{g.note}</div>
                       </td>
                       <td className="px-2 py-2.5">

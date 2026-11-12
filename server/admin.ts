@@ -6,6 +6,7 @@ import { applySeed, listAdminRoles, previewRole, publishBlockers, readCareersSee
 import { publishRole, unpublishRole } from './careers';
 import { bulkHide, listOverrides, setOverride, templateStats } from './templateAdmin';
 import { adminPartnerAction, listPartners, partnerStats, setDailyAlert } from './partnerAdmin';
+import { CV_ACTIONS, cleanQuery, openCustomerCv, recentLookups, searchCustomers, type CvAction } from './customers';
 import { createManualGrant, listManualGrants, type ManualInput } from './manualAccess';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
@@ -149,6 +150,29 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
   if (partner) {
     if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
     return adminPartnerAction(db, partner[1], (await request.json().catch(() => ({}))) as Record<string, unknown>);
+  }
+
+  // Customers: search one account, open its CVs. Every shown account and every CV view/export is logged first.
+  if (pathname === '/api/admin/customers') {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    const q = cleanQuery(new URL(request.url).searchParams.get('q'));
+    if (!q) return json({ ok: false, error: 'query' }, 400);
+    return json({ ok: true, customers: await searchCustomers(db, admin.id, q) });
+  }
+
+  if (pathname === '/api/admin/customers/log') {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    return json({ ok: true, lookups: await recentLookups(db) });
+  }
+
+  const customerCv = /^\/api\/admin\/customers\/([\w-]{1,64})\/cvs\/([\w-]{1,64})$/.exec(pathname);
+  if (customerCv) {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    const params = new URL(request.url).searchParams;
+    const action = params.get('for') ?? 'view';
+    if (!CV_ACTIONS.includes(action as CvAction)) return json({ ok: false, error: 'invalid' }, 400);
+    const cv = await openCustomerCv(db, admin.id, customerCv[1], customerCv[2], action as CvAction, cleanQuery(params.get('q')) ?? '', Date.now());
+    return cv ? json({ ok: true, cv }) : json({ ok: false, error: 'not_found' }, 404);
   }
 
   if (pathname === '/api/admin/manual') {

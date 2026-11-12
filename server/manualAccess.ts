@@ -17,6 +17,8 @@ const MAX_AMOUNT = 100_000;
 
 export interface ManualInput {
   kind?: unknown;
+  /** A Bangladeshi mobile number or an email address. `phone` is the older name and still works. */
+  contact?: unknown;
   phone?: unknown;
   productId?: unknown;
   amount?: unknown;
@@ -31,7 +33,9 @@ export interface ManualGrant {
   createdAt: number;
   adminId: string | null;
   kind: 'paid' | 'free';
+  /** Empty when the account was found by email and has no phone. */
   phone: string;
+  email: string | null;
   productId: string;
   productName: string;
   amount: number;
@@ -46,6 +50,7 @@ type Row = {
   admin_id: string | null;
   kind: 'paid' | 'free';
   phone: string;
+  email?: string | null;
   user_id: string | null;
   product_id: string;
   amount: number;
@@ -61,6 +66,7 @@ const toGrant = (r: Row): ManualGrant => ({
   adminId: r.admin_id,
   kind: r.kind,
   phone: r.phone,
+  email: r.email ?? null,
   productId: r.product_id,
   productName: nameOf(r.product_id),
   amount: r.amount,
@@ -89,8 +95,11 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
   const errors: string[] = [];
   const kind = input.kind === 'paid' || input.kind === 'free' ? input.kind : null;
   if (!kind) errors.push('Choose paid or free.');
-  const phone = normalizePhone(input.phone);
-  if (!phone) errors.push('Enter a Bangladeshi mobile number like 01XXXXXXXXX.');
+  const contact = typeof input.contact === 'string' ? input.contact.trim() : typeof input.phone === 'string' ? input.phone.trim() : '';
+  const byEmail = contact.includes('@');
+  const email = byEmail ? contact.toLowerCase() : null;
+  const phoneInput = byEmail ? null : normalizePhone(contact);
+  if (byEmail ? !/^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/.test(contact) : !phoneInput) errors.push('Enter a Bangladeshi mobile number like 01XXXXXXXXX, or an email address.');
   const productId = typeof input.productId === 'string' ? input.productId.trim() : '';
   const plan = findPlan(productId);
   const product = plan || productId === CART_PRODUCT_ID ? undefined : findProduct(productId);
@@ -106,7 +115,7 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
     reference = typeof input.reference === 'string' ? input.reference.trim().toUpperCase() : '';
     if (!/^[A-Z0-9]{6,40}$/.test(reference)) errors.push('Enter the payment transaction id (6 to 40 letters or digits).');
   }
-  if (errors.length || !kind || !phone || (!plan && !product)) return { ok: false, error: 'invalid', errors };
+  if (errors.length || !kind || (!email && !phoneInput) || (!plan && !product)) return { ok: false, error: 'invalid', errors };
 
   const requestId = typeof input.requestId === 'string' && /^[0-9a-f-]{36}$/i.test(input.requestId) ? input.requestId.toLowerCase() : null;
   const id = requestId ?? crypto.randomUUID();
@@ -122,15 +131,31 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
     return { ok: false, error: 'duplicate', grant: toGrant(earlier) };
   }
 
+  // An email can only belong to an account that already exists (it is created by signing in), so we never make one here.
+  let phone = phoneInput ?? '';
+  let existingUser: unknown = null;
+  let user: { id: string };
+  if (email) {
+    const found = await db.prepare('SELECT id, phone FROM users WHERE email = ?').bind(email).first<{ id: string; phone: string | null }>();
+    if (!found) return { ok: false, error: 'invalid', errors: ['No account has this email yet. Ask the customer to log in once with it, then try again.'] };
+    user = found;
+    existingUser = found;
+    phone = found.phone ?? '';
+  } else {
+    existingUser = await db.prepare('SELECT id FROM users WHERE phone = ?').bind(phoneInput).first();
+    user = await userForPhone(db, phoneInput!, 'bn', now);
+  }
   const invoiceId = newInvoiceId(kind);
-  const existingUser = await db.prepare('SELECT id FROM users WHERE phone = ?').bind(phone).first();
-  const user = await userForPhone(db, phone, 'bn', now);
+  // The email column exists only after migration 0010, so a phone grant does not touch it (it keeps working before that).
   const insert = await db
     .prepare(
-      `INSERT INTO manual_grants (id, created_at, admin_id, kind, phone, user_id, product_id, amount, reference, invoice_id, note)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
+      email
+        ? `INSERT INTO manual_grants (id, created_at, admin_id, kind, phone, user_id, product_id, amount, reference, invoice_id, note, email)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`
+        : `INSERT INTO manual_grants (id, created_at, admin_id, kind, phone, user_id, product_id, amount, reference, invoice_id, note)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
     )
-    .bind(id, now, adminId, kind, phone, user.id, productId, amount, reference, invoiceId, note)
+    .bind(id, now, adminId, kind, phone, user.id, productId, amount, reference, invoiceId, note, ...(email ? [email] : []))
     .run();
 
   if ((insert.meta?.changes ?? 0) === 0) {
@@ -153,7 +178,7 @@ export async function createManualGrant(db: D1Like, adminId: string, input: Manu
 /** Give what the row says: Pro days or an order record. Safe to run again for the same row. */
 async function applyGrant(db: D1Like, row: Row, now: number): Promise<number | null> {
   const plan = findPlan(row.product_id);
-  const order = { invoiceId: row.invoice_id, productId: row.product_id, amount: row.amount, userId: row.user_id, phone: row.phone };
+  const order = { invoiceId: row.invoice_id, productId: row.product_id, amount: row.amount, userId: row.user_id, phone: row.phone || null };
   let proUntil: number | null = null;
   if (plan && row.user_id) {
     const r = await grantPass(db, { ...order, userId: row.user_id }, plan, now);

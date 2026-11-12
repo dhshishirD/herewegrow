@@ -27,6 +27,7 @@ import { ProPage } from './pages/Pro';
 import { AdminDashboardPage } from './pages/AdminDashboard';
 import { AdminCareersPage } from './pages/AdminCareers';
 import { AdminManualPage } from './pages/AdminManual';
+import { AdminCustomersPage } from './pages/AdminCustomers';
 import { AdminPromosPage } from './pages/AdminPromos';
 import { AdminTemplatesPage } from './pages/AdminTemplates';
 import { AdminBlogPage } from './pages/AdminBlog';
@@ -75,6 +76,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/admin/promos': AdminPromosPage,
   '/admin/templates': AdminTemplatesPage,
   '/admin/blog': AdminBlogPage,
+  '/admin/customers': AdminCustomersPage,
   '/admin/manual': AdminManualPage,
   '/admin/partners': AdminPartnersPage,
   '/linkedin-profile-optimization': LinkedInPage,

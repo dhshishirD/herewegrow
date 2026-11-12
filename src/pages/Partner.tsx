@@ -13,6 +13,7 @@ import { partnerApply, partnerErrorText, partnerMe, type PartnerMe } from '../li
 import { checkPromo, PROMO_ERRORS, savedPromo, type PromoCheck } from '../lib/promo';
 import { setPageMeta } from '../lib/seo';
 import { track, tracker } from '../lib/track';
+import { Link } from '../lib/router';
 
 const Workspace = lazy(() => import('./PartnerWorkspace'));
 
@@ -192,6 +193,12 @@ function Landing({ me, reload }: { me: PartnerMe | null; reload: () => Promise<v
     <>
       <PageHead crumbs={[{ href: '/partner', label: { en: 'CV Partner', bn: 'সিভি পার্টনার' } }]} title={title} intro={intro} />
       <section className="wrap max-w-5xl py-10">
+        {user && !user.phone && !me?.applied && (
+          <p role="status" className="mb-8 rounded-xl bg-leaf-soft px-5 py-4 text-leaf-dark">
+            {t({ en: 'Logged in with Google? If you bought or were given a Partner pass with your mobile number, ', bn: 'গুগল দিয়ে লগইন করেছেন? মোবাইল নম্বরে পার্টনার পাস কিনলে বা পেয়ে থাকলে, ' })}
+            <Link href="/account" className="font-semibold underline">{t({ en: 'connect your number here', bn: 'এখানে নম্বর যুক্ত করুন' })}</Link>.
+          </p>
+        )}
         {setup && (
           <p role="status" className="mb-8 rounded-xl bg-leaf-soft px-5 py-4 font-semibold text-leaf-dark">
             {t({ en: 'Your Partner pass is active. Add your name and accept the terms below to open your workspace.', bn: 'আপনার পার্টনার পাস চালু আছে। ওয়ার্কস্পেস খুলতে নিচে নাম লিখে শর্তে টিক দিন।' })}

@@ -1,8 +1,9 @@
 // HTTP handlers for /api/auth/*. Business logic is in auth.ts and google.ts.
 
 import { activePlan } from './templatePerks';
+import { linkPhone } from './link';
 import {
-  clearCookie, createSession, destroySession, getSessionUser, publicUser, requestOtp, sessionCookie,
+  allow, clearCookie, createSession, destroySession, getSessionUser, normalizePhone, publicUser, requestOtp, sessionCookie,
   userForGoogle, userForPhone, verifyOtp, type AuthEnv,
 } from './auth';
 import { googleConfigured, googleFinish, googleStartUrl, safeNext } from './google';
@@ -73,6 +74,27 @@ export async function handleAuth(request: Request, env: AuthEnv, pathname: strin
     const user = await userForPhone(env.DB, phone, body.lang === 'en' ? 'en' : 'bn');
     const sid = await createSession(env, user.id);
     return withCookie(json({ ok: true, user: publicUser(user) }), sessionCookie(sid));
+  }
+
+  // Connect a phone number to the account that is logged in (e.g. made with Google). Needs the SMS code.
+  if (pathname === '/api/auth/link/otp' || pathname === '/api/auth/link/verify') {
+    const me = await getSessionUser(env, request);
+    if (!me) return json({ ok: false, error: 'login' }, 401);
+    if (me.phone) return json({ ok: false, error: 'already' }, 409);
+    if (pathname === '/api/auth/link/otp') {
+      if (!(await allow(env.KV, `rl:link:u:${me.id}`, 5, 3600))) return json({ ok: false, error: 'rate' }, 429);
+      const r = await requestOtp(env, body.phone, clientIp(request));
+      if (!r.ok) return json({ ok: false, error: r.error }, r.error === 'rate' ? 429 : r.error === 'phone' ? 400 : 502);
+      return json({ ok: true });
+    }
+    const phone = await verifyOtp(env, body.phone, body.code);
+    if (!phone || phone !== normalizePhone(body.phone)) return json({ ok: false, error: 'code' }, 400);
+    const r = await linkPhone(env.DB, me, phone);
+    if (!r.ok) return json({ ok: false, error: r.error }, 409);
+    if (r.userId === me.id) return json({ ok: true, merged: false });
+    await destroySession(env, request);
+    const sid = await createSession(env, r.userId);
+    return withCookie(json({ ok: true, merged: true }), sessionCookie(sid));
   }
 
   if (pathname === '/api/auth/logout') {

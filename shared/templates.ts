@@ -4,7 +4,8 @@
 
 import type { Bilingual } from './catalog';
 import { LIBRARY_TEMPLATES } from './templatesLibrary';
-export { LIBRARY_TEMPLATES };
+import { NEW_BADGE_DAYS, NEW_DESIGNED_TEMPLATES } from './templatesNew';
+export { LIBRARY_TEMPLATES, NEW_DESIGNED_TEMPLATES };
 
 export type TemplateStyle = 'ats' | 'designed';
 export type Sector = 'fresher' | 'banking' | 'corporate' | 'teaching' | 'engineering' | 'sales' | 'medical' | 'other';
@@ -28,11 +29,18 @@ export interface Template {
   prof?: string;
   color?: string;
   photo?: boolean;
+  /** Day added (YYYY-MM-DD): shows a "New" badge for 30 days and sets the sitemap lastmod. */
+  added?: string;
+  /** Free bonus files delivered with the purchase (private R2 keys), e.g. the ATS twin and the how-to guide. */
+  bonus?: string[];
+  /** Search title and description written for this template; overrides the generated ones. */
+  meta?: { title: string; description: string };
 }
 
 /** Browse categories, shown as chips on the Templates page. */
 export const CATEGORIES: { id: string; name: Bilingual }[] = [
   { id: 'modern', name: { en: 'Modern', bn: 'মডার্ন' } },
+  { id: 'gulf', name: { en: 'Gulf job', bn: 'গালফ জব' } },
   { id: 'professional', name: { en: 'Professional', bn: 'প্রফেশনাল' } },
   { id: 'simple', name: { en: 'Simple', bn: 'সিম্পল' } },
   { id: 'fresher', name: { en: 'Fresher and student', bn: 'ফ্রেশার ও স্টুডেন্ট' } },
@@ -101,8 +109,8 @@ export const CORE_TEMPLATES: Template[] = [
   { id: 'creative-sales-standard-2page', file: 'Creative_Sales_Standard_2Page.docx', style: 'designed', sector: 'sales', pages: 2, title: { en: 'Sales CV', bn: 'সেলস সিভি' } },
 ];
 
-/** All templates: the core 39 plus the 200 library templates. */
-export const TEMPLATES: Template[] = [...CORE_TEMPLATES, ...LIBRARY_TEMPLATES];
+/** All templates: the 20 newest Designed ones first, then the core 39 and the 200 library templates. */
+export const TEMPLATES: Template[] = [...NEW_DESIGNED_TEMPLATES, ...CORE_TEMPLATES, ...LIBRARY_TEMPLATES];
 
 /** Price of one template, in BDT. */
 export const SINGLE_TEMPLATE_PRICE = 29;
@@ -121,3 +129,15 @@ export function hubOf(t: Template): string {
 export const shownPages = (t: Template) => t.shown ?? t.pages;
 
 export const findTemplate = (id: string) => TEMPLATES.find((t) => t.id === id);
+
+/** Show the "New" badge for 30 days after a template was added. */
+export function isNew(t: Pick<Template, 'added'>, now: number = Date.now()): boolean {
+  if (!t.added) return false;
+  const age = now - Date.parse(`${t.added}T00:00:00Z`);
+  return age >= 0 && age < NEW_BADGE_DAYS * 86400000;
+}
+
+/** Alt text of a template's preview image. Newly imported templates use "<English title> preview". */
+export function previewAlt(t: Pick<Template, 'added' | 'title'>, fallback: string): string {
+  return t.added ? `${t.title.en} preview` : fallback;
+}

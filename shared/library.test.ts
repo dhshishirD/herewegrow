@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { PRODUCTS, findProduct } from './catalog';
 import { quoteCart } from './cart';
-import { CORE_TEMPLATES, LIBRARY_TEMPLATES, SINGLE_TEMPLATE_PRICE, TEMPLATES, hubOf } from './templates';
+import { CORE_TEMPLATES, LIBRARY_TEMPLATES, NEW_DESIGNED_TEMPLATES, SINGLE_TEMPLATE_PRICE, TEMPLATES, hubOf } from './templates';
 
 describe('template library', () => {
-  it('has the 39 core and 200 library templates with unique ids', () => {
+  it('has the 39 core, 200 library and 20 new designed templates with unique ids', () => {
     expect(CORE_TEMPLATES).toHaveLength(39);
     expect(LIBRARY_TEMPLATES).toHaveLength(200);
-    expect(new Set(TEMPLATES.map((t) => t.id)).size).toBe(239);
+    expect(new Set(TEMPLATES.map((t) => t.id)).size).toBe(259);
+    expect(NEW_DESIGNED_TEMPLATES).toHaveLength(20);
   });
   it('uses ids that are valid R2 file names', () => {
     for (const t of TEMPLATES) expect(`${t.id}.docx`).toMatch(/^[a-z0-9-]+\.docx$/);

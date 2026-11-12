@@ -350,6 +350,7 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['CV templates', '/templates'], [t.title.en, `/templates/${t.id}`]]),
       ],
       priority: 0.8,
+      lastmod: t.added,
       images,
       noindex: !shouldIndex(t) || (isVariant(t.id) && !!t.lib),
       canonical: isVariant(t.id) ? canonicalPathFor(t.id) : undefined,

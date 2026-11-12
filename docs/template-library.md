@@ -1,4 +1,4 @@
-# Template library (239 templates)
+# Template library (259 templates)
 
 The Templates page now lists the original 39 ("core") plus 200 library templates.
 
@@ -17,3 +17,8 @@ The Word files and pack zips go to the private R2 bucket (not this repo):
     scripts/upload-library-r2.sh /path/to/hwg-r2-upload
 
 Keys are `<id>.docx` and `pack-lib-<category>.zip`. Until they are uploaded, buying a library template shows the "file not available" message.
+
+## The 20 new Designed CVs (13 Nov 2026)
+- Data: `shared/templatesNew.ts` (one profession each, tier A, listed, indexed, shown first, "New" badge for 30 days from `added`).
+- Files in R2 (bucket root): `<id>.docx` (Designed), `hwg-cv-ats-<profession>-cv.docx` (free ATS twin) and `HWG_How_To_Use_CV_Templates.pdf`. A purchase delivers all three: the product's `files` list holds the bonus files, and a template counts as one Pro download however many files it has.
+- The Gulf CV has its own category chip (`gulf`). Other new templates sit in the closest existing category. Packs (Best 40, Full library) are unchanged for now.

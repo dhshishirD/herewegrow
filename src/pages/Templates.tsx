@@ -3,7 +3,7 @@ import { PRODUCTS, findProduct } from '../../shared/catalog';
 import { presetFor } from '../../shared/templatePresets';
 import { applyOverrides, isHidden } from '../../shared/templateOverrides';
 import { useTemplateList, useTemplateOverrides } from '../lib/templateOverrides';
-import { CATEGORIES, SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, hubOf, shownPages, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
+import { CATEGORIES, SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate, hubOf, isNew, previewAlt, shownPages, type Sector, type Template, type TemplateStyle } from '../../shared/templates';
 import { PackGrid } from '../components/Catalog';
 import { useCheckout } from '../components/Checkout';
 import { PageHead } from '../components/PageHead';
@@ -35,6 +35,11 @@ const STYLE_HINT: Record<TemplateStyle, { en: string; bn: string }> = {
     bn: 'রং, কলাম ও ছবির জায়গাসহ। প্রিন্ট, ইমেইল ও সরাসরি ইন্টারভিউয়ের জন্য সেরা।',
   },
 };
+
+function NewBadge({ className = '' }: { className?: string }) {
+  const { t } = useLang();
+  return <span className={`rounded bg-leaf px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white shadow-sm ${className}`}>{t({ en: 'New', bn: 'নতুন' })}</span>;
+}
 
 function StyleBadge({ style }: { style: TemplateStyle }) {
   const { t } = useLang();
@@ -79,7 +84,7 @@ function TemplateCard({ tpl }: { tpl: Template }) {
           <div className="overflow-hidden rounded-xl bg-mist p-3 ring-1 ring-line transition group-hover:-translate-y-1 group-hover:ring-2 group-hover:ring-leaf">
             <img
               src={thumb(tpl.id)}
-              alt={t(tpl.title)}
+              alt={previewAlt(tpl, t(tpl.title))}
               width={420}
               height={594}
               loading="lazy"
@@ -88,6 +93,7 @@ function TemplateCard({ tpl }: { tpl: Template }) {
             />
           </div>
         </Link>
+        {isNew(tpl) && <NewBadge className="absolute left-2 top-2" />}
         <AddToCart id={tpl.id} compact />
       </div>
       <Link href={`/templates/${tpl.id}`} className="block">
@@ -343,7 +349,7 @@ export function TemplateDetail({ id }: { id: string }) {
       })
     : '';
   useEffect(() => {
-    if (tpl) setPageMeta(title, desc, canonicalPathFor(tpl.id));
+    if (tpl) setPageMeta(tpl.meta?.title ?? title, tpl.meta?.description ?? desc, canonicalPathFor(tpl.id));
   }, [tpl, title, desc]);
   useEffect(() => {
     if (tpl) track('view_template', { id: tpl.id });
@@ -382,7 +388,7 @@ export function TemplateDetail({ id }: { id: string }) {
             <figure key={i}>
               <img
                 src={pageImg(tpl.id, i + 1)}
-                alt={t({ en: `Page ${i + 1} of the ${tpl.title.en}`, bn: `${tpl.title.bn}, পৃষ্ঠা ${num(String(i + 1), 'bn')}` })}
+                alt={tpl.added && i === 0 ? previewAlt(tpl, '') : t({ en: `Page ${i + 1} of the ${tpl.title.en}`, bn: `${tpl.title.bn}, পৃষ্ঠা ${num(String(i + 1), 'bn')}` })}
                 width={900}
                 height={1273}
                 loading={i === 0 ? 'eager' : 'lazy'}
@@ -401,6 +407,7 @@ export function TemplateDetail({ id }: { id: string }) {
         <aside className="order-1 lg:order-2">
           <div className="lg:sticky lg:top-6">
             <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
+              {isNew(tpl) && <NewBadge />}
               <StyleBadge style={tpl.style} />
               <span>{pagesLabel(tpl.pages, t, lang)}</span>
               {sectorName && <span>{t(sectorName)}</span>}
@@ -415,6 +422,7 @@ export function TemplateDetail({ id }: { id: string }) {
                   { en: 'Editable Word file (.docx), opens in Word and Google Docs', bn: 'এডিটযোগ্য Word ফাইল (.docx), Word ও Google Docs-এ খোলে' },
                   { en: 'Sample text to replace with your own details', bn: 'নিজের তথ্য বসানোর জন্য নমুনা লেখা' },
                   { en: 'Download right after you pay', bn: 'পেমেন্টের পরই ডাউনলোড' },
+                  ...(tpl.bonus ? [{ en: 'Free bonus: plain ATS version and a how-to guide (PDF)', bn: 'ফ্রি বোনাস: সাধারণ ATS ভার্সন ও কীভাবে ব্যবহার করবেন গাইড (PDF)' }] : []),
                 ].map((line) => (
                   <li key={line.en} className="flex gap-2.5">
                     <svg aria-hidden="true" viewBox="0 0 16 16" className="mt-1.5 h-3.5 w-3.5 shrink-0 text-leaf"><path d="M2 8.5l3.5 3.5L14 4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>

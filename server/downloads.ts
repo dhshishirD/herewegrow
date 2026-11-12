@@ -54,14 +54,14 @@ export async function handleDownload(request: Request, env: Env): Promise<Respon
   const invalid = page(403, 'This download link is not valid. Use the link from your payment page, or message us on WhatsApp.');
 
   if (!env.FILES || !secret || !inv || !file || !sig || !Number.isFinite(exp)) return invalid;
-  if (!/^[a-z0-9-]+\.(docx|zip)$/.test(file)) return invalid;
+  if (!/^[A-Za-z0-9_-]+\.(docx|zip|pdf)$/.test(file)) return invalid;
   if ((await sign(secret, `${inv}|${file}|${exp}`)) !== sig) return invalid;
   if (exp < Date.now() / 1000) return expired;
 
   const obj = await env.FILES.get(file);
   if (!obj) return page(404, 'This file is not available right now. Message us on WhatsApp and we will send it.');
 
-  const type = file.endsWith('.zip') ? 'application/zip' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  const type = file.endsWith('.zip') ? 'application/zip' : file.endsWith('.pdf') ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
   return new Response(obj.body, {
     headers: {
       'Content-Type': type,

@@ -3,6 +3,7 @@
 // structured data without running JavaScript. Also writes sitemap.xml with image entries.
 // The React app replaces the static content as soon as it loads.
 
+import { BUILDER_FAQ, BUILDER_STEPS, BUILDER_UPDATED, designsByGroup, templateForDesign } from '../shared/builderContent';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
@@ -119,8 +120,26 @@ function pages(): Page[] {
     {
       path: '/builder',
       ...seo('/builder'),
-      body: `<h1>ফ্রি সিভি বিল্ডার</h1><p>সহজ ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি ডিজাইনে সিভি বানান ও PDF ডাউনলোড করুন।</p><ul>${DESIGN_LIST.map((d) => `<li>${esc(d.name.bn)}: ${esc(d.note.bn)}</li>`).join('')}</ul>`,
-      jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow CV builder', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
+      body: `<h1>ফ্রি সিভি বিল্ডার</h1><p>সহজ ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি ডিজাইনে সিভি বানান ও PDF ডাউনলোড করুন। Free online CV maker for Bangladesh.</p><h2>অনলাইনে ফ্রি সিভি বানানোর নিয়ম</h2><ol>${BUILDER_STEPS.map((x) => `<li><strong>${esc(x.title.bn)}</strong> ${esc(x.body.bn)}</li>`).join('')}</ol><h2>আপনার চাকরির ধরন অনুযায়ী সিভি ডিজাইন</h2>${designsByGroup().map((g) => `<h3>${esc(g.name.bn)}</h3><ul>${g.items.map((d) => { const tpl = templateForDesign(d.id); return `<li>${esc(d.name.bn)}: ${esc(d.note.bn)}${tpl ? ` · ${link(`/templates/${tpl}`, 'Word ভার্সন')}` : ''}</li>`; }).join('')}</ul>`).join('')}<p>${link('/templates', 'সিভি টেমপ্লেট')} · ${link('/cv-for-gulf-jobs', 'গালফ সিভি ফরম্যাট')} · ${link('/tools/cv-checker', 'ফ্রি সিভি চেকার')} · ${link('/pro', 'Pro')}</p><h2>সিভি বিল্ডার নিয়ে প্রশ্ন</h2><ul>${BUILDER_FAQ.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><p>সর্বশেষ হালনাগাদ ${BUILDER_UPDATED}</p>`,
+      jsonLd: [
+        {
+          '@type': 'WebApplication',
+          name: 'HereWeGrow CV builder',
+          url: `${SITE}/builder`,
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Any',
+          inLanguage: ['bn', 'en'],
+          description: 'Free online CV maker for Bangladeshi job seekers: pick a design, fill the form or upload an old CV, download PDF or Word.',
+          featureList: ['Bangladeshi CV personal details and photo', 'Upload an old PDF or Word CV to fill the form', `${DESIGN_LIST.length} CV designs`, 'PDF and Word download', 'Works on a phone', 'English and Bangla'],
+          offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' },
+          publisher: { '@type': 'Organization', name: 'HereWeGrow', url: SITE },
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: BUILDER_FAQ.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })),
+        },
+        crumbs([['HereWeGrow', '/'], ['Free tools', '/tools'], ['CV builder', '/builder']]),
+      ],
       priority: 0.9,
     },
     {

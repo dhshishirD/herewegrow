@@ -31,6 +31,9 @@ import {
   type HeadingLang,
 } from '../builder/model';
 import { SummaryHelper } from '../builder/SummaryHelper';
+import { BuilderInfo } from '../builder/BuilderInfo';
+import { DESIGN_GROUPS, templateForDesign } from '../../shared/builderContent';
+import { SINGLE_TEMPLATE_PRICE, TEMPLATES } from '../../shared/templates';
 import { JobTailor, type CopyResult } from '../builder/JobTailor';
 import { addSkill } from '../builder/tailor';
 import { PageHead } from '../components/PageHead';
@@ -240,25 +243,63 @@ function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: bo
   const live = useDeferredValue(state.data);
   const sample = useMemo(sampleCv, []);
   const d = live.name || live.experience.length ? live : sample;
+  const [filter, setFilter] = useState('all');
+  const [more, setMore] = useState(false);
+  const group = DESIGN_GROUPS.find((g) => g.id === filter);
+  const all = DESIGNS.filter((x) => filter === 'all' || (filter === 'free' ? !x.pro : group?.designs.includes(x.id)));
+  const SHOWN = 12;
+  // Collapsed: the first twelve, plus the chosen design if it sits further down, so it is always in view
+  const head = all.slice(0, SHOWN);
+  const chosen = all.find((x) => x.id === state.design);
+  const list = filter === 'all' && !more ? (chosen && !head.includes(chosen) ? [...head, chosen] : head) : all;
+  const chips: { id: string; label: string }[] = [
+    { id: 'all', label: t({ en: `All ${DESIGNS.length}`, bn: `সব ${num(String(DESIGNS.length), 'bn')}টি` }) },
+    { id: 'free', label: t({ en: 'Free', bn: 'ফ্রি' }) },
+    ...DESIGN_GROUPS.map((g) => ({ id: g.id, label: t(g.name) })),
+  ];
+  const tplId = templateForDesign(state.design);
+  const tpl = tplId ? TEMPLATES.find((x) => x.id === tplId) : null;
   return (
-    <div role="radiogroup" aria-label={t({ en: 'Design', bn: 'ডিজাইন' })} className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-3 pt-1">
-      {DESIGNS.map((x) => {
-        const on = state.design === x.id;
-        return (
-          <button key={x.id} type="button" role="radio" aria-checked={on} title={t(x.note)} onClick={() => onPick(x.id)}
-            className={`group shrink-0 snap-start rounded-xl p-1.5 text-left transition ${on ? 'bg-white ring-2 ring-leaf shadow-md' : 'ring-1 ring-line hover:bg-white hover:ring-leaf/50'}`}>
-            <div className="relative">
-              <Thumb d={d} design={x.id} accent={state.accent} headings={state.headings} font={state.font} />
-              {x.pro && (
-                <span className={`absolute right-1.5 top-1.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${pro ? 'bg-leaf text-white' : 'bg-saffron text-ink'}`}>
-                  {pro ? 'Pro ✓' : 'Pro'}
-                </span>
-              )}
-            </div>
-            <p className={`mt-1.5 truncate px-0.5 text-sm font-semibold ${on ? 'text-leaf-dark' : ''}`} style={{ maxWidth: 794 * THUMB }}>{t(x.name)}</p>
+    <div>
+      <div role="group" aria-label={t({ en: 'Filter designs', bn: 'ডিজাইন ফিল্টার' })} className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2 md:flex-wrap md:overflow-visible">
+        {chips.map((c) => (
+          <button key={c.id} type="button" aria-pressed={filter === c.id} onClick={() => { setFilter(c.id); track('design_filter', { group: c.id }); }}
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold ring-1 transition ${filter === c.id ? 'bg-leaf text-white ring-leaf' : 'bg-white text-ink ring-line hover:ring-leaf/50'}`}>
+            {c.label}
           </button>
-        );
-      })}
+        ))}
+      </div>
+      <div role="radiogroup" aria-label={t({ en: 'Design', bn: 'ডিজাইন' })} className="grid grid-cols-[repeat(auto-fill,minmax(7.75rem,1fr))] gap-3 pb-2 pt-2 max-md:flex max-md:snap-x max-md:overflow-x-auto">
+        {list.map((x) => {
+          const on = state.design === x.id;
+          return (
+            <button key={x.id} type="button" role="radio" aria-checked={on} title={t(x.note)} onClick={() => onPick(x.id)}
+              className={`group shrink-0 snap-start justify-self-start rounded-xl p-1.5 text-left transition ${on ? 'bg-white ring-2 ring-leaf shadow-md' : 'ring-1 ring-line hover:bg-white hover:ring-leaf/50'}`}>
+              <div className="relative">
+                <Thumb d={d} design={x.id} accent={state.accent} headings={state.headings} font={state.font} />
+                {x.pro && (
+                  <span className={`absolute right-1.5 top-1.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${pro ? 'bg-leaf text-white' : 'bg-saffron text-ink'}`}>
+                    {pro ? 'Pro ✓' : 'Pro'}
+                  </span>
+                )}
+              </div>
+              <p className={`mt-1.5 truncate px-0.5 text-sm font-semibold ${on ? 'text-leaf-dark' : ''}`} style={{ maxWidth: 794 * THUMB }}>{t(x.name)}</p>
+            </button>
+          );
+        })}
+      </div>
+      {filter === 'all' && all.length > SHOWN && (
+        <button type="button" className="btn btn-quiet mt-2 bg-white !min-h-10 max-md:hidden" onClick={() => setMore((m) => !m)}>
+          {more ? t({ en: 'Show fewer designs', bn: 'কম ডিজাইন দেখুন' }) : t({ en: `Show all ${all.length} designs`, bn: `সব ${num(String(all.length), 'bn')}টি ডিজাইন দেখুন` })}
+        </button>
+      )}
+      {tpl && (
+        <p className="mt-3 text-sm text-muted">
+          {t({ en: 'This look matches our Word template ', bn: 'এই ডিজাইন আমাদের Word টেমপ্লেটের মতো: ' })}
+          <Link href={`/templates/${tpl.id}`} className="font-semibold text-leaf underline underline-offset-4">{t(tpl.title)}</Link>
+          {t({ en: ` (৳${SINGLE_TEMPLATE_PRICE}). Try it free here first.`, bn: ` (৳${num(String(SINGLE_TEMPLATE_PRICE), 'bn')})। আগে এখানে ফ্রি-তে দেখে নিন।` })}
+        </p>
+      )}
     </div>
   );
 }
@@ -599,9 +640,19 @@ export function BuilderPage() {
           </div>
         </div>
 
-        <div className="wrap grid grid-cols-1 gap-8 py-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        {/* Step 1: designs, full width so every design is easy to find */}
+        <section className={`wrap pt-8 ${view !== 'design' ? 'max-md:hidden' : ''}`} aria-labelledby="pick-design">
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 id="pick-design" className="font-display text-2xl font-semibold"><span className="mr-2 text-leaf">1</span>{t({ en: 'Choose a design', bn: 'ডিজাইন বেছে নিন' })}</h2>
+            <p className="text-sm text-muted">{t(DESIGNS.find((x) => x.id === state.design)?.note ?? DESIGNS[0].note)}</p>
+          </div>
+          <DesignGallery state={state} pro={pro} onPick={pickDesign} t={t} />
+        </section>
+
+        <div className="wrap grid grid-cols-1 gap-8 pb-8 pt-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           {/* Form */}
           <div className={`min-w-0 space-y-3 ${view !== 'edit' ? 'max-md:hidden' : ''}`}>
+            <h2 className="font-display text-2xl font-semibold max-md:hidden"><span className="mr-2 text-leaf">2</span>{t({ en: 'Add your details', bn: 'আপনার তথ্য দিন' })}</h2>
             {/* Saved CVs */}
             <section className="rounded-2xl bg-white p-5 ring-1 ring-line max-md:p-4">
               {!user ? (
@@ -879,11 +930,6 @@ export function BuilderPage() {
           <div className={`min-w-0 ${view === 'edit' ? 'max-md:hidden' : ''}`}>
             <div className="md:sticky md:top-36">
               <div className={view === 'download' ? 'max-md:hidden' : ''}>
-              <div className="mb-3 flex items-baseline justify-between gap-3">
-                <p className="font-display text-lg font-semibold">{t({ en: 'Choose a design', bn: 'ডিজাইন বেছে নিন' })}</p>
-                <p className="truncate text-sm text-muted">{t(DESIGNS.find((x) => x.id === state.design)?.note ?? DESIGNS[0].note)}</p>
-              </div>
-              <DesignGallery state={state} pro={pro} onPick={pickDesign} t={t} />
               {/* Phone only: colour, font and margins live here, next to the design, not in the toolbar */}
               <div className="mb-4 space-y-3 rounded-2xl bg-white p-4 ring-1 ring-line md:hidden">
                 <div>
@@ -958,6 +1004,8 @@ export function BuilderPage() {
           </div>
         </div>
       </div>
+
+      <BuilderInfo onPick={(id) => { pickDesign(id as DesignId); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
 
       {gate && (
         <ProGate designName={DESIGNS.find((x) => x.id === state.design)?.name ?? DESIGNS[0].name} onClose={() => setGate(false)}

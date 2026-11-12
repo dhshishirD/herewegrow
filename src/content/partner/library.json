@@ -1,0 +1,116 @@
+{
+  "phrases": {
+    "fresher": [
+      "Completed a final-year project on [topic] and presented findings to a panel of 5 faculty members",
+      "Maintained a CGPA of 3.5+ while leading a university club of 40 members",
+      "Prepared and presented weekly reports in MS Excel and PowerPoint during a 3-month internship",
+      "Organised [event] with 150+ participants and a team of 12 volunteers",
+      "Quick learner who picked up [tool] in two weeks and used it to save 3 hours of weekly work",
+      "Communicated with customers and team members clearly in English and Bangla"
+    ],
+    "nurse": [
+      "Delivered safe, compassionate care to 12 to 15 patients per shift in a [ward/ICU/emergency] unit",
+      "Administered medication and IV fluids on schedule with zero documentation errors",
+      "Monitored vital signs and reported changes to doctors promptly, supporting fast treatment decisions",
+      "Assisted in [number] surgical and emergency procedures under senior doctors",
+      "Followed infection-control protocols and trained new staff on hand hygiene and sterile technique",
+      "Guided patients and families on medicines, diet and discharge care in simple language"
+    ],
+    "teacher": [
+      "Planned and taught [subject] to [number] students of Class [x] to [y], improving average results by [x]%",
+      "Used group work, questions and short quizzes to keep every student involved",
+      "Prepared students for board exams with weekly practice tests and individual feedback",
+      "Communicated progress to parents through monthly meetings and clear reports",
+      "Introduced a weekly speaking club that raised student confidence in English",
+      "Managed a classroom of 40+ students with respect, fairness and clear rules"
+    ],
+    "banker": [
+      "Served 60 to 80 customers a day with accurate transactions and zero escalated complaints",
+      "Opened [number] new accounts and exceeded the branch deposit target by [x]%",
+      "Maintained complete KYC and AML files, passing [number] internal audits with no findings",
+      "Analysed credit files of [number] SME loan applicants and prepared summaries for approval",
+      "Resolved customer issues within [x] hours, improving branch service rating",
+      "Built an Excel tracker that cut weekly reporting time by 50%"
+    ],
+    "merchandiser": [
+      "Managed [number] buyers and [number] orders a year with [x]% on-time shipment",
+      "Prepared costing sheets, TNA and sample plans for every order",
+      "Negotiated with fabric and trims suppliers, saving [x]% on material cost",
+      "Coordinated with production, QC and shipping teams to solve delays within 24 hours",
+      "Reduced sample approval time by [x] days through weekly buyer follow-up",
+      "Tracked orders, LC and shipping documents with zero document mistakes"
+    ],
+    "gulf": [
+      "Worked [8 to 10] hour shifts with full attendance and strict safety discipline",
+      "Operated [machine/vehicle/tool] safely with zero accidents in [x] years",
+      "Followed supervisor instructions precisely and finished tasks on time",
+      "Trained [number] new workers on daily tasks and safety rules",
+      "Ready to join immediately and to work in shifts, with a valid passport",
+      "Basic spoken English and Arabic for workplace communication"
+    ],
+    "driver": [
+      "Drove [150+] km daily on city and highway routes with zero accidents",
+      "Held a valid [light/heavy] driving license and a clean driving record",
+      "Kept the vehicle serviced, clean and fully documented",
+      "Planned efficient routes and always arrived on time for pick-ups and drop-offs",
+      "Handled customers and passengers politely and safely",
+      "Basic vehicle repair: tyre change, oil and battery checks"
+    ],
+    "it": [
+      "Built [number] web applications with React and Node.js used by [x]+ users",
+      "Reduced page load time by [x]% through code splitting and caching",
+      "Wrote unit and integration tests that cut bug reports by [x]%",
+      "Designed REST APIs and SQL databases handling [x] requests a day",
+      "Worked in Agile sprints with designers, QA and product managers",
+      "Reviewed code and mentored [number] junior developers"
+    ],
+    "ngo": [
+      "Supported [number] households across [number] upazilas through [project name]",
+      "Prepared monthly and quarterly donor reports on time and within format",
+      "Trained [number] community volunteers and field staff on [topic]",
+      "Collected and analysed field data using KoBo/ODK and Excel",
+      "Coordinated with local government, partners and community groups",
+      "Monitored activities against the logframe and reported results to the project manager"
+    ],
+    "sales": [
+      "Achieved [x]% of the yearly sales target and ranked in the top [x] of [number] executives",
+      "Opened [number] new retail and corporate accounts in [x] months",
+      "Kept [x]% of key clients through regular visits and fast after-sales support",
+      "Presented products to decision makers and closed deals worth BDT [amount]",
+      "Used CRM and Excel to track leads, follow-ups and monthly targets",
+      "Negotiated prices and terms that protected margin and the client relationship"
+    ],
+    "abroad": [
+      "Graduated with CGPA [x]/4.00 and ranked in the top [x]% of the class",
+      "Collected and analysed data from [number] respondents for a research project",
+      "Co-authored [one] paper/report on [topic]",
+      "Led a volunteer team of [number] students on [project], reaching [number] beneficiaries",
+      "Received [scholarship/award] for academic excellence",
+      "Achieved IELTS [score] (L [x], R [x], W [x], S [x])"
+    ]
+  },
+  "coverLetters": [
+    {
+      "id": "general",
+      "title": { "en": "Cover letter: general", "bn": "কভার লেটার: সাধারণ" },
+      "body": "Dear Hiring Manager,\n\nI am writing to apply for the position of [Job Title] at [Company]. With [x] years of experience in [field], I have [one strong result, for example: handled 60 customers a day with zero complaints].\n\nIn my last role at [Company], I [achievement with a number]. I am confident I can bring the same reliability and results to your team.\n\nMy CV is attached. I would be glad to discuss how I can contribute to [Company]. Thank you for your time.\n\nSincerely,\n[Full Name]\n[Phone] | [Email]"
+    },
+    {
+      "id": "fresher",
+      "title": { "en": "Cover letter: fresher", "bn": "কভার লেটার: ফ্রেশার" },
+      "body": "Dear Hiring Manager,\n\nI am a recent [degree] graduate from [University] and I would like to apply for the position of [Job Title] at [Company].\n\nDuring my studies and my [internship/project], I [one result with a number]. I learn fast, work well in a team, and I am ready to give my best from the first day.\n\nPlease find my CV attached. I would welcome the chance to meet you.\n\nSincerely,\n[Full Name]\n[Phone] | [Email]"
+    }
+  ],
+  "emails": [
+    {
+      "id": "apply-email",
+      "title": { "en": "Email: job application", "bn": "ইমেইল: চাকরির আবেদন" },
+      "body": "Subject: Application for [Job Title] - [Full Name]\n\nDear Hiring Team,\n\nPlease find attached my CV for the position of [Job Title]. I have [x] years of experience in [field] and would be glad to discuss the role.\n\nBest regards,\n[Full Name]\n[Phone]"
+    },
+    {
+      "id": "follow-up",
+      "title": { "en": "Email: follow-up after 1 week", "bn": "ইমেইল: ১ সপ্তাহ পর ফলো-আপ" },
+      "body": "Subject: Following up: [Job Title] application - [Full Name]\n\nDear [Name],\n\nI applied for [Job Title] on [date] and wanted to confirm that you received my CV. I remain very interested and available for an interview at your convenience.\n\nThank you,\n[Full Name]\n[Phone]"
+    }
+  ]
+}

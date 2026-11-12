@@ -63,6 +63,14 @@ export function PrivacyPage() {
             { en: `To have your analytics ID or contact messages deleted, message ${SUPPORT_WHATSAPP_DISPLAY} on WhatsApp.`, bn: `আপনার অ্যানালিটিক্স আইডি বা যোগাযোগের মেসেজ মুছতে হোয়াটসঅ্যাপে ${SUPPORT_WHATSAPP_DISPLAY} নম্বরে জানান।` },
           ],
         },
+        {
+          h: { en: 'CV Partners and their clients', bn: 'CV পার্টনার ও তাদের ক্লায়েন্ট' },
+          p: [
+            { en: 'CV Partners keep their clients\' CV details (name, phone, email, photo, work and education) in a private folder inside the Partner Workspace. Only that partner can open it. We do not collect NID or passport numbers.', bn: 'CV পার্টনাররা তাদের ক্লায়েন্টের CV-র তথ্য (নাম, ফোন, ইমেইল, ছবি, কাজ ও শিক্ষা) পার্টনার ওয়ার্কস্পেসের একটি ব্যক্তিগত ফোল্ডারে রাখেন। শুধু সেই পার্টনারই তা খুলতে পারেন। আমরা NID বা পাসপোর্ট নম্বর নিই না।' },
+            { en: 'If a client fills a partner\'s intake link, the details go only to that partner. We do not use client details for our own marketing and never sell them. The partner can export or delete a client at any time; a client can ask the partner, or us on WhatsApp, to delete their details.', bn: 'ক্লায়েন্ট কোনো পার্টনারের লিংকে ফর্ম পূরণ করলে তথ্য শুধু সেই পার্টনারের কাছে যায়। আমরা ক্লায়েন্টের তথ্য নিজেদের মার্কেটিংয়ে ব্যবহার করি না, কখনো বিক্রিও করি না। পার্টনার যেকোনো সময় ক্লায়েন্টের তথ্য এক্সপোর্ট বা মুছতে পারেন; ক্লায়েন্ট পার্টনারকে বা আমাদের হোয়াটসঅ্যাপে জানিয়ে তথ্য মুছতে পারেন।' },
+            { en: 'To stop abuse we keep the count of CVs delivered, the partner\'s device IDs (at most 2 active devices) and the IP of intake-form submissions for a short time for rate limits.', bn: 'অপব্যবহার ঠেকাতে আমরা ডেলিভার হওয়া CV-র সংখ্যা, পার্টনারের ডিভাইস আইডি (সর্বোচ্চ ২টি সক্রিয় ডিভাইস) এবং ফর্ম জমার সীমা ঠিক রাখতে অল্প সময়ের জন্য আইপি ব্যবহার করি।' },
+          ],
+        },
       ]}
     />
   );

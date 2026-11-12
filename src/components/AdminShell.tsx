@@ -7,6 +7,7 @@ import { Link } from '../lib/router';
 const SECTIONS = [
   { href: '/admin', label: 'Analytics' },
   { href: '/admin/manual', label: 'Manual access' },
+  { href: '/admin/partners', label: 'Partners' },
   { href: '/admin/careers', label: 'Career Hub' },
   { href: '/admin/templates', label: 'Templates' },
   { href: '/admin/promos', label: 'Promo codes' },

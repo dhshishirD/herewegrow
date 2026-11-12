@@ -41,6 +41,10 @@ const LazyBuilder = () => (
   </Suspense>
 );
 
+const PartnerRoute = lazy(() => import('./pages/Partner').then((m) => ({ default: m.PartnerRoute })));
+const PartnerIntake = lazy(() => import('./pages/PartnerIntake').then((m) => ({ default: m.PartnerIntake })));
+const AdminPartnersLazy = lazy(() => import('./pages/AdminPartners').then((m) => ({ default: m.AdminPartnersPage })));
+const AdminPartnersPage = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><AdminPartnersLazy /></Suspense>;
 const Landing = lazy(() => import('./pages/ProfileLanding'));
 const LinkedInPage = () => <Suspense fallback={<div className="lux-band min-h-[70vh]" />}><Landing kind="linkedin" /></Suspense>;
 const Abroad = lazy(() => import('./pages/AbroadLanding'));
@@ -72,6 +76,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/admin/templates': AdminTemplatesPage,
   '/admin/blog': AdminBlogPage,
   '/admin/manual': AdminManualPage,
+  '/admin/partners': AdminPartnersPage,
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
   '/cv-for-gulf-jobs': GulfPage,
@@ -82,6 +87,9 @@ const ROUTES: Record<string, () => JSX.Element> = {
 
 function Page() {
   const path = usePath();
+  if (path === '/partner' || path.startsWith('/partner/')) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerRoute path={path} /></Suspense>;
+  const intake = path.match(/^\/p\/([a-z0-9]{6,16})$/);
+  if (intake) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerIntake key={path} code={intake[1]} /></Suspense>;
   const tpl = path.match(/^\/templates\/([a-z0-9-]+)$/);
   if (tpl) return <TemplateDetail key={path} id={tpl[1]} />;
   const guide = path.match(/^\/guides\/([a-z0-9-]+)$/);

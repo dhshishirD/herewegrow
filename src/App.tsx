@@ -2,9 +2,10 @@ import { lazy, Suspense, useEffect, type JSX } from 'react';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutProvider } from './components/Checkout';
 import { CartProvider } from './lib/cart';
-import { AuthProvider } from './lib/auth';
+import { AuthProvider, useAuth } from './lib/auth';
 import { PageTracker } from './components/PageTracker';
 import { LoginModal } from './components/LoginModal';
+import { LinkPhone } from './components/LinkPhone';
 import { AccountPage } from './pages/Account';
 import { ContactPage, ContactWidget } from './components/ContactWidget';
 import { Footer } from './components/Footer';
@@ -87,6 +88,9 @@ const ROUTES: Record<string, () => JSX.Element> = {
 
 function Page() {
   const path = usePath();
+  const { user, ready } = useAuth();
+  // Everyone ends up on one phone-based account: a login without a phone number (Google) confirms it first.
+  if (ready && user && !user.phone && !user.isAdmin && path !== '/privacy' && path !== '/terms' && !path.startsWith('/payment/') && !/^\/p\/[a-z0-9]{6,16}$/.test(path)) return <LinkPhone gate />;
   if (path === '/partner' || path.startsWith('/partner/')) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerRoute path={path} /></Suspense>;
   const intake = path.match(/^\/p\/([a-z0-9]{6,16})$/);
   if (intake) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerIntake key={path} code={intake[1]} /></Suspense>;

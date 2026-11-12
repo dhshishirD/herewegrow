@@ -94,6 +94,7 @@ function Page() {
 
 export default function App() {
   useEffect(capturePromoParam, []);
+  const path = usePath();
   return (
     <LangProvider>
       <AuthProvider>
@@ -104,7 +105,7 @@ export default function App() {
           Skip to content
         </a>
         <Header />
-        <main id="main" className="pb-20">
+        <main id="main" className={path.startsWith('/builder') ? '' : 'pb-20'}>
           <Page />
         </main>
         <Footer />

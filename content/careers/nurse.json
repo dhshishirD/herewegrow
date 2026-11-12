@@ -1,0 +1,369 @@
+{
+  "slug": "nurse",
+  "title": "Nurse",
+  "title_en": "Nurse",
+  "title_bn": "নার্স (সেবিকা)",
+  "field": "Healthcare & Nursing",
+  "seo_title": "Nurse Career in Bangladesh: Salary, BNMC, Abroad Jobs (2026)",
+  "seo_desc": "Nurse career in Bangladesh: salary ranges, BNMC registration, diploma vs BSc, Gulf and UK routes, skills, CV tips and a free skill test. Checked Nov 2026.",
+  "summary": "A nurse cares for patients, gives treatment ordered by doctors, watches for danger signs and keeps clinical records. Bangladesh has far too few nurses, so demand is real, but pay at home is uneven and many nurses look abroad. This page shows honest pay ranges, the BNMC and degree routes, Gulf and UK licensing steps, the skills employers ask for, a nurse CV guide and a free skill test.",
+  "salary": {
+    "entry": "BDT 12,000 - 35,000 (small private clinics 12,000-16,000; government posts start higher)",
+    "mid": "BDT 30,000 - 60,000 (estimate)",
+    "senior": "BDT 60,000 - 100,000+ (supervisor or specialist; abroad reported 100,000 - 150,000)",
+    "note": "Public pay data is thin. Private hospital pay about 15-16k, new recruits 12-13k (bdnews24, May 2026). Abroad: TBS, Oct 2025. Mid and senior are estimates; confirm the 9th pay scale in the gazette.",
+    "checked": "2026-11-12"
+  },
+  "benefits": [
+    "Jobs in almost every district because every hospital, clinic and health project needs nurses",
+    "Government posts: fixed pay scale, allowances, festival bonuses and pension rules",
+    "Many large private hospitals give meal, transport, housing or training support (ask in the circular)",
+    "A real global market: more than 800,000 foreign-trained nurses worked in OECD countries in 2023",
+    "Clear promotion path: Staff Nurse to Senior Staff Nurse to Supervisor to Nursing Superintendent",
+    "Work with real human meaning, with chances to teach, lead or specialise"
+  ],
+  "companies": [
+    "Government medical college, district and specialised hospitals (Directorate General of Health Services)",
+    "BSMMU and other public specialised hospitals",
+    "Large private hospitals (for example Evercare, Labaid, Popular, Square, United, Ibn Sina; alphabetical, not a ranking)",
+    "Armed forces hospitals and institutional medical centres",
+    "NGOs and development projects (BRAC, icddr,b, UN-funded health projects)",
+    "Nursing institutes and colleges (instructor and lecturer posts)",
+    "Factory medical centres, schools and corporate clinics",
+    "Hospitals abroad: Saudi Arabia, Kuwait, UAE, Qatar, Oman, the UK and other countries"
+  ],
+  "season": [
+    "Hospitals and NGOs hire all year; check BDJobs and hospital pages weekly",
+    "Government circulars come in rounds; keep your BNMC registration, certificates and photos ready before the notice",
+    "BNMC admission tests for nursing courses are held once a year (the 2025-26 test was on 27 Feb 2026)",
+    "Overseas recruitment notices (BOESL and employers) appear irregularly; apply only through official channels"
+  ],
+  "skills": [
+    {
+      "name": "Vital signs, injections, IV cannulation, wound care",
+      "level": "Core",
+      "tag": "clinical"
+    },
+    {
+      "name": "Infection prevention and hand hygiene",
+      "level": "Core",
+      "tag": "safety"
+    },
+    {
+      "name": "Medication safety (right patient, drug, dose, route, time)",
+      "level": "Core",
+      "tag": "safety"
+    },
+    {
+      "name": "Clear nursing records and shift handover",
+      "level": "Core",
+      "tag": "records"
+    },
+    {
+      "name": "Basic and advanced life support (BLS/ACLS)",
+      "level": "Important",
+      "tag": "emergency"
+    },
+    {
+      "name": "One specialty skill (ICU, OT, emergency, dialysis, neonatal)",
+      "level": "Important",
+      "tag": "clinical"
+    },
+    {
+      "name": "Patient and family communication",
+      "level": "Core",
+      "tag": "communication"
+    },
+    {
+      "name": "English for work (speaking, writing, patient talk)",
+      "level": "Important",
+      "tag": "english"
+    },
+    {
+      "name": "Hospital software and electronic records basics",
+      "level": "Growing",
+      "tag": "software"
+    },
+    {
+      "name": "Teamwork, ethics and patient privacy",
+      "level": "Core",
+      "tag": "ethics"
+    }
+  ],
+  "gaps_checklist": [
+    "I can take and record temperature, pulse, blood pressure and breathing rate correctly",
+    "I know the five rights of medication and check them every time",
+    "I can follow the hand hygiene steps and name the key moments to clean hands",
+    "I can give an injection and place an IV cannula safely under supervision",
+    "I can do a sterile dressing without breaking the sterile field",
+    "I know BLS steps and can do CPR on a manikin",
+    "I can write a clear shift note and give a short handover",
+    "I can speak and write simple English with patients and doctors",
+    "My BNMC registration is valid and my CV shows unit, patient load and training"
+  ],
+  "courses": [
+    {
+      "title": "Diploma in Nursing Science and Midwifery and BSc in Nursing admission",
+      "provider": "BNMC",
+      "url": "https://www.bnmc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "clinical"
+    },
+    {
+      "title": "Infection prevention and control online courses",
+      "provider": "OpenWHO (World Health Organization)",
+      "url": "https://openwho.org",
+      "is_affiliate": false,
+      "skill_tag": "safety"
+    },
+    {
+      "title": "OET: English test for healthcare professionals (free sample material)",
+      "provider": "OET",
+      "url": "https://www.oet.com",
+      "is_affiliate": false,
+      "skill_tag": "english"
+    },
+    {
+      "title": "UK nurse registration: test of competence (CBT and OSCE)",
+      "provider": "Nursing and Midwifery Council (UK)",
+      "url": "https://www.nmc.org.uk",
+      "is_affiliate": false,
+      "skill_tag": "emergency"
+    },
+    {
+      "title": "Bangla e-learning courses",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "communication"
+    },
+    {
+      "title": "Health and nursing topics (audit free)",
+      "provider": "Coursera",
+      "url": "https://www.coursera.org",
+      "is_affiliate": false,
+      "skill_tag": "records"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a nurse in Bangladesh?",
+      "a": "It varies widely. Small private clinics often pay about BDT 12,000-16,000 a month, government posts start higher, and reports from nurses working in Saudi Arabia and Kuwait show BDT 1-1.5 lakh a month. These are ranges checked on 12 Nov 2026, not promises. Confirm in the circular."
+    },
+    {
+      "q": "What qualification do I need to become a nurse in Bangladesh?",
+      "a": "A Diploma in Nursing Science and Midwifery (3 years) or a BSc in Nursing (4 years) from a BNMC-approved institute, then BNMC registration. Diploma nurses can upgrade with a 2-year post-basic BSc and later an MSc."
+    },
+    {
+      "q": "Is BNMC registration compulsory?",
+      "a": "Yes for government service and for most employers. Keep your registration valid and renewed, and write the number on your CV."
+    },
+    {
+      "q": "Diploma or BSc nursing: which is better?",
+      "a": "Both lead to registration. Many foreign employers prefer a BSc, and BSc or MSc holders move faster into teaching and leadership. Government and private circulars list which qualification they accept, so check the circular for your target post."
+    },
+    {
+      "q": "Can Bangladeshi nurses work abroad?",
+      "a": "Yes, with the right licence and English. Gulf countries usually need a licensing exam such as Prometric and experience; the UK needs the NMC test of competence and an English test. Use BOESL or a licensed agency and never pay for a guaranteed job."
+    },
+    {
+      "q": "Why do Bangladeshi nurses find overseas jobs hard?",
+      "a": "Licensing exams, English fluency, limited clinical and simulation training, and migration costs are common barriers, and some recruitment drives were reduced or cancelled. Preparing early for the exam and English test improves your chances."
+    },
+    {
+      "q": "What should be in a nurse CV (nurse CV format Bangladesh)?",
+      "a": "BNMC registration, unit and patient load, clinical skills named plainly, training such as BLS, languages, and a short profile. Keep it to one or two pages and never include patient information. Name the file YourName_Nurse_CV.pdf."
+    },
+    {
+      "q": "Is nursing a good career in Bangladesh?",
+      "a": "Demand is strong because of the shortage, and the work is meaningful, but private hospital pay and workload can be hard. A BSc, a specialty and English skills improve pay and options, at home and abroad."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 12 November 2026\n\n> **Quick answer:** A nurse in Bangladesh cares for patients, gives treatment as ordered by doctors, watches for danger signs and keeps clinical records. You need a Diploma in Nursing Science and Midwifery (3 years) or a BSc in Nursing (4 years) and a BNMC registration. Pay at home is uneven: small private clinics often pay BDT 12,000-16,000, government posts start higher, and reports from nurses working in Saudi Arabia and Kuwait show BDT 1-1.5 lakh a month. Bangladesh has far too few nurses, so demand is real, but pay, workload and recognition still need honest planning.\n\n## Nurse career at a glance\n\n| Question | Short answer |\n|---|---|\n| Who hires? | Government hospitals, private hospitals and clinics, NGOs, armed forces hospitals, factories, schools, and hospitals abroad |\n| Minimum education | Diploma in Nursing Science and Midwifery (3 years) or BSc in Nursing (4 years) |\n| Must-have licence | Registration with the Bangladesh Nursing and Midwifery Council (BNMC) |\n| Post-basic routes | Post-basic BSc (2 years after diploma), then MSc in Nursing (2 years) |\n| Biggest strength | Severe shortage of nurses: about 15 doctors, nurses and midwives per 10,000 people against a WHO benchmark of 44.5 |\n| Biggest weakness | Low and unregulated pay in many private hospitals |\n| Global demand | US projects 5% growth for registered nurses, 2024-34 |\n\n## What does a nurse do?\n\nA nurse is the person who is with the patient hour after hour. In a ward that means taking temperature, pulse, blood pressure and breathing rate, giving medicines and injections as prescribed, dressing wounds, helping patients move and eat, teaching the family, and writing clear notes for the next shift. In an ICU or operation theatre the work is more technical: monitors, ventilators, sterile procedures and fast decisions. In a community or NGO setting nurses and midwives do antenatal care, immunisation, health education and referrals.\n\n**A normal shift:** receive handover, check each patient and their charts, give scheduled medicines, respond to calls and emergencies, record everything, and hand over carefully at the end. Shifts can be morning, evening or night, and in many private hospitals they are long.\n\n> Florence Nightingale's famous line from her hospital writings is that a hospital should, above all, do the sick no harm. Safety is the heart of the job.\n\n## Scope: where this career can take you\n\nNursing is not one job. It is a family of careers:\n\n- **Ward and clinical nursing:** staff nurse, senior staff nurse, in-charge, nursing supervisor, nursing superintendent.\n- **Specialist units:** ICU, CCU, emergency, operation theatre, dialysis, paediatric and neonatal care, oncology.\n- **Midwifery and maternal health:** diploma in midwifery, labour room, antenatal and postnatal care.\n- **Community and public health:** upazila health complexes, family planning, immunisation programmes, NGO health projects.\n- **Teaching:** instructor and lecturer at nursing institutes and colleges (needs BSc, post-basic or MSc).\n- **Management and quality:** infection control nurse, quality and patient-safety officer, hospital administration.\n- **Armed forces and institutional nursing:** military hospitals, factory medical centres, schools.\n- **Research and public health:** MSc, MPH, PhD and projects with universities and international bodies.\n- **Abroad:** Gulf countries, the UK and other countries recruit nurses, usually with licensing exams and English tests (see below).\n\n## Salary in Bangladesh (2026 ranges)\n\nNurse pay in Bangladesh has very little reliable public data, so please read these as estimates and check the actual circular.\n\n| Level | Typical experience | Monthly pay (BDT) | Visual |\n|---|---|---|---|\n| Entry | 0-2 years | 12,000 - 35,000 | ██ |\n| Mid | 3-6 years | 30,000 - 60,000 | ████ |\n| Senior | 7+ years, specialist or supervisor | 60,000 - 100,000+ | ███████ |\n| Abroad (reported) | Varies, licence needed | 100,000 - 150,000 | ██████████ |\n\n**How we got these ranges.** The anchors are: (1) a 2026 report from Chattogram where a private hospital nurse said nurses earn about BDT 15,000-16,000 a month and new recruits about BDT 12,000-13,000, with no wage board for private healthcare; (2) government senior staff nurses (10th grade) earned BDT 16,000-38,000 in basic pay under the 2015 scale, and the new 9th national pay scale effective 1 July 2026 reportedly doubles the 10th-grade starting basic to BDT 32,000, paid in phases, so check the official gazette for your grade; (3) Business Standard reporting that overseas Bangladeshi nurses earn about BDT 1-1.5 lakh a month, for example about BDT 98,000 for a staff nurse in Riyadh and offers of BDT 1.27 lakh (BSc) and BDT 1.11 lakh (diploma) from Kuwait in October 2025. Mid and senior ranges are our estimates from the government ladder and larger private hospitals. They are not promises.\n\n### Who pays the most?\n\nIn general, pay rises in this order: small private clinics → large private hospitals → government posts with full allowances → NGOs and international organisations → hospitals in the Gulf and other countries. The biggest jumps come from a BSc or post-basic degree, a critical-care or operation-theatre specialty, English fluency and a foreign licence.\n\n**Global comparison:** in the United States the median pay for registered nurses was USD 93,600 a year in May 2024, and nurse practitioners, nurse midwives and nurse anaesthetists earned a median of USD 132,050 (US Bureau of Labor Statistics). Nursing is valued worldwide.\n\n## Benefits beyond salary\n\n- A job in almost every district, because every hospital, clinic and health project needs nurses.\n- Government posts bring a fixed pay scale, allowances, festival bonuses and pension rules.\n- Many large private hospitals give meal, transport, housing or training support (ask in the circular).\n- A real global market: the OECD had more than 800,000 foreign-trained nurses in 2023, up 69% since 2010.\n- Work with real human meaning: you are present at the most important days of other people's lives.\n\n## Top employers: Bangladesh and the world\n\n**Bangladesh (alphabetical, not a ranking):** public medical college hospitals and district hospitals under the Directorate General of Health Services, BSMMU and other public specialised hospitals, armed forces hospitals, and large private hospitals such as Evercare, Labaid, Popular, Square, United and Ibn Sina. NGOs and development organisations (for example BRAC, icddr,b and UN-funded projects) hire nurses and midwives for community health work. Always check each organisation's own career page.\n\n**World:** public health services such as the NHS in the UK, large hospital systems in the Gulf (Saudi Arabia, Kuwait, the UAE, Qatar, Oman), and healthcare systems in the US, Canada, Australia and Europe. We do not rank foreign hospitals because rankings change and mix many criteria.\n\n**Facts worth knowing:**\n\n- Business Standard reported in 2026 that Saudi Arabia's Ministry of Health sought 500 nurses in October 2024; about 300 applied and 215 were hired as nurse specialists. The requirements were three years of experience, English proficiency and Saudi Prometric certification.\n- The same report says a 2025 government-to-government proposal for 150 nurses was cancelled over Prometric exam problems, and in October 2025 only 15 of 100 candidates were selected in a BOESL recruitment for Kuwait. Signed agreements do not guarantee deployment.\n- BOESL's 2023-24 annual report shows 677 nurses placed in Kuwait's public hospitals by the end of 2024.\n\n## The nurse shortage: why demand is strong\n\n- A Daily Star report (October 2026, via the Asia News Network) says Bangladesh has only about 15 doctors, nurses and midwives per 10,000 people, far below the WHO benchmark of 44.5.\n- Bonik Barta reports that nursing institutions grew to 453 by 2025 (70 public and 383 private), a rise of 421% in 15 years, yet shortages remain. Quality and clinical training are the problem, not only numbers.\n- An ECRL review (October 2025) reports about 20,715 diploma seats and 9,900 BSc seats, with 81% of seats in private institutions. Check any institute's BNMC approval before you pay.\n\n## Skills employers ask for\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Vital signs, injections, IV cannulation, wound care | Daily core work | █████ |\n| Infection prevention and hand hygiene | Patient safety | █████ |\n| Medication safety (right patient, drug, dose, route, time) | Errors can harm | █████ |\n| Clear records and handover | Continuity of care | ████ |\n| Basic and advanced life support (BLS/ACLS) | Emergencies | ████ |\n| Specialty skills (ICU, OT, dialysis, neonatal) | Higher pay and abroad jobs | ████ |\n| English (speaking, writing, patient talk) | Foreign hospitals, exams, international NGOs | ████ |\n| Computer and hospital software basics | Electronic records | ███ |\n| Communication and compassion | Patients and families remember it | █████ |\n\n*Demand bars are our reading of recent circulars and press reports, not a statistical survey.*\n\n## Free ways to build these skills\n\n- **Infection prevention:** free online courses at [openwho.org](https://openwho.org) from the World Health Organization.\n- **General health and nursing topics:** audit free courses on [coursera.org](https://www.coursera.org) and [edx.org](https://www.edx.org); Bangla e-learning on [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **English for work:** the free sample material on [oet.com](https://www.oet.com) shows how healthcare English is tested; practise speaking with a friend every day.\n- **First aid and life support basics:** first-aid training from the Red Crescent or a recognised hospital training unit; ask your institute about BLS certification.\n- **Your own institute:** many hospitals run in-service training; ask for it in writing and add it to your CV.\n\n## Education, registration and study support\n\n| Route | Time | Notes |\n|---|---|---|\n| Diploma in Nursing Science and Midwifery | 3 years | Entry level; BNMC admission test (the 2025-26 test was held on 27 February 2026) |\n| BSc in Nursing | 4 years | Preferred by many foreign employers |\n| Post-basic BSc | 2 years after diploma | Upgrade route for diploma nurses |\n| MSc in Nursing | 2 years | Teaching, leadership and research |\n| Diploma in Midwifery | 3 years | Maternal and newborn care |\n\nRegistration with the [BNMC](https://www.bnmc.gov.bd) is required to work as a nurse in the government service, and a valid, renewed registration is the first thing most employers check.\n\n**Support to explore (check each official site for current rules):**\n\n- **Chevening (UK):** [chevening.org](https://www.chevening.org) funds a master's, including health-related fields.\n- **Commonwealth Scholarships:** [cscuk.fcdo.gov.uk](https://cscuk.fcdo.gov.uk).\n- **DAAD (Germany):** [daad.de](https://www.daad.de/en/).\n- **Fulbright (USA):** through the US Embassy in Dhaka.\n- Some employers pay for licence exams or training in return for a service agreement; read every agreement before you sign.\n\n## Working abroad: what the routes look like\n\n| Destination | Typical steps | Notes |\n|---|---|---|\n| Saudi Arabia and the Gulf | Degree check, English, Prometric exam, licence, experience (often 2-3 years) | Fast first job for many; check employer and agency honesty |\n| UK | NMC test of competence (computer-based test, then practical OSCE), English (IELTS or OET), sponsored visa | A strong route but costly; confirm current NMC rules |\n| USA and Canada | NCLEX-RN or provincial exam, credential check, English | Long timelines |\n\nA 2023 study reported in the same Business Standard feature found that 97.2% of Bangladeshi nurses were willing to work abroad, and experts say language, simulation-lab training and licensing exams held inside Bangladesh would help. **Warning:** never pay a \"visa\" or \"job guarantee\" fee to an individual. Use BOESL, a licensed recruiting agency, or the employer's official portal, and check the agency with the Ministry of Expatriates' Welfare and Overseas Employment.\n\n## Long-term career timeline\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-2 | Staff Nurse / Senior Staff Nurse | Vital signs, medication safety, wound care, documentation |\n| 3-5 | Experienced Nurse / Unit specialist | One specialty (ICU, OT, emergency, dialysis), BLS/ACLS, teaching juniors |\n| 6-9 | Nursing Supervisor / In-charge | Roster, quality, infection control, leadership |\n| 10-14 | Deputy Nursing Superintendent / Educator | Management, training design, audits |\n| 15+ | Nursing Superintendent / Principal / Consultant | Policy, institute leadership, research, mentoring |\n\n*A typical path, not a guarantee. A BSc, post-basic or MSc degree usually opens higher posts faster.*\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years)\n2. **My target title in 3 years:** ___\n3. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n4. **One qualification or licence step this year:** (BSc / post-basic / BLS / OET / Prometric / none yet)\n5. **My weekly study hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 3.\n\n## Career shifts: where nurses move\n\n- **Ward nurse → specialist nurse** (ICU, OT, dialysis, neonatal) for higher pay and abroad jobs.\n- **Nurse → nurse educator** at an institute or college.\n- **Nurse → infection control or quality officer** in a hospital.\n- **Nurse → public health or NGO programme officer** (add an MPH or project skills).\n- **Nurse → hospital administration** (add management training).\n- **Nurse → health content, patient education or health-tech support** (add writing and software skills).\n- **Nurse → nurse practitioner or advanced practice abroad** (needs a master's and local licence).\n\n## Where will you find more peace of mind?\n\nNo job is free of pressure, and we have no survey to rank them. As a general pattern: night shifts, understaffed wards and long private-hospital hours are the hardest conditions; government posts and teaching usually have steadier routines; community and NGO roles have regular hours but may involve travel; working abroad gives higher pay but adds exam, visa and distance stress. Three things protect your peace in any of them: enough rest between shifts, a trusted senior to ask when unsure, and clear written records so you are always safe when questions come. If work is hurting your health, speak to a trusted person and a qualified professional.\n\n## Faith and history: nursing is an honoured service\n\n**The Quran.** \"Whoever saves one life, it is as if he saved all of humanity\" is the message of [Al-Ma'idah 5:32](https://quran.com/5/32). In [Ash-Shu'ara 26:80](https://quran.com/26/80) Prophet Ibrahim (peace be upon him) says that when he is ill, it is Allah who heals him, a reminder that care is our effort and healing is from Allah.\n\n**Hadith.** The Prophet (peace be upon him) said that Allah has not sent down a disease without also sending down its cure (Sahih al-Bukhari 5678). Seeking cure and caring for the sick are therefore part of faith, not outside it.\n\n**History.** Many Muslim sources describe Rufaida Al-Aslamia (Rufaydah bint Sa'ad) of Madinah as the first Muslim nurse. She lived in the time of the Prophet (peace be upon him), and accounts say she set up a tent near the Prophet's mosque to treat the sick and wounded, trained other women in care, and is estimated to have worked about 1,200 years before Florence Nightingale. Historians note that details come from later sources, so we present this as a tradition widely honoured, not as a precise historical record.\n\n## Your contribution to the nation\n\nWith only about 15 doctors, nurses and midwives per 10,000 people, every trained, honest nurse directly improves safe childbirth, infection control, vaccination, emergency response and care for the elderly. The BNMC registrar has also said that international licensing exams held in Bangladesh would remove technical barriers for nurses who want to go abroad, which would raise both skills and remittance income. Strong nursing standards also protect patients from avoidable harm and give families trust in public hospitals.\n\n## Your contribution to the world\n\nNurses are a global profession. Foreign-trained nurses already fill a large share of hospital staffing in many countries, and an ageing world population will keep demand high. A well-trained, English-ready Bangladeshi nurse can serve patients abroad, send remittances home and, with the right licence, come back with advanced skills to teach the next generation.\n\n## If you want to be an entrepreneur\n\n- **Home nursing and elderly care service** for families (check local health licensing rules and keep strict hygiene and records).\n- **Training centre** for caregivers, first aid and BLS (with proper certification partners).\n- **Exam and English preparation** for nurses preparing for Prometric, NMC, OET or IELTS.\n- **Small clinic or diagnostic partnership** (this needs legal registration and a DGHS licence; do not start without it).\n- **Patient education content** in Bangla (safe, accurate, not medical advice).\n\nStart small: three reliable clients, clean records and good reviews are a real business.\n\n## Research opportunities\n\n- Topics with real need in Bangladesh: nurse workload and staffing, patient safety, maternal and newborn care, hospital infection control, nurse migration and retention, rural health services, nursing education quality.\n- Where to learn and publish: nursing colleges and universities, the BNMC and professional associations, and public health research institutes.\n- Path: BSc or post-basic → MSc in Nursing → research assistant or teaching → PhD (the scholarships above fund many of these).\n\n## Whom to follow and learn from\n\nFollow institutions rather than personalities: [BNMC](https://www.bnmc.gov.bd), the [Directorate General of Nursing and Midwifery](https://www.dgnm.gov.bd), the [World Health Organization](https://www.who.int), the [International Council of Nurses](https://www.icn.ch) and the UK [Nursing and Midwifery Council](https://www.nmc.org.uk). On LinkedIn, follow nursing educators and hospital nursing leaders and read what they post about hiring and training.\n\n## Where to find nurse jobs\n\n- Government circulars on the official websites of the Directorate General of Nursing and Midwifery and the Directorate General of Health Services, and national newspaper job pages.\n- [BDJobs](https://www.bdjobs.com) (Medical and health categories) and hospital career pages.\n- NGO and donor project circulars (often on BDJobs and organisation sites).\n- [BOESL](https://www.boesl.gov.bd) and the Ministry of Expatriates' Welfare for government-run overseas recruitment notices.\n- LinkedIn Jobs for private hospitals and international roles.\n\n## Nurse CV: what to write\n\nYour nurse CV should show your ward or unit, your patient load, your clinical skills and your licence, not only duties.\n\n| Weak line | Better line |\n|---|---|\n| Took care of patients in ward. | Cared for 4-6 critical ICU patients per shift; no medication error in 2 years. |\n| Good clinical skills. | IV cannulation, wound care, catheter care, vital monitoring, sterile dressing. |\n| Trained in life support. | Basic Life Support (BLS) certified, [Institute Name], 2024. |\n\n*Use only your real, provable figures. Never put a patient's name or details in your CV.*\n\n**Must-have lines:** BNMC registration number and validity, education and institute, unit experience (ICU, OT, ward, emergency), training and certificates, languages (Bangla and English level).\n\n**Career objective samples:**\n\n- *Fresher:* \"BSc Nursing graduate with BLS training and 12 months of internship in medical and surgical wards, seeking a Staff Nurse position to give safe, compassionate patient care.\"\n- *Experienced:* \"Registered nurse with 5 years in ICU, skilled in ventilated-patient care, medication safety and handover, seeking a Senior Staff Nurse role.\"\n\nBuild yours free with the HereWeGrow CV Builder and the Nurse CV template.\n\n## Common mistakes in applications\n\n- Duties without numbers or unit names.\n- Missing or expired BNMC registration details.\n- \"Good English\" with no proof.\n- Ignoring the circular's documents, age limit or deadline.\n- A file named \"CV final 2\". Use YourName_Nurse_CV.pdf.\n- Paying an unlicensed agent for a \"guaranteed\" job abroad.\n\n## Sources and method\n\nFigures were checked on 12 November 2026 and will be reviewed regularly. Salary ranges for mid and senior levels are estimates because public data is thin.\n\n- US Bureau of Labor Statistics, Occupational Outlook Handbook: [Registered Nurses](https://www.bls.gov/ooh/healthcare/registered-nurses.htm); [Nurse Anesthetists, Nurse Midwives and Nurse Practitioners](https://www.bls.gov/ooh/healthcare/nurse-anesthetists-nurse-midwives-and-nurse-practitioners.htm)\n- The Business Standard: [Can Bangladesh's nurses capitalise on surging global demand?](https://www.tbsnews.net/features/panorama/can-bangladeshs-nurses-capitalise-surging-global-demand-1445416)\n- bdnews24: [Private hospital workers' pay in Chattogram, 1 May 2026](https://bdnews24.com/bangladesh/f9db0c8c38fd)\n- Government pay scale summary: [New pay scale 2026, Teachers Portal blog](https://www.teachers.gov.bd/index.php/blog/details/849702) (a blog summary; confirm in the official gazette)\n- Asia News Network / The Daily Star: [Bangladesh's healthcare system: short of healing hands](https://asianews.network/?p=310399)\n- Bonik Barta: [Nursing education institutes up 421% in 15 years](https://en.bonikbarta.com/bangladesh/2AkGPWv89oGNdGYp)\n- Business Post: [Nursing, a noble career with a multitude of opportunities](https://businesspostbd.com/front/nursing-a-noble-career-with-multitude-of-opportunities-2022-09-17)\n- ECRL Monthly Economic and Business Review, October 2025 (nursing seats)\n- Digi Bangla Tech: [BNMC admission test results, 2025-26](https://digibanglatech.news/169267)\n- BSS: [G2G framework for recruiting Bangladeshi nurses to Saudi Arabia](https://www.bssnews.net/news/334936)\n- Wikipedia and academic accounts of [Rufaida Al-Aslamia](https://en.wikipedia.org/wiki/Rufaida_Al-Aslamia); Quran text at [quran.com](https://quran.com)\n\n**How to cite this page:** Shishir, D. H. (2026). *Nurse career in Bangladesh: salary, BNMC, skills and abroad routes.* HereWeGrow Career Hub. https://herewegrow.pro/careers/nurse\n\n*This guide gives general career information. It does not promise a job, salary or visa. It is not medical, legal or religious legal advice.*\n",
+  "growth_plan": {
+    "y1": "Complete your course and internship, get BNMC registration, master vital signs, medication safety, infection control and documentation, get a BLS certificate, begin daily English practice and build a clear CV.",
+    "y2": "Choose one specialty (ICU, OT, emergency, dialysis or neonatal) and ask for rotation in that unit, collect training certificates, improve English to a working level and decide between a post-basic or BSc upgrade and an overseas route.",
+    "y3": "Move to a senior staff nurse or specialist role, start a post-basic BSc or exam preparation (Prometric, NMC or OET), mentor junior nurses and keep a record of your results for your CV and LinkedIn."
+  },
+  "goal_sheet": [
+    "Week 1-2: Check your BNMC registration, collect certificates and update your CV",
+    "Week 3-4: Review vital signs, medication rights and hand hygiene steps",
+    "Month 2: Complete an infection prevention course and practise sterile dressing steps",
+    "Month 3: Take or renew BLS training and practise CPR on a manikin",
+    "Month 4: Practise shift notes and SBAR handover with a senior",
+    "Month 5: Start daily English practice (10 minutes speaking, 10 minutes writing)",
+    "Month 6: Apply to 10 circulars, prepare 20 interview answers and decide on your next qualification"
+  ],
+  "test": [
+    {
+      "q": "Which set lists the main vital signs?",
+      "options": [
+        "Height, weight, age, name",
+        "Temperature, pulse, respiration, blood pressure",
+        "Hair, skin, nails, eyes",
+        "Appetite, mood, sleep, weight"
+      ],
+      "answer_idx": 1,
+      "explain": "Temperature, pulse, respiration and blood pressure are the core vital signs.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "Before giving a medicine, which check is essential?",
+      "options": [
+        "Only the drug name",
+        "Right patient, drug, dose, route and time",
+        "Whether the patient is awake",
+        "Whether the ward is quiet"
+      ],
+      "answer_idx": 1,
+      "explain": "The five rights of medication prevent most errors.",
+      "skill_tag": "safety"
+    },
+    {
+      "q": "Why do nurses check two patient identifiers before treatment?",
+      "options": [
+        "To save paper",
+        "To confirm the correct patient",
+        "To speed up rounds",
+        "To please visitors"
+      ],
+      "answer_idx": 1,
+      "explain": "Two identifiers (for example name and date of birth) reduce wrong-patient errors.",
+      "skill_tag": "safety"
+    },
+    {
+      "q": "When should you clean your hands in routine ward care?",
+      "options": [
+        "Only at the end of shift",
+        "Before and after touching a patient",
+        "Only if hands look dirty",
+        "Once every hour"
+      ],
+      "answer_idx": 1,
+      "explain": "Hand hygiene before and after patient contact is the most effective infection control habit.",
+      "skill_tag": "safety"
+    },
+    {
+      "q": "What is the safest way to dispose of a used needle?",
+      "options": [
+        "Recap it by hand and keep it",
+        "Put it in a sharps container immediately",
+        "Throw it in the normal bin",
+        "Hand it to a colleague"
+      ],
+      "answer_idx": 1,
+      "explain": "Use a sharps container right away and never recap by hand.",
+      "skill_tag": "safety"
+    },
+    {
+      "q": "A typical resting breathing rate for a healthy adult is about:",
+      "options": [
+        "4-6 per minute",
+        "12-20 per minute",
+        "30-40 per minute",
+        "60-80 per minute"
+      ],
+      "answer_idx": 1,
+      "explain": "Healthy adults usually breathe about 12 to 20 times a minute at rest.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "In adult CPR, the common compression-to-breath ratio with one rescuer is:",
+      "options": [
+        "5:1",
+        "15:2",
+        "30:2",
+        "50:5"
+      ],
+      "answer_idx": 2,
+      "explain": "BLS guidance uses 30 compressions followed by 2 breaths for an adult.",
+      "skill_tag": "emergency"
+    },
+    {
+      "q": "Which action helps prevent pressure ulcers in a bedridden patient?",
+      "options": [
+        "Leave the patient in one position",
+        "Change position regularly and keep skin clean and dry",
+        "Use a rough sheet",
+        "Limit all movement"
+      ],
+      "answer_idx": 1,
+      "explain": "Regular repositioning and skin care reduce pressure injuries.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "You find a medication error you made. What should you do first?",
+      "options": [
+        "Hide it",
+        "Monitor the patient, report to your senior and document honestly",
+        "Change the chart",
+        "Wait to see if anything happens"
+      ],
+      "answer_idx": 1,
+      "explain": "Patient safety and honest reporting come first; hiding errors increases harm.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "What is the purpose of a shift handover?",
+      "options": [
+        "To end the shift early",
+        "To pass key patient information safely to the next nurse",
+        "To blame the previous nurse",
+        "To count visitors"
+      ],
+      "answer_idx": 1,
+      "explain": "A clear handover keeps care continuous and safe.",
+      "skill_tag": "records"
+    },
+    {
+      "q": "Which statement about patient privacy is correct?",
+      "options": [
+        "Share details with any friend",
+        "Share information only with those involved in the care",
+        "Post cases on social media",
+        "Discuss patients in the canteen"
+      ],
+      "answer_idx": 1,
+      "explain": "Patient information is confidential and shared only on a need-to-know basis.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Why is English important for nurses who want to work abroad?",
+      "options": [
+        "It is not important",
+        "Employers and licensing bodies require English for safe communication",
+        "Only for managers",
+        "Only for doctors"
+      ],
+      "answer_idx": 1,
+      "explain": "Foreign employers and exams require working English for patient safety.",
+      "skill_tag": "english"
+    }
+  ],
+  "cv_template_notes": "Use the HWG Nurse CV template. Lead with your BNMC registration number and validity, then your unit and patient load (ICU, OT, ward, emergency, beds per shift). Write clinical skills plainly (IV cannulation, wound care, catheter care, vital monitoring), list training such as BLS/ACLS and any Gulf or NMC exam you have passed. Never put a patient's name or details in your CV. Check the circular: some hospitals want a photo and a BNMC copy attached. Keep it to 1-2 pages. File name: YourName_Nurse_CV.pdf. Use only figures you can prove.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Staff Nurse position advertised on [site/date]. I am a BNMC-registered nurse ([registration no.]) with [X] years of experience in [ward/unit], where I [one provable result, e.g. cared for 4-6 critical patients per shift with no medication error in two years]. I am trained in [BLS/IV cannulation/wound care] and I work carefully with records and handover.\n\nMy CV is attached as a PDF. I would be glad to attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email]",
+  "interview_qs": [
+    "Tell me about yourself. Tip: 45 seconds: qualification, BNMC registration, unit experience, one strength, why this hospital.",
+    "Why did you choose nursing? Tip: Give a real, short reason and link it to patient care, not only salary.",
+    "What are the five rights of medication? Tip: Right patient, drug, dose, route, time; add 'and I double-check'.",
+    "How do you prevent infection on the ward? Tip: Hand hygiene, gloves, sterile technique, sharps safety, waste segregation.",
+    "How do you take and record vital signs? Tip: Name each, normal ranges for adults, and what you do when a value is abnormal.",
+    "What would you do if you gave the wrong dose? Tip: Check the patient, inform the senior, document honestly, follow incident reporting.",
+    "How do you handle a patient who refuses medicine? Tip: Listen, explain risks simply, do not force, inform the doctor and record.",
+    "Describe a busy shift and how you managed priorities. Tip: Use a real example: urgent first, delegate, document.",
+    "What is SBAR? Tip: Situation, Background, Assessment, Recommendation for clear handover.",
+    "How do you give an injection safely? Tip: Verify order, identify patient, prepare, correct site, dispose sharps, document.",
+    "What would you do if a patient collapses? Tip: Check response, call for help, start BLS, use emergency trolley, document.",
+    "How do you communicate with an anxious family? Tip: Calm tone, simple Bangla, honest information, refer to the doctor for medical decisions.",
+    "What do you know about pressure ulcer prevention? Tip: Reposition, skin care, nutrition, special mattress if available.",
+    "How do you maintain patient privacy? Tip: Share only with the care team, no photos or social media, secure records.",
+    "What was your internship or clinical placement experience? Tip: Name units, procedures and what you learned.",
+    "What are your strengths and one area to improve? Tip: Be honest and show a plan, such as daily English practice.",
+    "How do you work with doctors and other nurses? Tip: Respectful, clear communication, speak up for patient safety.",
+    "How do you handle night duty and stress? Tip: Rest plan, teamwork, asking for help, healthy routine.",
+    "Why do you want to work here? Tip: Mention one real fact about the hospital (specialty, size, training).",
+    "What are your plans for the next 3 years? Tip: Specialty skill, BSc or post-basic upgrade, certifications, mentoring juniors.",
+    "What is your expected salary? Tip: Give a range based on market data and your qualification; ask about benefits and training.",
+    "Do you have any questions for us? Tip: Ask about the unit, shift pattern, training and orientation."
+  ]
+}

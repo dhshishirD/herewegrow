@@ -1,7 +1,7 @@
 // CV builder designs: ids, names and which need Pro. No layout code here, so the
 // build-time SEO pages can use it too. The layouts live in src/builder/designs.tsx.
 
-export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite' | 'banner' | 'bars' | 'ascent' | 'care' | 'journey' | 'terminal';
+export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite' | 'banner' | 'bars' | 'ascent' | 'care' | 'journey' | 'terminal' | 'chalk' | 'scholar' | 'ledger' | 'office' | 'spark' | 'support' | 'passport' | 'road' | 'orbit';
 
 export interface DesignInfo {
   id: DesignId;
@@ -31,6 +31,15 @@ export const DESIGN_LIST: DesignInfo[] = [
   { id: 'care', name: { en: 'Care', bn: 'কেয়ার' }, note: { en: 'Teal header with a heartbeat line, for nurses and doctors', bn: 'হার্টবিট লাইনসহ টিল হেডার, নার্স ও ডাক্তারদের জন্য' }, pro: true, photo: true },
   { id: 'journey', name: { en: 'Journey', bn: 'জার্নি' }, note: { en: 'Wave header and a study timeline, for freshers and students', bn: 'ওয়েভ হেডার ও পড়াশোনার টাইমলাইন, ফ্রেশার ও স্টুডেন্টদের জন্য' }, pro: true, photo: true },
   { id: 'terminal', name: { en: 'Terminal', bn: 'টার্মিনাল' }, note: { en: 'Dark terminal-style header and skills panel, for IT and software', bn: 'ডার্ক টার্মিনাল স্টাইল হেডার, আইটি ও সফটওয়্যারের জন্য' }, pro: true, photo: true },
+  { id: 'chalk', name: { en: 'Chalk', bn: 'চক' }, note: { en: 'Chalkboard-green header on cream, for teachers', bn: 'ক্রিমের ওপর চকবোর্ড-সবুজ হেডার, শিক্ষকদের জন্য' }, pro: true, photo: true },
+  { id: 'scholar', name: { en: 'Scholar', bn: 'স্কলার' }, note: { en: 'Deep plum header with rings, for students and higher study', bn: 'গাঢ় প্লাম হেডার, স্টুডেন্ট ও উচ্চশিক্ষার জন্য' }, pro: true, photo: true },
+  { id: 'ledger', name: { en: 'Ledger', bn: 'লেজার' }, note: { en: 'White ledger-grid header with a green rule, for accountants', bn: 'সবুজ রুলসহ সাদা লেজার-গ্রিড হেডার, অ্যাকাউন্ট্যান্টদের জন্য' }, pro: true, photo: true },
+  { id: 'office', name: { en: 'Office', bn: 'অফিস' }, note: { en: 'Teal header with squares and a tinted side panel, for admin roles', bn: 'চৌকো প্যাটার্নসহ টিল হেডার, অ্যাডমিন পদের জন্য' }, pro: true, photo: true },
+  { id: 'spark', name: { en: 'Spark', bn: 'স্পার্ক' }, note: { en: 'Navy header with orange stripes, for sales and marketing', bn: 'কমলা স্ট্রাইপসহ নেভি হেডার, সেলস ও মার্কেটিংয়ের জন্য' }, pro: true, photo: true },
+  { id: 'support', name: { en: 'Support', bn: 'সাপোর্ট' }, note: { en: 'Purple header with chat bubbles, for customer service', bn: 'চ্যাট বাবলসহ পার্পল হেডার, কাস্টমার সার্ভিসের জন্য' }, pro: true, photo: true },
+  { id: 'passport', name: { en: 'Passport', bn: 'পাসপোর্ট' }, note: { en: 'Green header and a passport-style details card, for Gulf jobs', bn: 'পাসপোর্ট স্টাইল তথ্য কার্ডসহ সবুজ হেডার, গালফ জবের জন্য' }, pro: true, photo: true },
+  { id: 'road', name: { en: 'Road', bn: 'রোড' }, note: { en: 'Dark header with a yellow road line, for drivers', bn: 'হলুদ রোড লাইনসহ ডার্ক হেডার, ড্রাইভারদের জন্য' }, pro: true, photo: true },
+  { id: 'orbit', name: { en: 'Orbit', bn: 'অরবিট' }, note: { en: 'Cream page with coral circles, for merchandisers', bn: 'কোরাল সার্কেলসহ ক্রিম পেজ, মার্চেন্ডাইজারদের জন্য' }, pro: true, photo: true },
 ];
 
 export const DESIGN_IDS = DESIGN_LIST.map((d) => d.id);

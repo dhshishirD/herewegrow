@@ -16,6 +16,15 @@ export const TEMPLATE_PRESETS: Record<string, TemplatePreset> = {
   'hwg-cv-designed-nurse-cv': { design: 'care', accent: '#0f766e' },
   'hwg-cv-designed-banker-cv': { design: 'ascent', accent: '#1e3a5f' },
   'hwg-cv-designed-it-software-cv': { design: 'terminal', accent: '#0f766e' },
+  'hwg-cv-designed-teacher-cv': { design: 'chalk', accent: '#0e3b2e' },
+  'hwg-cv-designed-student-higher-study-cv': { design: 'scholar', accent: '#7c2d12' },
+  'hwg-cv-designed-accountant-cv': { design: 'ledger', accent: '#0f766e' },
+  'hwg-cv-designed-admin-officer-cv': { design: 'office', accent: '#0f766e' },
+  'hwg-cv-designed-sales-marketing-cv': { design: 'spark', accent: '#1e3a5f' },
+  'hwg-cv-designed-customer-service-cv': { design: 'support', accent: '#6d28d9' },
+  'hwg-cv-designed-gulf-job-cv': { design: 'passport', accent: '#0e3b2e' },
+  'hwg-cv-designed-driver-cv': { design: 'road', accent: '#334155' },
+  'hwg-cv-designed-merchandiser-cv': { design: 'orbit', accent: '#7c2d12' },
 };
 
 export const presetFor = (templateId: string | null | undefined) => (templateId ? TEMPLATE_PRESETS[templateId] ?? null : null);

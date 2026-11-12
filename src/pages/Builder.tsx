@@ -1,6 +1,8 @@
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
 import { CV_FONTS, ensureAllFonts, ensureFont, findFont } from '../builder/fonts';
+import { useHistoryState } from '../builder/history';
+import { builderHistoryShape } from '../builder/historyShape';
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
 import {
   ACCENTS,
@@ -91,6 +93,21 @@ function Section({ title, open, onToggle, children, count, extra }: { title: Rea
       </div>
       {open && <div className="space-y-4 border-t border-line px-5 pb-5 pt-4">{children}</div>}
     </section>
+  );
+}
+
+/** Undo and redo for the whole CV. Also Ctrl+Z and Ctrl+Y (Cmd on Mac). */
+function UndoRedo({ canUndo, canRedo, onUndo, onRedo, t }: { canUndo: boolean; canRedo: boolean; onUndo: () => void; onRedo: () => void; t: T }) {
+  const cls = 'btn btn-quiet bg-white !min-h-10 !px-3 disabled:opacity-40';
+  return (
+    <div className="flex items-center gap-1.5" role="group" aria-label={t({ en: 'Undo and redo', bn: 'আনডু ও রিডু' })}>
+      <button type="button" onClick={onUndo} disabled={!canUndo} className={cls} title={t({ en: 'Undo (Ctrl+Z)', bn: 'আনডু (Ctrl+Z)' })}>
+        <span aria-hidden="true">↶ </span>{t({ en: 'Undo', bn: 'আনডু' })}
+      </button>
+      <button type="button" onClick={onRedo} disabled={!canRedo} className={cls} title={t({ en: 'Redo (Ctrl+Y)', bn: 'রিডু (Ctrl+Y)' })}>
+        <span aria-hidden="true">↷ </span>{t({ en: 'Redo', bn: 'রিডু' })}
+      </button>
+    </div>
   );
 }
 
@@ -317,14 +334,14 @@ export function BuilderPage() {
   const abroadId = useRef(new URLSearchParams(window.location.search).get('preset')).current;
   // /builder?client=<id>: a Partner's client folder. The CV loads from and autosaves to that folder, never to this device's own draft.
   const clientId = useRef(new URLSearchParams(window.location.search).get('client')).current;
-  const [state, setState] = useState<BuilderState>(() => {
+  const [state, setState, hist] = useHistoryState<BuilderState>(() => {
     if (clientId) return { data: emptyCv(), design: 'classic' as DesignId, accent: ACCENTS[0] };
     const base = loadState() ?? { data: emptyCv(), design: 'classic' as DesignId, accent: ACCENTS[0] };
     const p = presetFor(tplId);
     if (p) return { ...base, design: p.design, accent: p.accent };
     const a = abroadPreset(abroadId);
     return a ? { ...base, design: a.design, accent: a.accent, data: { ...base.data, showPersonal: a.showPersonal } } : base;
-  });
+  }, builderHistoryShape);
   const [open, setOpen] = useState<string>('import');
   // Phones show one step at a time (fill the form, pick a design, download); wide screens show form and preview together
   const [view, setView] = useState<'edit' | 'design' | 'download'>('edit');
@@ -376,7 +393,7 @@ export function BuilderPage() {
         ? { ...st, headings: 'en', design: st.design ?? 'classic', accent: st.accent ?? ACCENTS[0], data: normalise(st.data) }
         : { data: { ...emptyCv(), name: c.value.name }, design: 'classic', accent: ACCENTS[0] };
       savedJson.current = JSON.stringify(next);
-      setState(next);
+      hist.reset(next);
       setClient({ name: c.value.name, ready: true, error: '' });
     })();
   }, []);
@@ -444,6 +461,35 @@ export function BuilderPage() {
   const score = useMemo(() => analyzeCv(cvText(d), { fromPdf: false, splitRowShare: 0 }), [d]);
   const set = (patch: Partial<CvData>) => setState((s) => ({ ...s, data: { ...s.data, ...patch } }));
 
+  // "Removed. Undo" message for 6 seconds after something is deleted or cleared
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const notify = (msg: string) => {
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 6000);
+  };
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
+  // Ctrl+Z, Ctrl+Y and Ctrl+Shift+Z (Cmd on Mac) undo and redo the whole CV, also while typing in a CV field
+  const { undo, redo } = hist;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.isComposing || e.altKey || !(e.ctrlKey || e.metaKey)) return;
+      const k = e.key.toLowerCase();
+      const isUndo = k === 'z' && !e.shiftKey;
+      const isRedo = k === 'y' || (k === 'z' && e.shiftKey);
+      if (!isUndo && !isRedo) return;
+      // Boxes that are not part of the CV (job ad, summary helper, new section name) keep the browser's own undo
+      if ((e.target as HTMLElement | null)?.closest?.('[data-native-undo]')) return;
+      e.preventDefault();
+      if (isUndo) undo();
+      else redo();
+      setToast(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [undo, redo]);
+
   // Funnel: opened the builder, then typed or imported something (once each)
   const startedRef = useRef(false);
   const initialData = useRef(JSON.stringify(state.data));
@@ -459,7 +505,11 @@ export function BuilderPage() {
   const toggle = (id: string) => setOpen((cur) => (cur === id ? '' : id));
   const upd = <K extends ListKey>(key: K, id: string, patch: Partial<CvData[K][number]>) =>
     set({ [key]: (d[key] as { id: string }[]).map((x) => (x.id === id ? { ...x, ...patch } : x)) } as Partial<CvData>);
-  const del = (key: ListKey, id: string) => set({ [key]: (d[key] as { id: string }[]).filter((x) => x.id !== id) } as Partial<CvData>);
+  const removedMsg = () => t({ en: 'Removed.', bn: 'মুছে গেছে।' });
+  const del = (key: ListKey, id: string) => {
+    set({ [key]: (d[key] as { id: string }[]).filter((x) => x.id !== id) } as Partial<CvData>);
+    notify(removedMsg());
+  };
   const mv = (key: ListKey, i: number, dir: -1 | 1) => set({ [key]: move(d[key] as { id: string }[], i, dir) } as Partial<CvData>);
 
   // Custom sections
@@ -473,7 +523,10 @@ export function BuilderPage() {
     setOpen(`custom:${id}`);
     setNewSection('');
   };
-  const removeSection = (id: string) => set({ custom: d.custom.filter((c) => c.id !== id), order: d.order.filter((k) => k !== `custom:${id}`) });
+  const removeSection = (id: string) => {
+    set({ custom: d.custom.filter((c) => c.id !== id), order: d.order.filter((k) => k !== `custom:${id}`) });
+    notify(removedMsg());
+  };
 
   const sectionName = (k: string) => {
     const names: Record<string, { en: string; bn: string }> = {
@@ -503,6 +556,7 @@ export function BuilderPage() {
       const hasContent = d.name || d.experience.length || d.education.length;
       if (hasContent && !window.confirm(t({ en: 'Replace what you have typed with the uploaded CV?', bn: 'আপনার লেখা তথ্যের জায়গায় আপলোড করা সিভি বসাবেন?' }))) return;
       setState((s) => ({ ...s, data: normalise({ ...data, photo: s.data.photo }) }));
+      if (hasContent) notify(t({ en: 'Your earlier CV was replaced.', bn: 'আগের সিভির জায়গায় নতুন তথ্য বসেছে।' }));
       const counts = found.filter((f) => f.includes(':')).map((f) => f.split(':')).filter(([, n]) => /^\d+$/.test(n));
       const parts = [
         found.includes('contact') ? t({ en: 'contact details', bn: 'যোগাযোগের তথ্য' }) : '',
@@ -603,7 +657,7 @@ export function BuilderPage() {
     if (!cvId && !isEmpty && !window.confirm(t({ en: 'Open this CV? The one on screen is not saved to your account and will be replaced.', bn: 'এই সিভি খুলবেন? স্ক্রিনের সিভিটি অ্যাকাউন্টে সেভ করা নেই, এটি বদলে যাবে।' }))) return;
     const r = await loadCv(id);
     if (r.ok && r.value?.data) {
-      setState({ ...r.value, headings: 'en', design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
+      hist.reset({ ...r.value, headings: 'en', design: r.value.design ?? 'classic', accent: r.value.accent ?? ACCENTS[0], data: normalise(r.value.data) });
       setCvId(id);
       setSync('saved');
     } else setSync('error');
@@ -613,6 +667,7 @@ export function BuilderPage() {
     setCvId(null);
     setState((s) => ({ ...s, data: emptyCv() }));
     setSync('idle');
+    notify(t({ en: 'New CV started.', bn: 'নতুন সিভি শুরু হয়েছে।' }));
   };
   const removeSaved = async (c: CvSummary) => {
     if (!window.confirm(t({ en: `Delete “${c.title}” from your account?`, bn: `“${c.title}” অ্যাকাউন্ট থেকে মুছবেন?` }))) return;
@@ -696,8 +751,14 @@ export function BuilderPage() {
                 </button>
               ))}
             </div>
+            {view !== 'download' && (
+              <div className="flex justify-end pb-2">
+                <UndoRedo canUndo={hist.canUndo} canRedo={hist.canRedo} onUndo={hist.undo} onRedo={hist.redo} t={t} />
+              </div>
+            )}
           </div>
           <div className="wrap flex flex-wrap items-center gap-3 py-3 max-md:hidden">
+            <UndoRedo canUndo={hist.canUndo} canRedo={hist.canRedo} onUndo={hist.undo} onRedo={hist.redo} t={t} />
             <FontPicker value={state.font} onChange={(font) => setState((s) => ({ ...s, font }))} t={t} />
             <div role="radiogroup" aria-label={t({ en: 'Colour', bn: 'রং' })} className="flex gap-1.5">
               {ACCENTS.map((c) => (
@@ -818,7 +879,7 @@ export function BuilderPage() {
                   {d.photo ? t({ en: 'Change photo', bn: 'ছবি বদলান' }) : t({ en: 'Add photo (optional)', bn: 'ছবি দিন (ঐচ্ছিক)' })}
                   <input type="file" accept="image/*" className="sr-only" onChange={async (e) => { const f = e.target.files?.[0]; if (f) set({ photo: await photoToDataUrl(f) }); }} />
                 </label>
-                {d.photo && <button type="button" className="text-sm text-alert underline" onClick={() => set({ photo: '' })}>{t({ en: 'Remove photo', bn: 'ছবি মুছুন' })}</button>}
+                {d.photo && <button type="button" className="text-sm text-alert underline" onClick={() => { set({ photo: '' }); notify(removedMsg()); }}>{t({ en: 'Remove photo', bn: 'ছবি মুছুন' })}</button>}
               </div>
               <p className="text-sm text-muted">{t({ en: `The photo shows in ${DESIGNS.filter((x) => x.photo).map((x) => x.name.en).join(', ')}. Leave it out for online portals.`, bn: `ছবি দেখায় ${DESIGNS.filter((x) => x.photo).map((x) => x.name.bn).join(', ')} ডিজাইনে। অনলাইন পোর্টালের জন্য ছবি না দেওয়াই ভালো।` })}</p>
             </Section>
@@ -900,7 +961,7 @@ export function BuilderPage() {
                 extra={<button type="button" className="text-sm text-alert underline" onClick={() => { if (window.confirm(t({ en: `Delete the “${c.title}” section?`, bn: `“${c.title}” অংশটি মুছবেন?` }))) removeSection(c.id); }}>{t({ en: 'Delete', bn: 'মুছুন' })}</button>}>
                 <Field label={t({ en: 'Section title', bn: 'অংশের শিরোনাম' })} value={c.title} onChange={(v) => updSection(c.id, { title: v })} />
                 {c.items.map((it, i) => (
-                  <ItemBox key={it.id} t={t} title={it.title || t({ en: 'New entry', bn: 'নতুন এন্ট্রি' })} onRemove={() => updSection(c.id, { items: c.items.filter((x) => x.id !== it.id) })}
+                  <ItemBox key={it.id} t={t} title={it.title || t({ en: 'New entry', bn: 'নতুন এন্ট্রি' })} onRemove={() => { updSection(c.id, { items: c.items.filter((x) => x.id !== it.id) }); notify(removedMsg()); }}
                     onUp={i > 0 ? () => updSection(c.id, { items: move(c.items, i, -1) }) : undefined} onDown={i < c.items.length - 1 ? () => updSection(c.id, { items: move(c.items, i, 1) }) : undefined}>
                     <div className="grid gap-3 sm:grid-cols-2">
                       <Field label={t({ en: 'Title', bn: 'শিরোনাম' })} value={it.title} onChange={(v) => updItem(c.id, it.id, { title: v })} />
@@ -926,7 +987,7 @@ export function BuilderPage() {
                 ))}
               </div>
               <form className="mt-3 flex gap-2" onSubmit={(e) => { e.preventDefault(); addSection(newSection); }}>
-                <input className="field" value={newSection} onChange={(e) => setNewSection(e.target.value)} placeholder={t({ en: 'Or name your own, e.g. Research', bn: 'অথবা নিজের নাম দিন, যেমন Research' })} aria-label={t({ en: 'New section name', bn: 'নতুন অংশের নাম' })} />
+                <input className="field" data-native-undo value={newSection} onChange={(e) => setNewSection(e.target.value)} placeholder={t({ en: 'Or name your own, e.g. Research', bn: 'অথবা নিজের নাম দিন, যেমন Research' })} aria-label={t({ en: 'New section name', bn: 'নতুন অংশের নাম' })} />
                 <button type="submit" className="btn btn-quiet shrink-0 bg-white" disabled={!newSection.trim()}>{t({ en: 'Add', bn: 'যোগ করুন' })}</button>
               </form>
             </section>
@@ -997,7 +1058,7 @@ export function BuilderPage() {
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm text-muted">
               <span>{t({ en: 'Saved on this device as you type.', bn: 'লেখার সাথে সাথে এই ডিভাইসে সেভ হচ্ছে।' })}</span>
-              <button type="button" className="text-alert underline underline-offset-4" onClick={() => { if (window.confirm(t({ en: 'Clear everything and start again?', bn: 'সব মুছে নতুন করে শুরু করবেন?' }))) set(emptyCv()); }}>
+              <button type="button" className="text-alert underline underline-offset-4" onClick={() => { if (window.confirm(t({ en: 'Clear everything and start again?', bn: 'সব মুছে নতুন করে শুরু করবেন?' }))) { set(emptyCv()); notify(t({ en: 'Everything cleared.', bn: 'সব মুছে গেছে।' })); } }}>
                 {t({ en: 'Start again', bn: 'নতুন করে শুরু' })}
               </button>
             </div>
@@ -1087,6 +1148,15 @@ export function BuilderPage() {
       {gate && (
         <ProGate designName={DESIGNS.find((x) => x.id === state.design)?.name ?? DESIGNS[0].name} onClose={() => setGate(false)}
           onUseFree={() => { setGate(false); pickDesign('classic'); setTimeout(printNow, 150); }} />
+      )}
+
+      {toast && (
+        <div role="status" className="no-print fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full bg-ink px-5 py-3 text-sm text-white shadow-lg">
+          <span>{toast}</span>
+          <button type="button" className="min-h-8 rounded-full bg-white px-4 font-semibold text-ink" onClick={() => { hist.undo(); setToast(null); }}>
+            {t({ en: 'Undo', bn: 'আনডু' })}
+          </button>
+        </div>
       )}
 
       {/* What gets printed: the CV alone, at full A4 size */}

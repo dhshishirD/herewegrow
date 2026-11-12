@@ -28,7 +28,7 @@ export function SummaryHelper({ d, t, onUse }: { d: CvData; t: T; onUse: (text: 
   const input = (id: keyof SummaryInput, label: string, placeholder: string) => (
     <label className="block">
       <span className="label text-sm">{label}</span>
-      <input className="field" value={form[id]} placeholder={placeholder} onChange={(e) => set({ [id]: e.target.value })} />
+      <input className="field" data-native-undo value={form[id]} placeholder={placeholder} onChange={(e) => set({ [id]: e.target.value })} />
     </label>
   );
 

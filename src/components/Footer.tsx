@@ -1,5 +1,5 @@
 import { SUPPORT_WHATSAPP_DISPLAY } from '../../shared/catalog';
-import { LINK_GROUPS } from './navLinks';
+import { LINK_GROUPS, SOCIAL_LINKS } from './navLinks';
 import { useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { whatsappLink } from '../lib/whatsapp';
@@ -13,7 +13,7 @@ export function Footer() {
 
   return (
     <footer className="site-footer bg-leaf-dark text-white/90">
-      <div className="wrap grid gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)]">
+      <div className="wrap grid gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.9fr_repeat(4,1fr)]">
         <div className="sm:col-span-2 lg:col-span-1">
           <p className="flex items-center gap-2.5">
             <img src="/logo-mark.svg" alt="" width={36} height={36} className="h-9 w-9 rounded-lg ring-1 ring-white/20" />
@@ -31,6 +31,14 @@ export function Footer() {
             WhatsApp {SUPPORT_WHATSAPP_DISPLAY}
           </a>
           <p className="mt-3 text-sm text-white/70">{t({ en: 'Every day, 9am to 11pm', bn: 'প্রতিদিন সকাল ৯টা থেকে রাত ১১টা' })}</p>
+          <ul className="mt-5 flex flex-wrap gap-1.5" aria-label={t({ en: 'Follow us', bn: 'আমাদের ফলো করুন' })}>
+            {SOCIAL_LINKS.map((s) => (
+              <li key={s.name}>
+                <a className="inline-flex min-h-10 items-center rounded-full border border-white/25 px-3.5 text-sm font-medium text-white hover:bg-white/10" href={s.href} target="_blank" rel="noreferrer noopener"
+                  onClick={() => track('social_click', { network: s.name })}>{s.name}</a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {LINK_GROUPS.map((g) => (

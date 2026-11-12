@@ -40,6 +40,7 @@ export const LINK_GROUPS: LinkGroup[] = [
       { href: '/services', label: { en: 'CV writing and review', bn: 'সিভি রাইটিং ও রিভিউ' } },
       { href: '/linkedin-profile-optimization', label: { en: 'LinkedIn profile', bn: 'লিংকডইন প্রোফাইল' } },
       { href: '/bdjobs-profile-optimization', label: { en: 'BDJobs profile setup', bn: 'বিডিজবস প্রোফাইল সেটআপ' } },
+      { href: '/partner', label: { en: 'CV Partner (for CV writers)', bn: 'সিভি পার্টনার (রাইটারদের জন্য)' } },
     ],
   },
   {
@@ -59,4 +60,11 @@ export const LINK_GROUPS: LinkGroup[] = [
       { href: '/contact', label: { en: 'Contact', bn: 'যোগাযোগ' } },
     ],
   },
+];
+
+/** Official social pages, shown in the footer. Add new ones here. */
+export const SOCIAL_LINKS: { name: string; href: string }[] = [
+  { name: 'Facebook', href: 'https://www.facebook.com/share/1FQxPBWXoK/' },
+  { name: 'Instagram', href: 'https://www.instagram.com/herewegrowpro' },
+  { name: 'YouTube', href: 'https://youtube.com/@herewegrowpro' },
 ];

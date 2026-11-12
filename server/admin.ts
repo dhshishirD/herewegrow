@@ -4,6 +4,7 @@ import { CONTACT_STATUSES, countNewContacts, listContacts, MAX_NOTE, setContactS
 import { getSessionUser, type AuthEnv, type User } from './auth';
 import { publishRole, unpublishRole } from './careers';
 import { bulkHide, listOverrides, setOverride, templateStats } from './templateAdmin';
+import { adminPartnerAction, listPartners, partnerStats, setDailyAlert } from './partnerAdmin';
 import { createManualGrant, listManualGrants, type ManualInput } from './manualAccess';
 import { isAllowedOrigin, json } from './paymently';
 import { bulkCreatePromos, createPromo, listPromos, setPromoActive, type PromoInput } from './promo';
@@ -115,6 +116,21 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
     const live = await db.prepare("SELECT 1 AS live FROM roles WHERE id = ? AND status = 'published'").bind(saved.id).first();
     if (live) await publishRole(env, saved.id);
     return json({ ok: true, id: saved.id, created: saved.created, slug: checked.pack.slug });
+  }
+
+  if (pathname === '/api/admin/partners') {
+    if (request.method === 'GET') return json({ ok: true, partners: await listPartners(db), stats: await partnerStats(db) });
+    if (request.method === 'POST') {
+      const b = (await request.json().catch(() => ({}))) as { dailyAlert?: unknown };
+      return (await setDailyAlert(db, b.dailyAlert)) ? json({ ok: true }) : json({ ok: false, error: 'invalid' }, 400);
+    }
+    return json({ ok: false, error: 'method' }, 405);
+  }
+
+  const partner = /^\/api\/admin\/partners\/([\w-]{1,64})$/.exec(pathname);
+  if (partner) {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    return adminPartnerAction(db, partner[1], (await request.json().catch(() => ({}))) as Record<string, unknown>);
   }
 
   if (pathname === '/api/admin/manual') {

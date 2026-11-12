@@ -3,7 +3,7 @@
 
 import { CART_PRODUCT_ID, cartProduct, quoteCart } from '../shared/cart';
 import { findProduct } from '../shared/catalog';
-import { findPlan, templatePrice, type Plan } from '../shared/plans';
+import { findPlan, isPartnerPlan, templatePrice, type Plan } from '../shared/plans';
 import { scopeFor } from '../shared/promo';
 import { getSessionUser, type User } from './auth';
 import { trackPurchase } from './analytics';
@@ -13,6 +13,7 @@ import { findManualGrant, isManualInvoice, manualProUntil, manualReferenceTaken 
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
 import { checkPromo, lookupPromo, normalizeCode, priceWith, recordRedemption, type Promo, type PromoError } from './promo';
 import { activePlan, claimTemplate } from './templatePerks';
+import { getProfile, logPartnerEvent } from './partner';
 
 interface CheckoutBody {
   productId?: string;
@@ -103,6 +104,11 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   const q = await quoteFor(env, user, body);
   if (failed(q)) return json({ ok: false, error: q.error, ...(q.reason ? { reason: q.reason } : {}) }, q.status);
 
+  if (q.plan && isPartnerPlan(q.plan.id)) {
+    // A Partner pass needs the partner profile (name and accepted terms) first.
+    if (!env.DB || !(await getProfile(env.DB, user!.id).catch(() => null))) return json({ ok: false, error: 'apply' }, 400);
+    await logPartnerEvent(env.DB, user!.id, 'PartnerCheckoutStart', { plan: q.plan.id });
+  }
   if (q.plan) return startPayment(request, env, planPayload(q.plan, user!, lang, q.price, q.promo, clean(body.vid, 64)));
 
   const product = q.product!;
@@ -323,6 +329,7 @@ async function verifyPlan(
     }
     // Only the call that granted the pass writes the purchase event (see the template path above).
     if (r.granted) await safeTrack(env.DB, { invoiceId, productId: plan.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId });
+    if (r.granted && isPartnerPlan(plan.id)) await logPartnerEvent(env.DB, userId, 'PartnerPaid', { plan: plan.id, amount });
     return json({ ...base, status: 'paid', proUntil: r.proUntil });
   } catch (err) {
     console.error('pro grant failed', invoiceId, err);

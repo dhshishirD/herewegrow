@@ -1,7 +1,9 @@
 // The signed-in home: who you are, your CVs, what you bought, and the next useful thing to do.
 import { useEffect, useState } from 'react';
 import { SUPPORT_WHATSAPP } from '../../shared/catalog';
-import { cloudId } from '../lib/cvs';
+import { cloudId, loadCv } from '../lib/cvs';
+import { renderCvHtml } from '../builder/renderCvHtml';
+import { printCvIsolated } from '../builder/printIsolated';
 import { useAuth } from '../lib/auth';
 import { useLang } from '../lib/lang';
 import { Link, navigate } from '../lib/router';
@@ -39,6 +41,8 @@ export function AccountPage() {
   const failed = new URLSearchParams(window.location.search).get('login') === 'failed';
   const [data, setData] = useState<Summary | null | undefined>(undefined);
   const userId = user?.id;
+  const [pdfBusy, setPdfBusy] = useState<string | null>(null);
+  const [pdfMsg, setPdfMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) return;
@@ -80,6 +84,25 @@ export function AccountPage() {
   const openCv = (id: string) => {
     cloudId.set(id);
     navigate('/builder');
+  };
+
+  /** Clean PDF of a saved CV: only the CV, from its saved data (Pro: no footer; Free: small footer on free designs). */
+  const downloadPdf = async (c: { id: string; title: string; design: string | null }) => {
+    setPdfMsg(null);
+    setPdfBusy(c.id);
+    const { isProDesign } = await import('../builder/designs');
+    if (!user.pro && c.design && isProDesign(c.design as never)) { setPdfBusy(null); return openCv(c.id); } // the builder explains Pro designs
+    const r = await loadCv(c.id);
+    if (!r.ok || !r.value?.data) {
+      setPdfBusy(null);
+      return setPdfMsg(t({ en: 'Could not open this CV. Check your internet and try again.', bn: 'এই CV খোলা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।' }));
+    }
+    const html = await renderCvHtml(r.value, !user.pro);
+    const name = (r.value.data.name || 'My').replace(/\s+/g, '_');
+    track('cv_export', { format: 'pdf', from: 'account' });
+    const ok = await printCvIsolated(html, `${name}_CV`);
+    setPdfBusy(null);
+    if (!ok) setPdfMsg(t({ en: 'Your browser blocked the print window. Open the CV and use Download PDF there.', bn: 'ব্রাউজার প্রিন্ট উইন্ডো আটকে দিয়েছে। CV খুলে সেখান থেকে PDF ডাউনলোড করুন।' }));
   };
 
   return (
@@ -125,6 +148,8 @@ export function AccountPage() {
         {data === undefined ? (
           <p className="mt-3 text-muted">…</p>
         ) : cvs.length ? (
+          <>
+          {pdfMsg && <p role="alert" className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">{pdfMsg}</p>}
           <ul className="mt-4 divide-y divide-line rounded-2xl bg-white ring-1 ring-line">
             {cvs.slice(0, 6).map((c) => (
               <li key={c.id} className="flex flex-wrap items-center gap-3 p-4">
@@ -133,10 +158,14 @@ export function AccountPage() {
                   <p className="truncate font-semibold">{c.title}</p>
                   <p className="text-sm text-muted">{t({ en: 'Updated', bn: 'হালনাগাদ' })} {day(c.updatedAt)}</p>
                 </div>
-                <button type="button" className="btn btn-quiet" onClick={() => openCv(c.id)}>{t({ en: 'Open', bn: 'খুলুন' })}</button>
+                <button type="button" className="btn btn-primary !min-h-11" disabled={pdfBusy === c.id} onClick={() => void downloadPdf(c)}>
+                  {pdfBusy === c.id ? '…' : t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}
+                </button>
+                <button type="button" className="btn btn-quiet !min-h-11" onClick={() => openCv(c.id)}>{t({ en: 'Open', bn: 'খুলুন' })}</button>
               </li>
             ))}
           </ul>
+          </>
         ) : (
           <div className="mt-4 rounded-2xl border-2 border-dashed border-leaf/40 bg-leaf-soft/50 p-6">
             <p className="text-lg font-semibold">{t({ en: 'You have no saved CV yet', bn: 'এখনো কোনো CV সেভ করা নেই' })}</p>

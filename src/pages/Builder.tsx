@@ -1,6 +1,7 @@
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
 import { CV_FONTS, ensureAllFonts, ensureFont, findFont } from '../builder/fonts';
+import { printCvIsolated } from '../builder/printIsolated';
 import { useHistoryState } from '../builder/history';
 import { builderHistoryShape } from '../builder/historyShape';
 import { ImportError, parseCv, readCvFile } from '../builder/importCv';
@@ -681,7 +682,14 @@ export function BuilderPage() {
   const printNow = () => {
     track('cv_export', { format: 'pdf' });
     const prev = document.title;
-    document.title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
+    const title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
+    const html = document.getElementById('cv-print')?.innerHTML;
+    // Print from a private frame so browser-extension overlays on this page cannot end up on the PDF
+    if (html) {
+      void printCvIsolated(html, title).then((ok) => { if (!ok) { document.title = title; window.print(); document.title = prev; } });
+      return;
+    }
+    document.title = title;
     window.print();
     document.title = prev;
   };

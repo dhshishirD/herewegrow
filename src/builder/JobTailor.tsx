@@ -49,7 +49,7 @@ export function JobTailor({ cv, name, lang, t, onAddSkill, onSaveCopy }: {
       </p>
       <label className="block">
         <span className="label">{t({ en: 'Job ad (paste the text)', bn: 'চাকরির বিজ্ঞাপন (টেক্সট পেস্ট করুন)' })}</span>
-        <textarea className="field" rows={6} value={ad} onChange={(e) => setAd(e.target.value)} onFocus={() => track('tailor_open')} />
+        <textarea className="field" data-native-undo rows={6} value={ad} onChange={(e) => setAd(e.target.value)} onFocus={() => track('tailor_open')} />
       </label>
       {ad.trim() && !long && <p className="text-sm text-muted" role="status">{t({ en: 'Paste the whole ad, at least a few lines.', bn: 'পুরো বিজ্ঞাপন দিন, অন্তত কয়েক লাইন।' })}</p>}
       {r && (

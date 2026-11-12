@@ -2,6 +2,7 @@
 
 import { CONTACT_STATUSES, countNewContacts, listContacts, MAX_NOTE, setContactStatus, type ContactStatus } from './contact';
 import { getSessionUser, type AuthEnv, type User } from './auth';
+import { applySeed, listAdminRoles, previewRole, publishBlockers, readCareersSeed, type CareerAdminEnv } from './careerAdmin';
 import { publishRole, unpublishRole } from './careers';
 import { bulkHide, listOverrides, setOverride, templateStats } from './templateAdmin';
 import { adminPartnerAction, listPartners, partnerStats, setDailyAlert } from './partnerAdmin';
@@ -95,8 +96,25 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
 
   if (pathname === '/api/admin/roles') {
     if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
-    const rows = await db.prepare('SELECT id, slug, title_en, title_bn, field, status, published_at, updated_at FROM roles ORDER BY updated_at DESC').all();
-    return json({ ok: true, roles: rows.results ?? [] });
+    return json({ ok: true, ...(await listAdminRoles(db, await readCareersSeed(request, env as CareerAdminEnv))) });
+  }
+
+  // Role packs shipped with the site: bring in new ones as drafts, or apply one named update.
+  if (pathname === '/api/admin/roles/seed') {
+    if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    const seed = await readCareersSeed(request, env as CareerAdminEnv);
+    if (!seed) return json({ ok: false, error: 'seed' }, 502);
+    const b = (await request.json().catch(() => ({}))) as { slug?: unknown };
+    const slug = typeof b.slug === 'string' && b.slug ? b.slug : undefined;
+    if (slug && !seed.some((p) => p.slug === slug)) return json({ ok: false, error: 'not_found' }, 404);
+    return json({ ok: true, ...(await applySeed(env as CareerAdminEnv, seed, slug)) });
+  }
+
+  const preview = /^\/api\/admin\/roles\/([\w-]{1,64})\/preview$/.exec(pathname);
+  if (preview) {
+    if (request.method !== 'GET') return json({ ok: false, error: 'method' }, 405);
+    const p = await previewRole(db, preview[1]);
+    return p ? json({ ok: true, ...p }) : json({ ok: false, error: 'not_found' }, 404);
   }
 
   if (pathname === '/api/admin/roles/import') {
@@ -166,6 +184,11 @@ async function route(request: Request, env: AuthEnv, pathname: string): Promise<
   const publish = /^\/api\/admin\/roles\/([\w-]{1,64})\/(publish|unpublish)$/.exec(pathname);
   if (publish) {
     if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+    if (publish[2] === 'publish') {
+      // A page with sample text or a thin article never goes public.
+      const blockers = await publishBlockers(db, publish[1]);
+      if (blockers.length) return json({ ok: false, error: 'checks', errors: blockers }, 400);
+    }
     const r = await (publish[2] === 'publish' ? publishRole(env, publish[1]) : unpublishRole(env, publish[1]));
     if (!r.ok) return json({ ok: false, error: r.error }, r.error === 'not_found' ? 404 : 503);
     return json({ ok: true, slug: r.slug, status: publish[2] === 'publish' ? 'published' : 'draft' });

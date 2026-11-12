@@ -24,3 +24,11 @@ export const samplePack = (over: Record<string, unknown> = {}) => ({
   interview_qs: ['Why banking?'],
   ...over,
 });
+
+/** A pack that also passes the publish checks (long enough article, four FAQs). */
+export const publishablePack = (over: Record<string, unknown> = {}) =>
+  samplePack({
+    body_md: `## Overview\n\n${'Bank officers handle accounts and serve customers every day. '.repeat(40)}`,
+    faq: [1, 2, 3, 4].map((n) => ({ q: `Real question ${n}?`, a: `A real answer ${n}.` })),
+    ...over,
+  });

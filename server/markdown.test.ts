@@ -35,3 +35,26 @@ describe('renderMarkdown', () => {
     expect(html).not.toMatch(/<a [^>]*onmouseover/);
   });
 });
+
+describe('renderMarkdown: tables, quotes, italics', () => {
+  it('renders a pipe table, padding short rows', () => {
+    const html = renderMarkdown('| A | B |\n|---|---|\n| 1 | **2** |\n| 3 |\n\nafter');
+    expect(html).toContain('<div class="table-wrap"><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td><strong>2</strong></td></tr><tr><td>3</td><td></td></tr></tbody></table></div>');
+    expect(html).toContain('<p>after</p>');
+  });
+
+  it('a line of pipes without a rule line stays a paragraph', () => {
+    expect(renderMarkdown('| not a table |')).toBe('<p>| not a table |</p>');
+  });
+
+  it('renders quotes and italics, and keeps * bullets as lists', () => {
+    expect(renderMarkdown('> **Quick answer:** yes\n> more')).toBe('<blockquote><p><strong>Quick answer:</strong> yes more</p></blockquote>');
+    expect(renderMarkdown('*A note.* and 2*3*4')).toBe('<p><em>A note.</em> and 2*3*4</p>');
+    expect(renderMarkdown('* one\n* two')).toBe('<ul><li>one</li><li>two</li></ul>');
+  });
+
+  it('own-site links are followed, others are nofollow', () => {
+    expect(renderMarkdown('[me](https://www.dhshishir.com)')).toContain('rel="noopener"');
+    expect(renderMarkdown('[x](https://example.com)')).toContain('rel="noopener nofollow"');
+  });
+});

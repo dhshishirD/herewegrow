@@ -47,7 +47,8 @@ export async function claimTemplate(
   now = Date.now(),
 ): Promise<{ ok: true } | { ok: false; error: ClaimError }> {
   if (product.kind === 'service' || !product.files?.length) return { ok: false, error: 'product' };
-  const n = product.files.length;
+  // A template counts as one download even when it comes with free bonus files (ATS version, guide).
+  const n = product.kind === 'template' ? 1 : product.files.length;
   const key = `q:dl:${userId}:${dayKey(now)}`;
   const used = Number((await kv.get(key)) ?? 0);
 

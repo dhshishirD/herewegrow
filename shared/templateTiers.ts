@@ -8,7 +8,7 @@
 //
 // Nothing here deletes a Word file, a preview image or an order.
 
-import { TEMPLATES } from './templates';
+import { TEMPLATES, NEW_DESIGNED_TEMPLATES } from './templates';
 
 /** Flip to true when the /templates/category/<slug> pages exist. Until then retired templates redirect to /templates. */
 export const CATEGORY_PAGES_LIVE = false;
@@ -56,6 +56,8 @@ export const TIER_A: ReadonlySet<string> = new Set([
   'hwg-cv-it-it-executive-emgin-006',
   'creative-graduate-standard-bd',
   'hwg-cv-teacher-teacher-003',
+  // The 20 new Designed CVs (13 Nov 2026): one lead design per profession.
+  ...NEW_DESIGNED_TEMPLATES.map((t) => t.id),
 ]);
 
 /** Retired template id -> the category page it should land on once category pages exist. */

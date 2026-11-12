@@ -115,6 +115,7 @@ export function routeSeo(path: string): RouteSeo | undefined {
   const m = path.match(/^\/templates\/([a-z0-9-]+)$/);
   const t = m ? findTemplate(m[1]) : undefined;
   if (!t) return undefined;
+  if (t.meta) return { title: t.meta.title, description: t.meta.description };
   const sector = SECTORS.find((s) => s.id === t.sector)!;
   const style = t.style === 'ats' ? 'ATS-ফ্রেন্ডলি' : 'ডিজাইনড';
   const shared = isSharedTitle(t.title.en);

@@ -5,10 +5,10 @@ import { redirectsFile, ON_SALE_COUNT, RETIRED, TIER_A, VARIANT_OF, canonicalPat
 
 describe('template tiers, variants and retirements', () => {
   it('has the agreed counts', () => {
-    expect(TIER_A.size).toBe(40);
+    expect(TIER_A.size).toBe(60);
     expect(Object.keys(RETIRED)).toHaveLength(39);
     expect(Object.keys(VARIANT_OF)).toHaveLength(92);
-    expect(ON_SALE_COUNT).toBe(239 - 39);
+    expect(ON_SALE_COUNT).toBe(259 - 39);
   });
   it('only names templates that exist', () => {
     for (const id of [...TIER_A, ...Object.keys(RETIRED), ...Object.keys(VARIANT_OF), ...Object.values(VARIANT_OF)]) expect(findTemplate(id), id).toBeDefined();
@@ -27,8 +27,8 @@ describe('template tiers, variants and retirements', () => {
       expect(lead).not.toBe(id);
     }
   });
-  it('lists 108 cards and 92 variants', () => {
-    expect(TEMPLATES.filter((t) => isListed(t.id))).toHaveLength(108);
+  it('lists 128 cards and 92 variants', () => {
+    expect(TEMPLATES.filter((t) => isListed(t.id))).toHaveLength(128);
     const all = Object.values(VARIANT_OF);
     expect(all).toHaveLength(92);
     expect(variantsOf('creative-sales-standard-1page').sort()).toEqual(
@@ -38,7 +38,7 @@ describe('template tiers, variants and retirements', () => {
   it('keeps every already indexed core template indexable, and indexes only A of the library', () => {
     for (const t of TEMPLATES.filter((x) => !x.lib)) expect(shouldIndex(t), t.id).toBe(true);
     const lib = TEMPLATES.filter((x) => x.lib && shouldIndex(x));
-    expect(lib).toHaveLength(24);
+    expect(lib).toHaveLength(44);
     for (const t of lib) expect(TIER_A.has(t.id)).toBe(true);
   });
   it('sends a variant canonical to its lead', () => {

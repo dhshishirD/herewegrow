@@ -23,7 +23,46 @@ main{max-width:760px;margin:0 auto;padding:28px 20px 64px}h1{font-size:2rem;line
 table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
 a{color:var(--blue)}.cta{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600}
 .note{font-size:.875rem;color:var(--muted)}
+.table-wrap{overflow-x:auto;margin:12px 0}.table-wrap table{min-width:480px}th{font-size:.875rem;color:var(--muted)}
+blockquote{margin:16px 0;padding:12px 16px;border-left:4px solid var(--blue);background:var(--mist);border-radius:0 12px 12px 0}blockquote p{margin:0}
 `;
+
+/** Everything inside <main>: the same HTML for the public page and the admin preview. All text is escaped. */
+export function renderRoleBody(pack: RolePack): string {
+  const s = pack.salary;
+  const courses = pack.courses.length
+    ? `<h2>Courses to close the gap</h2><ul>${pack.courses
+        .map(
+          (c) =>
+            `<li><a href="${esc(c.url)}" rel="noopener nofollow${c.is_affiliate ? ' sponsored' : ''}">${esc(c.title)}</a> <span class="note">${esc(c.provider)}</span></li>`,
+        )
+        .join('')}</ul>${pack.courses.some((c) => c.is_affiliate) ? '<p class="note">Some course links are affiliate links. They cost you nothing extra.</p>' : ''}`
+    : '';
+  const skills = pack.skills.length
+    ? `<h2>Skills employers look for</h2><ul>${pack.skills.map((k) => `<li>${esc(k.name)} <span class="note">(${esc(k.level)})</span></li>`).join('')}</ul>`
+    : '';
+  const faq = pack.faq.length
+    ? `<h2>Frequently asked questions</h2>${pack.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}`
+    : '';
+
+  return `<nav class="crumbs"><a href="/">Home</a> / <a href="/careers">Careers</a> / ${esc(pack.title_en)}</nav>
+<h1>${esc(pack.title_en)}</h1>
+${pack.title_bn ? `<p class="sub">${esc(pack.title_bn)} · ${esc(pack.field)}</p>` : `<p class="sub">${esc(pack.field)}</p>`}
+<p>${esc(pack.summary)}</p>
+<div class="card"><strong>Salary range (BDT per month)</strong>
+<table><tr><th>Entry</th><th>Mid</th><th>Senior</th></tr><tr><td>${esc(s.entry)}</td><td>${esc(s.mid)}</td><td>${esc(s.senior)}</td></tr></table>
+<p class="note">${esc(s.note)} Last checked ${esc(s.checked)}.</p></div>
+<h2>Benefits</h2>${list(pack.benefits)}
+<h2>Who hires</h2>${list(pack.companies)}
+${pack.season.length ? `<h2>When vacancies appear</h2>${list(pack.season)}` : ''}
+${skills}
+${renderMarkdown(pack.body_md)}
+${courses}
+${faq}
+<div class="card"><strong>Go further with Pro</strong>
+<p>Get the full toolkit for this role: a role-specific CV template, cover letter, interview questions and a 1 to 3 year growth plan.</p>
+<a class="cta" href="/pro">See Pro</a> <a href="/builder">or build your CV free</a></div>`;
+}
 
 export function renderRolePage(pack: RolePack, updatedAt: number): string {
   const url = `${SITE}/careers/${pack.slug}`;
@@ -41,7 +80,7 @@ export function renderRolePage(pack: RolePack, updatedAt: number): string {
       dateModified: modified,
       mainEntityOfPage: url,
       inLanguage: 'en',
-      author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about` },
+      author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about`, sameAs: ['https://www.dhshishir.com'] },
       publisher: { '@id': `${SITE}/#org` },
     },
     {
@@ -61,22 +100,6 @@ export function renderRolePage(pack: RolePack, updatedAt: number): string {
       mainEntity: pack.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
     });
   }
-
-  const s = pack.salary;
-  const courses = pack.courses.length
-    ? `<h2>Courses to close the gap</h2><ul>${pack.courses
-        .map(
-          (c) =>
-            `<li><a href="${esc(c.url)}" rel="noopener nofollow${c.is_affiliate ? ' sponsored' : ''}">${esc(c.title)}</a> <span class="note">${esc(c.provider)}</span></li>`,
-        )
-        .join('')}</ul>${pack.courses.some((c) => c.is_affiliate) ? '<p class="note">Some course links are affiliate links. They cost you nothing extra.</p>' : ''}`
-    : '';
-  const skills = pack.skills.length
-    ? `<h2>Skills employers look for</h2><ul>${pack.skills.map((k) => `<li>${esc(k.name)} <span class="note">(${esc(k.level)})</span></li>`).join('')}</ul>`
-    : '';
-  const faq = pack.faq.length
-    ? `<h2>Frequently asked questions</h2>${pack.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}`
-    : '';
 
   return `<!doctype html>
 <html lang="en">
@@ -100,23 +123,7 @@ ${jsonLd.map((d) => `<script type="application/ld+json">${ldJson(d)}</script>`).
 <body>
 <header class="site"><a href="/">HereWeGrow</a></header>
 <main>
-<nav class="crumbs"><a href="/">Home</a> / <a href="/careers">Careers</a> / ${esc(pack.title_en)}</nav>
-<h1>${esc(pack.title_en)}</h1>
-${pack.title_bn ? `<p class="sub">${esc(pack.title_bn)} · ${esc(pack.field)}</p>` : `<p class="sub">${esc(pack.field)}</p>`}
-<p>${esc(pack.summary)}</p>
-<div class="card"><strong>Salary range (BDT per month)</strong>
-<table><tr><th>Entry</th><th>Mid</th><th>Senior</th></tr><tr><td>${esc(s.entry)}</td><td>${esc(s.mid)}</td><td>${esc(s.senior)}</td></tr></table>
-<p class="note">${esc(s.note)} Last checked ${esc(s.checked)}.</p></div>
-<h2>Benefits</h2>${list(pack.benefits)}
-<h2>Who hires</h2>${list(pack.companies)}
-${pack.season.length ? `<h2>When vacancies appear</h2>${list(pack.season)}` : ''}
-${skills}
-${renderMarkdown(pack.body_md)}
-${courses}
-${faq}
-<div class="card"><strong>Go further with Pro</strong>
-<p>Get the full toolkit for this role: a role-specific CV template, cover letter, interview questions and a 1 to 3 year growth plan.</p>
-<a class="cta" href="/pro">See Pro</a> <a href="/builder">or build your CV free</a></div>
+${renderRoleBody(pack)}
 </main>
 </body>
 </html>

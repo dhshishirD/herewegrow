@@ -20,7 +20,7 @@ binding = "ASSETS"
 html_handling = "auto-trailing-slash"
 not_found_handling = "single-page-application"
 # Send /api/* to the Worker first so the payment API is never answered with the web page
-run_worker_first = ["/api/*", "/careers", "/careers/*", "/sitemap-careers.xml", "/blog", "/blog/*", "/sitemap-blog.xml", "/admin-blog-seed.json"]
+run_worker_first = ["/api/*", "/careers", "/careers/*", "/sitemap-careers.xml", "/blog", "/blog/*", "/sitemap-blog.xml", "/admin-blog-seed.json", "/admin-careers-seed.json"]
 
 # Private storage for the paid Word files and pack zips (never public).
 # Create the bucket first: Cloudflare → R2 → Create bucket → herewegrow-files

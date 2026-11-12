@@ -51,8 +51,8 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
       return json({ ok: false, error: 'not_found' }, 404);
     }
 
-    // The starting-posts file is for the admin API only; the public gets a 404.
-    if (pathname === '/admin-blog-seed.json') return new Response('Not found', { status: 404 });
+    // The starting-posts and role-pack files are for the admin API only; the public gets a 404.
+    if (pathname === '/admin-blog-seed.json' || pathname === '/admin-careers-seed.json') return new Response('Not found', { status: 404 });
 
     // Career Hub: saved role pages and their sitemap; anything else under /careers/ falls through to the app.
     if (request.method === 'GET' || request.method === 'HEAD') {

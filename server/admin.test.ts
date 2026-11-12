@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createSession, publicUser, userForPhone, SESSION_COOKIE, type AuthEnv } from './auth';
 import { handleAdmin } from './admin';
-import { samplePack } from './rolePack.fixture';
+import { publishablePack, samplePack } from './rolePack.fixture';
 import { fakeD1, fakeKV } from './testkit';
 
 const NOW = Date.UTC(2026, 10, 4, 6);
@@ -43,7 +43,7 @@ describe('admin guard', () => {
     const { call, cookie, admin } = await setup();
     const res = await call('/api/admin/roles', { cookie: await cookie(admin.id) });
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ ok: true, roles: [] });
+    expect(await res.json()).toEqual({ ok: true, roles: [], pending: null });
   });
 
   it('unknown admin paths are 404 for admins', async () => {
@@ -105,9 +105,21 @@ describe('publish routes', () => {
   const imported = async () => {
     const s = await setup();
     const c = await s.cookie(s.admin.id);
-    const { id } = (await (await s.call('/api/admin/roles/import', { method: 'POST', cookie: c, body: samplePack() })).json()) as { id: string };
+    const { id } = (await (await s.call('/api/admin/roles/import', { method: 'POST', cookie: c, body: publishablePack() })).json()) as { id: string };
     return { ...s, c, id };
   };
+
+  it('refuses to publish a role with sample text or a thin article, and says why', async () => {
+    const s = await setup();
+    const c = await s.cookie(s.admin.id);
+    const { id } = (await (await s.call('/api/admin/roles/import', { method: 'POST', cookie: c, body: samplePack({ faq: [{ q: 'Question?', a: 'Answer.' }] }) })).json()) as { id: string };
+    const res = await s.call(`/api/admin/roles/${id}/publish`, { method: 'POST', cookie: c });
+    expect(res.status).toBe(400);
+    const d = (await res.json()) as { error: string; errors: string[] };
+    expect(d.error).toBe('checks');
+    expect(d.errors.length).toBeGreaterThanOrEqual(2);
+    expect(await s.env.KV!.get('career:bank-officer')).toBeNull();
+  });
 
   it('admin publishes then unpublishes a role', async () => {
     const { call, c, id, env } = await imported();

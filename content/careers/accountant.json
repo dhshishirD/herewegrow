@@ -1,0 +1,354 @@
+{
+  "slug": "accountant",
+  "title_bn": "অ্যাকাউন্ট্যান্ট (হিসাবরক্ষক)",
+  "field": "Accounting & Finance",
+  "seo_title": "Accountant Career in Bangladesh: Salary, CV, Skills (2026)",
+  "seo_desc": "Accountant career in Bangladesh: salary ranges, skills, top firms, CA/ACCA routes, scholarships, CV tips, roadmap and a free skill test. Checked Nov 2026.",
+  "summary": "An accountant keeps a company's money records correct: vouchers, bank reconciliation, VAT and TDS, payroll and monthly reports. Almost every factory, bank, NGO, school and shop needs one, so it is one of the most common office careers in Bangladesh. This page shows real pay ranges, the skills circulars ask for, an accountant CV guide and a free skill test.",
+  "salary": {
+    "entry": "BDT 15,000 - 30,000 per month",
+    "mid": "BDT 35,000 - 70,000 per month",
+    "senior": "BDT 80,000 - 150,000+ per month (often CA / CMA / ACCA qualified, with VAT and ERP experience)",
+    "note": "Ranges, not promises. Built from real job circulars and public pay guides; pay changes with city, sector, company size and qualification. Confirm in the actual circular.",
+    "checked": "2026-11-12"
+  },
+  "benefits": [
+    "Festival bonus (usually two per year) in most registered companies",
+    "Provident fund, gratuity or insurance in many mid-size and large firms",
+    "Exam fee or study leave support for CA / CMA / ACCA in some firms",
+    "Mobile bill, lunch or transport allowance in some companies",
+    "Clear promotion path: Accounts Officer to Senior Officer to Manager to Finance Controller",
+    "Strong demand in every sector, so jobs are easier to find than in many fields"
+  ],
+  "companies": [
+    "Commercial banks and NBFIs (finance and accounts departments)",
+    "Readymade garment (RMG) factories, buying houses and accessories makers",
+    "Pharmaceutical, FMCG and distribution companies (MNC and local)",
+    "NGOs and donor-funded projects (often ask for donor-fund experience)",
+    "Audit and accounting firms (CA firms, tax consultants)",
+    "Construction, real estate and trading companies (often ask for Tally)",
+    "Telecom, IT and e-commerce companies (reconciliation and VAT focus)",
+    "Hospitals, universities and private schools"
+  ],
+  "season": [
+    "Circulars appear all year on BDJobs and company pages; check weekly",
+    "Many companies hire after the July budget and tax changes, and after year-end closing",
+    "Audit firms hire more before the audit season (January to June)",
+    "Banks and NGOs usually publish fixed deadlines; apply at least 3 days early"
+  ],
+  "skills": [
+    {
+      "name": "Bookkeeping and double-entry (journal, ledger, trial balance)",
+      "level": "Core",
+      "tag": "bookkeeping"
+    },
+    {
+      "name": "Tally ERP 9 / Tally Prime voucher posting",
+      "level": "Core",
+      "tag": "software"
+    },
+    {
+      "name": "MS Excel (VLOOKUP/XLOOKUP, SUMIF, pivot table)",
+      "level": "Core",
+      "tag": "excel"
+    },
+    {
+      "name": "Bank reconciliation and petty cash control",
+      "level": "Core",
+      "tag": "bookkeeping"
+    },
+    {
+      "name": "Financial statements (P&L, balance sheet, cash flow)",
+      "level": "Core",
+      "tag": "reporting"
+    },
+    {
+      "name": "VAT (Mushak), TDS/AIT and income tax basics",
+      "level": "Important",
+      "tag": "tax"
+    },
+    {
+      "name": "Payroll and supplier payment schedule",
+      "level": "Important",
+      "tag": "payroll"
+    },
+    {
+      "name": "Audit support and documentation",
+      "level": "Important",
+      "tag": "audit"
+    },
+    {
+      "name": "IFRS / BFRS awareness",
+      "level": "Growing",
+      "tag": "reporting"
+    },
+    {
+      "name": "Business English (email and short reports)",
+      "level": "Important",
+      "tag": "communication"
+    }
+  ],
+  "gaps_checklist": [
+    "I can pass journal entries and post them to a ledger without help",
+    "I can prepare a bank reconciliation statement",
+    "I have used Tally (or similar) on at least 100 sample vouchers",
+    "I can build a pivot table and use VLOOKUP/XLOOKUP in Excel",
+    "I know how VAT and TDS are charged, deducted and deposited",
+    "I can prepare a P&L and balance sheet from a trial balance",
+    "I can explain a balance sheet to a non-accountant in simple words",
+    "I can write a clear English email to a manager or auditor",
+    "My CV shows software, numbers and compliance work"
+  ],
+  "courses": [
+    {
+      "title": "Chartered Accountancy (CA) - Certificate, Professional, Advanced levels",
+      "provider": "ICAB",
+      "url": "https://www.icab.org.bd",
+      "is_affiliate": false,
+      "skill_tag": "reporting"
+    },
+    {
+      "title": "Cost and Management Accountancy (CMA)",
+      "provider": "ICMAB",
+      "url": "https://www.icmab.org.bd",
+      "is_affiliate": false,
+      "skill_tag": "reporting"
+    },
+    {
+      "title": "ACCA Qualification",
+      "provider": "ACCA",
+      "url": "https://www.accaglobal.com",
+      "is_affiliate": false,
+      "skill_tag": "reporting"
+    },
+    {
+      "title": "VAT and customs guidance and publications",
+      "provider": "National Board of Revenue (NBR)",
+      "url": "https://nbr.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "tax"
+    },
+    {
+      "title": "Excel and office skills courses",
+      "provider": "10 Minute School",
+      "url": "https://10minuteschool.com",
+      "is_affiliate": false,
+      "skill_tag": "excel"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of an accountant in Bangladesh?",
+      "a": "Roughly BDT 15,000-30,000 a month for entry level, BDT 35,000-70,000 for mid level and BDT 80,000-150,000+ for senior roles. These are ranges from real circulars and pay guides checked on 12 Nov 2026; your offer depends on city, sector and qualification."
+    },
+    {
+      "q": "What degree do I need to become an accountant?",
+      "a": "Most circulars ask for a Bachelor's in Accounting, Finance or Business Administration (BBA, B.Com). Many senior roles ask for M.Com, MBA or CA / CMA / ACCA, fully or partly completed."
+    },
+    {
+      "q": "Is Tally necessary for an accounts job?",
+      "a": "Very often. Many circulars name Tally ERP 9 or Tally Prime, along with MS Excel. Bigger companies may use SAP, Oracle or their own ERP, which you learn on the job."
+    },
+    {
+      "q": "Which is better: CA, CMA or ACCA?",
+      "a": "CA (ICAB) is the main path for audit and many top corporate roles in Bangladesh. CMA suits cost and management accounting. ACCA is useful for multinational and abroad jobs. Choose the one your target employers ask for."
+    },
+    {
+      "q": "How much does the CA course cost?",
+      "a": "A Daily Star report citing ICAB's website put the total for all three levels at about BDT 1,42,400, with admission up to BDT 30,000. Fees change, so check the ICAB website before you decide."
+    },
+    {
+      "q": "Can a fresher get an accountant job without CA?",
+      "a": "Yes. Many circulars say freshers can apply, and part-qualified CA / ACCA / CMA is usually an advantage, not a must. Strong Tally, Excel and a clear CV matter most at entry level."
+    },
+    {
+      "q": "What should be in an accountant CV (accountant CV format Bangladesh)?",
+      "a": "A short profile, software by name (Tally, Excel functions), numbers (vouchers per day, bank accounts reconciled, staff paid), VAT/TDS work, certificates and any CA / ACCA / CMA stage. Keep it to two pages and send a PDF named YourName_Accountant_CV.pdf."
+    },
+    {
+      "q": "What is a good career objective for an accountant?",
+      "a": "Write one or two lines with your skill and the job: 'Commerce graduate with Tally and Excel skills seeking an Accounts Officer role where accuracy and timely reporting matter.' See the samples in the article below."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 12 November 2026\n\n> **Quick answer:** An accountant in Bangladesh records, checks and reports an organisation's money. Entry pay is usually BDT 15,000-30,000 a month, mid-level BDT 35,000-70,000 and senior BDT 80,000-150,000+. The core skills are bookkeeping, Tally, Excel, bank reconciliation and VAT/TDS. A CA, CMA or ACCA qualification opens the senior and global roles.\n\n## Accountant career at a glance\n\n| Question | Short answer |\n|---|---|\n| Who hires? | Every sector: factories, banks, NGOs, audit firms, hospitals, schools, startups |\n| Minimum education | Bachelor's in Accounting, Finance or Business (BBA, B.Com) |\n| Must-have tools | Tally ERP 9 / Tally Prime, MS Excel |\n| Professional routes | CA (ICAB), CMA (ICMAB), ACCA |\n| Standard VAT rate to know | 15% on most goods and services (check current NBR rules) |\n| Global demand | US projects 5% job growth for accountants and auditors, 2024-34 |\n\n## What does an accountant do?\n\nAn accountant makes sure every taka is recorded, explained and reported. In a factory that means vouchers, supplier bills, bank reconciliation, payroll and VAT/TDS papers. In an NGO it also means fund-wise records and donor reports. Job titles differ (Accountant, Accounts Officer, Accounts Executive, Junior Accountant) but the work is similar.\n\n**A normal day:** post yesterday's vouchers in Tally, check the bank balance, match bills with purchase records, prepare reports, and at month end close the books and hand the manager a profit and loss statement and balance sheet.\n\n> \"Accounting is the language of business.\" (a line widely attributed to investor Warren Buffett)\n\n## Scope: where this career can take you\n\nAccounting is not one job. It is a family of careers:\n\n- **Corporate accounts and finance:** accounts officer to finance controller to CFO.\n- **Audit and assurance:** CA firms, internal audit departments.\n- **Tax and VAT:** company tax teams, tax consultancy, income tax practice.\n- **Banking and NBFIs:** finance, credit and reconciliation teams.\n- **NGO and donor projects:** project accountant, finance and admin officer, grants officer.\n- **Government and autonomous bodies:** accounts and audit posts through public circulars.\n- **Technology side:** ERP consultant (SAP, Oracle, Tally), finance data analyst.\n- **Teaching and research:** college and university teaching, professional institute trainer.\n- **Abroad:** Gulf, Malaysia, UK, Canada and Australia regularly hire accountants; ACCA or CA plus experience helps most.\n\n## Salary in Bangladesh (2026 ranges)\n\n| Level | Typical experience | Monthly pay (BDT) | Visual |\n|---|---|---|---|\n| Entry | 0-2 years | 15,000 - 30,000 | ██ |\n| Mid | 3-6 years | 35,000 - 70,000 | █████ |\n| Senior | 7+ years, often CA/CMA/ACCA | 80,000 - 150,000+ | ███████████ |\n\n**How we got these ranges.** Public salary websites disagree with each other, so we cross-checked them with real circulars: an NGO assistant accounts officer post (2-3 years) capped at BDT 30,000; a Sr. Executive Accounts & Tax post (CA course completed, up to 2 years) at BDT 28,000-30,000; a Senior Accounts Officer post (3-5 years) at BDT 30,000-35,000; and a multinational distribution company accountant post (4-5 years, VAT and ERP) at about BDT 90,000. These are ranges, not promises. Your offer depends on city, sector, company size and qualification.\n\n### Who pays the most?\n\nIn general, pay rises in this order: small trading firms and local shops → local manufacturers and NGOs → banks, pharma, telecom and large groups → multinationals and senior roles in large CA firms. The single biggest pay jump usually comes from a completed professional qualification (CA, CMA, ACCA) combined with VAT, tax and ERP experience.\n\n**Global comparison:** in the United States the median pay for accountants and auditors was USD 81,680 a year in May 2024, with about 124,200 openings projected each year to 2034 (US Bureau of Labor Statistics). This shows the skill is valued worldwide.\n\n## Benefits beyond salary\n\n- Festival bonuses, and provident fund or gratuity in many registered companies.\n- A job in almost every district, because every organisation keeps accounts.\n- A clear promotion ladder and skills that move with you across sectors and countries.\n- Exam or study support for CA / CMA / ACCA in some firms.\n\n## Top employers: Bangladesh and the world\n\n**World: the \"Big Four\" (fiscal year 2025 global revenue)**\n\n| Firm | Revenue (USD billion) | Visual |\n|---|---|---|\n| Deloitte | 70.5 | ██████████████ |\n| PwC | 56.9 | ███████████ |\n| EY | 53.2 | ██████████ |\n| KPMG | reports separately each December | |\n\n**Bangladesh: well-known chartered accountancy firms** (alphabetical, not a ranking; all appear on regulator audit panels): A. Qasem & Co., ACNABIN, Hoda Vasi Chowdhury & Co., M J Abedin & Co., Mahfel Huq & Co., Masih Muhith Haque & Co., Nurul Faruk Hasan & Co. (reported as Deloitte's local member firm), Rahman Rahman Huq, and Syful Shamsul Alam & Co. In 2026 The Financial Express reported that KPMG was preparing to end its long affiliation with Rahman Rahman Huq, so always check a firm's current network on its own website.\n\n**Other strong employers:** commercial banks, pharmaceutical and FMCG companies, telecom operators, large RMG groups, international NGOs and UN-funded projects.\n\n**A fact worth knowing:** The Daily Star reported in September 2025 that ICAB had qualified only 1,967 chartered accountants since independence. Qualified people are scarce, which is why the qualification pays.\n\n## Skills employers ask for\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Double-entry bookkeeping | The base of everything | █████ |\n| Tally ERP 9 / Tally Prime | Named in many circulars | █████ |\n| MS Excel (lookup, SUMIF, pivot) | Daily reconciliation and reports | █████ |\n| Bank reconciliation | Checked in almost every interview | ████ |\n| VAT (Mushak), TDS, income tax basics | Compliance work pays more | ████ |\n| Financial statements | Needed for promotion | ████ |\n| ERP (SAP, Oracle, Odoo) | Large companies | ███ |\n| Business English | Email, audit and donor reports | ███ |\n\n*Demand bars are our reading of recent Bangladeshi accounts circulars, not a statistical survey.*\n\n## Free ways to build these skills\n\n- **Excel:** Microsoft's free Excel help and training at [support.microsoft.com/excel](https://support.microsoft.com/excel).\n- **Tally:** the company's own learning pages at [tallysolutions.com](https://tallysolutions.com); practise with 100 sample vouchers.\n- **VAT and tax:** read the official FAQs and publications at [nbr.gov.bd](https://nbr.gov.bd).\n- **Accounting basics:** audit free courses on [edx.org](https://www.edx.org) and [coursera.org](https://www.coursera.org); Bangla e-learning on [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **Standards:** free registered access to IFRS standards at [ifrs.org](https://www.ifrs.org).\n\n## Professional qualifications, scholarships and study support\n\n| Route | Body | Best for |\n|---|---|---|\n| CA | [ICAB](https://www.icab.org.bd) | Statutory audit, top corporate finance roles in Bangladesh |\n| CMA | [ICMAB](https://www.icmab.org.bd) | Cost and management accounting, manufacturing |\n| ACCA | [ACCA](https://www.accaglobal.com) | Multinationals and jobs abroad |\n\nCA has three levels (Certificate, Professional, Advanced). A Daily Star report citing ICAB's website put the total cost for all levels at about BDT 1,42,400. Fees change, so confirm with ICAB.\n\n**Support to explore (check each official site for current rules):**\n\n- **ICAB Quard-E-Hasana:** an interest-free study loan project for CA students, launched in 2021.\n- **ACCA Simpson Scholarship:** a yearly merit award for high-performing ACCA students.\n- **Chevening (UK):** [chevening.org](https://www.chevening.org) for a funded master's, including accounting and finance.\n- **Commonwealth Scholarships:** [cscuk.fcdo.gov.uk](https://cscuk.fcdo.gov.uk).\n- **DAAD (Germany):** [daad.de](https://www.daad.de/en/).\n- **Fulbright (USA):** through the US Embassy in Dhaka.\n\n## Long-term career timeline\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-2 | Junior Accountant / Accounts Officer | Vouchers, Tally, Excel, reconciliation |\n| 3-5 | Senior Officer / Accounts Executive | Monthly closing, VAT/TDS filing, audit support |\n| 6-9 | Assistant Manager / Manager | Budgets, team lead, ERP, reporting to management |\n| 10-14 | Senior Manager / Finance Controller | Strategy, financing, compliance, board reports |\n| 15+ | CFO / Partner / Consultant / Founder | Leadership, governance, mentoring |\n\n*A typical path, not a guarantee. A professional qualification usually shortens it.*\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years)\n2. **My target title in 3 years:** ___\n3. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n4. **One qualification step this year:** (CA / CMA / ACCA / Excel certificate / none yet)\n5. **My weekly study hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 3.\n\n## Career shifts: where accountants move\n\nAccounting is one of the easiest fields to move out of and into:\n\n- **Accounts → internal audit or compliance** (same knowledge, checking role).\n- **Accounts → tax and VAT consultancy** (specialist, often better paid).\n- **Accounts → financial analyst or FP&A** (add Excel modelling).\n- **Accounts → ERP implementation or finance data analyst** (add software skills).\n- **Accounts → banking credit or NGO finance and grants.**\n- **Accounts → teaching and training.**\n\n## Where will you find more peace of mind?\n\nNo job is free of pressure, and we have no survey to rank them. As a general pattern: audit firms and month-end corporate closing have busy seasons with long hours; NGO project finance, teaching, and many government accounts posts tend to have steadier routines; consultancy gives freedom but less income certainty. Three things protect your peace in any of them: clean daily records (no backlog), honest numbers (nothing to hide in an audit), and a halal income you can explain.\n\n## Faith and history: an old and honoured profession\n\n**The Quran.** The longest verse of the Quran, Al-Baqarah 2:282, instructs believers to write down a debt for a fixed term and to have a scribe record it justly ([read it on quran.com](https://quran.com/2/282)). Other verses command full measure and fair weight ([55:9](https://quran.com/55/9), [83:1-3](https://quran.com/83/1-3)). Accurate recording is therefore not only a job skill; it is an act of trust (amanah).\n\n**Hadith.** The Prophet (peace be upon him) said that the truthful, trustworthy merchant will be with the prophets, the truthful and the martyrs (Jami' at-Tirmidhi 1209).\n\n**History.** Accounting historian Omar Abdullah Zaid writes that the obligation of Zakat in the second year after Hijrah made written accounts necessary and led to the Diwan, the office where accounts were kept. The Diwan was organised as a state finance department under Caliph Umar ibn al-Khattab (may Allah be pleased with him), alongside the Bayt al-Mal (public treasury). Zaid also notes that records from the early Islamic state resemble the methods Luca Pacioli described in Italy in 1494.\n\n## Your contribution to the nation\n\nBangladesh's tax-to-GDP ratio is among the lowest in Asia. The NBR's 2026 roadmap aims to raise it from 6.8% to 15% by 2035, and a World Bank country director has said about 15% is needed to fund the country's development. That gap cannot close without honest, skilled accountants in every company: correct books mean correct VAT and tax, fair wages, bankable small businesses and trusted financial reports for investors.\n\n## Your contribution to the world\n\nAccounting standards (IFRS) are shared across most countries, so a Bangladeshi accountant can serve clients anywhere. Growing areas include sustainability reporting, anti-money-laundering compliance, humanitarian and donor-fund accounting, and remote bookkeeping for foreign small businesses.\n\n## If you want to be an entrepreneur\n\n- **Bookkeeping and payroll service** for small businesses that cannot afford a full-time accountant.\n- **VAT and tax return support** (check NBR's rules for registered tax practitioners before you offer filing services).\n- **Remote bookkeeping for foreign clients** using cloud software such as QuickBooks or Xero.\n- **Accounts training centre** for Tally, Excel and VAT.\n- **A CA practice** (requires ICAB membership and a certificate of practice).\n\nStart small: three paying clients and clean monthly reports are a real business.\n\n## Research opportunities\n\n- Topics with real need in Bangladesh: SME bookkeeping practices, VAT automation and compliance, Islamic finance reporting, sustainability disclosure, RMG costing, audit quality.\n- Where to publish and learn: journals of ICAB and ICMAB, university business faculties, and conferences of professional bodies.\n- Path: a strong master's thesis → research assistant work → MPhil/PhD (the scholarships above fund many of these).\n\n## Whom to follow and learn from\n\nFollow institutions rather than personalities: [ICAB](https://www.icab.org.bd), [ICMAB](https://www.icmab.org.bd), [ACCA](https://www.accaglobal.com), [IFAC](https://www.ifac.org), the [IFRS Foundation](https://www.ifrs.org) and [NBR](https://nbr.gov.bd). On LinkedIn, follow the finance heads of companies you want to join and read what they post about hiring.\n\n## Where to find accountant jobs\n\n- [BDJobs](https://www.bdjobs.com) (Accounting/Finance category) and company career pages.\n- [ACCA Careers](https://jobs.accaglobal.com) for local and international roles.\n- LinkedIn Jobs, and newspapers' weekly job pages.\n- NGO and donor project circulars (often on BDJobs and organisation sites).\n\n## Accountant CV: what to write\n\nYour accountant CV should show numbers and software, not only duties.\n\n| Weak line | Better line |\n|---|---|\n| Maintained accounts. | Posted 80-100 vouchers a day in Tally and closed the books by the 5th working day. |\n| Handled VAT. | Filed monthly VAT and TDS returns on time with no late fee. |\n| Good at Excel. | Used pivot tables and lookups to reconcile 6 bank accounts weekly. |\n\n*Use only your real, provable figures.*\n\n**Computer skills for the CV:** write software by name and level (Tally Prime, Excel pivot and lookup, any ERP). Do not write \"MS Office\" alone.\n\n**Career objective samples:**\n\n- *Fresher:* \"B.Com graduate with Tally and Excel skills seeking an Accounts Officer position to apply accurate bookkeeping and timely reporting.\"\n- *Experienced:* \"Accountant with 5 years in manufacturing, skilled in bank reconciliation, VAT/TDS and monthly closing, seeking a Senior Accounts Officer role.\"\n\nBuild yours free with the HereWeGrow CV Builder and the Accountant CV template.\n\n## Common mistakes in applications\n\n- Duties without numbers.\n- \"MS Office\" instead of named tools.\n- Ignoring the circular's documents, age limit or deadline.\n- A file named \"CV final 2\". Use YourName_Accountant_CV.pdf.\n- Claiming skills you cannot show in the interview.\n\n## Sources and method\n\nFigures were checked on 12 November 2026 and will be reviewed regularly. Salary ranges combine job circulars with public pay guides and are estimates.\n\n- US Bureau of Labor Statistics, Occupational Outlook Handbook: [Accountants and Auditors](https://www.bls.gov/ooh/business-and-financial/accountants-and-auditors.htm)\n- CPA Practice Advisor: [Deloitte](https://www.cpapracticeadvisor.com/2025/10/01/deloitte-tops-70-billion-in-global-revenue/170024/), [EY](https://www.cpapracticeadvisor.com/2025/10/17/ey-posts-4-jump-in-global-revenue-in-2025/171117/) and [PwC](https://www.cpapracticeadvisor.com/2025/10/28/pwc-reports-global-revenue-of-56-9-billion-in-2025/171838/) FY2025 revenue reports\n- The Financial Express: [KPMG set to exit Bangladesh](https://thefinancialexpress.com.bd/trade/big-four-accounting-firm-kpmg-set-to-exit-bangladesh); [ICAB interest-free study loans](https://thefinancialexpress.com.bd/education/icab-to-provide-interest-free-study-loans-to-its-students-1631187699)\n- Bangladesh Securities and Exchange Commission: [Panel of Auditors](https://sec.gov.bd/notice/POA_25.02.2025.pdf)\n- The Daily Star: [Is Chartered Accountancy the right career choice?](https://www.thedailystar.net/campus/news/exploring-chartered-accountancy-it-the-right-career-choice-you-3720231)\n- BSS: [NBR roadmap to raise the tax-GDP ratio](https://www.bssnews.net/news/426618)\n- PwC Worldwide Tax Summaries: [Bangladesh, other taxes (VAT)](https://taxsummaries.pwc.com/bangladesh/corporate/other-taxes)\n- Omar Abdullah Zaid, \"Accounting Systems and Recording Procedures in the Early Islamic State\", [Accounting Historians Journal, vol. 27, no. 1](https://egrove.olemiss.edu/aah_journal/vol27/iss1/4)\n- Job circulars on BDJobs and employer sites, read 12 November 2026\n\n**How to cite this page:** Shishir, D. H. (2026). *Accountant career in Bangladesh: salary, skills, scope and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/accountant\n\n*This guide gives general career information. It does not promise a job, salary or visa, and it is not tax or religious legal advice.*\n",
+  "growth_plan": {
+    "y1": "Master Excel and Tally with real practice data, complete one internship or first job, learn VAT/TDS basics, register for CA / CMA / ACCA foundation if you choose that path, and build a strong CV.",
+    "y2": "Own bank reconciliation and monthly closing, pass 2-4 professional papers, learn your company's ERP, support an audit, and ask for reporting tasks.",
+    "y3": "Move to Senior Accounts Officer or Executive, handle budgets, VAT filing and auditor coordination, complete more professional papers, and build a LinkedIn profile with your results."
+  },
+  "goal_sheet": [
+    "Week 1-2: Excel basics, VLOOKUP/XLOOKUP, SUMIF",
+    "Week 3-4: Pivot tables and a mini cash-book in Excel",
+    "Month 2: Tally practice with 100 sample vouchers",
+    "Month 3: Bank reconciliation and petty cash practice",
+    "Month 4: VAT, TDS basics and a sample Mushak workflow",
+    "Month 5: Prepare P&L and balance sheet from a trial balance",
+    "Month 6: Update CV, write cover letter, apply to 10 circulars, practise 20 interview questions"
+  ],
+  "test": [
+    {
+      "q": "In double-entry bookkeeping, every transaction affects:",
+      "options": [
+        "Only one account",
+        "At least two accounts",
+        "Only the cash book",
+        "Only the bank"
+      ],
+      "answer_idx": 1,
+      "explain": "Every entry has equal debit and credit in at least two accounts.",
+      "skill_tag": "bookkeeping"
+    },
+    {
+      "q": "Which of these is an asset?",
+      "options": [
+        "Accounts payable",
+        "Share capital",
+        "Accounts receivable",
+        "Rent expense"
+      ],
+      "answer_idx": 2,
+      "explain": "Money customers owe the business is an asset.",
+      "skill_tag": "bookkeeping"
+    },
+    {
+      "q": "You buy goods on credit. What happens to accounts payable?",
+      "options": [
+        "Decreases",
+        "Increases",
+        "No change",
+        "Becomes zero"
+      ],
+      "answer_idx": 1,
+      "explain": "You now owe the supplier more.",
+      "skill_tag": "bookkeeping"
+    },
+    {
+      "q": "A bank reconciliation statement compares:",
+      "options": [
+        "Cash book and bank statement",
+        "Sales and purchases",
+        "Assets and capital",
+        "VAT and income tax"
+      ],
+      "answer_idx": 0,
+      "explain": "It explains differences between your cash book and the bank's record.",
+      "skill_tag": "bookkeeping"
+    },
+    {
+      "q": "Which Excel feature quickly summarises large data by category?",
+      "options": [
+        "Page layout",
+        "Pivot table",
+        "Spell check",
+        "Freeze panes"
+      ],
+      "answer_idx": 1,
+      "explain": "A pivot table groups and totals data without writing formulas.",
+      "skill_tag": "excel"
+    },
+    {
+      "q": "Which function finds a value in a table using a lookup key?",
+      "options": [
+        "SUM",
+        "VLOOKUP",
+        "COUNT",
+        "ROUND"
+      ],
+      "answer_idx": 1,
+      "explain": "VLOOKUP (or XLOOKUP) returns a value from a table by matching a key.",
+      "skill_tag": "excel"
+    },
+    {
+      "q": "In Tally, a sales invoice is normally entered as which voucher type?",
+      "options": [
+        "Payment",
+        "Sales",
+        "Journal",
+        "Contra"
+      ],
+      "answer_idx": 1,
+      "explain": "Sales vouchers record sales to customers; contra is for cash/bank transfers.",
+      "skill_tag": "software"
+    },
+    {
+      "q": "The balance sheet shows:",
+      "options": [
+        "Only profit for the year",
+        "Assets, liabilities and equity on a date",
+        "Cash received today",
+        "Only expenses"
+      ],
+      "answer_idx": 1,
+      "explain": "It is a snapshot of financial position on a date.",
+      "skill_tag": "reporting"
+    },
+    {
+      "q": "Net profit equals:",
+      "options": [
+        "Revenue minus all expenses",
+        "Assets minus liabilities",
+        "Cash minus bank balance",
+        "Sales plus purchases"
+      ],
+      "answer_idx": 0,
+      "explain": "Net profit is what remains after all expenses.",
+      "skill_tag": "reporting"
+    },
+    {
+      "q": "Before depositing VAT or TDS you should first:",
+      "options": [
+        "Use last year's rate",
+        "Check the current rate and due date in NBR guidance",
+        "Ask a colleague",
+        "Wait for the audit"
+      ],
+      "answer_idx": 1,
+      "explain": "Rates and rules change each budget; always confirm with current NBR guidance.",
+      "skill_tag": "tax"
+    },
+    {
+      "q": "Petty cash should be:",
+      "options": [
+        "Spent without records",
+        "Kept with vouchers and counted regularly",
+        "Mixed with personal money",
+        "Checked once a year"
+      ],
+      "answer_idx": 1,
+      "explain": "Every small payment needs a voucher and a regular count.",
+      "skill_tag": "bookkeeping"
+    },
+    {
+      "q": "You find a wrong entry already posted. What is the safest correction?",
+      "options": [
+        "Delete it quietly",
+        "Pass a correcting entry and inform your supervisor",
+        "Ignore it",
+        "Change the bank statement"
+      ],
+      "answer_idx": 1,
+      "explain": "Never delete posted records; correct with a documented entry.",
+      "skill_tag": "audit"
+    }
+  ],
+  "cv_template_notes": "Use the HWG Accountant CV (ledger-grid layout). Put software by name (Tally ERP 9 / Tally Prime, Excel pivot and lookup) and numbers (vouchers per day, bank accounts reconciled, staff paid, turnover handled). Show VAT/TDS and audit support, and write your CA / ACCA / CMA stage even if unfinished. Keep it to 2 pages. File name: YourName_Accountant_CV.pdf. Use only figures you can prove.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Accounts Officer position advertised on [site/date]. I have [X] years of experience in [bookkeeping, bank reconciliation, VAT and TDS] and use Tally and Excel daily. In my last role I [one provable result, e.g. closed monthly accounts by the 5th working day].\n\nMy CV is attached as a PDF. I would be glad to attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email]",
+  "interview_qs": [
+    "Tell me about yourself. (Tip: 45 seconds: education, software, one result, why this company.)",
+    "What is the difference between debit and credit? (Tip: Use a simple cash and sale example, not only definitions.)",
+    "How do you prepare a bank reconciliation? (Tip: Compare cash book to statement; list unpresented cheques and deposits in transit; explain differences.)",
+    "Which Excel functions do you use most? (Tip: Name four: XLOOKUP/VLOOKUP, SUMIF, IF, pivot table, and say what you used them for.)",
+    "Which accounting software have you used? (Tip: Name the software and version (Tally ERP 9 / Prime) and the vouchers you posted.)",
+    "What do you know about VAT and TDS? (Tip: Give the basic idea, then say you always confirm rates and due dates in current NBR guidance.)",
+    "How do you handle a mistake in a posted entry? (Tip: Do not delete; pass a correcting entry, document it and tell your supervisor.)",
+    "How do you manage month-end deadlines? (Tip: Daily posting, early reconciliation, a closing checklist.)",
+    "What is the difference between accounting and auditing? (Tip: Accounting records and reports; auditing independently checks those records.)",
+    "What is depreciation and why do we charge it? (Tip: Spreading an asset's cost over its useful life; mention straight-line method.)",
+    "How do you deal with a supplier invoice that does not match the purchase order? (Tip: Hold payment, check with the purchasing team, record the difference, get approval.)",
+    "What is your expected salary? (Tip: Give a range based on market data and your skills; stay flexible and ask about benefits.)",
+    "Why do you want to work here? (Tip: Mention the sector and one real fact about the company.)",
+    "Where do you see yourself in 3 years? (Tip: Link growth to skills: ERP, tax, CA/ACCA/CMA stage, more responsibility.)",
+    "Do you have any questions for us? (Tip: Ask about software used, team size and reporting calendar.)"
+  ],
+  "title_en": "Accountant"
+}

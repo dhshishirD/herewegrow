@@ -224,6 +224,7 @@
 /* CV builder: only the CV is printed, at A4 with no paper margins (the designs carry their own) */
 #cv-print { display: none; }
 .cv-watermark { display: none; }
+.cv-brand-last { display: none; }
 .cv-sidebar-bg { display: none; }
 /* Minimal design: a section with nothing to show leaves no empty labelled row */
 .cv-minimal-row:has(> .cv-minimal-body:empty) { display: none !important; }
@@ -233,7 +234,7 @@
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body > #root > a, .site-header, .site-footer, .no-print, .cart-sheet { display: none !important; }
   main:not(.cv-pad) { padding: 0 !important; }
-  #cv-print { display: block; }
+  #cv-print { display: block; position: relative; }
   /* Fill page 1 but never by a hair more than A4, which used to leave an empty extra page */
   #cv-print .cv-page { min-height: 296mm !important; }
   /* Top and bottom padding repeat on every page, so page 2 does not start at the paper edge */
@@ -247,6 +248,8 @@
   /* Fixed elements repeat on each printed page: the Modern sidebar colour runs full height on every page */
   #cv-print .cv-sidebar-bg { display: block; position: fixed; top: 0; bottom: 0; left: 0; }
   #cv-print .cv-sidebar-right { left: auto; right: 0; }
+  /* Partner Starter: one small line at the end of the last page only */
+  #cv-print .cv-brand-last { display: block; position: absolute; bottom: 3mm; right: 8mm; z-index: 2; font: 600 7pt/1 "Inter Variable", Arial, sans-serif; color: #94a3b8; }
   /* Free downloads: a small footer on every page (Pro removes it) */
   #cv-print .cv-watermark { display: block; position: fixed; bottom: 4mm; right: 8mm; z-index: 2; font: 600 7.5pt/1 "Inter Variable", Arial, sans-serif; color: #94a3b8; background: rgba(255,255,255,.85); padding: 1mm 2mm; border-radius: 1mm; }
 }

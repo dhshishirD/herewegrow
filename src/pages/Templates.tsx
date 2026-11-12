@@ -402,6 +402,24 @@ export function TemplateDetail({ id }: { id: string }) {
               )}
             </figure>
           ))}
+          {tpl.bonus?.some((f) => f.startsWith('hwg-cv-ats-')) && (
+            <figure className="border-t border-line pt-6">
+              <figcaption className="mb-3 text-center">
+                <span className="inline-block rounded bg-leaf-soft px-2.5 py-1 text-sm font-semibold text-leaf-dark">{t({ en: 'Free bonus with this template', bn: 'এই টেমপ্লেটের সাথে ফ্রি বোনাস' })}</span>
+                <span className="mt-2 block font-semibold">{t({ en: 'Plain ATS version', bn: 'সাধারণ ATS ভার্সন' })}</span>
+                <span className="block text-sm text-muted">{t({ en: 'No colours or columns, so job portals and ATS software read it cleanly. Same Word editing.', bn: 'রং বা কলাম ছাড়া, তাই জব পোর্টাল ও ATS সফটওয়্যার সহজে পড়তে পারে। একই Word এডিট।' })}</span>
+              </figcaption>
+              <img
+                src={`/templates/${tpl.id}/ats-preview.webp`}
+                alt={`${tpl.title.en} ATS version preview`}
+                width={900}
+                height={1273}
+                loading="lazy"
+                decoding="async"
+                className="h-auto w-full bg-white shadow-md"
+              />
+            </figure>
+          )}
         </div>
 
         <aside className="order-1 lg:order-2">

@@ -33,7 +33,7 @@ describe('the 20 new designed templates', () => {
       expect(t.meta!.title.length).toBeLessThanOrEqual(60);
       expect(t.meta!.description.length).toBeLessThanOrEqual(155);
       expect(routeSeo(`/templates/${t.id}`)!.title).toBe(t.meta!.title);
-      for (const f of ['thumb.webp', 'page-1.webp']) expect(existsSync(`public/templates/${t.id}/${f}`), `${t.id}/${f}`).toBe(true);
+      for (const f of ['thumb.webp', 'page-1.webp', 'ats-preview.webp']) expect(existsSync(`public/templates/${t.id}/${f}`), `${t.id}/${f}`).toBe(true);
     }
   });
   it('show a New badge for 30 days only, with "<title> preview" alt text', () => {

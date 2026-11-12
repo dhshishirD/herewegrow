@@ -1,8 +1,11 @@
 import { SUPPORT_WHATSAPP_DISPLAY } from '../../shared/catalog';
+import { LINK_GROUPS } from './navLinks';
 import { useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { whatsappLink } from '../lib/whatsapp';
 import { track } from '../lib/track';
+
+const LINK = 'hover:text-white hover:underline underline-offset-4';
 
 export function Footer() {
   const { t } = useLang();
@@ -10,8 +13,8 @@ export function Footer() {
 
   return (
     <footer className="site-footer bg-leaf-dark text-white/90">
-      <div className="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
-        <div>
+      <div className="wrap grid gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)]">
+        <div className="sm:col-span-2 lg:col-span-1">
           <p className="flex items-center gap-2.5">
             <img src="/logo-mark.svg" alt="" width={36} height={36} className="h-9 w-9 rounded-lg ring-1 ring-white/20" />
             <span className="font-display text-2xl font-semibold text-white">HereWeGrow</span>
@@ -23,42 +26,36 @@ export function Footer() {
               bn: 'বাংলাদেশের চাকরিপ্রার্থীদের জন্য সিভি রাইটিং, সিভি টেমপ্লেট ও ফ্রি জব টুলস। বিশেষজ্ঞ সেবা দিচ্ছে Career Solutions।',
             })}
           </p>
-          <p className="mt-5 text-sm text-white/70">
-            {t({ en: 'Pay with bKash, Nagad or Rocket', bn: 'বিকাশ, নগদ বা রকেটে পেমেন্ট' })}
-          </p>
+          <a className="btn mt-5 !min-h-10 bg-white text-ink hover:bg-white/90" href={whatsappLink('Hello HereWeGrow')} target="_blank" rel="noreferrer"
+            onClick={() => track('cta_whatsapp_click', { where: 'footer' })}>
+            WhatsApp {SUPPORT_WHATSAPP_DISPLAY}
+          </a>
+          <p className="mt-3 text-sm text-white/70">{t({ en: 'Every day, 9am to 11pm', bn: 'প্রতিদিন সকাল ৯টা থেকে রাত ১১টা' })}</p>
         </div>
 
-        <div>
-          <p className="font-display font-semibold text-white">{t({ en: 'Get help', bn: 'সাহায্য' })}</p>
-          <ul className="mt-3 space-y-2">
-            <li>
-              <a className="hover:text-white underline-offset-4 hover:underline" href={whatsappLink('Hello HereWeGrow')} target="_blank" rel="noreferrer" onClick={() => track('cta_whatsapp_click', { where: 'footer' })}>
-                WhatsApp {SUPPORT_WHATSAPP_DISPLAY}
-              </a>
-            </li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/order">{t({ en: 'Download your files again', bn: 'আবার ফাইল ডাউনলোড' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/contact">{t({ en: 'Send us a message', bn: 'আমাদের মেসেজ পাঠান' })}</Link></li>
-            <li className="text-white/70">{t({ en: 'Every day, 9am to 11pm', bn: 'প্রতিদিন সকাল ৯টা থেকে রাত ১১টা' })}</li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-display font-semibold text-white">{t({ en: 'More', bn: 'আরও' })}</p>
-          <ul className="mt-3 space-y-2">
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/linkedin-profile-optimization">{t({ en: 'LinkedIn profile optimization', bn: 'লিংকডইন প্রোফাইল অপটিমাইজেশন' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/bdjobs-profile-optimization">{t({ en: 'BDJobs profile setup', bn: 'বিডিজবস প্রোফাইল সেটআপ' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/cv-for-gulf-jobs">{t({ en: 'Gulf job CV', bn: 'গাল্ফ চাকরির সিভি' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/guides">{t({ en: 'Career guides', bn: 'ক্যারিয়ার গাইড' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/blog">{t({ en: 'Blog', bn: 'ব্লগ' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/careers">{t({ en: 'Career roles and salaries', bn: 'ক্যারিয়ার রোল ও বেতন' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/about">{t({ en: 'About us', bn: 'আমাদের কথা' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/privacy">{t({ en: 'Privacy', bn: 'গোপনীয়তা' })}</Link></li>
-            <li><Link className="hover:text-white hover:underline underline-offset-4" href="/terms">{t({ en: 'Terms and refunds', bn: 'শর্তাবলি ও রিফান্ড' })}</Link></li>
-          </ul>
-        </div>
+        {LINK_GROUPS.map((g) => (
+          <nav key={g.title.en} aria-label={t(g.title)}>
+            <p className="font-display font-semibold text-white">{t(g.title)}</p>
+            <ul className="mt-3 space-y-2">
+              {g.links.map((l) => (
+                <li key={`${g.title.en}-${l.href}`}><Link className={LINK} href={l.href}>{t(l.label)}</Link></li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
+
       <div className="border-t border-white/15">
-        <p className="wrap py-5 text-sm text-white/60">© {year} HereWeGrow</p>
+        {/* Extra bottom space on phones keeps the floating "Message us" button off the links */}
+        <div className="wrap flex flex-col gap-3 py-5 pb-20 text-sm text-white/65 md:flex-row md:items-center md:justify-between md:pb-5">
+          <p>© {year} HereWeGrow</p>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            <li><Link className={LINK} href="/privacy">{t({ en: 'Privacy', bn: 'গোপনীয়তা' })}</Link></li>
+            <li><Link className={LINK} href="/terms">{t({ en: 'Terms and refunds', bn: 'শর্তাবলি ও রিফান্ড' })}</Link></li>
+            <li><Link className={LINK} href="/order">{t({ en: 'Download your files again', bn: 'আবার ফাইল ডাউনলোড' })}</Link></li>
+          </ul>
+          <p>{t({ en: 'Pay with bKash, Nagad or Rocket', bn: 'বিকাশ, নগদ বা রকেটে পেমেন্ট' })}</p>
+        </div>
       </div>
     </footer>
   );

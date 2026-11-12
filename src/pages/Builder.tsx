@@ -684,7 +684,7 @@ export function BuilderPage() {
         )}
 
         {/* Toolbar */}
-        <div className="sticky top-[4.25rem] z-20 border-b border-line bg-paper/95 backdrop-blur max-md:top-[7.6rem]">
+        <div className="sticky top-[var(--hdr)] z-20 border-b border-line bg-paper/95 backdrop-blur">
           {/* Phone: three steps, one at a time */}
           <div className="wrap md:hidden" role="tablist" aria-label={t({ en: 'Steps', bn: 'ধাপ' })}>
             <div className="grid grid-cols-3 gap-1.5 py-2">

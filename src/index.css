@@ -9,6 +9,10 @@
   saffron    teal accent for stamps, highlights and the logo leaf
   gold       dark teal for accent text on white (meets contrast)
 */
+/* Sticky header height: sticky bars below it (like the builder toolbar) sit at --hdr */
+:root { --hdr-row: 4.25rem; --hdr: 4.25rem; }
+@media (max-width: 1023px) { :root { --hdr-row: 3.5rem; --hdr: calc(6.25rem + 2px); } }
+
 @theme {
   --color-ink: #0b1a33;
   --color-muted: #51607a;

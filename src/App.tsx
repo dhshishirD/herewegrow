@@ -36,7 +36,7 @@ import { TemplateDetail, TemplatesPage } from './pages/Templates';
 
 const BuilderPage = lazy(() => import('./pages/Builder').then((m) => ({ default: m.BuilderPage })));
 const LazyBuilder = () => (
-  <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}>
+  <Suspense fallback={<div className="wrap min-h-[120vh] py-24 text-muted">…</div>}>
     <BuilderPage />
   </Suspense>
 );

@@ -36,5 +36,5 @@ export function renderPage(template: string, p: HeadPage): string {
     '</head>',
     `    <meta property="og:locale" content="bn_BD" />\n    <meta property="og:locale:alternate" content="en_US" />\n    <meta name="twitter:card" content="summary_large_image" />\n    ${ld}\n  </head>`,
   );
-  return html.replace('<div id="root"></div>', `<div id="root"><main class="wrap" style="padding:2rem 1.25rem">${p.body}</main></div>`);
+  return html.replace('<div id="root"></div>', `<div id="root"><style>#root>main,#root>main *{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif!important}</style><main class="wrap" style="padding:2rem 1.25rem">${p.body}</main></div>`);
 }

@@ -51,8 +51,8 @@ const STATIC: Record<string, RouteSeo> = {
     description: 'ফ্রি সিভি চেকার ও টেলিটক সরকারি চাকরির ফর্মের জন্য ছবি-স্বাক্ষর রিসাইজার। Free CV checker and photo and signature resizer, no sign-up.',
   },
   '/builder': {
-    title: 'ফ্রি সিভি বিল্ডার: অনলাইনে সিভি বানান, PDF ডাউনলোড | Free CV maker Bangladesh | HereWeGrow',
-    description: `সহজ ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি পেশাদার ডিজাইনে সিভি বানান (${bn(FREE_DESIGN_COUNT)}টি ফ্রি), ATS-ফ্রেন্ডলি PDF ডাউনলোড করুন। বাংলাদেশি ফরম্যাটের ব্যক্তিগত তথ্যসহ। বিনামূল্যে, সাইন-আপ ছাড়া। Free online CV maker.`,
+    title: 'Free CV Maker Bangladesh: ফ্রি সিভি তৈরি অনলাইনে, PDF | HereWeGrow',
+    description: `Free CV maker for Bangladesh: ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি ডিজাইনে সিভি বানান (${bn(FREE_DESIGN_COUNT)}টি ফ্রি), PDF ও Word ডাউনলোড। ব্যাংক, শিক্ষক, নার্স, আইটি, গালফ। বাংলাদেশি তথ্য ও ছবিসহ, সাইন-আপ ছাড়া, মোবাইলে চলে।`,
   },
   '/linkedin-profile-optimization': {
     title: `লিংকডইন প্রোফাইল অপটিমাইজেশন সার্ভিস (৳${price('linkedin-profile')}) | LinkedIn profile optimization Bangladesh | HereWeGrow`,

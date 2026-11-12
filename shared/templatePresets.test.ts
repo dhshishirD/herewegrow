@@ -11,6 +11,9 @@ describe('template presets', () => {
       expect(p.accent).toMatch(/^#[0-9a-f]{6}$/i);
     }
   });
+  it('opens four of the new designed CVs in the builder', () => {
+    for (const k of ['fresher', 'nurse', 'banker', 'it-software']) expect(presetFor(`hwg-cv-designed-${k}-cv`), k).not.toBeNull();
+  });
   it('returns null for unknown or empty ids', () => {
     expect(presetFor('nope')).toBeNull();
     expect(presetFor(null)).toBeNull();

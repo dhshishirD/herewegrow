@@ -22,6 +22,7 @@ export function deviceId(): string {
 export interface PartnerMe {
   ok: true;
   applied: boolean;
+  hasPass?: boolean;
   name?: string | null;
   active?: boolean;
   suspended?: boolean;

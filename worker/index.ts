@@ -11,6 +11,7 @@ import { handlePromo } from '../server/promoHandlers';
 import { handleAuth } from '../server/authHandlers';
 import { handleContact } from '../server/contact';
 import { handleTrack } from '../server/analyticsHandlers';
+import { handleAccount } from '../server/account';
 import { handleCvs } from '../server/cvs';
 import { handlePartner } from '../server/partner';
 import { handleDownload } from '../server/downloads';
@@ -38,6 +39,7 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
       if (pathname.startsWith('/api/promo/')) return handlePromo(request, env, pathname);
       if (pathname.startsWith('/api/auth/')) return handleAuth(request, env, pathname);
       if (pathname === '/api/cvs' || pathname.startsWith('/api/cvs/')) return handleCvs(request, env, pathname);
+      if (pathname.startsWith('/api/account/')) return handleAccount(request, env, pathname);
       if (pathname.startsWith('/api/partner/')) return handlePartner(request, env, pathname);
       if (pathname === '/api/download' && request.method === 'GET') return handleDownload(request, env);
       if (pathname === '/api/t' && request.method === 'POST') return handleTrack(request, env);

@@ -544,17 +544,18 @@ export function BuilderPage() {
   }, []);
 
   const [wordBusy, setWordBusy] = useState(false);
-  const downloadWord = async () => {
+  /** The Word file follows the design on screen. asAts gives the plain one-column Classic file for job portals instead. */
+  const downloadWord = async (asAts = false) => {
     setWordBusy(true);
     try {
       const { buildDocx } = await import('../builder/word');
-      const blob = await buildDocx(state, { watermark: !pro, brand: clientId && brandOn ? BRAND_LINE : undefined });
+      const blob = await buildDocx(asAts ? { ...state, design: 'classic' } : state, { watermark: !pro, brand: clientId && brandOn && !asAts ? BRAND_LINE : undefined });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV.docx`;
+      a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV${asAts ? '_ATS' : ''}.docx`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      track('cv_export', { format: 'docx' });
+      track('cv_export', { format: asAts ? 'docx_ats' : 'docx' });
     } catch (err) {
       console.error(err);
       window.alert(t({ en: 'The Word file could not be made. Try again, or use Download PDF.', bn: 'Word ফাইল তৈরি করা যায়নি। আবার চেষ্টা করুন, অথবা PDF ডাউনলোড করুন।' }));
@@ -707,8 +708,11 @@ export function BuilderPage() {
             </div>
             <MarginControl margins={state.margins} onChange={(margins) => setState((s) => ({ ...s, margins }))} t={t} />
             <div className="ml-auto flex items-center gap-2">
-              <button type="button" onClick={downloadWord} disabled={wordBusy} className="btn btn-quiet bg-white !min-h-10" title={t({ en: 'Editable Word file, Classic layout', bn: 'এডিটযোগ্য Word ফাইল, ক্লাসিক লেআউট' })}>
+              <button type="button" onClick={() => void downloadWord()} disabled={wordBusy} className="btn btn-quiet bg-white !min-h-10" title={t({ en: 'Editable Word file with the same design as the preview', bn: 'প্রিভিউয়ের একই ডিজাইনে এডিটযোগ্য Word ফাইল' })}>
                 {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : 'Word'}
+              </button>
+              <button type="button" onClick={() => void downloadWord(true)} disabled={wordBusy} className="btn btn-quiet bg-white !min-h-10" title={t({ en: 'Plain one-column Word file for job portals (ATS)', bn: 'জব পোর্টালের জন্য সাদামাটা এক কলামের Word ফাইল (ATS)' })}>
+                {t({ en: 'Word (ATS)', bn: 'Word (ATS)' })}
               </button>
               <button type="button" onClick={download} className="btn btn-primary !min-h-10">
                 {needPro && <span aria-hidden="true">🔒 </span>}{t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}
@@ -1043,8 +1047,11 @@ export function BuilderPage() {
                   <button type="button" onClick={download} className="btn btn-primary !min-h-12 w-full text-[1.05rem]">
                     {needPro && <span aria-hidden="true">🔒 </span>}{t({ en: 'Download PDF', bn: 'PDF ডাউনলোড' })}
                   </button>
-                  <button type="button" onClick={downloadWord} disabled={wordBusy} className="btn btn-quiet w-full bg-white !min-h-12">
-                    {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : t({ en: 'Download Word (editable)', bn: 'Word ডাউনলোড (এডিটযোগ্য)' })}
+                  <button type="button" onClick={() => void downloadWord()} disabled={wordBusy} className="btn btn-quiet w-full bg-white !min-h-12">
+                    {wordBusy ? t({ en: 'Making…', bn: 'তৈরি হচ্ছে…' }) : t({ en: 'Download Word (editable, same design)', bn: 'Word ডাউনলোড (এডিটযোগ্য, একই ডিজাইন)' })}
+                  </button>
+                  <button type="button" onClick={() => void downloadWord(true)} disabled={wordBusy} className="btn btn-quiet w-full bg-white !min-h-12">
+                    {t({ en: 'Download Word, ATS one column', bn: 'Word ডাউনলোড, ATS এক কলাম' })}
                   </button>
                 </div>
               )}

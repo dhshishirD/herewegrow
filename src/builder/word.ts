@@ -6,6 +6,9 @@ import { findFont } from './fonts';
 // which is the easiest to edit and ATS-safe.
 // Elegant, Bold, Minimal, Timeline, Fresher and Bars follow their preview too: colour band, edge strip,
 // labels column, rule beside entries, skill tags and section bars. Classic and Executive stay plain.
+// The newer designs (Care, Journey, Terminal, Chalk, Scholar, Ledger, Office, Spark, Support, Passport, Road, Orbit)
+// are a colour header band over a main column and a right-hand panel; Ascent is a header band over a label column.
+// Every design has its own Word layout. Only "Classic (ATS)" is the plain one-column file.
 
 import {
   AlignmentType,
@@ -50,6 +53,17 @@ function tint(color: string, amount: number): string {
   return `${ch(16)}${ch(8)}${ch(0)}`.toUpperCase();
 }
 
+/** Mixes colour a with colour b: amount 0 is all a, 1 is all b. Word has no gradients, so a header gradient becomes its middle colour. */
+export function mix(a: string, b: string, amount: number): string {
+  const x = parseInt(hex(a), 16);
+  const y = parseInt(hex(b), 16);
+  const ch = (shift: number) => {
+    const v = Math.round(((x >> shift) & 255) * (1 - amount) + ((y >> shift) & 255) * amount);
+    return v.toString(16).padStart(2, '0');
+  };
+  return `${ch(16)}${ch(8)}${ch(0)}`.toUpperCase();
+}
+
 function dataUrlBytes(url: string): Uint8Array {
   const b64 = url.split(',')[1] ?? '';
   const bin = atob(b64);
@@ -77,10 +91,60 @@ interface SidebarSpec {
   band?: string;
   /** Colour of the heading underline when it is not the heading colour (Banner uses the accent). */
   ruleColor?: string;
+  /** Newer designs: the band holds the name, headline, contact line and photo (the panel then has no photo or contact block). */
+  hdr?: {
+    photo: 'left' | 'right';
+    nameColor: string;
+    headColor: string;
+    contactColor: string;
+    /** Font for the name: a serif for the warm designs, a mono face for Terminal. */
+    font?: string;
+    /** A thin coloured row above a white band (Ledger). */
+    topBar?: string;
+  };
+  /** Skills in the panel as tags instead of a bullet list. */
+  pills?: { fill: string; text: string; font?: string };
+  /** Page colour behind the main column (cream designs). */
+  mainFill?: string;
+  /** How section headings in the main column look. */
+  title?: 'underline' | 'bar' | 'dot' | 'mono';
+  /** Colour of the heading rule, bar or square. */
+  titleRule?: string;
+  /** Entry subtitles (company, school) in the accent colour, bold. */
+  subAccent?: boolean;
+  /** Passport: personal details sit in a card above the main column. */
+  card?: boolean;
+}
+
+const WHITE = 'FFFFFF';
+const SERIF_WORD = 'Cambria';
+const MONO_WORD = 'Consolas';
+
+/** The panel-and-band look shared by the newer designs. Each design passes only what differs. */
+function bandSpec(accent: string, o: Partial<SidebarSpec> & { band: string; hdr: NonNullable<SidebarSpec['hdr']> }): SidebarSpec {
+  const a = hex(accent);
+  return { side: 'right', widthPx: 232, fill: tint(a, 0.09), text: '1F2933', head: a, muted: '52606D', refs: true, rule: true, ruleColor: tint(a, 0.28), title: 'underline', titleRule: a, pills: { fill: WHITE, text: a }, ...o };
 }
 
 export function sidebarSpec(design: DesignId, accent: string): SidebarSpec | null {
   const a = hex(accent);
+  const lightHdr = (font?: string, photo: 'left' | 'right' = 'right') => ({ photo, nameColor: '111827', headColor: a, contactColor: '111827', font });
+  const darkHdr = (font?: string, photo: 'left' | 'right' = 'left') => ({ photo, nameColor: WHITE, headColor: WHITE, contactColor: WHITE, font });
+  if (design === 'care') return bandSpec(accent, { band: mix(a, '000000', 0.15), hdr: darkHdr(SERIF_WORD), fill: tint(a, 0.08), titleRule: tint(a, 0.4), subAccent: true, pills: undefined });
+  if (design === 'journey') return bandSpec(accent, { band: mix(a, '6D28D9', 0.3), hdr: darkHdr(SERIF_WORD), fill: tint(a, 0.06), title: 'dot', titleRule: 'F5B301', rule: false });
+  if (design === 'terminal') {
+    const hi = mix(a, WHITE, 0.55);
+    return bandSpec(accent, { band: '0B1220', hdr: { photo: 'left', nameColor: WHITE, headColor: hi, contactColor: 'E5E7EB', font: MONO_WORD }, fill: '0B1220', text: 'E5E7EB', head: hi, muted: 'AEB6C4', rule: false, title: 'mono', titleRule: a, subAccent: true, pills: { fill: mix('0B1220', a, 0.28), text: hi, font: MONO_WORD } });
+  }
+  if (design === 'chalk') return bandSpec(accent, { band: mix(a, '000000', 0.14), hdr: darkHdr(SERIF_WORD), titleRule: 'E0A526', mainFill: 'FBF6E9', subAccent: true });
+  if (design === 'scholar') return bandSpec(accent, { band: mix(a, '000000', 0.33), hdr: darkHdr(SERIF_WORD, 'right'), fill: tint(a, 0.08), title: 'bar', titleRule: 'D4A62A', subAccent: true });
+  if (design === 'ledger') return bandSpec(accent, { band: WHITE, hdr: { ...lightHdr(undefined), topBar: a }, title: 'bar', titleRule: '16A34A', subAccent: true });
+  if (design === 'office') return bandSpec(accent, { band: mix(a, '000000', 0.16), hdr: darkHdr(undefined, 'right'), titleRule: 'E0A526', subAccent: true });
+  if (design === 'spark') return bandSpec(accent, { band: mix(a, '000000', 0.45), hdr: darkHdr(undefined, 'left'), fill: 'FFF3EA', titleRule: 'F97316', subAccent: true });
+  if (design === 'support') return bandSpec(accent, { band: mix(a, 'EC4899', 0.15), hdr: darkHdr(undefined, 'right'), title: 'bar', titleRule: '22D3EE', subAccent: true });
+  if (design === 'passport') return bandSpec(accent, { band: mix(a, '000000', 0.14), hdr: darkHdr(SERIF_WORD, 'left'), fill: 'F5EDD2', mainFill: 'FBF8EE', titleRule: 'C9A24B', card: true, subAccent: true });
+  if (design === 'road') return bandSpec(accent, { band: '18202F', hdr: darkHdr(undefined, 'right'), title: 'bar', titleRule: 'FACC15', subAccent: true });
+  if (design === 'orbit') return bandSpec(accent, { band: 'FBF5EC', hdr: lightHdr(SERIF_WORD, 'right'), fill: 'F1E6D4', mainFill: 'FBF5EC', titleRule: 'E0674F', subAccent: true });
   if (design === 'modern') return { side: 'left', widthPx: 250, fill: a, text: 'FFFFFF', head: 'FFFFFF', muted: 'E5E7EB', refs: true, rule: false };
   if (design === 'graphite') return { side: 'left', widthPx: 250, fill: '1F2933', text: 'FFFFFF', head: 'FFFFFF', muted: 'CBD2D9', refs: true, rule: false };
   if (design === 'corporate') return { side: 'right', widthPx: 236, fill: tint(a, 0.07), text: '1F2933', head: a, muted: '52606D', refs: false, rule: true };
@@ -100,9 +164,9 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const side = sidebarSpec(state.design, state.accent);
   const sideW = side ? side.widthPx * PX : 0;
   // Width of the column the main text lives in, used for right-aligned dates
-  const SIDE_PAD = 26 * PX;
-  const mainPadL = side?.side === 'left' ? (side.band ? 20 : 40) * PX : marginX;
-  const mainPadR = side?.side === 'right' ? 34 * PX : marginX;
+  const SIDE_PAD = (side?.hdr ? 22 : 26) * PX;
+  const mainPadL = side?.hdr ? 44 * PX : side?.side === 'left' ? (side.band ? 20 : 40) * PX : marginX;
+  const mainPadR = side?.hdr ? 30 * PX : side?.side === 'right' ? 34 * PX : marginX;
   let CONTENT = side ? A4.width - sideW - mainPadL - mainPadR : A4.width - marginX * 2;
 
   const design = state.design;
@@ -110,7 +174,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const tintAcc = (n: number) => tint(state.accent, n);
   const shade = (fill: string) => ({ type: ShadingType.CLEAR, color: 'auto', fill });
   // Inside Elegant's and Minimal's table rows a keep-with-next chain would tie the whole table together and push it to page two
-  const kn = design === 'elegant' || design === 'minimal' ? {} : { keepNext: true };
+  const kn = design === 'elegant' || design === 'minimal' || side?.hdr ? {} : { keepNext: true };
   const tiny = () => new Paragraph({ spacing: { before: 0, after: 0, line: 20 }, children: [new TextRun({ text: '', size: 2 })] });
 
   /** Extra paragraph settings for lines inside one entry (Elegant and Timeline draw a rule beside entries). */
@@ -125,6 +189,17 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   /** Section heading, in the look of the chosen design. Minimal returns nothing: its labels sit in a column. */
   const heading = (text: string): Paragraph[] => {
     const keep = kn; // a heading never sits alone at the bottom of a page (except inside table rows, see kn)
+    if (design === 'ascent') return []; // its labels sit in the left column
+    if (side?.hdr) {
+      const ruleColor = side.titleRule ?? accent;
+      if (side.title === 'bar')
+        return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, indent: { left: 140 }, border: { left: { style: BorderStyle.SINGLE, size: 24, color: ruleColor, space: 6 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
+      if (side.title === 'dot')
+        return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, children: [new TextRun({ text: '■  ', color: ruleColor, size: 16 }), new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
+      if (side.title === 'mono')
+        return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, children: [new TextRun({ text: `// ${up(text)}`, bold: true, color: accent, size: 22, font: MONO_WORD })] })];
+      return [new Paragraph({ ...keep, spacing: { before: 260, after: 110 }, border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: ruleColor, space: 3 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 22, characterSpacing: 25 })] })];
+    }
     if (design === 'elegant')
       return [new Paragraph({ ...keep, spacing: { before: 280, after: 120 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: 'E5E7EB', space: 3 } }, children: [new TextRun({ text: up(text), bold: true, color: accent, size: 20, characterSpacing: 50 })] })];
     if (design === 'minimal') return [];
@@ -195,7 +270,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       if (date) out.push(new Paragraph({ keepNext: true, spacing: { after: 20 }, ...ex, children: [new TextRun({ text: date.toUpperCase(), bold: true, color: accent, size: 19 })] }));
       out.push(new Paragraph({ keepNext: true, spacing: { after: 20 }, ...ex, children: [new TextRun({ text: title, bold: true })] }));
     } else out.push(leftRight([new TextRun({ text: title, bold: true })], date));
-    if (sub) out.push(plain(sub, { color: grey }));
+    if (sub) out.push(plain(sub, side?.subAccent ? { color: accent, bold: true } : { color: grey }));
     details(out, text);
     ex = {};
     out.push(spacer());
@@ -260,11 +335,11 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   const cellBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
   const photoPara = (size: number, alignment: (typeof AlignmentType)[keyof typeof AlignmentType]) =>
     d.photo ? new Paragraph({ alignment, children: [new ImageRun({ type: imageType(d.photo), data: dataUrlBytes(d.photo), transformation: { width: size, height: size } })] }) : null;
-  const para = (text: string, o: { size?: number; bold?: boolean; color?: string; align?: (typeof AlignmentType)[keyof typeof AlignmentType]; after?: number; before?: number; caps?: boolean } = {}) =>
-    new Paragraph({ alignment: o.align, spacing: { before: o.before ?? 0, after: o.after ?? 40 }, children: [new TextRun({ text, bold: o.bold, color: o.color, size: o.size, allCaps: o.caps })] });
+  const para = (text: string, o: { size?: number; bold?: boolean; color?: string; align?: (typeof AlignmentType)[keyof typeof AlignmentType]; after?: number; before?: number; caps?: boolean; font?: string } = {}) =>
+    new Paragraph({ alignment: o.align, spacing: { before: o.before ?? 0, after: o.after ?? 40 }, children: [new TextRun({ text, bold: o.bold, color: o.color, size: o.size, allCaps: o.caps, font: o.font })] });
   /** Name, headline and contact line as three paragraphs. */
-  const nameBlock = (o: { nameSize: number; nameColor: string; nameBold?: boolean; caps?: boolean; headColor: string; headWhite?: boolean; sep: string; align?: (typeof AlignmentType)[keyof typeof AlignmentType]; contactColor?: string; contactSize?: number }) => {
-    const out: Paragraph[] = [para(d.name || 'Your Name', { size: o.nameSize, bold: o.nameBold ?? true, color: o.nameColor, align: o.align, caps: o.caps, after: 40 })];
+  const nameBlock = (o: { nameSize: number; nameColor: string; nameBold?: boolean; caps?: boolean; headColor: string; headWhite?: boolean; sep: string; align?: (typeof AlignmentType)[keyof typeof AlignmentType]; contactColor?: string; contactSize?: number; font?: string }) => {
+    const out: Paragraph[] = [para(d.name || 'Your Name', { size: o.nameSize, bold: o.nameBold ?? true, color: o.nameColor, align: o.align, caps: o.caps, after: 40, font: o.font })];
     if (d.headline) out.push(para(d.headline, { size: 25, bold: !o.headWhite, color: o.headColor, align: o.align, after: 60 }));
     const c = contactLine(d).join(o.sep);
     if (c) out.push(para(c, { size: o.contactSize ?? 20, color: o.contactColor ?? grey, align: o.align, after: 60 }));
@@ -283,7 +358,7 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
     }
     return new Table({ width: { size: width, type: WidthType.DXA }, columnWidths: photo ? (photoLeft ? [pw, width - pw] : [width - pw, pw]) : [width], layout: TableLayoutType.FIXED, borders: TableBorders.NONE, rows: [new TableRow({ children: cells })] });
   };
-  const bleeds = !!side || design === 'elegant' || design === 'bold';
+  const bleeds = !!side || design === 'elegant' || design === 'bold' || design === 'ascent';
 
   let children: (Paragraph | Table)[];
 
@@ -336,6 +411,42 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
         }),
         tiny(),
       ];
+    } else if (design === 'ascent') {
+      /* ── Ascent: colour band with a gold rule, then each section is a row with a cream label column ── */
+      const GOLD = 'C9A24B';
+      const labelW = 150 * PX;
+      const padL = 24 * PX;
+      const padR = 40 * PX;
+      const bandPad = 44 * PX;
+      CONTENT = A4.width - labelW - padL - padR;
+      const labels = L as Record<string, string>;
+      const texts = nameBlock({ nameSize: 56, nameColor: WHITE, headColor: WHITE, headWhite: true, sep: '   ·   ', contactColor: WHITE, contactSize: 19, font: SERIF_WORD });
+      const bandInner = headerTable(texts, photoPara(100, A.LEFT), true, A4.width - bandPad * 2);
+      const rows: TableRow[] = [new TableRow({
+        children: [new TableCell({
+          columnSpan: 2,
+          width: { size: A4.width, type: WidthType.DXA },
+          shading: shade(accent),
+          borders: { ...cellBorders, bottom: { style: BorderStyle.SINGLE, size: 32, color: GOLD } },
+          margins: { top: 520, bottom: 440, left: bandPad, right: bandPad },
+          children: [bandInner, tiny()],
+        })],
+      })];
+      const rowTop = { ...cellBorders, top: { style: BorderStyle.SINGLE, size: 6, color: 'E7DFC9' } };
+      for (const k of d.order) {
+        if (d.hidden.includes(k)) continue;
+        const out: Paragraph[] = [];
+        renderSection(out, k);
+        if (!out.length) continue;
+        const label = k.startsWith('custom:') ? d.custom.find((x) => `custom:${x.id}` === k)?.title ?? '' : k === 'summary' ? labels.profile : labels[k];
+        rows.push(new TableRow({
+          children: [
+            new TableCell({ width: { size: labelW, type: WidthType.DXA }, shading: shade('F7F1E1'), borders: rowTop, margins: { top: 200, bottom: 100, left: 26 * PX, right: 8 * PX }, children: [new Paragraph({ children: [new TextRun({ text: up(label), bold: true, color: accent, size: 16, characterSpacing: 16, font: SERIF_WORD })] })] }),
+            new TableCell({ width: { size: A4.width - labelW, type: WidthType.DXA }, borders: rowTop, margins: { top: 180, bottom: 60, left: padL, right: padR }, children: out }),
+          ],
+        }));
+      }
+      children = [new Table({ width: { size: A4.width, type: WidthType.DXA }, columnWidths: [labelW, A4.width - labelW], layout: TableLayoutType.FIXED, borders: TableBorders.NONE, rows }), tiny()];
     } else if (design === 'minimal') {
       /* ── Minimal: each section is a row, label in a narrow left column ── */
       const tableW = A4.width - marginX * 2;
@@ -407,32 +518,48 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
   } else {
     /* ── Two columns: a borderless table, the sidebar cell shaded ── */
     const sideItems: Paragraph[] = [];
+    const mono = side.hdr && side.title === 'mono';
     const sh = (text: string) =>
       new Paragraph({
         spacing: { before: 280, after: 100 },
         ...(side.rule ? { border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: side.ruleColor ?? side.head, space: 3 } } } : {}),
-        children: [new TextRun({ text: (state.headings ?? 'en') === 'en' ? text.toUpperCase() : text, bold: true, color: side.head, size: 20 })],
+        children: [new TextRun({ text: `${mono ? '// ' : ''}${(state.headings ?? 'en') === 'en' ? text.toUpperCase() : text}`, bold: true, color: side.head, size: 20, font: mono ? MONO_WORD : undefined })],
       });
     const sp = (text: string, o: { muted?: boolean; bold?: boolean } = {}) =>
       new Paragraph({ spacing: { after: 70 }, children: [new TextRun({ text, bold: o.bold, color: o.muted ? side.muted : side.text, size: 20 })] });
 
-    if (d.photo) {
+    // Newer designs show photo and contact in the header band, so the panel starts with the skills
+    if (d.photo && !side.hdr) {
       sideItems.push(new Paragraph({
         alignment: AlignmentType.CENTER,
         spacing: { after: 60 },
         children: [new ImageRun({ type: imageType(d.photo), data: dataUrlBytes(d.photo), transformation: { width: 100, height: 100 } })],
       }));
     }
-    sideItems.push(sh(L.contact));
-    for (const c of contactLine(d)) sideItems.push(sp(c));
+    if (!side.hdr) {
+      sideItems.push(sh(L.contact));
+      for (const c of contactLine(d)) sideItems.push(sp(c));
+    }
     if (!d.hidden.includes('skills')) {
       if (d.skills) {
         sideItems.push(sh(L.skills));
-        for (const s of list(d.skills)) sideItems.push(new Paragraph({ numbering: { reference: 'bullets', level: 0 }, spacing: { after: 40 }, children: [new TextRun({ text: s, color: side.text, size: 20 })] }));
+        const items = list(d.skills);
+        const chips = side.pills;
+        if (chips) {
+          // Skills as tags: shaded runs that wrap like the rounded tags in the preview
+          sideItems.push(new Paragraph({
+            spacing: { after: 70, line: 380 },
+            children: items.flatMap((s, i) => [
+              ...(i ? [new TextRun({ text: '  ' })] : []),
+              new TextRun({ text: ` ${s} `, bold: true, color: chips.text, size: 20, font: chips.font, shading: shade(chips.fill) }),
+            ]),
+          }));
+        } else for (const s of items) sideItems.push(new Paragraph({ numbering: { reference: 'bullets', level: 0 }, spacing: { after: 40 }, children: [new TextRun({ text: s, color: side.text, size: 20 })] }));
       }
       if (d.languages) sideItems.push(sh(L.languages), sp(d.languages));
     }
-    const personal = d.showPersonal && !d.hidden.includes('personal') ? personalRows(d, L) : [];
+    // Passport shows these in a card above the main column instead
+    const personal = d.showPersonal && !d.hidden.includes('personal') && !side.card ? personalRows(d, L) : [];
     if (personal.length) {
       sideItems.push(sh(L.personal));
       for (const [a, v] of personal) sideItems.push(new Paragraph({ spacing: { after: 70 }, children: [new TextRun({ text: a, color: side.muted, size: 17, break: 0 }), new TextRun({ text: v, color: side.text, size: 20, break: 1 })] }));
@@ -453,6 +580,30 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       sections(main, ['summary', 'skills', 'personal', ...(side.refs ? ['references'] : [])]);
     }
 
+    // Passport: a card with the personal details, three to a row, above the main column
+    const lead: (Paragraph | Table)[] = [];
+    const cardRows = side.card && d.showPersonal && !d.hidden.includes('personal') ? personalRows(d, L) : [];
+    if (cardRows.length) {
+      const cw = Math.floor((A4.width - sideW - mainPadL - mainPadR) / 3);
+      const edge = { style: BorderStyle.SINGLE, size: 4, color: 'E8E0C4' };
+      const trs: TableRow[] = [];
+      for (let i = 0; i < cardRows.length; i += 3) {
+        const chunk = cardRows.slice(i, i + 3);
+        trs.push(new TableRow({
+          children: [0, 1, 2].map((j) => new TableCell({
+            width: { size: cw, type: WidthType.DXA },
+            shading: shade(WHITE),
+            borders: { top: i === 0 ? edge : noBorder, bottom: i + 3 >= cardRows.length ? edge : noBorder, left: j === 0 ? edge : noBorder, right: j === 2 ? edge : noBorder },
+            margins: { top: 80, bottom: 80, left: 160, right: 100 },
+            children: chunk[j]
+              ? [new Paragraph({ spacing: { after: 0 }, children: [new TextRun({ text: chunk[j][0].toUpperCase(), color: grey, size: 15, characterSpacing: 20 })] }), new Paragraph({ spacing: { after: 0 }, children: [new TextRun({ text: chunk[j][1], bold: true, size: 21 })] })]
+              : [new Paragraph({ children: [] })],
+          })),
+        }));
+      }
+      lead.push(new Table({ width: { size: cw * 3, type: WidthType.DXA }, columnWidths: [cw, cw, cw], layout: TableLayoutType.FIXED, borders: TableBorders.NONE, rows: trs }), tiny());
+    }
+
     const mainW = A4.width - sideW;
     const sideCell = new TableCell({
       width: { size: sideW, type: WidthType.DXA },
@@ -463,12 +614,32 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
     });
     const mainCell = new TableCell({
       width: { size: mainW, type: WidthType.DXA },
+      ...(side.mainFill ? { shading: shade(side.mainFill) } : {}),
       borders: cellBorders,
       margins: { top: 300, bottom: 300, left: mainPadL, right: mainPadR },
-      children: main,
+      children: [...lead, ...main],
     });
+    // Newer designs: the band holds name, headline, contact and photo across the full width
+    const HDR_BAND_H = 2500; // twips, with a 100 px photo
+    const hdrRows: TableRow[] = [];
+    if (side.hdr) {
+      const h = side.hdr;
+      const texts = nameBlock({ nameSize: 56, nameColor: h.nameColor, headColor: h.headColor, headWhite: h.headColor === WHITE, sep: '   ·   ', contactColor: h.contactColor, contactSize: 20, font: h.font });
+      const inner = headerTable(texts, photoPara(100, h.photo === 'left' ? AlignmentType.LEFT : AlignmentType.RIGHT), h.photo === 'left', A4.width - mainPadL * 2);
+      if (h.topBar) hdrRows.push(new TableRow({ children: [new TableCell({ columnSpan: 2, width: { size: A4.width, type: WidthType.DXA }, shading: shade(h.topBar), borders: cellBorders, children: [tiny()] })] }));
+      hdrRows.push(new TableRow({
+        children: [new TableCell({
+          columnSpan: 2,
+          width: { size: A4.width, type: WidthType.DXA },
+          shading: shade(side.band!),
+          borders: cellBorders,
+          margins: { top: 420, bottom: 360, left: mainPadL, right: mainPadL },
+          children: [inner, tiny()],
+        })],
+      }));
+    }
     // Banner: one full-width coloured row on top, the name starting where the main column starts
-    const bandRow = side.band
+    const bandRow = side.hdr ? hdrRows : side.band
       ? [new TableRow({
           height: { value: 150 * PX, rule: HeightRule.ATLEAST },
           children: [new TableCell({
@@ -492,7 +663,9 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
         borders: TableBorders.NONE,
         rows: [...bandRow, new TableRow({
           // Tall enough that the sidebar colour fills page one; a longer CV just flows onto page two
-          ...(side.band ? {} : { height: { value: A4.height - marginY * 2 - 900, rule: HeightRule.ATLEAST } }),
+          ...(side.hdr
+            ? { height: { value: A4.height - marginY * 2 - HDR_BAND_H - (side.hdr.topBar ? 150 : 0) - 1100, rule: HeightRule.ATLEAST } }
+            : side.band ? {} : { height: { value: A4.height - marginY * 2 - 900, rule: HeightRule.ATLEAST } }),
           children: side.side === 'left' ? [sideCell, mainCell] : [mainCell, sideCell],
         })],
       }),

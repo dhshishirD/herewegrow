@@ -431,10 +431,20 @@ export function intakeCv(b: Record<string, unknown>): { cv: string; name: string
   const name = clip(b.name, 80);
   const phone = normalizePhone(b.phone);
   if (name.length < 2 || !phone) return null;
-  const edu = clip(b.degree, 120) || clip(b.institution, 120) ? [{ id: sid(), degree: clip(b.degree, 120), major: '', institution: clip(b.institution, 120), result: clip(b.result, 40), year: clip(b.year, 20), details: '' }] : [];
-  const exp = clip(b.role, 120) || clip(b.org, 120) ? [{ id: sid(), role: clip(b.role, 120), org: clip(b.org, 120), location: '', start: clip(b.period, 40), end: '', current: false, bullets: clip(b.duties, 1200) }] : [];
+  // Several jobs / education entries (jobs, edus), or the older single-entry fields.
+  const rows = (v: unknown, max: number): Record<string, unknown>[] => (Array.isArray(v) ? v.slice(0, max).filter((x): x is Record<string, unknown> => !!x && typeof x === 'object') : []);
+  const eduIn = rows(b.edus, 8);
+  const jobIn = rows(b.jobs, 10);
+  if (!eduIn.length) eduIn.push({ degree: b.degree, institution: b.institution, result: b.result, year: b.year });
+  if (!jobIn.length) jobIn.push({ role: b.role, org: b.org, period: b.period, duties: b.duties });
+  const edu = eduIn
+    .filter((e) => clip(e.degree, 120) || clip(e.institution, 120))
+    .map((e) => ({ id: sid(), degree: clip(e.degree, 120), major: '', institution: clip(e.institution, 120), result: clip(e.result, 40), year: clip(e.year, 20), details: '' }));
+  const exp = jobIn
+    .filter((j) => clip(j.role, 120) || clip(j.org, 120))
+    .map((j) => ({ id: sid(), role: clip(j.role, 120), org: clip(j.org, 120), location: '', start: clip(j.period, 40), end: '', current: false, bullets: clip(j.duties, 1200) }));
   const target = clip(b.target, 120);
-  const data = { name, headline: target, phone, skills: clip(b.skills, 600), photo: photoOk(b.photo), education: edu, experience: exp, summary: '' };
+  const data = { name, headline: target, phone, email: clip(b.email, 120), skills: clip(b.skills, 600), photo: photoOk(b.photo), education: edu, experience: exp, summary: clip(b.summary, 800) };
   const state = { data, design: 'classic', accent: '#1e3a5f' };
   return { cv: JSON.stringify(state), name, phone, note: clip(b.message, 600) };
 }

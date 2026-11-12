@@ -189,6 +189,15 @@ describe('devices', () => {
 });
 
 describe('intake link', () => {
+  it('keeps several jobs and education entries, drops empty ones, caps the count', () => {
+    const jobs = Array.from({ length: 14 }, (_, i) => ({ role: `Role ${i}`, org: 'Co', period: '2020', duties: 'a\nb' }));
+    const made = intakeCv({ name: 'Karim Uddin', phone: '01712345678', email: 'k@x.com', summary: 'Hello', jobs: [...jobs, { role: '', org: '' }], edus: [{ degree: 'MBA', institution: 'DU' }, { degree: '', institution: '' }, { degree: 'BBA', institution: 'NSU' }] })!;
+    const d = JSON.parse(made.cv).data;
+    expect(d.experience).toHaveLength(10);
+    expect(d.education.map((e: { degree: string }) => e.degree)).toEqual(['MBA', 'BBA']);
+    expect(d).toMatchObject({ email: 'k@x.com', summary: 'Hello' });
+    expect(JSON.parse(intakeCv({ name: 'Karim Uddin', phone: '01712345678', jobs: 'bad', edus: [null, 5] })!.cv).data.experience).toEqual([]);
+  });
   it('turns the client’s answers into a prefilled folder, name and phone only required', async () => {
     expect(intakeCv({ name: 'A', phone: '01712345678' })).toBeNull();
     expect(intakeCv({ name: 'Karim Uddin', phone: '123' })).toBeNull();

@@ -1,7 +1,7 @@
 // CV builder designs: ids, names and which need Pro. No layout code here, so the
 // build-time SEO pages can use it too. The layouts live in src/builder/designs.tsx.
 
-export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite' | 'banner' | 'bars';
+export type DesignId = 'classic' | 'modern' | 'executive' | 'elegant' | 'minimal' | 'timeline' | 'corporate' | 'pulse' | 'bold' | 'fresher' | 'graphite' | 'banner' | 'bars' | 'ascent' | 'care' | 'journey' | 'terminal';
 
 export interface DesignInfo {
   id: DesignId;
@@ -27,6 +27,10 @@ export const DESIGN_LIST: DesignInfo[] = [
   { id: 'graphite', name: { en: 'Graphite', bn: 'গ্রাফাইট' }, note: { en: 'Dark charcoal sidebar, serious and sharp', bn: 'গাঢ় চারকোল সাইডবার, গম্ভীর ও ধারালো' }, pro: true, photo: true },
   { id: 'banner', name: { en: 'Banner', bn: 'ব্যানার' }, note: { en: 'Colour band with your name, photo and clean side column', bn: 'রঙিন ব্যানারে নাম, ছবি ও পরিষ্কার সাইড কলাম' }, pro: true, photo: true },
   { id: 'bars', name: { en: 'Bars (ATS)', bn: 'বার্স (ATS)' }, note: { en: 'Full-width section bars, one column, for banks and corporates', bn: 'পুরো প্রস্থের সেকশন বার, এক কলাম, ব্যাংক ও কর্পোরেটের জন্য' }, pro: true, photo: true },
+  { id: 'ascent', name: { en: 'Ascent', bn: 'অ্যাসেন্ট' }, note: { en: 'Navy header with a rising line and cream label column, for bankers', bn: 'নেভি হেডার, ওঠা লাইন ও ক্রিম লেবেল কলাম, ব্যাংকারদের জন্য' }, pro: true, photo: true },
+  { id: 'care', name: { en: 'Care', bn: 'কেয়ার' }, note: { en: 'Teal header with a heartbeat line, for nurses and doctors', bn: 'হার্টবিট লাইনসহ টিল হেডার, নার্স ও ডাক্তারদের জন্য' }, pro: true, photo: true },
+  { id: 'journey', name: { en: 'Journey', bn: 'জার্নি' }, note: { en: 'Wave header and a study timeline, for freshers and students', bn: 'ওয়েভ হেডার ও পড়াশোনার টাইমলাইন, ফ্রেশার ও স্টুডেন্টদের জন্য' }, pro: true, photo: true },
+  { id: 'terminal', name: { en: 'Terminal', bn: 'টার্মিনাল' }, note: { en: 'Dark terminal-style header and skills panel, for IT and software', bn: 'ডার্ক টার্মিনাল স্টাইল হেডার, আইটি ও সফটওয়্যারের জন্য' }, pro: true, photo: true },
 ];
 
 export const DESIGN_IDS = DESIGN_LIST.map((d) => d.id);

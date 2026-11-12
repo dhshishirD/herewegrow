@@ -670,6 +670,268 @@ function Bars({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
+
+/* ── New Designed-CV looks (Pro): Ascent (banker), Care (nurse), Journey (fresher), Terminal (IT) ── */
+
+const lighten = (hex: string, pct = 45) => `color-mix(in srgb, ${hex} ${pct}%, white)`;
+const MONO = 'ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace';
+
+function RefsList({ d, small }: { d: CvData; small?: boolean }) {
+  return (
+    <>
+      {d.references.map((r) => (
+        <p key={r.id} style={{ margin: '0 0 9px', wordBreak: 'break-word', fontSize: small ? 11.5 : undefined }}>
+          <strong>{r.name}</strong>{[r.title, r.org].filter(Boolean).map((x) => <span key={x}><br />{x}</span>)}
+          {(r.phone || r.email) && <span style={{ opacity: 0.75 }}><br />{[r.phone, r.email].filter(Boolean).join(', ')}</span>}
+        </p>
+      ))}
+    </>
+  );
+}
+
+/** Ascent: navy header with a rising line, gold rule, and a cream label column (banker). */
+function Ascent({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const GOLD = '#c9a24b';
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: SERIF, fontSize: 10.5, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: accent, margin: 0, paddingTop: 2 }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 11 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontFamily: SERIF, fontSize: 13.5, color: '#111827' }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const { Title } = T;
+  const RowTheme: Theme = { ...T, Title: () => null };
+  return (
+    <div className="cv-page" style={PAGE}>
+      <header className="cv-keep" style={{ position: 'relative', background: accent, color: '#fff', padding: `${my(38)} ${mx(44)} 34px`, borderBottom: `4px solid ${GOLD}`, overflow: 'hidden' }}>
+        <svg aria-hidden="true" viewBox="0 0 400 150" preserveAspectRatio="none" style={{ position: 'absolute', right: 0, bottom: 0, width: 300, height: 110, opacity: 0.55 }}>
+          <path d="M0 150 L0 118 L70 112 L130 94 L190 98 L250 62 L300 52 L340 28 L400 8 L400 150 Z" fill="#ffffff" fillOpacity="0.1" />
+          <polyline points="0,118 70,112 130,94 190,98 250,62 300,52 340,28 400,8" fill="none" stroke={GOLD} strokeWidth="2.5" />
+        </svg>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 22 }}>
+          {d.photo && <img src={d.photo} alt="" style={{ width: 104, height: 104, borderRadius: '50%', objectFit: 'cover', border: `3px solid ${GOLD}`, flexShrink: 0, background: '#fff' }} />}
+          <div style={{ minWidth: 0 }}>
+            <h1 style={{ fontFamily: SERIF, fontSize: 31, fontWeight: 650, margin: 0, lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+            {d.headline && <p style={{ margin: '6px 0 0', fontSize: 13.5, letterSpacing: '0.04em', opacity: 0.92 }}>{d.headline}</p>}
+            <p style={{ margin: '8px 0 0', fontSize: 11.5, opacity: 0.85 }}>{contactLine(d).join('   ·   ')}</p>
+          </div>
+        </div>
+      </header>
+      <div className="cv-pad" style={{ padding: `${my(8)} 0 ${my(36)}` }}>
+        {d.order.map((k) => {
+          if (d.hidden.includes(k)) return null;
+          const label = k.startsWith('custom:') ? d.custom.find((x) => `custom:${x.id}` === k)?.title : k === 'summary' ? L.profile : L[k];
+          return (
+            <div key={k} className="cv-minimal-row" style={{ display: 'grid', gridTemplateColumns: '150px 1fr', borderTop: '1px solid #e7dfc9' }}>
+              <div style={{ background: '#f7f1e1', padding: `13px 14px 8px ${mx(30)}` }}><Title>{label}</Title></div>
+              <div className="cv-minimal-body" style={{ padding: `12px ${mx(40)} 2px 24px` }}><Section k={k} d={d} L={L} T={RowTheme} /></div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** Care: teal header with a heartbeat line, main column and a tinted side panel (nurse, doctor). */
+function Care({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const tint = `${accent}14`;
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', paddingBottom: 4, borderBottom: `2px solid ${accent}55` }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: accent, fontWeight: 600, fontSize: 12 }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 11, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', paddingBottom: 3, borderBottom: `1px solid ${accent}40` }}>{children}</h2>
+  );
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
+  return (
+    <div className="cv-page" style={{ ...PAGE, display: 'flex', flexDirection: 'column' }}>
+      <header className="cv-keep" style={{ position: 'relative', background: `linear-gradient(120deg, ${accent}, color-mix(in srgb, ${accent} 70%, #000))`, color: '#fff', padding: `${my(34)} ${mx(44)} 46px`, overflow: 'hidden' }}>
+        <svg aria-hidden="true" viewBox="0 0 794 46" preserveAspectRatio="none" style={{ position: 'absolute', left: 0, bottom: 0, width: '100%', height: 46 }}>
+          <polyline points="0,28 240,28 270,28 285,10 300,40 318,4 336,34 350,28 794,28" fill="none" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="2" />
+        </svg>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 22 }}>
+          {d.photo && <img src={d.photo} alt="" style={{ width: 104, height: 104, borderRadius: '50%', objectFit: 'cover', border: '4px solid #fff', flexShrink: 0, background: '#fff' }} />}
+          <div style={{ minWidth: 0 }}>
+            <h1 style={{ fontFamily: SERIF, fontSize: 31, fontWeight: 650, margin: 0, lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+            {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14, opacity: 0.95, letterSpacing: '0.03em' }}>{d.headline}</p>}
+            <p style={{ margin: '8px 0 0', fontSize: 11.5, opacity: 0.9 }}>{contactLine(d).join('   ·   ')}</p>
+          </div>
+        </div>
+      </header>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 232px' }}>
+        <main className="cv-pad" style={{ padding: `${my(8)} ${mx(30)} ${my(36)} ${mx(44)}` }}>
+          {!d.hidden.includes('summary') && d.summary && <T.Title>{L.profile}</T.Title>}
+          {!d.hidden.includes('summary') && d.summary && <p style={{ margin: 0 }}>{d.summary}</p>}
+          {d.order.filter((k) => !['summary', 'skills', 'personal', 'references'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+        </main>
+        <aside className="cv-pad" style={{ background: tint, padding: `${my(14)} 22px ${my(36)}` }}>
+          {showSkills && d.skills && (<><Side>{L.skills}</Side><ul style={{ margin: 0, paddingLeft: 16, listStyle: 'disc' }}>{list(d.skills).map((s) => <li key={s} style={{ marginBottom: 3 }}>{s}</li>)}</ul></>)}
+          {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+          {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px', fontSize: 11.5 }}><span style={{ color: GREY, fontSize: 10.5 }}>{a}</span><br />{b}</p>)}</>)}
+          {showRefs && (<><Side>{L.references}</Side><RefsList d={d} small /></>)}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+/** Journey: blue header with a wave, a "my journey so far" strip from the education entries, tinted skills panel (fresher, student). */
+function Journey({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const GOLD = '#f5b301';
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ width: 8, height: 8, background: GOLD, borderRadius: 2, display: 'inline-block' }} />{children}
+      </h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: GREY }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 11, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px' }}>{children}</h2>
+  );
+  const steps = d.hidden.includes('education') ? [] : d.education.filter((e) => e.degree || e.institution).slice(0, 4);
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
+  return (
+    <div className="cv-page" style={{ ...PAGE, display: 'flex', flexDirection: 'column' }}>
+      <header className="cv-keep" style={{ position: 'relative', background: `linear-gradient(135deg, ${accent}, color-mix(in srgb, ${accent} 65%, #6d28d9))`, color: '#fff', padding: `${my(34)} ${mx(44)} 58px`, overflow: 'hidden' }}>
+        <svg aria-hidden="true" viewBox="0 0 794 40" preserveAspectRatio="none" style={{ position: 'absolute', left: 0, bottom: -1, width: '100%', height: 40 }}>
+          <path d="M0 22 C130 -4 260 44 400 22 S660 0 794 22 L794 40 L0 40 Z" fill="#ffffff" />
+        </svg>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 22 }}>
+          {d.photo && <img src={d.photo} alt="" style={{ width: 104, height: 104, borderRadius: '50%', objectFit: 'cover', border: `4px solid ${GOLD}`, flexShrink: 0, background: '#fff' }} />}
+          <div style={{ minWidth: 0 }}>
+            <h1 style={{ fontFamily: SERIF, fontSize: 32, fontWeight: 700, margin: 0, lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+            {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14, opacity: 0.95 }}>{d.headline}</p>}
+            <p style={{ margin: '8px 0 0', fontSize: 11.5, opacity: 0.9 }}>{contactLine(d).join('   ·   ')}</p>
+          </div>
+        </div>
+      </header>
+      {steps.length > 0 && (
+        <div className="cv-keep" style={{ margin: `0 ${mx(44)} 4px`, padding: '10px 18px 12px', borderRadius: 12, background: '#fff', boxShadow: '0 2px 10px rgba(30,41,59,0.12)', border: '1px solid #e5e7eb' }}>
+          <p style={{ margin: 0, fontSize: 10, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: accent }}>{L.education}</p>
+          <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: `repeat(${steps.length}, 1fr)`, marginTop: 14 }}>
+            <span style={{ position: 'absolute', left: 8, right: 8, top: 6, height: 2, background: `${accent}55` }} />
+            {steps.map((e, i) => (
+              <div key={e.id} style={{ position: 'relative', textAlign: 'center', padding: '0 6px' }}>
+                <span style={{ display: 'block', width: 14, height: 14, borderRadius: '50%', margin: '0 auto 5px', background: i === steps.length - 1 ? GOLD : '#fff', border: `3px solid ${accent}`, boxSizing: 'border-box' }} />
+                <div style={{ fontWeight: 700, fontSize: 11.5 }}>{[e.year, degreeLine(e.degree, '')].filter(Boolean).join(' · ')}</div>
+                <div style={{ color: GREY, fontSize: 10.5 }}>{e.institution}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 232px' }}>
+        <main className="cv-pad" style={{ padding: `${my(6)} ${mx(30)} ${my(36)} ${mx(44)}` }}>
+          {d.order.filter((k) => !['skills', 'personal', 'references'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+        </main>
+        <aside className="cv-pad" style={{ background: `${accent}10`, padding: `${my(10)} 22px ${my(36)}` }}>
+          {showSkills && d.skills && (<><Side>{L.skills}</Side><Pills items={list(d.skills)} accent={accent} /></>)}
+          {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+          {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px', fontSize: 11.5 }}><span style={{ color: GREY, fontSize: 10.5 }}>{a}</span><br />{b}</p>)}</>)}
+          {showRefs && (<><Side>{L.references}</Side><RefsList d={d} small /></>)}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+/** Terminal: dark terminal-window header with "// section" headings and a dark skills panel (IT, software). */
+function Terminal({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const DARK = '#0b1220';
+  const hi = lighten(accent, 55);
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: accent, margin: '19px 0 8px', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{'// '}{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11, whiteSpace: 'nowrap', fontFamily: MONO }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: accent, fontWeight: 600, fontSize: 12 }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: MONO, fontSize: 11.5, fontWeight: 700, color: hi, margin: '19px 0 8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>{'// '}{children}</h2>
+  );
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
+  return (
+    <div className="cv-page" style={{ ...PAGE, display: 'flex', flexDirection: 'column' }}>
+      <header className="cv-keep" style={{ padding: `${my(22)} ${mx(26)} 0` }}>
+        <div style={{ background: DARK, color: '#e5e7eb', borderRadius: 10, border: `1px solid ${accent}`, boxShadow: `0 0 0 3px ${accent}22`, overflow: 'hidden' }}>
+          <div style={{ display: 'flex', gap: 6, padding: '9px 14px', background: '#111a2e' }} aria-hidden="true">
+            {['#ef4444', '#f59e0b', '#22c55e'].map((c) => <span key={c} style={{ width: 9, height: 9, borderRadius: '50%', background: c, display: 'inline-block' }} />)}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 22, padding: '16px 24px 20px' }}>
+            {d.photo && <img src={d.photo} alt="" style={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover', border: `3px solid ${hi}`, boxShadow: `0 0 14px ${accent}`, flexShrink: 0, background: '#fff' }} />}
+            <div style={{ minWidth: 0, fontFamily: MONO }}>
+              <p style={{ margin: 0, fontSize: 11, color: hi }}>$ whoami</p>
+              <h1 style={{ fontFamily: MONO, fontSize: 28, fontWeight: 800, margin: '2px 0 0', color: '#fff', lineHeight: 1.1 }}>{d.name || 'Your Name'}</h1>
+              {d.headline && <p style={{ margin: '5px 0 0', fontSize: 12.5, color: hi }}>{'> '}{d.headline}</p>}
+              <p style={{ margin: '8px 0 0', fontSize: 10.5, opacity: 0.85 }}>{contactLine(d).join('  |  ')}</p>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 224px', marginTop: 14 }}>
+        <main className="cv-pad" style={{ padding: `${my(2)} ${mx(26)} ${my(34)} ${mx(36)}` }}>
+          {!d.hidden.includes('summary') && d.summary && <T.Title>{L.profile}</T.Title>}
+          {!d.hidden.includes('summary') && d.summary && <p style={{ margin: 0 }}>{d.summary}</p>}
+          {d.order.filter((k) => !['summary', 'skills', 'personal', 'references'].includes(k)).map((k) => <Section key={k} k={k} d={d} L={L} T={T} />)}
+        </main>
+        <aside className="cv-pad" style={{ background: DARK, color: '#e5e7eb', borderRadius: '10px 0 0 10px', padding: `${my(8)} 20px ${my(34)}` }}>
+          {showSkills && d.skills && (<><Side>{L.skills}</Side><div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px 6px' }}>{list(d.skills).map((s) => <span key={s} style={{ fontFamily: MONO, fontSize: 10.5, padding: '2px 8px', borderRadius: 4, border: `1px solid ${accent}`, color: hi, background: `${accent}22` }}>{s}</span>)}</div></>)}
+          {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+          {showPersonal && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px', fontSize: 11.5 }}><span style={{ opacity: 0.65, fontSize: 10.5 }}>{a}</span><br />{b}</p>)}</>)}
+          {showRefs && (<><Side>{L.references}</Side><RefsList d={d} small /></>)}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
@@ -686,6 +948,10 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font }
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {
+  if (design === 'ascent') return <Ascent d={d} accent={accent} L={L} />;
+  if (design === 'care') return <Care d={d} accent={accent} L={L} />;
+  if (design === 'journey') return <Journey d={d} accent={accent} L={L} />;
+  if (design === 'terminal') return <Terminal d={d} accent={accent} L={L} />;
   if (design === 'banner') return <Banner d={d} accent={accent} L={L} />;
   if (design === 'bars') return <Bars d={d} accent={accent} L={L} />;
   if (design === 'pulse') return <Pulse d={d} accent={accent} L={L} />;

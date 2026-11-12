@@ -932,6 +932,147 @@ function Terminal({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
+
+/* ── Styled: one layout, many looks (Pro) — header art + main column + tinted side panel ── */
+
+type Look = {
+  page?: string;
+  /** Header background, given the accent. */
+  bg: (a: string) => string;
+  /** Text colour in the header. */
+  fg?: string;
+  art?: (a: string) => ReactNode;
+  photo: 'left' | 'right';
+  shape: 'circle' | 'round' | 'square';
+  ring: string;
+  panel: (a: string) => string;
+  title: 'underline' | 'bar' | 'dot';
+  /** Second colour: rules, dots, bar edge. */
+  hi: string;
+  head: 'serif' | 'sans' | 'mono';
+  pills?: boolean;
+  /** passport: a personal-details card under the header (Gulf). */
+  card?: 'passport';
+  /** Panel colour for the side column text. */
+  edge?: string;
+};
+
+const svgArt = (children: ReactNode, box = '0 0 794 190') => (
+  <svg aria-hidden="true" viewBox={box} preserveAspectRatio="xMaxYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>{children}</svg>
+);
+
+const LOOKS: Record<string, Look> = {
+  chalk: {
+    page: '#fbf6e9', bg: (a) => `linear-gradient(135deg, ${a}, color-mix(in srgb, ${a} 72%, #000))`, photo: 'left', shape: 'circle', ring: '#f3d98b', panel: (a) => `color-mix(in srgb, ${a} 9%, #fff)`, title: 'underline', hi: '#e0a526', head: 'serif', pills: true,
+    art: () => svgArt(<g fill="none" stroke="#fff" strokeOpacity="0.5" strokeWidth="1.6"><path d="M700 40 l8 18 20 2 -15 13 5 20 -18 -10 -18 10 5 -20 -15 -13 20 -2z" /><path d="M640 150 L720 150 L640 100 Z" /><path d="M560 40 q14 -14 28 0" /><rect x="6" y="6" width="782" height="178" stroke="#a16b3a" strokeOpacity="0.9" strokeWidth="10" /></g>),
+  },
+  scholar: {
+    bg: (a) => `linear-gradient(135deg, color-mix(in srgb, ${a} 80%, #000), color-mix(in srgb, ${a} 55%, #000))`, photo: 'right', shape: 'circle', ring: '#e7c46a', panel: (a) => `color-mix(in srgb, ${a} 8%, #fff)`, title: 'bar', hi: '#d4a62a', head: 'serif', pills: true,
+    art: () => svgArt(<g fill="none" stroke="#fff" strokeOpacity="0.14" strokeWidth="1.5"><circle cx="680" cy="95" r="70" /><circle cx="680" cy="95" r="110" /><circle cx="680" cy="95" r="150" /></g>),
+  },
+  ledger: {
+    page: '#fff', bg: () => '#fff', fg: '#111827', photo: 'right', shape: 'round', ring: '', panel: (a) => `color-mix(in srgb, ${a} 9%, #fff)`, title: 'bar', hi: '#16a34a', head: 'sans', pills: true, edge: 'top',
+    art: (a) => svgArt(<g><rect x="0" y="0" width="794" height="9" fill={a} /><g stroke={a} strokeOpacity="0.09">{[40, 80, 120, 160].map((y) => <line key={y} x1="0" x2="794" y1={y} y2={y} />)}{[100, 200, 300, 400, 500, 600, 700].map((x) => <line key={x} y1="0" y2="190" x1={x} x2={x} />)}</g></g>),
+  },
+  office: {
+    bg: (a) => `linear-gradient(120deg, ${a}, color-mix(in srgb, ${a} 68%, #000))`, photo: 'right', shape: 'circle', ring: '#f3d98b', panel: (a) => `color-mix(in srgb, ${a} 9%, #fff)`, title: 'underline', hi: '#e0a526', head: 'sans', pills: true,
+    art: () => svgArt(<g fill="#fff" fillOpacity="0.16">{[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <rect key={i} x={440 + i * 30} y="150" width="22" height="22" rx="4" />)}{[0, 1, 2].map((i) => <rect key={i} x="700" y={30 + i * 24} width="20" height="14" rx="3" />)}</g>),
+  },
+  spark: {
+    bg: (a) => `linear-gradient(120deg, color-mix(in srgb, ${a} 70%, #000), color-mix(in srgb, ${a} 40%, #000))`, photo: 'left', shape: 'round', ring: '#f97316', panel: () => '#fff3ea', title: 'underline', hi: '#f97316', head: 'sans', pills: true,
+    art: () => svgArt(<g><polygon points="725,0 775,0 705,190 655,190" fill="#f97316" /><polygon points="785,0 794,0 794,20 725,190 712,190" fill="#f97316" fillOpacity="0.55" /><polygon points="680,0 700,0 635,190 615,190" fill="#ffffff" fillOpacity="0.08" /></g>),
+  },
+  support: {
+    bg: (a) => `linear-gradient(135deg, ${a}, color-mix(in srgb, ${a} 70%, #ec4899))`, photo: 'right', shape: 'circle', ring: '#67e8f9', panel: (a) => `color-mix(in srgb, ${a} 9%, #fff)`, title: 'bar', hi: '#22d3ee', head: 'sans', pills: true,
+    art: () => svgArt(<g fill="#fff" fillOpacity="0.13"><rect x="470" y="28" width="110" height="46" rx="22" /><rect x="520" y="96" width="120" height="44" rx="22" /><circle cx="500" cy="51" r="4" fill="#fff" /><circle cx="520" cy="51" r="4" fill="#fff" /><circle cx="540" cy="51" r="4" fill="#fff" /></g>),
+  },
+  passport: {
+    page: '#fbf8ee', bg: (a) => `linear-gradient(120deg, ${a}, color-mix(in srgb, ${a} 72%, #000))`, photo: 'left', shape: 'circle', ring: '#e7c46a', panel: () => '#f5edd2', title: 'underline', hi: '#c9a24b', head: 'serif', pills: true, card: 'passport',
+    art: () => svgArt(<g fill="#fff" fillOpacity="0.12">{Array.from({ length: 12 }).flatMap((_, r) => Array.from({ length: 22 }).map((__, c) => <circle key={`${r}-${c}`} cx={20 + c * 36} cy={14 + r * 16} r="1.4" />))}</g>),
+  },
+  road: {
+    bg: () => 'linear-gradient(120deg, #111827, #1f2937)', photo: 'right', shape: 'circle', ring: '#facc15', panel: (a) => `color-mix(in srgb, ${a} 9%, #fff)`, title: 'bar', hi: '#facc15', head: 'sans', pills: true,
+    art: () => svgArt(<g><line x1="0" y1="162" x2="794" y2="162" stroke="#facc15" strokeWidth="3" strokeDasharray="28 22" strokeOpacity="0.9" /><g fill="none" stroke="#fff" strokeOpacity="0.2" strokeWidth="1.6"><circle cx="560" cy="60" r="16" /><path d="M640 40 L668 40 L654 18 Z" /></g></g>),
+  },
+  orbit: {
+    page: '#fbf5ec', bg: () => '#fbf5ec', fg: '#111827', photo: 'right', shape: 'circle', ring: '#fff', panel: () => '#f1e6d4', title: 'underline', hi: '#e0674f', head: 'serif', pills: true,
+    art: (a) => svgArt(<g fill={a}><circle cx="690" cy="40" r="170" fillOpacity="0.22" /><circle cx="690" cy="40" r="125" fillOpacity="0.34" /><circle cx="690" cy="40" r="80" fillOpacity="0.5" /></g>),
+  },
+};
+
+function Styled({ d, accent, L, look }: { d: CvData; accent: string; L: Labels; look: string }) {
+  const k = LOOKS[look];
+  const fg = k.fg ?? '#fff';
+  const font = k.head === 'serif' ? SERIF : k.head === 'mono' ? MONO : 'inherit';
+  const Title = ({ children }: { children: ReactNode }) => {
+    if (k.title === 'bar') return <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', paddingLeft: 9, borderLeft: `4px solid ${k.hi}` }}>{children}</h2>;
+    if (k.title === 'dot') return <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px' }}>{children}</h2>;
+    return <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 12, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', paddingBottom: 4, borderBottom: `2px solid ${k.hi}` }}>{children}</h2>;
+  };
+  const T: Theme = {
+    Title,
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
+          <strong style={{ fontSize: 13.5 }}>{title}</strong>
+          {date && <span style={{ color: GREY, fontSize: 11.5, whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ color: accent, fontWeight: 600, fontSize: 12 }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const Side = ({ children }: { children: ReactNode }) => (
+    <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 11, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: accent, margin: '19px 0 8px', paddingBottom: 3, borderBottom: `1px solid ${accent}40` }}>{children}</h2>
+  );
+  const showSkills = !d.hidden.includes('skills');
+  const personal = d.showPersonal ? personalRows(d, L) : [];
+  const showPersonal = !d.hidden.includes('personal') && personal.length > 0;
+  const showRefs = !d.hidden.includes('references') && d.references.length > 0;
+  const passport = k.card === 'passport' && showPersonal;
+  const radius = k.shape === 'circle' ? '50%' : k.shape === 'round' ? 14 : 4;
+  const photo = d.photo ? (
+    <img src={d.photo} alt="" style={{ width: 104, height: k.shape === 'circle' ? 104 : 118, borderRadius: radius, objectFit: 'cover', border: k.ring ? `4px solid ${k.ring}` : `3px solid ${accent}`, flexShrink: 0, background: '#fff' }} />
+  ) : null;
+  const text = (
+    <div style={{ minWidth: 0, flex: 1 }}>
+      <h1 style={{ fontFamily: font, fontSize: 31, fontWeight: 700, margin: 0, lineHeight: 1.1, color: fg }}>{d.name || 'Your Name'}</h1>
+      {d.headline && <p style={{ margin: '6px 0 0', fontSize: 14, opacity: 0.95, letterSpacing: '0.03em', color: k.fg ? accent : fg, fontWeight: k.fg ? 600 : 400 }}>{d.headline}</p>}
+      <p style={{ margin: '8px 0 0', fontSize: 11.5, opacity: 0.9, color: k.fg ?? fg }}>{contactLine(d).join('   ·   ')}</p>
+    </div>
+  );
+  return (
+    <div className="cv-page" style={{ ...PAGE, background: k.page ?? '#fff', display: 'flex', flexDirection: 'column' }}>
+      <header className="cv-keep" style={{ position: 'relative', background: k.bg(accent), color: fg, flexShrink: 0, padding: `${passport ? '24px' : my(34)} ${mx(44)} ${passport ? 52 : 34}px`, overflow: 'hidden' }}>
+        {k.art?.(accent)}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 22 }}>
+          {k.photo === 'left' && photo}
+          {text}
+          {k.photo === 'right' && photo}
+        </div>
+      </header>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 232px' }}>
+        <main className="cv-pad" style={{ padding: `${my(8)} ${mx(30)} ${my(36)} ${mx(44)}` }}>
+          {passport && (
+    <div className="cv-keep" style={{ margin: '-34px 0 4px', position: 'relative', flexShrink: 0, background: '#fff', borderRadius: 10, boxShadow: '0 2px 12px rgba(30,41,59,0.18)', padding: '10px 18px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px 14px', border: '1px solid #e8e0c4' }}>
+      {personal.map(([a, b]) => (
+        <div key={a}><div style={{ fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: GREY }}>{a}</div><div style={{ fontWeight: 600, fontSize: 12 }}>{b}</div></div>
+      ))}
+    </div>
+  )}
+          {d.order.filter((x) => !['skills', 'references', 'personal'].includes(x)).map((x) => <Section key={x} k={x} d={d} L={L} T={T} />)}
+        </main>
+        <aside className="cv-pad" style={{ background: k.panel(accent), padding: `${my(12)} 22px ${my(36)}` }}>
+          {showSkills && d.skills && (<><Side>{L.skills}</Side>{k.pills ? <Pills items={list(d.skills)} accent={accent} /> : <ul style={{ margin: 0, paddingLeft: 16, listStyle: 'disc' }}>{list(d.skills).map((s) => <li key={s}>{s}</li>)}</ul>}</>)}
+          {showSkills && d.languages && (<><Side>{L.languages}</Side><p style={{ margin: 0 }}>{d.languages}</p></>)}
+          {showPersonal && !passport && (<><Side>{L.personal}</Side>{personal.map(([a, b]) => <p key={a} style={{ margin: '0 0 6px', fontSize: 11.5 }}><span style={{ color: GREY, fontSize: 10.5 }}>{a}</span><br />{b}</p>)}</>)}
+          {showRefs && (<><Side>{L.references}</Side><RefsList d={d} small /></>)}
+        </aside>
+      </div>
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
@@ -948,6 +1089,7 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font }
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {
+  if (design in LOOKS) return <Styled d={d} accent={accent} L={L} look={design} />;
   if (design === 'ascent') return <Ascent d={d} accent={accent} L={L} />;
   if (design === 'care') return <Care d={d} accent={accent} L={L} />;
   if (design === 'journey') return <Journey d={d} accent={accent} L={L} />;

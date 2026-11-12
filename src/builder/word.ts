@@ -90,7 +90,7 @@ export function sidebarSpec(design: DesignId, accent: string): SidebarSpec | nul
 }
 
 /** watermark: free downloads carry a small "Made with HereWeGrow.pro" footer; Pro files do not. */
-export async function buildDocx(state: BuilderState, opts: { watermark?: boolean } = {}): Promise<Blob> {
+export async function buildDocx(state: BuilderState, opts: { watermark?: boolean; brand?: string } = {}): Promise<Blob> {
   const d = state.data;
   const L = LABELS[state.headings ?? 'en'];
   const accent = hex(state.accent);
@@ -517,7 +517,10 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       ...(opts.watermark
         ? { footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, indent: bleeds ? { right: marginX } : undefined, children: [new TextRun({ text: 'Made with HereWeGrow.pro', size: 14, color: '94A3B8' })] })] }) } }
         : {}),
-      children,
+      // Partner Starter: one small line after the last content, so it sits on the last page only
+      children: opts.brand
+        ? [...children, new Paragraph({ alignment: AlignmentType.RIGHT, spacing: { before: 200 }, indent: bleeds ? { right: marginX } : undefined, children: [new TextRun({ text: opts.brand, size: 14, color: '94A3B8' })] })]
+        : children,
     }],
   });
   return Packer.toBlob(doc);

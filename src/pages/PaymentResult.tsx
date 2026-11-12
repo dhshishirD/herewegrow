@@ -62,7 +62,7 @@ export function PaymentSuccess() {
 
       {state.kind === 'done' && state.data.status === 'paid' && plan && (
         <div>
-          <h1 className="text-4xl font-bold text-leaf">{t({ en: 'Pro is active', bn: 'প্রো চালু হয়েছে' })}</h1>
+          <h1 className="text-4xl font-bold text-leaf">{plan.partner ? t({ en: 'Partner pass is active', bn: 'পার্টনার পাস চালু হয়েছে' }) : t({ en: 'Pro is active', bn: 'প্রো চালু হয়েছে' })}</h1>
           <p className="mt-3 text-lg">
             {t(plan.name)}{state.data.free ? '' : `, ${taka(state.data.amount ?? plan.price, lang)}`}.{' '}
             {state.data.proUntil
@@ -74,7 +74,11 @@ export function PaymentSuccess() {
           </p>
           <p className="mt-2 text-muted">{t({ en: 'Keep this reference:', bn: 'এই রেফারেন্সটি রাখুন:' })} <strong className="break-all">{ref}</strong></p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/builder" className="btn btn-primary">{t({ en: 'Open the CV builder', bn: 'সিভি বিল্ডার খুলুন' })}</Link>
+            {plan.partner ? (
+              <Link href="/partner" className="btn btn-primary">{t({ en: 'Open my Partner Workspace', bn: 'আমার পার্টনার ওয়ার্কস্পেস খুলুন' })}</Link>
+            ) : (
+              <Link href="/builder" className="btn btn-primary">{t({ en: 'Open the CV builder', bn: 'সিভি বিল্ডার খুলুন' })}</Link>
+            )}
             <Link href="/account" className="btn btn-quiet">{t({ en: 'My account', bn: 'আমার অ্যাকাউন্ট' })}</Link>
           </div>
         </div>

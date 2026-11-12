@@ -42,6 +42,7 @@ import { useAuth } from '../lib/auth';
 import { presetFor } from '../../shared/templatePresets';
 import { abroadPreset } from '../../shared/abroadPresets';
 import { analyzeCv } from '../lib/cvAnalysis';
+import { getClient, markDelivered, partnerErrorText, partnerMe, saveClientCv } from '../lib/partner';
 import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
 import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
@@ -49,6 +50,8 @@ import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
 
 type T = (x: { en: string; bn: string }) => string;
+
+const BRAND_LINE = 'Made with HWG | herewegrow.pro';
 
 /** Height of one A4 page in CSS pixels (297 mm at 96 dpi). */
 const A4_PX = 1123;
@@ -312,7 +315,10 @@ export function BuilderPage() {
   const tplId = useRef(new URLSearchParams(window.location.search).get('template')).current;
   // /builder?preset=gulf opens the builder with the design and personal details an abroad CV needs
   const abroadId = useRef(new URLSearchParams(window.location.search).get('preset')).current;
+  // /builder?client=<id>: a Partner's client folder. The CV loads from and autosaves to that folder, never to this device's own draft.
+  const clientId = useRef(new URLSearchParams(window.location.search).get('client')).current;
   const [state, setState] = useState<BuilderState>(() => {
+    if (clientId) return { data: emptyCv(), design: 'classic' as DesignId, accent: ACCENTS[0] };
     const base = loadState() ?? { data: emptyCv(), design: 'classic' as DesignId, accent: ACCENTS[0] };
     const p = presetFor(tplId);
     if (p) return { ...base, design: p.design, accent: p.accent };
@@ -338,7 +344,7 @@ export function BuilderPage() {
   // Account: saved CVs and Pro gating (Phase 1 spec, section 6)
   const { user, openLogin } = useAuth();
   const pro = !!user?.pro;
-  const [cvId, setCvId] = useState<string | null>(() => cloudId.get());
+  const [cvId, setCvId] = useState<string | null>(() => (clientId ? null : cloudId.get()));
   const [savedRaw, setSaved] = useState<{ list: CvSummary[]; limit: number } | null>(null);
   const saved = user ? savedRaw : null;
   const [sync, setSync] = useState<'idle' | 'saving' | 'saved' | 'error' | 'limit'>('idle');
@@ -349,8 +355,43 @@ export function BuilderPage() {
     bn: 'পুরনো সিভি আপলোড করুন বা নতুন করে শুরু করুন, ডিজাইন বেছে নিন, PDF বা Word ডাউনলোড করুন। বিনামূল্যে, সাইন-আপ ছাড়া, আর সিভি আপনার ডিভাইসেই থাকে।',
   });
   useEffect(() => setPageMeta(title, intro, '/builder'), [title, intro]);
-  useEffect(() => saveState(state), [state]);
-  useEffect(() => cloudId.set(cvId), [cvId]);
+  useEffect(() => { if (!clientId) saveState(state); }, [state, clientId]);
+  useEffect(() => { if (!clientId) cloudId.set(cvId); }, [cvId, clientId]);
+
+  // ── Partner client folder ──
+  const [client, setClient] = useState<{ name: string; ready: boolean; error: string } | null>(clientId ? { name: '', ready: false, error: '' } : null);
+  const [brandOn, setBrandOn] = useState(false);
+  const [ats, setAts] = useState(false);
+  const [csync, setCsync] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [deliverMsg, setDeliverMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const savedJson = useRef('');
+  useEffect(() => {
+    if (!clientId) return;
+    void (async () => {
+      const [c, me] = await Promise.all([getClient(clientId), partnerMe()]);
+      if (!c.ok) return setClient({ name: '', ready: false, error: c.error });
+      if (me.ok) setBrandOn(!!me.value.brandingOn);
+      const st = c.value.state;
+      const next: BuilderState = st?.data
+        ? { ...st, headings: 'en', design: st.design ?? 'classic', accent: st.accent ?? ACCENTS[0], data: normalise(st.data) }
+        : { data: { ...emptyCv(), name: c.value.name }, design: 'classic', accent: ACCENTS[0] };
+      savedJson.current = JSON.stringify(next);
+      setState(next);
+      setClient({ name: c.value.name, ready: true, error: '' });
+    })();
+  }, []);
+  useEffect(() => {
+    if (!clientId || !client?.ready) return;
+    const json = JSON.stringify(state);
+    if (json === savedJson.current) return;
+    setCsync('saving');
+    const h = setTimeout(async () => {
+      const r = await saveClientCv(clientId, state);
+      if (r.ok) savedJson.current = json;
+      setCsync(r.ok ? 'saved' : 'error');
+    }, 1200);
+    return () => clearTimeout(h);
+  }, [state, client?.ready, clientId]);
 
   const userId = user?.id;
   const refreshList = useCallback(async () => {
@@ -507,7 +548,7 @@ export function BuilderPage() {
     setWordBusy(true);
     try {
       const { buildDocx } = await import('../builder/word');
-      const blob = await buildDocx(state, { watermark: !pro });
+      const blob = await buildDocx(state, { watermark: !pro, brand: clientId && brandOn ? BRAND_LINE : undefined });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV.docx`;
@@ -589,7 +630,30 @@ export function BuilderPage() {
     window.print();
     document.title = prev;
   };
-  const download = () => (needPro ? askPro() : printNow());
+  const download = () => (needPro ? askPro() : clientId ? void clientPrint(false) : printNow());
+
+  /** Partner export: save the folder, print (the ATS version uses the plain Classic layout and never carries the brand line), then count it. */
+  const clientPrint = async (asAts: boolean) => {
+    if (!clientId) return;
+    setDeliverMsg(null);
+    const saved = await saveClientCv(clientId, state);
+    if (!saved.ok) return setDeliverMsg({ ok: false, text: partnerErrorText(saved.error, t) });
+    savedJson.current = JSON.stringify(state);
+    if (asAts) {
+      setAts(true);
+      await new Promise((r) => setTimeout(r, 300));
+    }
+    printNow();
+    if (asAts) setAts(false);
+    const r = await markDelivered(clientId);
+    if (!r.ok) return setDeliverMsg({ ok: false, text: partnerErrorText(r.error, t) });
+    const lv = r.value.newLevels.length ? ` ${r.value.newLevels.map((l) => l.toUpperCase()).join(', ')} bonus added!` : '';
+    setDeliverMsg({ ok: true, text: r.value.counted ? `Counted as delivered. ${r.value.delivered} this month.${lv}` : 'Exported again (already counted this month).' });
+  };
+
+  if (clientId && !client?.ready) {
+    return <div className="wrap py-24 text-muted">{client?.error ? <>{partnerErrorText(client.error, t)} <Link href="/partner" className="underline">Partner home</Link></> : '…'}</div>;
+  }
 
   const isEmpty = !d.name && d.experience.length === 0 && d.education.length === 0;
   const failing = score.checks.filter((c) => !c.pass).sort((a, b) => b.weight - a.weight).slice(0, 3);
@@ -605,6 +669,19 @@ export function BuilderPage() {
         <div className="max-md:hidden">
         <PageHead crumbs={[{ href: '/tools', label: { en: 'Free tools', bn: 'ফ্রি টুলস' } }, { href: '/builder', label: { en: 'CV builder', bn: 'সিভি বিল্ডার' } }]} title={title} intro={intro} />
         </div>
+
+        {clientId && (
+          <div className="border-b border-line bg-leaf-soft">
+            <div className="wrap flex flex-wrap items-center gap-x-4 gap-y-2 py-2.5 text-sm">
+              <Link href="/partner/clients" className="font-semibold text-leaf-dark underline">← Clients</Link>
+              <span className="font-semibold">{client?.name || 'Client'}</span>
+              <span className="text-muted">{csync === 'saving' ? 'Saving…' : csync === 'error' ? 'Not saved, check your connection' : csync === 'saved' ? 'Saved to client folder' : 'Autosaves to this client folder'}</span>
+              <button type="button" onClick={() => void clientPrint(true)} className="btn btn-quiet bg-white !min-h-9 ml-auto" title="Plain one-column version for job portals. No brand line.">ATS PDF</button>
+              {brandOn && <span className="w-full text-xs text-muted">The line “{BRAND_LINE}” is added to PDF and Word files. Not on the ATS PDF. Pass 90 days or Year can remove it in Partner settings.</span>}
+              {deliverMsg && <span role={deliverMsg.ok ? 'status' : 'alert'} className={`w-full font-semibold ${deliverMsg.ok ? 'text-leaf-dark' : 'text-alert'}`}>{deliverMsg.text}</span>}
+            </div>
+          </div>
+        )}
 
         {/* Toolbar */}
         <div className="sticky top-[4.25rem] z-20 border-b border-line bg-paper/95 backdrop-blur max-md:top-[7.6rem]">
@@ -1014,7 +1091,8 @@ export function BuilderPage() {
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
-        <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} />
+        <CvDocument d={d} design={ats ? 'classic' : state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} />
+        {clientId && brandOn && !ats && <div className="cv-brand-last">{BRAND_LINE}</div>}
         {!pro && <div className="cv-watermark">Made with HereWeGrow.pro</div>}
       </div>
     </>

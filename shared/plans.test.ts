@@ -53,3 +53,19 @@ describe('templatePrice', () => {
     expect(templatePrice(39, 'pro-365')).toBe(0);
   });
 });
+
+describe('partner plans', () => {
+  it('has the agreed prices, lengths and caps', async () => {
+    const { PARTNER_PLANS } = await import('./plans');
+    expect(PARTNER_PLANS.map((p) => [p.id, p.price, p.days, p.partner?.clientCap, p.partner?.brandingRemovable])).toEqual([
+      ['partner-30', 299, 30, 30, false],
+      ['partner-90', 699, 90, 100, true],
+      ['partner-365', 1999, 365, 500, true],
+    ]);
+  });
+  it('are found by id and never listed with Pro plans', async () => {
+    const { PLANS } = await import('./plans');
+    expect(findPlan('partner-30')?.price).toBe(299);
+    expect(PLANS.some((p) => p.id.startsWith('partner'))).toBe(false);
+  });
+});

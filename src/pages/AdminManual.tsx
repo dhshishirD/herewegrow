@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { PRODUCTS } from '../../shared/catalog';
-import { PLANS, findPlan } from '../../shared/plans';
+import { PARTNER_PLANS, PLANS, findPlan } from '../../shared/plans';
 import { AdminShell, Badge, Card } from '../components/AdminShell';
 import { useAuth } from '../lib/auth';
 
@@ -146,7 +146,7 @@ export function AdminManualPage() {
   const options = (
     <>
       <optgroup label="Pro passes">
-        {PLANS.map((p) => <option key={p.id} value={p.id}>{p.name.en} · {taka(p.price)}</option>)}
+        {[...PLANS, ...PARTNER_PLANS].map((p) => <option key={p.id} value={p.id}>{p.name.en} · {taka(p.price)}</option>)}
       </optgroup>
       <optgroup label="CV services">
         {PRODUCTS.filter((p) => p.kind === 'service').map((p) => <option key={p.id} value={p.id}>{p.name.en} · {taka(p.price)}</option>)}

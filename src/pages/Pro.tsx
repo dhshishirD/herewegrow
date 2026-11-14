@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../../shared/designList';
+import { goToPayment } from '../lib/paymentStart';
+import { featuredPlan } from '../lib/exportOffer';
 import { PLANS, PRO_LIMITS, type PlanId } from '../../shared/plans';
 import { discountedPrice } from '../../shared/promo';
 import { PageHead } from '../components/PageHead';
@@ -71,6 +73,7 @@ export function ProPage() {
   const [promo, setPromo] = useState<PromoCheck | null>(null);
   const [promoBusy, setPromoBusy] = useState(false);
   const [promoMsg, setPromoMsg] = useState<{ ok: boolean; text: B } | null>(null);
+  const featuredId = featuredPlan(typeof window === 'undefined' ? '' : window.location.search);
   const [pending, setPending] = useState<PlanId | null>(null);
   const [busy, setBusy] = useState<PlanId | null>(null);
   const [error, setError] = useState('');
@@ -134,7 +137,7 @@ export function ProPage() {
       const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, lang, promo: discount?.code, vid: tracker.vid() }) });
       const d = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string };
       if (d.ok && d.paymentUrl) {
-        window.location.href = d.paymentUrl;
+        goToPayment(d.paymentUrl, id);
         return;
       }
       if (d.error === 'login') {
@@ -205,7 +208,7 @@ export function ProPage() {
         <div className="grid gap-5 md:grid-cols-3">
           {PLANS.map((p) => {
             const x = PLAN_TEXT[p.id];
-            const featured = p.id === 'pro-30';
+            const featured = p.id === featuredId;
             return (
               <article key={p.id} className={`relative flex flex-col rounded-2xl bg-white p-6 transition-shadow hover:shadow-md ${featured ? 'ring-2 ring-leaf shadow-lg md:-translate-y-2' : 'ring-1 ring-line'}`}>
                 <div className="flex min-h-7 items-center justify-between gap-2">

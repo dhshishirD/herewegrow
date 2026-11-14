@@ -1,3 +1,5 @@
+import { PLANS, type PlanId } from '../../shared/plans';
+
 /** After a free export: show the clean-PDF offer once and count it as a paywall view. Pro users and partner client exports never see it. */
 export function offerAfterExport(o: {
   pro: boolean;
@@ -11,4 +13,11 @@ export function offerAfterExport(o: {
   o.track('paywall_view', { source: 'export', format: o.format });
   o.open();
   return true;
+}
+
+
+/** The pass the /pro page highlights: the one named in ?plan=, else the 30-day pass. */
+export function featuredPlan(search: string): PlanId {
+  const p = new URLSearchParams(search).get('plan');
+  return PLANS.find((x) => x.id === p)?.id ?? 'pro-30';
 }

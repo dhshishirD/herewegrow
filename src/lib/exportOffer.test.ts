@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { offerAfterExport } from './exportOffer';
+import { featuredPlan, offerAfterExport } from './exportOffer';
 
 const run = (over: Partial<Parameters<typeof offerAfterExport>[0]> = {}) => {
   const track = vi.fn();
@@ -27,5 +27,14 @@ describe('offerAfterExport', () => {
   it('does nothing when the sheet is already open (double tap)', () => {
     const { track, open, shown } = run({ alreadyOpen: true });
     expect([shown, track.mock.calls.length, open.mock.calls.length]).toEqual([false, 0, 0]);
+  });
+});
+
+
+describe('featuredPlan', () => {
+  it('highlights the plan named in the URL, else pro-30', () => {
+    expect(featuredPlan('?plan=pro-7&from=export')).toBe('pro-7');
+    expect(featuredPlan('?plan=bogus')).toBe('pro-30');
+    expect(featuredPlan('')).toBe('pro-30');
   });
 });

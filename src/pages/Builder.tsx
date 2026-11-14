@@ -1,4 +1,6 @@
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { ExportReady } from '../components/ExportReady';
+import { offerAfterExport } from '../lib/exportOffer';
 import { CvDocument, DESIGNS, degreeLine, isProDesign } from '../builder/designs';
 import { CV_FONTS, ensureAllFonts, ensureFont, findFont } from '../builder/fonts';
 import { printCvIsolated } from '../builder/printIsolated';
@@ -599,6 +601,9 @@ export function BuilderPage() {
   }, []);
 
   const [wordBusy, setWordBusy] = useState(false);
+  // Clean-PDF offer after a free export (the free file has already been handed over)
+  const [ready, setReady] = useState(false);
+  const offerClean = (format: string) => offerAfterExport({ pro, clientId, format, alreadyOpen: ready, track, open: () => setReady(true) });
   /** The Word file follows the design on screen. asAts gives the plain one-column Classic file for job portals instead. */
   const downloadWord = async (asAts = false) => {
     setWordBusy(true);
@@ -611,6 +616,7 @@ export function BuilderPage() {
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       track('cv_export', { format: asAts ? 'docx_ats' : 'docx' });
+      offerClean(asAts ? 'docx_ats' : 'docx');
     } catch (err) {
       console.error(err);
       window.alert(t({ en: 'The Word file could not be made. Try again, or use Download PDF.', bn: 'Word ফাইল তৈরি করা যায়নি। আবার চেষ্টা করুন, অথবা PDF ডাউনলোড করুন।' }));
@@ -682,6 +688,7 @@ export function BuilderPage() {
 
   const printNow = () => {
     track('cv_export', { format: 'pdf' });
+    offerClean('pdf');
     const prev = document.title;
     const title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
     const html = document.getElementById('cv-print')?.innerHTML;
@@ -1160,6 +1167,7 @@ export function BuilderPage() {
 
       <BuilderInfo onPick={(id) => { pickDesign(id as DesignId); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
 
+      {ready && <ExportReady onClose={() => setReady(false)} />}
       {gate && (
         <ProGate designName={DESIGNS.find((x) => x.id === state.design)?.name ?? DESIGNS[0].name} onClose={() => setGate(false)}
           onUseFree={() => { setGate(false); pickDesign('classic'); setTimeout(printNow, 150); }} />

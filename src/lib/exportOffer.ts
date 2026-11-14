@@ -21,3 +21,9 @@ export function featuredPlan(search: string): PlanId {
   const p = new URLSearchParams(search).get('plan');
   return PLANS.find((x) => x.id === p)?.id ?? 'pro-30';
 }
+
+/** Run the print step, then (only after it finishes) show the offer. `offer` null/undefined means no offer for this export. */
+export async function runExport(print: () => Promise<void>, offer?: (() => void) | null): Promise<void> {
+  await print();
+  offer?.();
+}

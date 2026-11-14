@@ -38,3 +38,29 @@ describe('featuredPlan', () => {
     expect(featuredPlan('')).toBe('pro-30');
   });
 });
+
+import { runExport } from './exportOffer';
+
+describe('runExport', () => {
+  it('offers only after the print step has finished', async () => {
+    const order: string[] = [];
+    let release!: () => void;
+    const print = () => new Promise<void>((res) => { release = () => { order.push('printed'); res(); }; });
+    const p = runExport(print, () => order.push('offer'));
+    expect(order).toEqual([]);
+    release();
+    await p;
+    expect(order).toEqual(['printed', 'offer']);
+  });
+  it('does not offer when the caller opts out (free user who just declined the Pro upsell)', async () => {
+    const offer = vi.fn();
+    await runExport(async () => {}, null);
+    await runExport(async () => {}, undefined);
+    expect(offer).not.toHaveBeenCalled();
+  });
+  it('still offers when printing falls back or throws nothing', async () => {
+    const offer = vi.fn();
+    await runExport(async () => {}, offer);
+    expect(offer).toHaveBeenCalledTimes(1);
+  });
+});

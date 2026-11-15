@@ -4,6 +4,7 @@ import { findProduct, type Product } from '../../shared/catalog';
 import { markCartPending } from '../lib/cart';
 import { findPlan, templatePrice, type PlanId } from '../../shared/plans';
 import { useAuth } from '../lib/auth';
+import { goToPayment } from '../lib/paymentStart';
 import { track, tracker } from '../lib/track';
 import { taka, useLang } from '../lib/lang';
 import { checkPromo, PROMO_ERRORS, savedPromo, type PromoCheck } from '../lib/promo';
@@ -147,7 +148,7 @@ function CheckoutDialog({ product, templateIds, onClose }: { product: Product; t
       }
       if (data.ok && data.paymentUrl) {
         if (templateIds) markCartPending();
-        window.location.href = data.paymentUrl;
+        goToPayment(data.paymentUrl, templateIds ? CART_PRODUCT_ID : product.id);
         return;
       }
       setError(data.error && ERRORS[data.error] ? data.error : 'gateway');

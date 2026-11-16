@@ -1,0 +1,371 @@
+{
+  "slug": "doctor",
+  "title": "Doctor",
+  "title_en": "Doctor (MBBS / Medical Officer)",
+  "title_bn": "ডাক্তার (এমবিবিএস / মেডিকেল অফিসার)",
+  "field": "Healthcare & Medicine",
+  "seo_title": "Doctor Career in Bangladesh: Salary, BMDC, FCPS (2026)",
+  "seo_desc": "Doctor career in Bangladesh: salary ranges, BMDC registration, BCS Health, FCPS and MD/MS routes, CV tips and a free skill test. Checked Nov 2026.",
+  "summary": "A doctor in Bangladesh diagnoses and treats patients as a medical officer, government assistant surgeon or specialist, after an MBBS, a one-year internship and BMDC registration. This page shows pay ranges, postgraduate routes (FCPS, MD/MS), BCS Health recruitment, overseas realities, a doctor CV guide and a free skill test. It is career information, not medical advice.",
+  "salary": {
+    "entry": "BDT 30,000 - 65,000 per month",
+    "mid": "BDT 60,000 - 140,000 per month",
+    "senior": "BDT 150,000+ per month (estimate for salaried specialists; private practice income varies widely and is not verified)",
+    "note": "Ranges, not promises. Built from pay-scale news (National Pay Scale 2026, a draft private-sector floor not yet approved) and the few circulars that show numbers; many circulars say negotiable. Confirm in the actual circular.",
+    "checked": "2026-11-16"
+  },
+  "benefits": [
+    "Government posts: published pay scale, festival bonuses, leave and pension rules (check the current circular)",
+    "Private and university posts: festival bonuses, medical coverage and training opportunities in many circulars",
+    "NGO and research posts: consolidated salary and festival bonus (for example in icddr,b circulars)",
+    "Strong social respect and meaningful daily work",
+    "Skills recognised in every district and, with extra exams, in other countries",
+    "A clear postgraduate ladder (FCPS, MD/MS) to specialist and teaching roles"
+  ],
+  "companies": [
+    "Government hospitals and health complexes through BCS (Health) cadre",
+    "Private hospitals and clinics",
+    "Medical colleges and universities",
+    "NGOs, research institutes and international health projects",
+    "University, corporate and factory clinics",
+    "Specialised eye, cancer and women and children hospitals",
+    "State-owned and large company medical posts"
+  ],
+  "season": [
+    "Government BCS (Health) circulars come in batches; the 51st special BCS applications ran 1 to 25 October 2026",
+    "Postgraduate admission circulars (BMU residency, BCPS exam notifications) usually appear before January and July sessions; watch official sites",
+    "Private hospitals and NGOs advertise all year on BDJobs and their own portals; check weekly",
+    "Keep registration, certificates and passport-size photos ready for short deadlines"
+  ],
+  "skills": [
+    {
+      "name": "Clinical reasoning, history taking and examination",
+      "level": "Core",
+      "tag": "clinical"
+    },
+    {
+      "name": "Emergency and life-support skills (BLS/ACLS/ELS)",
+      "level": "Core",
+      "tag": "emergency"
+    },
+    {
+      "name": "Practical procedures (cannulation, suturing, catheterisation)",
+      "level": "Core",
+      "tag": "procedures"
+    },
+    {
+      "name": "Patient communication in Bangla and English",
+      "level": "Core",
+      "tag": "communication"
+    },
+    {
+      "name": "Ethics, consent and confidentiality",
+      "level": "Core",
+      "tag": "ethics"
+    },
+    {
+      "name": "Clear records, prescriptions and handover",
+      "level": "Important",
+      "tag": "documentation"
+    },
+    {
+      "name": "Teamwork and leadership on the ward",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "Basic computer skills and hospital software",
+      "level": "Important",
+      "tag": "documentation"
+    },
+    {
+      "name": "Evidence-based medicine and research reading",
+      "level": "Growing",
+      "tag": "research"
+    },
+    {
+      "name": "Digital health and telemedicine awareness",
+      "level": "Growing",
+      "tag": "research"
+    }
+  ],
+  "gaps_checklist": [
+    "My BMDC registration is valid and my certificates are ready",
+    "I can take a clear history and examine a patient systematically",
+    "I hold current BLS/ACLS (or similar) training",
+    "I can perform basic procedures safely (cannulation, suturing, catheterisation)",
+    "I can explain a diagnosis and plan to a patient in simple Bangla",
+    "I write clear notes, prescriptions and handovers (SBAR)",
+    "I know the next postgraduate step I want (BCS, FCPS, MD/MS, diploma, MPH)",
+    "I can read a research paper and explain its main finding",
+    "My CV shows registration, training, numbers and named skills"
+  ],
+  "courses": [
+    {
+      "title": "Fellowship of the College of Physicians and Surgeons (FCPS)",
+      "provider": "Bangladesh College of Physicians and Surgeons (BCPS)",
+      "url": "https://bcps.edu.bd",
+      "is_affiliate": false,
+      "skill_tag": "clinical"
+    },
+    {
+      "title": "MD / MS Residency Program",
+      "provider": "Bangladesh Medical University",
+      "url": "https://www.bmu.ac.bd",
+      "is_affiliate": false,
+      "skill_tag": "clinical"
+    },
+    {
+      "title": "Internship Training Programme with logbook",
+      "provider": "Bangladesh Medical and Dental Council (BMDC)",
+      "url": "https://www.bmdc.org.bd/docs/RotatoryInternshipProgramme.pdf",
+      "is_affiliate": false,
+      "skill_tag": "procedures"
+    },
+    {
+      "title": "Health and research courses (audit free)",
+      "provider": "Coursera",
+      "url": "https://www.coursera.org",
+      "is_affiliate": false,
+      "skill_tag": "research"
+    },
+    {
+      "title": "Free full-text medical research articles",
+      "provider": "PubMed Central (US National Library of Medicine)",
+      "url": "https://pmc.ncbi.nlm.nih.gov",
+      "is_affiliate": false,
+      "skill_tag": "research"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a doctor in Bangladesh?",
+      "a": "Roughly BDT 30,000-65,000 a month for entry level, BDT 60,000-140,000 for mid level, and about BDT 150,000+ for senior specialist roles (an estimate). These ranges combine pay-scale news and circulars checked on 16 Nov 2026. A government Grade 9 officer's basic salary is Tk 44,000 under the National Pay Scale 2026, phased in by July 2027."
+    },
+    {
+      "q": "What is required to become a doctor in Bangladesh?",
+      "a": "You need an MBBS from a BMDC-recognised medical college, a one-year internship, and BMDC registration. Check the BMDC website for current rules and fees."
+    },
+    {
+      "q": "How do I join the government health service?",
+      "a": "Doctors join the BCS (Health) cadre as assistant surgeons through the Public Service Commission's special BCS exam. The 51st special BCS announced 5,000 posts (4,700 assistant surgeons and 300 dental surgeons) with applications from 1 to 25 October 2026."
+    },
+    {
+      "q": "What is the difference between FCPS and MD/MS?",
+      "a": "FCPS is run by BCPS, with Part-I, supervised training and a final Part-II. MD and MS are residency programmes run by universities and institutes such as Bangladesh Medical University, with their own admission tests and phases. Both are postgraduate specialist routes; check each body's current rules."
+    },
+    {
+      "q": "How much do intern doctors earn?",
+      "a": "Intern doctors were reported to receive about Tk 20,000 a month, and interns demanded Tk 30,000 in June 2026 protests. Check the current government notice for the latest rate."
+    },
+    {
+      "q": "Can I work as a doctor abroad?",
+      "a": "It is possible but difficult and country-specific. The UK's Medical Training (Prioritisation) Act, effective 5 March 2026, prioritises UK graduates and some other groups for training posts, so Bangladeshi graduates are not prioritised. Read each regulator's official page and avoid agents who guarantee a post."
+    },
+    {
+      "q": "Is there a shortage of doctors in Bangladesh?",
+      "a": "Yes, particularly in government service and rural areas. The health minister told Parliament in September 2026 that 30,311 doctors were working against 41,806 approved posts in government hospitals, and cited a study estimating a need of about 88,909 doctors."
+    },
+    {
+      "q": "How do I avoid job and visa scams?",
+      "a": "Never pay a visa fee or job guarantee fee to an individual. Verify any recruiting agency with the Ministry of Expatriates' Welfare and Overseas Employment and BMET, and apply only through official circulars."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 16 November 2026\n\n> **Quick answer:** A doctor in Bangladesh needs an MBBS, a one-year internship and BMDC registration. Early-career pay is usually BDT 30,000-65,000 a month in a hospital or government post, and mid-level pay is often BDT 60,000-140,000. Specialist pay is harder to state because it varies widely. The main routes up are a BCS (Health) government career, FCPS or MD/MS postgraduate training, and hospital or research posts. This is career information, not medical advice.\n\n## Doctor career at a glance\n\n| Question | Short answer |\n|---|---|\n| Who hires? | Government hospitals (BCS Health cadre), private hospitals and clinics, universities, NGOs and research institutes, corporate and university clinics |\n| Job titles in circulars | Medical Officer (MO), Senior Medical Officer, Indoor Medical Officer, Assistant Surgeon (government), Registrar, Consultant |\n| Minimum education | MBBS from a medical college recognised by BMDC, plus one year of internship |\n| Must-have licence | BMDC registration (provisional after MBBS, full after internship), renewed as BMDC requires |\n| Postgraduate routes | FCPS (BCPS), MD/MS residency (Bangladesh Medical University and other institutes), diplomas, MPH |\n| Key rule | Never practise without valid BMDC registration. Check the official site for current rules and fees |\n| Global demand | The US Bureau of Labor Statistics projects 4% job growth for physicians and surgeons from 2025 to 2035 |\n\n## What does a doctor do?\n\nA doctor listens to patients, examines them, orders tests, makes a diagnosis, treats or refers, and keeps clear records. A medical officer in a hospital may look after inpatients, emergency cases or an outpatient clinic, working under a specialist or registrar. In a government upazila health complex, a doctor may also cover public health programmes.\n\n**A normal day:** morning ward round, review of test reports, orders and prescriptions, emergency calls, outpatient clinic, handover notes to the next shift, and teaching or learning time. Night duties and weekends are common in hospitals.\n\n> \"First, do no harm.\" (a maxim long linked to the Hippocratic tradition, though not word for word in the Hippocratic Oath)\n\n## Scope: where this career can take you\n\nMedicine is not one job. It is a family of careers:\n\n- **Clinical practice:** general medical officer, then specialist (medicine, surgery, paediatrics, gynaecology, anaesthesia and many more).\n- **Government service:** BCS (Health) cadre, with a path to senior consultant and administrative posts.\n- **Teaching and academia:** lecturer to professor in medical colleges and universities.\n- **Public health and research:** NGOs, research institutes and health projects (many circulars prefer an MPH).\n- **Hospital administration and quality:** hospital management and health systems roles.\n- **Corporate and institutional health:** university clinics, factory and company medical officers.\n- **Health technology and medical writing:** digital health, telemedicine, health content.\n- **Abroad:** possible, but difficult. Rules change often, so read the \"Overseas\" note below.\n\n## Salary in Bangladesh (2026 ranges)\n\n| Level | Typical experience | Monthly pay (BDT) | Visual |\n|---|---|---|---|\n| Entry | 0-3 years after internship | 30,000 - 65,000 | ███ |\n| Mid | 4-10 years, often with a diploma or postgraduate training | 60,000 - 140,000 | ███████ |\n| Senior | Specialist or consultant, 10+ years | 150,000+ (estimate; private practice varies widely) | ██████████ |\n\n**How we got these ranges.** Many hospital circulars say \"negotiable\", so we cross-checked official pay news with the few circulars that show numbers. Under the National Pay Scale 2026, the basic salary of Grade 9, where BCS officers enter, rises from Tk 22,000 to Tk 44,000 in three phases between 1 July 2026 and 1 July 2027, with allowances from 1 January 2028 (bdnews24). Prothom Alo reported that the total for a Grade 9 officer will be slightly above Tk 60,000. For the private sector, a government-formed committee recommended in July 2026 a minimum of Tk 30,000 a month for newly recruited doctors, and Tk 35,000 in Dhaka, but this was a draft and not approved when we checked. North South University advertised a Medical Officer scale of Tk 35,482 to Tk 88,706 in May 2026. icddr,b advertised Medical Officer posts at Tk 134,048 a month, consolidated, in January 2026. Intern doctors were reported to receive about Tk 20,000 a month, and interns demanded Tk 30,000 in June 2026 protests. We found no reliable public data for senior specialist or private-practice income, so the senior figure is an estimate. These are ranges, not promises. Confirm in the actual circular.\n\n### Who pays the most?\n\nAs a general pattern: private clinics and small hospitals → large private hospitals and universities → government posts with a clear pay scale and pension → international research organisations and NGOs, which often pay the highest consolidated salaries for experienced doctors. A completed postgraduate degree (FCPS, MD or MS) is usually the biggest long-term income and career jump.\n\n**Global comparison:** in the United States, the median pay for physicians and surgeons was USD 275,930 a year in May 2025, with about 862,800 jobs in 2025 (US Bureau of Labor Statistics). Costs of training, licensing and living are very different, so do not compare the numbers directly.\n\n## Benefits beyond salary\n\n- Government jobs: a published pay scale, festival bonuses, leave and pension rules (check the current circular).\n- Hospital and university jobs: festival bonuses, medical coverage and training opportunities are common.\n- NGO and research posts: consolidated pay, festival bonus and sometimes transport support (as in icddr,b circulars).\n- Respect and trust in the community, and daily meaningful work.\n- A skill that is valued in every district and in many countries.\n\n## Top employers: Bangladesh and the world\n\n**Bangladesh: where doctors are hired (alphabetical, not a ranking)**\n\n| Sector | Examples seen in circulars or news |\n|---|---|\n| Government | BCS (Health) cadre through the Public Service Commission. The 51st special BCS announced 5,000 posts (4,700 assistant surgeons, 300 dental surgeons), with applications from 1 to 25 October 2026 |\n| Private hospitals | Aurora Specialized Hospital, Bangladesh Specialized Hospital, Bashundhara Eye Hospital & Research Institute, Labaid Cancer Hospital, Millennium Specialized Hospital |\n| NGOs and research | icddr,b, Assistance for Blind Children, PRF |\n| Universities | North South University and BRAC University advertise Medical Officer posts for campus clinics |\n\nAlways check each employer's own site for current vacancies.\n\n**A fact worth knowing:** the health minister told Parliament in September 2026 that government hospitals have 41,806 approved doctor posts, and 30,311 doctors were working, leaving 11,495 vacant. The same statement cited a government-funded study estimating that the country needs about 88,909 doctors in 2026 to meet the WHO minimum of 0.50 doctors per 1,000 people.\n\n**World:** global employers vary by country and require local licensing. The US, UK, Canada, Australia and the Gulf have their own exams and registration. See \"Overseas\" below.\n\n## Skills employers ask for\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Clinical reasoning and examination | The core of the job | █████ |\n| Emergency and life-support skills (BLS/ACLS/ELS) | Casualty and ICU posts ask for them | █████ |\n| Procedures (cannulation, suturing, catheter, minor surgery) | Daily work in many posts | ████ |\n| Patient communication in Bangla and English | Trust, consent, fewer complaints | █████ |\n| Clear records and prescriptions | Safety and legal protection | ████ |\n| Basic computer skills (Word, Excel, PowerPoint, hospital software) | Named in circulars | ███ |\n| Evidence-based medicine and research reading | Needed for postgraduate and research jobs | ███ |\n| Teamwork and leadership | Wards run on teams | ████ |\n| Ethics, consent and confidentiality | Professional duty | █████ |\n\n*Demand bars are our reading of recent circulars, not a statistical survey.*\n\n## Free ways to build these skills\n\n- **Internship programme:** read the BMDC-approved [Internship Training Programme with logbook](https://www.bmdc.org.bd/docs/RotatoryInternshipProgramme.pdf).\n- **Research reading:** free full-text articles on [PubMed Central](https://pmc.ncbi.nlm.nih.gov).\n- **Online courses:** audit health and research courses on [Coursera](https://www.coursera.org) and [edX](https://www.edx.org).\n- **Bangla e-learning:** [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **Postgraduate preparation:** read the official BCPS and Bangladesh Medical University notices before you choose a subject.\n\n## Qualifications, licences, scholarships and study support\n\n| Step | Body | What it means |\n|---|---|---|\n| MBBS | A medical college recognised by BMDC | 5-year degree; admission through the central medical admission test run by DGHS |\n| Internship | Medical college hospitals, as approved by [BMDC](https://www.bmdc.org.bd) | One year of rotating training before full registration |\n| Registration | [BMDC](https://www.bmdc.org.bd/reg-registration) | Provisional registration after MBBS, full registration after internship, and renewal as required |\n| FCPS | [BCPS](https://bcps.edu.bd) | Part-I, then supervised training, then Part-II (final). Exam sessions are held in January and July |\n| MD / MS | [Bangladesh Medical University](https://www.bmu.ac.bd) and other institutes | Residency programme with an admission test and phases (for example Phase-A and Phase-B) |\n| Other | Diplomas, MPH, international exams | Useful for specific careers, such as public health |\n\n**Admission pressure:** for the 2025-26 session, 122,632 applicants competed for 13,051 MBBS and BDS seats in government and private colleges. BSS reported on 3 May 2026 that 11,833 students were admitted against 5,100 MBBS seats in 37 government colleges, 6,278 in 68 private colleges and 455 in 7 Armed Forces colleges.\n\n**Support to explore (check each official site for current rules):**\n\n- **Chevening (UK):** [chevening.org](https://www.chevening.org) for a funded master's, including public health and health policy.\n- **Commonwealth Scholarships:** [cscuk.fcdo.gov.uk](https://cscuk.fcdo.gov.uk).\n- **DAAD (Germany):** [daad.de](https://www.daad.de/en/).\n- **Fulbright (USA):** through the US Embassy in Dhaka.\n- **Medical college and university scholarships:** ask your institution and professional bodies about merit and need-based awards.\n\n**Overseas: be careful and honest.** The UK's Medical Training (Prioritisation) Act became law on 5 March 2026. It gives priority for foundation and specialty training places to UK graduates and certain other groups, so international medical graduates (IMGs) from Bangladesh are not prioritised for those posts, although they may still apply (BMA). Other countries have their own exams (for example USMLE for the US) and rules that change. Before you spend on any exam, read the official regulator's current page and talk to doctors who have done it.\n\n> **Warning on overseas jobs:** never pay a \"visa fee\", \"job guarantee\" or \"guaranteed PLAB/NHS post\" fee to an individual. Press reports describe workers cheated by brokers and agencies even when they held BMET clearance, and the Ministry of Expatriates' Welfare and Overseas Employment has told people not to pay money before an official announcement of a recruitment market. Verify any recruiting agency with the ministry and BMET before you pay or hand over a passport.\n\n## Long-term career timeline\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-1 | Intern doctor | Rotations, logbook, basic procedures, patient communication |\n| 1-3 | Medical Officer / Assistant Surgeon | Emergency care, ward management, choose a specialty |\n| 3-7 | Postgraduate trainee (FCPS / MD / MS) / Senior MO | Specialty skills, thesis, supervision |\n| 7-12 | Registrar / Assistant Professor / Specialist | Independent practice, teaching, research |\n| 12+ | Consultant / Associate Professor / Professor / Hospital head | Leadership, mentoring, policy and quality |\n\n*A typical path, not a guarantee. Postgraduate seats, posts and policies differ by year.*\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / intern / ___ years after internship)\n2. **My target role in 3 years:** ___\n3. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n4. **One qualification step this year:** (BCS / FCPS part-I / MD-MS admission / diploma / MPH / none yet)\n5. **My weekly study hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 3.\n\n## Career shifts: where doctors move\n\n- **Clinical → specialist** through FCPS, MD or MS.\n- **Clinical → public health** with an MPH (NGOs, research, programme management).\n- **Clinical → academia** (lecturer in a medical college).\n- **Clinical → hospital administration** or quality and patient safety.\n- **Clinical → health-tech, telemedicine or medical writing.**\n- **Government ↔ private ↔ NGO** moves are common when circulars open.\n\n## Where will you find more peace of mind?\n\nNo job is free of pressure, and we have no survey to rank them. As a general pattern, emergency, ICU and surgical work often means night shifts and high stress, outpatient and some administrative roles are more predictable, and research or teaching roles have deadlines but steadier hours. Three habits protect your peace: sleep and rest as much as duty allows, keep clear notes and consent records so every decision can be explained, and keep one trusted colleague or mentor you can talk to. If stress becomes heavy, speak to a mentor or a mental health professional early.\n\n## Faith and history: healing as a trust\n\n**The Quran.** \"Whoever saves one life, it is as if he saved all of mankind\" is the teaching of Al-Ma'idah ([5:32 on quran.com](https://quran.com/5/32)). Ibrahim (peace be upon him) says in Ash-Shu'ara that when he is ill, it is Allah who cures him ([26:80](https://quran.com/26/80)). A doctor treats with skill and humility, because healing is ultimately from Allah.\n\n**Hadith.** The Prophet (peace be upon him) said that Allah has not sent down a disease without also sending down its cure (Sahih al-Bukhari 5678).\n\n**History.** Early Islamic civilisation built hospitals called *bimaristans*. A history article on the Muslim Heritage site says Harun al-Rashid founded a hospital in Baghdad around 805, and many more followed. Al-Razi (d. 925) described the difference between smallpox and measles, and Ibn Sina (Avicenna, d. 1037) wrote the Canon of Medicine, which was a standard textbook for centuries (Britannica; islam.wiki).\n\n## Your contribution to the nation\n\nBangladesh has a large gap between the doctors it needs and the doctors working in government service, as the minister's figures above show. A WHO benchmark of 44.5 doctors, nurses and midwives per 10,000 people is far above the roughly 15 reported in Bangladesh (The Daily Star, October 2026). Every honest, well-trained doctor in a district hospital, upazila complex or urban clinic reduces that gap. BMDC officials said registered physicians stood at 134,000 in 2025, so the need is not only for numbers but for good distribution, training and teamwork.\n\n## Your contribution to the world\n\nDoctors from Bangladesh contribute through research (for example in diarrhoeal disease, maternal and child health and non-communicable diseases), global health organisations and clinical work abroad. Evidence-based practice, antimicrobial responsibility and honest reporting help protect patients everywhere.\n\n## If you want to be an entrepreneur\n\n- **Clinic or diagnostic service** (check licensing rules with DGHS first, and work in a hospital before you start).\n- **Telemedicine or health-tech** with proper data privacy and medical oversight.\n- **Medical education and exam-preparation coaching** (honest, accredited, no false guarantees).\n- **Corporate or school health programmes.**\n- **Health NGO or project** (needs registration and governance).\n- **Medical writing, health content and consulting.**\n\nStart small and legal: patient safety and trust come before growth.\n\n## Research opportunities\n\n- Topics with real need in Bangladesh: non-communicable diseases, maternal and newborn health, antimicrobial resistance, health workforce distribution, emergency care, mental health access and primary care quality.\n- Where to learn and publish: medical colleges, Bangladesh Medical University, BCPS, icddr,b and international journals (open access options exist).\n- Path: a thesis during MD/MS/FCPS → research assistant or MPH → PhD or fellowships (the scholarships above fund many of these).\n\n## Whom to follow and learn from\n\nFollow institutions first: [BMDC](https://www.bmdc.org.bd), [BCPS](https://bcps.edu.bd), [Bangladesh Medical University](https://www.bmu.ac.bd), [icddr,b](https://career.icddrb.org) for jobs, the [BMA](https://www.bma.org.uk) for UK training news, and the World Health Organization for global guidance. On LinkedIn, follow hospital quality leads and senior doctors who share careers and training advice.\n\n## Where to find doctor jobs\n\n- [BDJobs](https://www.bdjobs.com) (Medical/Pharma category) and hospital career pages.\n- Government: Public Service Commission BCS circulars and Directorate General of Health Services notices.\n- NGO and research: [icddr,b career portal](https://career.icddrb.org), PRF and other organisation portals.\n- University and institutional jobs: for example [North South University](https://jobs.northsouth.edu) and BRAC University.\n- LinkedIn, and weekly newspaper job pages.\n\n## Doctor CV: what to write\n\nYour CV should show registration, training, numbers and skills, not only duties.\n\n| Weak line | Better line |\n|---|---|\n| Worked in hospital. | Worked as Indoor Medical Officer in a 100-bed hospital, covering ICU and ward duties on rotation (use your real unit). |\n| Good at emergency care. | Completed BLS/ACLS training and managed casualty shifts, with certificate dates listed. |\n| Interested in research. | Co-authored one abstract on (your topic); presented at (event, year). |\n\n*Use only your real, provable details. Never exaggerate clinical experience.*\n\n**What to include:** BMDC registration number and date, internship hospital and dates, postgraduate status (FCPS part, MD/MS enrolment, diploma), training certificates, publications and research, languages, and computer skills named exactly (Word, Excel, PowerPoint, hospital software).\n\n**Career objective samples:**\n\n- *Fresher:* \"MBBS graduate with completed internship and BMDC registration seeking a Medical Officer position to build emergency and ward care experience.\"\n- *Experienced:* \"Medical Officer with 4 years in inpatient and emergency care, FCPS Part-I passed, seeking a Senior Medical Officer or Registrar role.\"\n\nBuild yours free with the HereWeGrow CV Builder and the Doctor CV template.\n\n## Common mistakes in applications\n\n- Missing BMDC registration number or an expired registration.\n- Skipping the circular's required documents, age limit or experience range.\n- Vague duties with no unit, volume or procedure list.\n- Writing a casual email address or a file named \"CV final 2\". Use YourName_Doctor_CV.pdf.\n- Claiming procedures or training you cannot document.\n- Paying anyone for a \"guaranteed\" job, posting or exam seat.\n\n## Sources and method\n\nFigures were checked on 16 November 2026 and will be reviewed regularly. Pay ranges combine news reports with the few circulars that show salary and are estimates. Policies, fees and exam rules change, so check the official sites.\n\n- BMDC: [Provisional Registration](https://www.bmdc.org.bd/reg-provisional); [Full Registration](https://www.bmdc.org.bd/reg-registration); [Internship Training Programme](https://www.bmdc.org.bd/docs/RotatoryInternshipProgramme.pdf)\n- BCPS: [Online registration guide](https://exams.bcps.edu.bd/Account/Register); [FCPS notification](https://bcps.edu.bd/document/ExamNotification.pdf)\n- Bangladesh Medical University: [Residency admission](https://forms.bmu.ac.bd/bmu_residency_2026/local/admission/)\n- bdnews24 (1 September 2026): [Ninth National Pay Scale approved](https://bdnews24.com/bangladesh/0b8623e729e7)\n- Prothom Alo: [Minimum salary in government jobs is Tk 33,000, what's the maximum?](https://en.prothomalo.com/bangladesh/px5oxn5r22)\n- The Financial Express (20 July 2026): [Committee recommends Tk 30,000 salary floor with bonuses for new doctors](https://thefinancialexpress.com.bd/health/committee-recommends-tk-30000-salary-floor-with-bonuses-for-new-doctors)\n- North South University: [Medical Officer circular](https://jobs.northsouth.edu/job/119)\n- icddr,b: [Medical Officer vacancy](https://career.icddrb.org/vacancy-preview/32174)\n- bdnews24 (24 September 2026): [51st special BCS opens 5,000 posts for doctors](https://bdnews24.com/bangladesh/a9yhj99o10)\n- The Financial Express: [Only 30,311 doctors serving against need for 88,909: minister](https://thefinancialexpress.com.bd/health/only-30311-doctors-serving-against-need-for-88909-minister)\n- Asia News Network / The Daily Star (26 October 2026): [Bangladesh's healthcare system: short of healing hands](https://asianews.network/?p=310399)\n- Prothom Alo: [\"Physicians will go after the people\": this situation does not exist in Bangladesh](https://en.prothomalo.com/bangladesh/cqm7hcigxi)\n- BSS (3 May 2026): [MBBS classes begin](https://www.bssnews.net/news/383827)\n- TBS Graduates: [A system under strain: the crisis behind Bangladesh's intern doctors' strike](https://tbsgraduates.net/?p=33825)\n- US Bureau of Labor Statistics: [Physicians and Surgeons](https://www.bls.gov/ooh/healthcare/physicians-and-surgeons.htm)\n- BMA: [What the new law means for UK graduate prioritisation](https://www.bma.org.uk/ukgradprioritisation); UK legislation: [Medical Training (Prioritisation) Act 2026](https://www.legislation.gov.uk/ukpga/2026/7)\n- The Business Standard: [Scams, smuggling, battlefields: how flawed vetting sent our workers into harm's way](https://www.tbsnews.net/node/1485026); Prothom Alo: [Govt warns against financial deals for Malaysia jobs before official notice](https://en.prothomalo.com/amp/story/bangladesh/mzi6etmj3q)\n- Muslim Heritage: [The Arab roots of European medicine](https://muslimheritage.com/arabic-roots-of-medicine/); Encyclopaedia Britannica article on Avicenna (copy at [kavehfarrokh.com](https://www.kavehfarrokh.com/wp-content/uploads/2010/07/Aviceena.pdf))\n- Islam.wiki: [Islamic medicine: from prophetic healing to hospital systems](https://islam.wiki/articles/islamic-medicine-history) (secondary source)\n- Voice7 News (14 December 2025): [MBBS and BDS admission results published](https://mail.voice7news.tv/education/news/26290)\n- Quran: [quran.com](https://quran.com)\n- Job circulars on BDJobs, employer portals and LinkedIn, read 16 November 2026\n\n**How to cite this page:** Shishir, D. H. (2026). *Doctor career in Bangladesh: salary, registration, postgraduate routes and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/doctor\n\n*This guide gives general career information. It does not promise a job, salary, seat or visa. It is not medical, legal, tax or religious advice, and nothing here should be used to diagnose or treat any condition. Check official sites for current rules, fees and dates.*\n",
+  "growth_plan": {
+    "y1": "Complete internship properly, obtain BMDC registration, build emergency and procedure skills, keep a logbook, and decide your first job route (BCS, hospital MO or NGO).",
+    "y2": "Work as a medical officer with real responsibility, prepare for BCS or postgraduate admission, learn research reading, and take a life-support course.",
+    "y3": "Enter a postgraduate programme (FCPS, MD/MS or diploma) or a senior MO role, start a research or audit project, and build a mentor network."
+  },
+  "goal_sheet": [
+    "Week 1-2: Collect and scan registration, certificates and logbook; list your procedure counts",
+    "Week 3-4: Update BLS/ACLS or emergency training and practise SBAR handovers",
+    "Month 2: Choose a target specialty and read the BCPS and BMU notices for it",
+    "Month 3: Start a structured study plan for BCS or postgraduate admission",
+    "Month 4: Read two research papers a week and write one short case report or summary",
+    "Month 5: Build basic computer and presentation skills; prepare a short audit or quality project",
+    "Month 6: Update CV, write cover letter, apply to 10 circulars, practise 20 interview questions"
+  ],
+  "test": [
+    {
+      "q": "Which registration must a doctor in Bangladesh hold to practise?",
+      "options": [
+        "A trade licence",
+        "BMDC registration",
+        "A VAT certificate",
+        "A TIN certificate only"
+      ],
+      "answer_idx": 1,
+      "explain": "BMDC (Bangladesh Medical and Dental Council) registers doctors; check its official site for current rules.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "After the MBBS final exam, a graduate must complete:",
+      "options": [
+        "A one-year internship",
+        "A three-month course",
+        "No training",
+        "A two-year MBA"
+      ],
+      "answer_idx": 0,
+      "explain": "BCPS and BMDC rules require one year of internship before full registration.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "The Glasgow Coma Scale (GCS) has a best possible total score of:",
+      "options": [
+        "10",
+        "12",
+        "15",
+        "20"
+      ],
+      "answer_idx": 2,
+      "explain": "GCS ranges from 3 (worst) to 15 (best).",
+      "skill_tag": "emergency"
+    },
+    {
+      "q": "For an adult in cardiac arrest, the usual recommended chest compression rate is:",
+      "options": [
+        "30-60 per minute",
+        "100-120 per minute",
+        "160-200 per minute",
+        "As slow as possible"
+      ],
+      "answer_idx": 1,
+      "explain": "Current resuscitation guidelines recommend 100-120 compressions per minute.",
+      "skill_tag": "emergency"
+    },
+    {
+      "q": "What is the first-line fluid used for rehydration in mild to moderate diarrhoea?",
+      "options": [
+        "Fruit juice",
+        "Oral rehydration solution (ORS)",
+        "Cola",
+        "Plain tea"
+      ],
+      "answer_idx": 1,
+      "explain": "ORS replaces water and salts safely and is a standard first-line measure.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "Before a procedure on a competent adult patient, you must first:",
+      "options": [
+        "Skip explaining to save time",
+        "Explain it and obtain informed consent",
+        "Ask a relative to sign instead without telling the patient",
+        "Wait until after the procedure"
+      ],
+      "answer_idx": 1,
+      "explain": "Informed consent respects patient autonomy and is a basic professional duty.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "A patient's diagnosis is asked by a neighbour. You should:",
+      "options": [
+        "Tell everything",
+        "Refuse to share without the patient's permission",
+        "Post it online",
+        "Tell only if they pay"
+      ],
+      "answer_idx": 1,
+      "explain": "Patient confidentiality is protected unless a legal or clinical exception applies.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Which action best prevents hospital infection spread?",
+      "options": [
+        "Rare hand washing",
+        "Hand hygiene at the right moments",
+        "Sharing gloves",
+        "Reusing single-use needles"
+      ],
+      "answer_idx": 1,
+      "explain": "Hand hygiene is the simplest and most effective infection control step.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "In triage, the patient to be treated first is generally:",
+      "options": [
+        "The one who arrived first, always",
+        "The one with the most life-threatening problem",
+        "The one with the most visitors",
+        "The youngest, always"
+      ],
+      "answer_idx": 1,
+      "explain": "Triage ranks patients by urgency of need, not arrival order.",
+      "skill_tag": "emergency"
+    },
+    {
+      "q": "The SBAR tool is used for:",
+      "options": [
+        "Drug pricing",
+        "Structured handover and escalation of a patient problem",
+        "Choosing a hospital name",
+        "Counting beds"
+      ],
+      "answer_idx": 1,
+      "explain": "SBAR = Situation, Background, Assessment, Recommendation.",
+      "skill_tag": "communication"
+    },
+    {
+      "q": "Antibiotic stewardship means:",
+      "options": [
+        "Giving antibiotics for every fever",
+        "Using antibiotics only when needed, with the right drug, dose and duration",
+        "Never using antibiotics",
+        "Using the newest antibiotic always"
+      ],
+      "answer_idx": 1,
+      "explain": "Careful use slows antimicrobial resistance.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "A circular asks for a doctor with experience and an attached BMDC certificate. A stranger offers to arrange the post for a fee. You should:",
+      "options": [
+        "Pay immediately",
+        "Refuse, apply through the official circular and verify the employer",
+        "Send your passport",
+        "Share your password"
+      ],
+      "answer_idx": 1,
+      "explain": "Never pay anyone for a job or seat; use official channels and verify.",
+      "skill_tag": "ethics"
+    }
+  ],
+  "cv_template_notes": "Use the HWG Doctor CV (clean, one-column layout). Put your BMDC registration number and date near the top, then internship hospital and dates, postgraduate status (FCPS part, MD/MS enrolment, diploma), training certificates (BLS/ACLS), procedures you can perform independently, publications or audits, and named computer skills. Keep it to 2 pages. Use only provable details and never exaggerate clinical experience. File name: YourName_Doctor_CV.pdf.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Medical Officer position advertised on [site/date]. I hold an MBBS from [college], completed my internship at [hospital], and am registered with BMDC (No. [number]). In my current role I [one provable detail, e.g. cover indoor and emergency duties in a 100-bed hospital on rotation].\n\nI communicate clearly with patients and colleagues, document carefully and keep patient safety first. I would be glad to contribute to [Hospital/Organisation name].\n\nI have attached my CV and certificates and would welcome an interview.\n\nSincerely,\nDr. [Your name]\n[Phone] | [Email]",
+  "interview_qs": [
+    "Tell me about yourself. (Tip: 45 seconds: MBBS college, internship, registration, one clinical strength, why this hospital.)",
+    "Why did you choose medicine? (Tip: Give a real, specific reason; avoid cliches.)",
+    "Why do you want to work here? (Tip: Name the hospital's service and what you can contribute.)",
+    "Describe your internship and the rotations you enjoyed most. (Tip: Mention procedures you did and what you learned.)",
+    "How would you approach a patient with chest pain in the emergency room? (Tip: ABC first, history, ECG, urgent tests, escalate; show safe steps.)",
+    "How do you manage a patient with fever and low blood pressure? (Tip: Think sepsis, fluids, cultures, antibiotics, escalate early.)",
+    "A relative is angry about waiting. How do you respond? (Tip: Listen, explain calmly, give a clear update, and involve the senior if needed.)",
+    "How do you take informed consent? (Tip: Explain the procedure, risks, alternatives, check understanding, document it.)",
+    "What would you do if you disagree with your senior's plan? (Tip: Raise it respectfully, use data, escalate through proper channels.)",
+    "What is antibiotic stewardship and why does it matter? (Tip: Right drug, dose and duration; reduces resistance.)",
+    "How do you hand over a patient at shift change? (Tip: Use SBAR.)",
+    "Tell me about a time you made a clinical mistake or near miss. (Tip: Be honest, explain the fix and what you changed.)",
+    "How do you handle a night shift with several sick patients at once? (Tip: Triage, delegate, call for help early, document.)",
+    "What basic life support steps do you know? (Tip: Check response, call help, compressions, airway, defibrillator.)",
+    "How would you counsel a patient newly diagnosed with diabetes or hypertension? (Tip: Simple Bangla, lifestyle, medicines, follow-up; this is a practice answer, not medical advice.)",
+    "How do you keep patient confidentiality? (Tip: Share only with permission or legal need; secure records.)",
+    "What is your plan for postgraduate training? (Tip: Name FCPS, MD/MS or diploma and your timeline.)",
+    "Why do you want to join the BCS (Health) cadre? (Tip: Service, stability, public health; be honest about posting areas.)",
+    "Are you willing to work in a remote upazila? (Tip: Answer honestly and show you understand the role.)",
+    "How do you stay updated with new guidelines? (Tip: Name a journal, guideline body or course you really use.)",
+    "What research or audit have you done? (Tip: Describe a real project and result.)",
+    "How do you handle stress and burnout? (Tip: Rest, peer support, boundaries; mention asking for help.)",
+    "How would you work with nurses and other staff? (Tip: Respect, clear communication, shared goals.)",
+    "What would you do if a patient refuses treatment? (Tip: Check capacity, explain risks, respect choice, document.)",
+    "Describe a difficult case you handled. (Tip: Use a clear structure: problem, action, result; protect patient identity.)",
+    "What computer skills do you have? (Tip: Name Word, Excel, PowerPoint and any hospital software.)",
+    "How do you manage your time during a busy outpatient clinic? (Tip: Prioritise red flags, keep notes short but clear.)",
+    "What are your salary expectations? (Tip: Give a range based on the circular and pay scale; stay polite and flexible.)",
+    "Where do you see yourself in five years? (Tip: Name a specialty or role and the steps you are taking.)",
+    "Do you have any questions for us? (Tip: Ask about training, supervision, shifts and case mix.)"
+  ],
+  "author_name": "Daloyar Hassan Shishir",
+  "author_url": "https://www.dhshishir.com"
+}

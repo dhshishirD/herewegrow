@@ -1,0 +1,376 @@
+{
+  "slug": "hr-officer",
+  "title": "HR Officer / HR Executive",
+  "title_en": "HR Officer / HR Executive",
+  "title_bn": "এইচআর অফিসার / এইচআর এক্সিকিউটিভ",
+  "field": "Human Resources & Administration",
+  "seo_title": "HR Officer Salary & Career in Bangladesh (2026)",
+  "seo_desc": "HR officer and HR executive career in Bangladesh: salary, labour law, skills, AI impact, free learning, CV tips and a free test. Checked Nov 2026.",
+  "summary": "An HR Officer or HR Executive in Bangladesh manages recruitment, onboarding, records, payroll inputs, employee relations and labour-law compliance for garments, NGOs, banks, companies and startups. This page shows pay ranges, the skills employers ask for, the 2025-2026 labour-law changes to check, free learning paths, honest advice on AI and job scams, CV tips and a free skill test.",
+  "salary": {
+    "entry": "BDT 20,000 - 35,000 per month",
+    "mid": "BDT 35,000 - 65,000 per month",
+    "senior": "BDT 80,000 - 150,000+ per month (estimate; few public numbers)",
+    "note": "Ranges, not promises. Built from the few circulars that show numbers; many circulars say negotiable. Confirm in the actual circular.",
+    "checked": "2026-11-16"
+  },
+  "benefits": [
+    "Festival bonuses (two a year in most circulars we found) and a yearly salary review",
+    "Provident fund, gratuity and insurance at larger employers",
+    "Mobile bill, lunch support and two weekly holidays in some circulars",
+    "Baishakhi and other allowances in some NGO circulars",
+    "Training and certification support in stronger organisations",
+    "A path to management because HR touches every department"
+  ],
+  "companies": [
+    "Garment, textile and footwear groups",
+    "Factories and manufacturers",
+    "NGOs and development organisations",
+    "Banks and large companies",
+    "BPO, tech companies and startups",
+    "Hospitals and universities"
+  ],
+  "season": [
+    "HR circulars appear all year; garments and BPOs hire in batches when orders rise",
+    "Many circulars close within two to three weeks, so check BDJobs and company pages often",
+    "Fresher and trainee programmes often open after university results (our observation, not a statistic)",
+    "Keep your CV, certificates and Excel samples ready so you can apply quickly"
+  ],
+  "skills": [
+    {
+      "name": "Bangladesh Labour Act and Rules knowledge",
+      "level": "Core",
+      "tag": "labour-law"
+    },
+    {
+      "name": "Recruitment, interviewing and onboarding",
+      "level": "Core",
+      "tag": "recruitment"
+    },
+    {
+      "name": "Employee records, attendance and leave management",
+      "level": "Core",
+      "tag": "records"
+    },
+    {
+      "name": "Excel and HR software (HRIS)",
+      "level": "Core",
+      "tag": "excel"
+    },
+    {
+      "name": "Payroll inputs, overtime and final settlements",
+      "level": "Important",
+      "tag": "payroll"
+    },
+    {
+      "name": "Employee relations and grievance handling",
+      "level": "Important",
+      "tag": "employee-relations"
+    },
+    {
+      "name": "Confidentiality and professional ethics",
+      "level": "Important",
+      "tag": "ethics"
+    },
+    {
+      "name": "Compliance and audit readiness",
+      "level": "Important",
+      "tag": "compliance"
+    },
+    {
+      "name": "English and Bangla business writing",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "HR reporting and analytics",
+      "level": "Growing",
+      "tag": "analytics"
+    },
+    {
+      "name": "Using AI tools and checking for bias",
+      "level": "Growing",
+      "tag": "ai-literacy"
+    }
+  ],
+  "gaps_checklist": [
+    "I can explain the main parts of the Bangladesh Labour Act and know where to check amendments",
+    "I can write a job description, a job ad and an appointment letter",
+    "I can screen CVs fairly and run a structured interview",
+    "I can build a salary and leave sheet in Excel without errors",
+    "I know how overtime, bonuses and final settlements are calculated",
+    "I can handle a complaint calmly, in writing and in confidence",
+    "I understand what buyers and donors check in an audit",
+    "I use AI tools but review their output for errors and bias",
+    "My CV shows volumes, systems and compliance work with real numbers",
+    "I know the job scams and the rule never to take or pay money for a job"
+  ],
+  "courses": [
+    {
+      "title": "Bangladesh Labour Act 2006 and Labour Rules (read the official text)",
+      "provider": "Bangladesh Laws portal, Ministry of Law",
+      "url": "http://bdlaws.minlaw.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "labour-law"
+    },
+    {
+      "title": "Free tutorials and training for Excel",
+      "provider": "Microsoft Learn",
+      "url": "https://learn.microsoft.com",
+      "is_affiliate": false,
+      "skill_tag": "excel"
+    },
+    {
+      "title": "Human resources and people management courses (audit for free)",
+      "provider": "Coursera",
+      "url": "https://www.coursera.org",
+      "is_affiliate": false,
+      "skill_tag": "recruitment"
+    },
+    {
+      "title": "Free online courses in HR and business skills",
+      "provider": "Alison",
+      "url": "https://alison.com",
+      "is_affiliate": false,
+      "skill_tag": "employee-relations"
+    },
+    {
+      "title": "Free national e-learning courses in Bangla",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "communication"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of an HR Officer in Bangladesh?",
+      "a": "Circulars we found show roughly BDT 20,000-35,000 a month for entry-level HR Officers and Executives, BDT 35,000-65,000 for mid-level posts, and BDT 80,000-150,000+ for HR heads (an estimate, with few public numbers). Many circulars say negotiable, so confirm in the actual circular. Checked 16 Nov 2026."
+    },
+    {
+      "q": "What qualifications do I need to become an HR Executive?",
+      "a": "Most circulars ask for a bachelor's degree; BBA, MBA or HRM is often preferred, and some mid-level posts require an MBA. Knowledge of the Bangladesh Labour Act, good Excel and clear communication matter as much as the degree."
+    },
+    {
+      "q": "Do I need a certification such as SHRM-CP or CIPD?",
+      "a": "Not for most entry-level jobs, but a recognised certification can help for mid and senior roles and for multinational employers. These programmes are paid, so check the official site for eligibility, fees and accreditation before you enrol."
+    },
+    {
+      "q": "Which labour law should an HR officer know?",
+      "a": "The Bangladesh Labour Act 2006 and the Labour Rules are the base. Reports say the law was changed through a 2025 Ordinance and a 2026 Amendment Act, so read the gazette and official Ministry of Labour and Employment notices, not only blog summaries."
+    },
+    {
+      "q": "Will AI replace HR jobs?",
+      "a": "AI is already used for screening and records, and the US Bureau of Labor Statistics still projects 6 percent growth for human resources specialists from 2025 to 2035. The safest path is to learn the law, employee relations and judgement, and to use AI tools while checking their output for errors and bias."
+    },
+    {
+      "q": "Is HR in garments different from HR in an NGO or a bank?",
+      "a": "Yes. Garments focus on workers, wages, overtime, audits and compliance, often with factory location and long hours. NGOs add donor rules and safeguarding, and banks and corporates focus on structured recruitment, performance and policy."
+    },
+    {
+      "q": "How can freshers get their first HR job?",
+      "a": "Do an internship or volunteer recruitment work, build strong Excel skills, learn the Labour Act basics, tailor your CV to each circular, and read every circular to the last line for required documents. Never pay anyone for a job or interview."
+    },
+    {
+      "q": "How do I avoid job scams?",
+      "a": "Never pay for a job, interview, test or placement. Apply through official company pages and verified circulars, be wary of work-from-home offers that ask for money upfront, and verify any recruiting agency with the Ministry of Expatriates' Welfare and Overseas Employment and BMET."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 16 November 2026\n\n> **Quick answer:** An HR Officer or HR Executive in Bangladesh handles recruitment, onboarding, attendance and leave, payroll support, employee records, policies and labour-law compliance. Most circulars ask for a bachelor's degree (BBA, MBA or HRM preferred), good Excel and communication skills, and working knowledge of the Bangladesh Labour Act, especially in garments and factories. Entry pay in the circulars we found is roughly BDT 20,000-35,000 a month, mid-level BDT 35,000-65,000, and HR heads BDT 80,000-150,000+ (estimate). Labour law changed in 2025-2026, so up-to-date legal knowledge is a real advantage.\n\n## HR Officer / HR Executive career at a glance\n\n| Question | Short answer |\n|---|---|\n| Who hires? | Garment and textile groups, factories and manufacturers, NGOs and development organisations, banks and companies, BPO and tech firms, startups, hospitals and universities |\n| Job titles in circulars | HR Officer, HR Executive, Executive (HR and Admin), Senior Executive (HR), Executive (Compensation and Benefits), People and Culture Executive, HR Business Partner, Assistant Manager (Admin and HR) |\n| Minimum education | Usually a bachelor's degree; BBA, MBA, HRM or social science preferred, and some circulars ask for MBA or M.Com |\n| Must-have knowledge | Bangladesh Labour Act and Labour Rules, recruitment basics, payroll inputs, Excel, record keeping, communication |\n| Typical conditions | Office or factory-based work, often with compliance audits; RMG posts may be outside Dhaka (for example Gazipur, Mymensingh, Bhaluka) |\n| Key rule | An HR professional never takes money from candidates. Never pay anyone for a job, an interview or a \"guaranteed\" posting |\n| Global demand | The US Bureau of Labor Statistics projects 6 percent growth for human resources specialists from 2025 to 2035, with about 73,700 openings a year |\n\n## What does an HR Officer or HR Executive do?\n\nHR keeps the people side of an organisation running fairly and legally. A typical HR officer coordinates recruitment from requisition to appointment, prepares job ads, schedules interviews, issues appointment letters, runs onboarding, keeps attendance, leave and personnel records, supports monthly payroll inputs, handles employee queries and grievances, and makes sure practices follow the Bangladesh Labour Act and the organisation's HR manual. In NGOs the work also includes donor and NGO Affairs Bureau compliance (as in an RDRS Bangladesh circular). In garments it includes audit and compliance work, wages, overtime and welfare.\n\n**A normal day:** check attendance and leave exceptions, answer employee questions, update records in an HRIS or Excel, schedule or run interviews, prepare offer or appointment letters, handle a warning or grievance process by the book, prepare payroll inputs before the deadline, and update reports for management.\n\n> A good HR officer protects both the people and the organisation. (our working rule for new HR staff)\n\n## Scope: where this career can take you\n\n- **Generalist HR:** recruitment, onboarding, records, policies and employee relations in one role, common in small and mid-size firms.\n- **Recruitment and talent acquisition:** sourcing, screening, interviewing and offers.\n- **Compensation, benefits and payroll:** salary sheets, overtime, bonuses, tax statements and final settlements.\n- **Compliance and labour relations:** factory and buyer audits, labour law, dispute handling (very strong demand in RMG).\n- **Learning and development:** training needs, trainers, performance systems.\n- **HR business partnering:** advising department heads, usually at senior executive and manager levels.\n- **HR in NGOs and development:** donor rules, project staffing, safeguarding and policy work.\n- **HR technology and analytics:** HRIS, payroll software, dashboards, and consulting (for example local HR-software firms).\n- **Own consultancy or training:** HR outsourcing for small companies, CV and interview coaching, compliance support.\n\n## Salary in Bangladesh (2026 ranges)\n\n| Level | Typical experience | Monthly pay (BDT) | Visual |\n|---|---|---|---|\n| Entry | 0-2 years, Executive or Officer | 20,000 - 35,000 | ███ |\n| Mid | 3-6 years, Senior Executive to Assistant Manager | 35,000 - 65,000 | █████ |\n| Senior | Manager to Head of HR (estimate; few public numbers) | 80,000 - 150,000+ | █████████ |\n\n**How we got these ranges.** Many circulars say \"negotiable\", so we used those that show numbers. In 2026: RDRS Bangladesh advertised an HR Officer in Rangpur at Tk 31,000 a month with at least two years of experience, two festival bonuses and a Baishakhi allowance; iFarmer advertised an Executive, People and Culture at Tk 25,000-30,000; Trutex Apparel advertised an HR Executive at Tk 25,000-35,000 with two festival bonuses; a therapy centre advertised a Senior Executive (HR) at Tk 25,000-30,000; a Junior Executive, HR and Admin post was listed at Tk 20,000-35,000. For mid-level, Apex Footwear advertised an Assistant Manager, Administration and Human Resources at Tk 50,000-62,000 with provident fund, gratuity and two weekly holidays (a LinkedIn post, deadline 20 October 2026). For seniors, Rahul Group advertised a Head of HR and Admin at Tk 80,000-120,000, and a Dhaka Tribune article quoted a figure of around Tk 150,000 a month for an HR manager in a mid-sized company, which is one person's estimate. We found no reliable public data for HR directors, so the senior figure is an estimate. These are ranges, not promises. Confirm in the actual circular.\n\n### Who pays the most?\n\nAs a general pattern: small firms and clinics → factories and local groups → NGOs and growing companies, which often add festival bonuses and allowances → large groups, multinationals, banks and tech firms with structured HR teams and benefits. Specialist knowledge in labour law, payroll and compliance, and a recognised certification, tend to raise pay faster than the title alone.\n\n**Global comparison:** in the United States, the median pay for human resources specialists was USD 75,940 a year in May 2025, with about 939,700 jobs in 2025, and the median for human resources managers was USD 149,280 (US Bureau of Labor Statistics). Living costs and legal systems are very different, so do not compare the numbers directly.\n\n## Benefits beyond salary\n\n- Festival bonuses (two a year in most circulars we found) and a yearly salary review.\n- Provident fund, gratuity and insurance at larger employers (as in the Apex Footwear circular).\n- Mobile bill, lunch support and weekly two holidays in some circulars.\n- Baishakhi allowance and other allowances in some NGO circulars.\n- Training and certification support in stronger organisations (ask in the interview).\n- A path to management, because HR touches every department.\n\n## Top employers: Bangladesh and the world\n\n**Bangladesh: examples seen in circulars, careers pages or news (alphabetical, not a ranking)**\n\n| Sector | Examples |\n|---|---|\n| Garments, textiles and footwear | Anwar Group of Industries, Apex Footwear, Cotton Club (BD) of Mondol Group, Niagara Textiles of Santa Group, Trutex Apparel, and many RMG factories (sweater and knit exporters) |\n| NGOs and development | Concern Worldwide, icddr,b, RDRS Bangladesh, and other donor-funded NGOs |\n| BPO, tech and startups | Exotico Solutions (BPO), iFarmer, and HR-software companies such as MiHCM Bangladesh |\n| Large groups and FMCG | Rahul Group and other business conglomerates |\n\nAlways check each employer's own site for current vacancies. This is not a quality rating.\n\n**A fact worth knowing:** a Bangladesh BPO company's circular for an HR post required every applicant to submit a one-to-two-page action plan with a 30/60/90-day timeline along with the CV, and said applications without it would not be considered. Read circulars to the last line.\n\n**World:** every large organisation needs HR. Multinationals, UN agencies and international NGOs hire local HR staff in Bangladesh, and HR skills transfer abroad when combined with local certifications and legal knowledge. Employment law differs by country, so read the rules for each route.\n\n## Skills employers ask for\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Bangladesh Labour Act and Rules knowledge | Named in RMG, BPO and NGO circulars | █████ |\n| Recruitment and selection | Core of most HR posts | █████ |\n| Payroll inputs, overtime, tax statements and final settlements | Accuracy protects people and audits | ████ |\n| Excel and HR software (HRIS) | Reports, records and payroll | █████ |\n| Communication and employee relations | Fair, calm handling of people issues | █████ |\n| Confidentiality and ethics | You hold sensitive data | █████ |\n| Compliance and audit readiness | Buyer and donor audits | ████ |\n| Reporting and HR analytics | Management wants numbers | ███ |\n| Training coordination | Planning and tracking learning | ███ |\n| AI and automation awareness | Screening and records are being automated | ███ |\n\n*Demand bars are our reading of recent circulars, not a statistical survey.*\n\n## Free ways to build these skills\n\n- **Read the law itself:** the Bangladesh Labour Act 2006 and Labour Rules on the government's laws portal ([bdlaws.minlaw.gov.bd](http://bdlaws.minlaw.gov.bd)), and then check the 2025 Ordinance and 2026 Amendment Act in the gazette.\n- **Excel practice:** build a mock salary sheet with overtime, deductions and leave balances; free tutorials at [Microsoft Learn](https://learn.microsoft.com).\n- **Online courses:** audit HR, communication and people-management courses on [Coursera](https://www.coursera.org) and [Alison](https://alison.com).\n- **Bangla e-learning:** [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **Professional community:** the Bangladesh Society for Human Resources Management (BSHRM) runs events and networking; check its official channels for current activities.\n- **Practice at work or in a club:** volunteer to run a student club recruitment, draft a policy, or help a small business write job descriptions.\n\n## Qualifications, licences, scholarships and study support\n\n| Step | Body | What it means |\n|---|---|---|\n| Bachelor's degree | University (BBA, HRM, social science, any discipline) | Most circulars ask for a bachelor's degree |\n| MBA or HRM master's | Universities and business schools | Preferred for mid and senior roles; some circulars require it |\n| Postgraduate diploma | For example PGD in HRM by Daffodil International University's HRDI with BSHRM; BIHRM advertises HRM diplomas and a labour law diploma | Career-oriented option; check accreditation and fees yourself |\n| SHRM-CP / SHRM-SCP | SHRM (US), launched in Bangladesh with BSHRM; WorkSMART Consulting describes itself as the SHRM partner in Bangladesh | Paid, globally recognised credential; check current eligibility and fees on the official site |\n| CIPD-linked qualifications | Some institutes advertise CIPD-accredited programmes | Verify accreditation with CIPD before paying |\n| Labour law training | BSHRM, consultancies and law institutes | Valuable for compliance and RMG roles |\n\n**Support to explore (check each official site for current rules):**\n\n- **Chevening (UK):** [chevening.org](https://www.chevening.org) for a funded master's in HR, management or organisational psychology.\n- **Commonwealth Scholarships:** [cscuk.fcdo.gov.uk](https://cscuk.fcdo.gov.uk).\n- **DAAD (Germany):** [daad.de](https://www.daad.de/en/).\n- **Fulbright (USA):** through the US Embassy in Dhaka.\n- **University scholarships:** ask your university about merit and need-based awards for MBA and HRM.\n\n> **Warning on job scams:** real HR never charges candidates. If anyone asks you to pay for a job, an interview, a test, a \"training seat\", a visa or a medical check, refuse. Press reports in 2026 describe Bangladeshis lured abroad with promised data entry or call centre jobs and forced into scam work, and The Business Standard describes work-from-home scams that ask for money upfront. Verify any recruiting agency with the Ministry of Expatriates' Welfare and Overseas Employment and BMET. As an HR officer, never ask a candidate for money or personal documents beyond what the role legitimately needs.\n\n## Long-term career timeline\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-2 | HR Executive / Officer | Records, recruitment support, attendance, onboarding, Excel, labour law basics |\n| 2-5 | Senior Executive (HR) | Payroll inputs, employee relations, compliance, interviewing, reporting |\n| 5-8 | Assistant Manager / Manager (HR) | Policy design, audits, performance systems, managing a small team |\n| 8-12 | Senior Manager or HR Business Partner | Workforce planning, compensation design, dispute handling, advising leaders |\n| 12+ | Head of HR, HR Director or CHRO | Strategy, culture, budgets, board reporting, labour relations at scale |\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years in HR)\n2. **My target role in 3 years:** ___\n3. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n4. **One learning step this year:** (labour law course / Excel / SHRM-CP / MBA / HR software)\n5. **My weekly study hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 3.\n\n## Career shifts: where HR professionals move\n\n- **HR → compliance and sustainability** (buyer audits, ESG) in garments and exporters.\n- **HR → recruitment agency or talent acquisition lead.**\n- **HR → learning and development or organisational development.**\n- **HR → administration or operations management.**\n- **HR → HR technology, analytics or HRIS consulting.**\n- **HR → NGO programme support or safeguarding roles.**\n- **HR → own HR consultancy or training business.**\n\n## Where will you find more peace of mind?\n\nWe have no survey that ranks the calm of different HR jobs, so this is a general pattern. Factory and RMG HR often means long hours, audits, labour disputes and pressure from both workers and management, while corporate, NGO and tech HR is often steadier, with deadlines around payroll, recruitment drives and audits. Three habits protect your peace: document every decision and conversation, learn the law so you are not guessing under pressure, and keep a mentor or peer group in HR you can ask. Ask about overtime, location, compliance workload and reporting lines in the interview, and get the answers in writing. If stress becomes heavy, talk to a mentor or a mental health professional.\n\n## Faith and history: trust, fairness and the worker's due\n\n**The Quran.** An-Nisa commands that trusts be returned to those entitled to them ([4:58 on quran.com](https://quran.com/4/58)), a standard for anyone who holds employee data and decisions. Al-Mutaffifin condemns those who give short measure ([83:1-3](https://quran.com/83/1)), a reminder to calculate wages and dues honestly. Al-Hujurat teaches that people were made into nations and tribes so they may know one another ([49:13](https://quran.com/49/13)), a basis for fair hiring and respect for diversity.\n\n**Hadith.** The Prophet (peace be upon him) said to give the worker his wages before his sweat dries (reported in Sunan Ibn Majah; check the grading before you quote it publicly).\n\n**History.** Early Islamic administration under Caliph Umar organised a register called the *diwan* to record people and their stipends, an early example of systematic pay records. Fair and recorded pay has a long history, and HR carries it forward.\n\n## Your contribution to the nation\n\nHR professionals shape how millions of Bangladeshis are hired, paid and treated at work. In garments, fair wages, safe workplaces and compliance protect workers and keep export orders. In NGOs, careful staffing and safeguarding protect communities. The Business Standard and the Financial Express note that labour law and wage rules are changing, so a well-trained HR officer helps a company follow them and helps workers receive what they are owed.\n\n## Your contribution to the world\n\nBangladeshi HR professionals support international buyers, donors and global companies by meeting audit and ethical standards, and many work with international NGOs and multinationals. Fair recruitment, equal opportunity, honest pay and good grievance systems are values that travel across borders.\n\n## If you want to be an entrepreneur\n\n- **HR outsourcing for small and mid-size companies** (policies, payroll support, contracts).\n- **Recruitment consultancy** for local jobs (check the legal rules, and never charge candidates).\n- **Labour-law and compliance training** for factories and managers.\n- **HR software or payroll tools** for small businesses.\n- **CV, interview and career coaching** (honest, with no job guarantees).\n- **Employer branding and onboarding programmes** for growing companies.\n\nStart with one or two real clients, write clear contracts and protect personal data.\n\n## Research opportunities\n\n- Topics with real need in Bangladesh: how the 2025-2026 labour reforms affect workplaces, worker retention and turnover in garments, women's participation and safety at work, AI in recruitment, HR analytics, and fair pay and wage board processes.\n- Where to learn and publish: business schools, BSHRM events, university journals, and ILO and labour research reports. Recent Bangladeshi studies on AI in recruitment (Independent University, Bangladesh, June 2026) and on AI in talent management in the telecom sector (April 2026) are good starting points.\n- Path: a final-year project → HR executive with research interests → master's or PhD in HRM or organisational behaviour (the scholarships above fund many of these).\n\n## Whom to follow and learn from\n\nFollow organisations first: the Bangladesh Society for Human Resources Management (BSHRM), the Ministry of Labour and Employment notices, SHRM and CIPD for global practice, and the ILO for labour standards. The Daily Star's [Next Step](https://www.thedailystar.net/next-step) pages and The Business Standard cover careers and labour news. On LinkedIn, follow HR leaders in RMG, NGOs and tech who share cases and templates, and ignore accounts that sell shortcuts.\n\n## Where to find HR jobs\n\n- [BDJobs](https://www.bdjobs.com) (search HR Officer, HR Executive, Executive HR and Admin, Compliance Executive, Payroll Executive) and company career pages.\n- NGO and development portals, for example [RDRS Bangladesh careers](https://www.rdrsbangladesh.org/careers/) and [icddr,b careers](https://career.icddrb.org).\n- Startup career pages, for example [iFarmer](https://www.ifarmer.asia/careers/executive---people-culture).\n- University career centres (for example BUFT's career development center lists company circulars), LinkedIn and newspaper job pages.\n- Use official company pages or verified circulars only. Do not pay anyone for a job or an interview.\n\n## HR Officer CV: what to write\n\nYour CV should show numbers, systems and compliance, not only duties.\n\n| Weak line | Better line |\n|---|---|\n| Responsible for recruitment. | Coordinated recruitment of 40 operators and 6 executives in 3 months, from requisition to appointment letter (use your real numbers). |\n| Maintained employee records. | Maintained records for 350 employees in Excel and reduced attendance errors by cross-checking leave and overtime weekly. |\n| Knows labour law. | Prepared warning and termination files following Bangladesh Labour Act procedure and supported two audit visits. |\n\n*Use only your real, provable details. Never exaggerate and never share confidential employee data in your CV.*\n\n**What to include:** a two-line summary, recruitment and payroll volumes, systems used (Excel, HRIS), labour law and compliance exposure, training or certificates with dates, languages, and a clear contact line.\n\n**Career objective samples:**\n\n- *Fresher:* \"BBA graduate with HR internship experience and strong Excel skills seeking an HR Executive role to support recruitment, records and compliance.\"\n- *Experienced:* \"HR Executive with 4 years in RMG recruitment, payroll inputs and labour law compliance, seeking a Senior Executive (HR) role.\"\n\nBuild yours free with the HereWeGrow CV Builder and the HR Officer CV template.\n\n## Common mistakes in applications\n\n- Not reading the circular to the end (for example a required action plan or document list).\n- A generic CV with no volumes, systems or compliance experience.\n- Quoting old labour-law rules without checking the 2025-2026 changes.\n- Weak Excel: a mistake in a salary sheet during a test can end your chances.\n- Ignoring confidentiality in your CV, interview examples or social posts.\n- Paying anyone for a job or an interview, or asking candidates to pay.\n\n## Sources and method\n\nFigures were checked on 16 November 2026 and will be reviewed regularly. Pay ranges combine the few circulars that show salary and are estimates. Labour law and wage rules are changing, so check the gazette and official notices, not only blog summaries.\n\n- US Bureau of Labor Statistics: [Human Resources Specialists](https://www.bls.gov/ooh/business-and-financial/human-resources-specialists.htm); [Human Resources Managers](https://www.bls.gov/ooh/Management/human-resources-managers.htm)\n- Circulars and listings: [RDRS Bangladesh, HR Officer](https://www.rdrsbangladesh.org/careers/hr-officer/); [iFarmer, Executive People and Culture](https://www.ifarmer.asia/careers/executive---people-culture); [Trutex Apparel, HR Executive (Careerjet)](https://www.careerjet.com.bd/jobad/bde926ee9015b123c716003b9d515c74d8); [Rahul Group, Head of HR and Admin](https://rahulgroup.com.bd/?p=7323); [Junior Executive, HR and Admin](https://www.wpxpo.com/?p=75799); [Exotico Solutions, HR circular](https://hotjobs.bdjobs.com/jobs/exoticos/exoticos2.htm); [Niagara Textiles (BUFT career centre)](https://buft.edu.bd/career-development-center/job); Apex Footwear and CS Care posts on LinkedIn ([Apex](https://bd.linkedin.com/in/arahmanovi), [CS Care](https://bd.linkedin.com/in/nuruzzamanraj))\n- Dhaka Tribune: [AI boom hits Bangladesh](https://www.dhakatribune.com/amp/bangladesh/395173/ai-boom-hits-bangladesh-amid-global-race-in)\n- Labour law: Apparel Resources: [Bangladesh introduces new regulation amending labour laws](https://bd.apparelresources.com/business-news/sustainability/bangladesh-introduces-new-regulation-amending-labour-laws); Mondaq (11 June 2026): [Bangladesh's 2025-2026 labour law reforms](https://webiis10.mondaq.com/employee-benefits-compensation/1800374/the-rules-have-changed-bangladeshs-2025-2026-labour-law-reforms-and-what-it-means-for-businesses); The Financial Express: [IndustriAll urges wage board for RMG workers](https://thefinancialexpress.com.bd/trade/industriall-bangladesh-urges-govt-to-form-wage-board-for-rmg-workers); MiHCM: [Payroll for the RMG industry](https://mihcm.com/blog/payroll-for-the-ready-made-garment-industry-in-bangladesh-managing-complexity-at-scale) and [How to run payroll in Bangladesh](https://mihcm.com/?p=60390) (an HR-software vendor, so read as secondary)\n- Professional bodies and training: The Daily Star: [HR transformation a must for national development](https://www.thedailystar.net/next-step/hr-transformation-must-national-development-1043302?amp); [DIU HRDI, PGD in HRM](https://sites.google.com/diu.edu.bd/pgd-hrm/about-this-course); [CPHR Canada and BSHRM MoU](https://cphr.ca/?p=663)\n- AI in HR: [Integration of AI agents in recruitment (IUB, June 2026)](https://ar.iub.edu.bd/handle/11348/1387); [AI in talent management in the telecom sector of Bangladesh](https://jis.iou.edu.gm/article/view/332)\n- Job scams: The Business Standard: [Rise in work-from-home job scams in Bangladesh](https://www.tbsnews.net/node/705162); Prothom Alo: [Major Middle East labour markets shrink, fraud in the name of new markets](https://en.prothomalo.com/bangladesh/t1vxgzxlgz)\n\n**How to cite this page:** Daloyar Hassan Shishir, \"HR Officer and HR Executive Career in Bangladesh\", HereWeGrow Career Hub, checked 16 November 2026.\n\n*This page is career information, not legal, financial or recruitment advice. Salaries, circulars and rules change, so confirm details with the employer and official sources.*\n",
+  "growth_plan": {
+    "y1": "Learn the Labour Act basics, master records, recruitment support and Excel, and finish an internship or first HR Executive role.",
+    "y2": "Own payroll inputs and employee relations, handle audits with a senior, and consider a certification such as an HRM diploma or SHRM-CP.",
+    "y3": "Move toward Senior Executive or Assistant Manager: design policies, manage a small team, and choose a path in compliance, talent acquisition or HR business partnering."
+  },
+  "goal_sheet": [
+    "Week 1-2: Read the Labour Act basics (hours, leave, wages, termination) and note questions",
+    "Week 3-4: Build a mock attendance, leave and salary sheet in Excel and check every formula",
+    "Month 2: Write a sample job description, job ad, interview guide and appointment letter",
+    "Month 3: Join a club, internship or volunteer role to practise real recruitment or records",
+    "Month 4: Learn the basics of compliance and audits; study one buyer or donor code",
+    "Month 5: Take one free HR or analytics course and practise HR reporting in Excel",
+    "Month 6: Update CV, apply to 10 circulars, practise 20 interview questions with a friend"
+  ],
+  "test": [
+    {
+      "q": "A candidate asks if a small fee will help speed up their application. What should an HR officer do?",
+      "options": [
+        "Accept it quietly",
+        "Refuse, never take money from candidates, and report the request",
+        "Ask for half now",
+        "Share it with the team"
+      ],
+      "answer_idx": 1,
+      "explain": "Real HR never charges candidates; taking money is unethical and often illegal.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Which law is the main reference for most private-sector workplaces in Bangladesh?",
+      "options": [
+        "The Bangladesh Labour Act 2006 and its Rules, as amended",
+        "The Penal Code only",
+        "The Companies Act only",
+        "The Motor Vehicles Act"
+      ],
+      "answer_idx": 0,
+      "explain": "The Labour Act and Rules govern most employment terms; always check the latest amendments in the gazette.",
+      "skill_tag": "labour-law"
+    },
+    {
+      "q": "What is the best first step when an employee raises a complaint?",
+      "options": [
+        "Ignore it",
+        "Listen, record it, follow the grievance procedure and keep it confidential",
+        "Announce it to everyone",
+        "Fire the employee"
+      ],
+      "answer_idx": 1,
+      "explain": "A fair, documented, confidential process protects the employee and the organisation.",
+      "skill_tag": "employee-relations"
+    },
+    {
+      "q": "In Excel, which function best looks up an employee's salary from a table by ID?",
+      "options": [
+        "SUM",
+        "XLOOKUP or VLOOKUP",
+        "ROUND",
+        "TODAY"
+      ],
+      "answer_idx": 1,
+      "explain": "Lookup functions fetch matching values and reduce manual errors in payroll sheets.",
+      "skill_tag": "excel"
+    },
+    {
+      "q": "What should an appointment letter clearly state?",
+      "options": [
+        "Only the job title",
+        "Role, pay, working terms, probation and reporting line, consistent with the law",
+        "Nothing in writing",
+        "Only the start date"
+      ],
+      "answer_idx": 1,
+      "explain": "A clear written letter prevents disputes and follows labour-law requirements.",
+      "skill_tag": "records"
+    },
+    {
+      "q": "An applicant's CV has strong skills but a gap in dates. What is the fair approach?",
+      "options": [
+        "Reject at once",
+        "Ask neutrally about the gap and judge on skills and evidence",
+        "Ask about their family plans",
+        "Guess the reason"
+      ],
+      "answer_idx": 1,
+      "explain": "Ask job-related questions and avoid assumptions or discrimination.",
+      "skill_tag": "recruitment"
+    },
+    {
+      "q": "Why must HR keep employee data confidential?",
+      "options": [
+        "It is optional",
+        "It contains sensitive pay, health and personal details that must be protected",
+        "It saves paper",
+        "Managers prefer secrecy"
+      ],
+      "answer_idx": 1,
+      "explain": "Misusing personal data harms people and creates legal and trust risks.",
+      "skill_tag": "confidentiality"
+    },
+    {
+      "q": "A final settlement is due when an employee leaves. HR should:",
+      "options": [
+        "Delay it as long as possible",
+        "Calculate dues accurately, document them and pay on time as the law and policy require",
+        "Pay only if asked twice",
+        "Skip leave encashment"
+      ],
+      "answer_idx": 1,
+      "explain": "Accurate, timely dues are a core HR duty; check the current rules for the exact timelines.",
+      "skill_tag": "payroll"
+    },
+    {
+      "q": "Which interview question is appropriate?",
+      "options": [
+        "Are you planning to get married?",
+        "Tell me about a time you handled a difficult customer or colleague.",
+        "What is your religion?",
+        "How old are your children?"
+      ],
+      "answer_idx": 1,
+      "explain": "Ask behavioural, job-related questions; avoid personal or discriminatory ones.",
+      "skill_tag": "recruitment"
+    },
+    {
+      "q": "A recruiting agent says: pay Tk 50,000 and you get a guaranteed job abroad. You should:",
+      "options": [
+        "Pay at once",
+        "Refuse and verify the agency with the Ministry of Expatriates' Welfare and BMET",
+        "Send your passport",
+        "Share your bank PIN"
+      ],
+      "answer_idx": 1,
+      "explain": "Job-guarantee fees and fake overseas offers are common scams.",
+      "skill_tag": "safety"
+    },
+    {
+      "q": "Why do many RMG HR roles ask for audit and compliance knowledge?",
+      "options": [
+        "Buyers and regulators inspect wages, safety and working conditions",
+        "It is a fashion",
+        "To reduce hiring",
+        "It replaces payroll"
+      ],
+      "answer_idx": 0,
+      "explain": "Buyer and donor audits check labour compliance, so HR must keep records ready.",
+      "skill_tag": "compliance"
+    },
+    {
+      "q": "An AI tool ranks candidates for you. What is the responsible approach?",
+      "options": [
+        "Accept its ranking without review",
+        "Use it as a helper, check for bias and errors, and keep a human decision",
+        "Hide that you used it from candidates and managers",
+        "Delete the applications it rejects"
+      ],
+      "answer_idx": 1,
+      "explain": "AI can speed up screening but can be biased; a person must review and own the decision.",
+      "skill_tag": "ai-literacy"
+    }
+  ],
+  "cv_template_notes": "Use the HWG HR Officer CV (clean, one-column layout). Start with a two-line summary, then recruitment and payroll volumes, systems used (Excel, HRIS), labour law and compliance exposure, training or certificates with dates, education, languages and a clear contact line. Keep it to 1 page for freshers and 2 pages at most. Use only provable details, never share confidential employee data, and never invent numbers. File name: YourName_HR_CV.pdf.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the HR Executive position advertised on [site/date]. I hold a [degree] from [university] and have [internship/work] experience in [recruitment/records/payroll support]. In my [role/internship] I [one provable detail, e.g. coordinated recruitment of 40 operators and maintained records for 350 employees in Excel].\n\nI know the basics of the Bangladesh Labour Act, keep information confidential, and I am careful with numbers and documents. I would be glad to contribute to [Company name] and to keep growing in your HR team.\n\nI have attached my CV and would welcome an interview.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
+  "interview_qs": [
+    "Tell me about yourself. (Tip: 45 seconds: education, one HR-related experience, why HR, why this company.)",
+    "Why do you want to work in HR? (Tip: Give a real reason such as people, fairness and systems; avoid just 'I like people'.)",
+    "What does an HR officer do in a typical week? (Tip: Recruitment, records, leave, payroll inputs, queries and compliance.)",
+    "How would you run recruitment for 30 operators in one month? (Tip: Requisition, ad, screening, interviews, offers, onboarding and records.)",
+    "How do you screen CVs fairly? (Tip: Clear criteria, job-related questions, no discrimination.)",
+    "Which questions should you never ask in an interview? (Tip: Marital status, religion, family plans, age of children.)",
+    "What do you know about the Bangladesh Labour Act? (Tip: Name real topics such as working hours, leave, wages and termination; be honest about limits.)",
+    "How would you stay updated on labour-law changes? (Tip: Gazette, Ministry notices, professional bodies and trusted legal sources.)",
+    "How do you calculate overtime? (Tip: Show the method from the Labour Act and company policy; say you would verify the current rule.)",
+    "What goes into a final settlement? (Tip: Wages, leave encashment, bonus, gratuity or other dues as per law and policy.)",
+    "How do you handle an employee who is repeatedly late? (Tip: Facts, conversation, written warning steps, support and fairness.)",
+    "An employee accuses a manager of harassment. What do you do? (Tip: Confidentiality, formal procedure, protection from retaliation, documentation.)",
+    "How do you deliver bad news, such as a rejection or termination? (Tip: Be clear, respectful, private and follow the process.)",
+    "How do you deal with a conflict between two teammates? (Tip: Listen to both, focus on facts, agree actions, follow up.)",
+    "What is an HRIS and have you used one? (Tip: Answer honestly and describe what you actually did.)",
+    "How do you keep employee data confidential? (Tip: Access limits, locked files, need-to-know, no gossip.)",
+    "Describe a time you found an error in a report or sheet. (Tip: Show checking habits and how you fixed and prevented it.)",
+    "What is onboarding and why does it matter? (Tip: First-week plan, documents, introductions and early retention.)",
+    "How would you reduce staff turnover? (Tip: Find causes through exit interviews, fix pay, supervision and workload.)",
+    "What is the difference between HR and administration? (Tip: People systems and law versus facilities and logistics.)",
+    "How do you prepare for a buyer or donor audit? (Tip: Records, policies, worker interviews, corrective actions.)",
+    "How do you use AI tools in HR work? (Tip: Be honest: for drafts and screening support, then review for bias and errors.)",
+    "How would you handle a request to hire a relative of a manager? (Tip: Follow policy, merit and conflict-of-interest rules.)",
+    "A candidate offers you money to push their application. What do you do? (Tip: Refuse, document and report; never take money.)",
+    "How do you handle pressure during payroll week? (Tip: Calendar, checklists, early checks, communication.)",
+    "Tell me about a time you worked with a difficult person. (Tip: Show calm, respect and outcome.)",
+    "Are you comfortable working at a factory location or long hours at peak times? (Tip: Answer honestly and ask about hours and transport.)",
+    "What are your salary expectations? (Tip: Give a range based on the circular and market; stay polite and flexible.)",
+    "Where do you see yourself in five years? (Tip: Name a role such as HR manager or HR business partner and the steps you are taking.)",
+    "Do you have any questions for us? (Tip: Ask about team size, HR systems, training, audits and growth.)"
+  ],
+  "author_name": "Daloyar Hassan Shishir",
+  "author_url": "https://www.dhshishir.com"
+}

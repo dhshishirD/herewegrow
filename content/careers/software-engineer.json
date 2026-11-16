@@ -1,0 +1,384 @@
+{
+  "slug": "software-engineer",
+  "title": "Software Engineer / Web Developer",
+  "title_en": "Software Engineer / Web Developer",
+  "title_bn": "সফটওয়্যার ইঞ্জিনিয়ার / ওয়েব ডেভেলপার",
+  "field": "Technology & Software",
+  "seo_title": "Software Engineer Salary & Career in Bangladesh (2026)",
+  "seo_desc": "Software engineer and web developer career in Bangladesh: salary, skills, AI impact, free learning, freelancing, CV tips and a free test. Checked Nov 2026.",
+  "summary": "A Software Engineer or Web Developer in Bangladesh designs, builds, tests and fixes software for product, export, fintech, NGO and remote employers. This page shows pay ranges, the skills employers ask for, honest advice on AI and entry-level jobs, free learning paths, freelancing realities, an overseas job scam warning, a CV guide with portfolio tips and a free skill test.",
+  "salary": {
+    "entry": "BDT 25,000 - 65,000 per month (very wide: small firms to top product companies)",
+    "mid": "BDT 60,000 - 130,000 per month",
+    "senior": "BDT 120,000 - 200,000+ per month (estimate; few public numbers)",
+    "note": "Ranges, not promises. Built from the few circulars that show numbers and a community-compiled table; many circulars say negotiable. Remote and foreign-contract pay is not included. Confirm in the actual circular.",
+    "checked": "2026-11-16"
+  },
+  "benefits": [
+    "Festival bonuses (two a year in several circulars) and a yearly salary review",
+    "Performance bonus, provident fund, gratuity, and health and life insurance at larger employers",
+    "Overtime or project allowances and mobile bill support in some circulars",
+    "Learning budgets and mentoring in stronger teams",
+    "Remote or hybrid options in some companies (confirm in writing)",
+    "Global options through remote work, export companies and relocation programmes"
+  ],
+  "companies": [
+    "Software and IT export companies",
+    "Fintech, mobile finance and app companies",
+    "Banks, telecoms and large retailers with in-house teams",
+    "E-commerce and ride-hailing platforms",
+    "NGOs, research bodies and development projects",
+    "Government and Hi-Tech Park projects",
+    "Remote and freelance clients abroad"
+  ],
+  "season": [
+    "Software circulars appear all year; product companies and exporters hire in batches, so check career pages monthly",
+    "Fresher and graduate programmes often open after university results; watch company pages and LinkedIn",
+    "Freelance demand moves with global client budgets (our observation, not a statistic)",
+    "Keep your GitHub, portfolio and CV ready so you can apply quickly"
+  ],
+  "skills": [
+    {
+      "name": "One main language and framework (Java, C#, JavaScript, Python or PHP)",
+      "level": "Core",
+      "tag": "programming"
+    },
+    {
+      "name": "Data structures, algorithms and problem solving",
+      "level": "Core",
+      "tag": "algorithms"
+    },
+    {
+      "name": "Git and code review",
+      "level": "Core",
+      "tag": "git"
+    },
+    {
+      "name": "Databases and SQL",
+      "level": "Core",
+      "tag": "databases"
+    },
+    {
+      "name": "APIs, web basics and security basics",
+      "level": "Important",
+      "tag": "apis"
+    },
+    {
+      "name": "Testing and debugging",
+      "level": "Important",
+      "tag": "testing"
+    },
+    {
+      "name": "English for documentation, teamwork and remote work",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "Portfolio, GitHub and deployed projects",
+      "level": "Important",
+      "tag": "portfolio"
+    },
+    {
+      "name": "Cloud, Docker and DevOps basics",
+      "level": "Growing",
+      "tag": "cloud"
+    },
+    {
+      "name": "Using AI tools and reviewing their output",
+      "level": "Growing",
+      "tag": "ai-literacy"
+    },
+    {
+      "name": "System design basics",
+      "level": "Growing",
+      "tag": "system-design"
+    }
+  ],
+  "gaps_checklist": [
+    "I can write working code in one main language and explain it",
+    "I know basic data structures and algorithms and can solve simple problems",
+    "I use Git daily and have a clean GitHub profile with READMEs",
+    "I can write SQL queries and design a simple database",
+    "I have two or three deployed projects, not only tutorials",
+    "I can write tests and debug step by step",
+    "I can read, test and fix AI-written code instead of copying it blindly",
+    "I read English documentation comfortably",
+    "My CV shows projects, links, tools and real results",
+    "I know the common job scams and the rule never to pay for a job"
+  ],
+  "courses": [
+    {
+      "title": "CS50: Introduction to Computer Science (free to learn)",
+      "provider": "Harvard University",
+      "url": "https://cs50.harvard.edu",
+      "is_affiliate": false,
+      "skill_tag": "algorithms"
+    },
+    {
+      "title": "Free full-stack web development curriculum",
+      "provider": "The Odin Project",
+      "url": "https://www.theodinproject.com",
+      "is_affiliate": false,
+      "skill_tag": "programming"
+    },
+    {
+      "title": "Free coding courses and project certifications",
+      "provider": "freeCodeCamp",
+      "url": "https://www.freecodecamp.org",
+      "is_affiliate": false,
+      "skill_tag": "programming"
+    },
+    {
+      "title": "Learn Web Development and reference docs",
+      "provider": "MDN Web Docs (Mozilla)",
+      "url": "https://developer.mozilla.org",
+      "is_affiliate": false,
+      "skill_tag": "apis"
+    },
+    {
+      "title": "Training for scaling of IT skills (cloud, DevOps, cybersecurity, full-stack)",
+      "provider": "Bangladesh Hi-Tech Park Authority (DEIED)",
+      "url": "https://deied.bhtpa.gov.bd/training-on-scaling-of-it-skills",
+      "is_affiliate": false,
+      "skill_tag": "cloud"
+    },
+    {
+      "title": "Free national e-learning courses in Bangla",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "communication"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a Software Engineer in Bangladesh?",
+      "a": "Roughly BDT 25,000-65,000 a month for entry level (a very wide range), BDT 60,000-130,000 for mid level, and about BDT 120,000-200,000+ for senior roles (an estimate). These ranges combine circulars that show numbers with a community-compiled table, checked on 16 Nov 2026. Many circulars say negotiable, so confirm in the actual circular."
+    },
+    {
+      "q": "Do I need a CSE degree to become a software developer?",
+      "a": "Many circulars ask for a bachelor's degree in CSE, CS, IT or a similar field, but employers also judge your projects, GitHub and problem solving. A degree is a door; proof of skill decides interviews."
+    },
+    {
+      "q": "Which programming language should I learn first?",
+      "a": "Pick one main stack and go deep. Circulars we saw ask for Java, C#/.NET, JavaScript and Angular, PHP and mobile (Android/iOS). Learn data structures, SQL and Git whichever you choose."
+    },
+    {
+      "q": "Will AI replace software developers?",
+      "a": "Routine coding is exposed. The US Bureau of Labor Statistics projects a 7 percent decline for computer programmers but 10 percent growth for software developers, QA analysts and testers from 2025 to 2035. Bangladeshi reports say entry-level developers, small firms and freelancers face more uncertainty, so build fundamentals, testing and the ability to review AI-written code."
+    },
+    {
+      "q": "How can freshers get their first software job?",
+      "a": "Build two or three deployed projects, keep clean code on GitHub, practise data structures, SQL and Git, apply to QA, associate and junior roles, and tailor your CV to each circular. Referrals and internships help. Never pay anyone for a job."
+    },
+    {
+      "q": "Is freelancing a good option for developers in Bangladesh?",
+      "a": "It can be, but it is not guaranteed. Reports say the country has hundreds of thousands of active freelancers, platforms charge fees (for example Fiverr's 20 percent flat fee as reported by Nsave), and internet outages can block access. Treat it as a skill and income builder, and plan for irregular income."
+    },
+    {
+      "q": "Can I get a software job abroad?",
+      "a": "It is possible through skilled-worker routes, company transfers, remote work and official programmes such as B-JET for Japan. Be extremely careful with fake offers: 2026 reports describe Bangladeshis lured abroad with promised IT or data entry jobs and forced into online scams. Never pay a fee or hand over a passport to an unverified person."
+    },
+    {
+      "q": "How do I avoid job scams?",
+      "a": "Never pay for a job, interview or placement. Apply through official company pages and verified circulars, be wary of work-from-home offers that ask for money upfront and of guaranteed-job bootcamps, and verify any recruiting agency with the Ministry of Expatriates' Welfare and Overseas Employment and BMET."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 16 November 2026\n\n> **Quick answer:** A Software Engineer or Web Developer in Bangladesh designs, builds, tests and fixes software, usually after a BSc in CSE, CS, IT or a related field, though employers mostly judge your projects and problem solving. Circular and listing numbers we found put entry pay at roughly BDT 25,000-65,000 a month (a very wide range, from small firms to top product companies), mid-level at BDT 60,000-130,000, and senior at BDT 120,000-200,000+ (estimate). AI is changing the entry door: routine coding is exposed, so the safe path is real projects, strong fundamentals, testing and debugging skills, and the ability to review AI-written code.\n\n## Software Engineer / Web Developer career at a glance\n\n| Question | Short answer |\n|---|---|\n| Who hires? | Software and IT export companies, fintech and app companies, banks and telecoms, e-commerce, NGOs and development organisations, government projects, and remote or freelance clients abroad |\n| Job titles in circulars | Software Engineer, Associate Software Engineer, Full-Stack Developer, Frontend or Backend Developer, Web Developer, Mobile App Developer, QA or SQA Engineer, ERP Software Engineer |\n| Minimum education | Often a bachelor's degree in CSE, CS, IT or equivalent. Many employers test skills and look at projects, so a degree is a door, not the whole key |\n| Must-have skills | One main language and its framework, data structures and algorithms, Git, databases and SQL, APIs, debugging, English for documentation and teamwork |\n| Proof of skill | GitHub projects, a live portfolio or deployed apps, contest or open-source work, internships, freelance reviews |\n| Key rule | Never pay anyone for a job, an interview or a \"guaranteed placement\". Never accept an overseas \"IT or data entry\" job from an unverified person |\n| Global demand | The US Bureau of Labor Statistics projects 10 percent growth for software developers, QA analysts and testers from 2025 to 2035, but computer programmers (routine coding) are projected to decline 7 percent |\n\n## What does a Software Engineer or Web Developer do?\n\nA software engineer turns a business need into working software. That means understanding the requirement, designing a solution, writing code, testing it, fixing bugs, working with other developers through Git and code review, and keeping the system running after release. A web developer focuses on websites and web apps: frontend (what users see) or backend (servers, databases, APIs), or both as a full-stack developer. In Bangladesh, circulars also ask for mobile developers (Android and iOS), .NET, Java, Laravel and PHP, and ERP specialists.\n\n**A normal day:** a short stand-up with the team, picking up a ticket, writing or changing code, running tests, a code review for a colleague, fixing a bug reported by users, a call with a product owner or client, and updating the ticket and documentation. Many teams now use AI coding assistants, but you remain responsible for what you ship.\n\n> Anyone can write code that works once. A good engineer writes code that other people can read, test and trust. (our working rule for new developers)\n\n## Scope: where this career can take you\n\n- **Product companies:** fintech, ride-hailing, e-commerce, edtech and health apps where you build one product deeply.\n- **Software export and service companies:** build software for clients in Europe, the US, Japan and elsewhere.\n- **Web and mobile development:** websites, web apps, Android and iOS apps.\n- **Quality and testing:** QA, SQA and automation engineers, a strong entry route and a career on its own.\n- **Data, AI and cloud:** data engineering, machine learning, DevOps, cloud and cybersecurity, which many circulars now mention.\n- **ERP and enterprise software:** retail, manufacturing and NGOs hire ERP engineers (for example a retail brand's ERP team that also asks for AI and LLM integration skills).\n- **Government and development sector:** NGOs, research bodies and public projects hire software engineers on contract or permanent posts.\n- **Freelance and remote work:** the ICT Division and the Bangladesh Freelancer Development Society say the country has over 800,000 active freelancers, with more than 650,000 registered on platforms such as Upwork, Fiverr and Freelancer.com, and about 70 percent are under 35 (The Daily Observer, June 2026).\n- **Abroad:** possible through skilled-worker routes, company transfers and programmes like B-JET for Japan (see below), but verify every route.\n\n## Salary in Bangladesh (2026 ranges)\n\n| Level | Typical experience | Monthly pay (BDT) | Visual |\n|---|---|---|---|\n| Entry | Fresher to 2 years | 25,000 - 65,000 | ████ |\n| Mid | 3-6 years | 60,000 - 130,000 | ███████ |\n| Senior | 6+ years, tech lead (estimate) | 120,000 - 200,000+ | ██████████ |\n\n**How we got these ranges.** Many circulars say \"negotiable\", so we used the ones that show numbers and a community-compiled table of circular salaries. Examples: Avian BPO & IT advertised a Software Engineer (Android/iOS) at Tk 35,000 with one year of experience (April 2026); a community-compiled table of 2025 and 2026 circular salaries lists a Junior Software Engineer (IoT) at Tk 25,000, a Software Engineer at SEBPO at Tk 20,000, a Therap BD Associate Software Engineer at Tk 65,000, a Brain Station 23 Software Engineer II at Tk 70,000 and a SELISE Staff Software Engineer at Tk 130,000-150,000; a post shared on LinkedIn for PKSF contract roles (deadline 23 September 2026) showed Tk 120,000 for a Software Engineer and Tk 160,000 for a Senior Software Engineer; and an Australian company's Dhaka circular offered Tk 100,000-150,000 for a Senior Full-stack Software Engineer, with two festival bonuses. The spread is huge: small firms pay at the bottom, while top product and export companies pay several times more. We found no reliable public data on remote-contract pay, so it is not included. These are ranges, not promises. Confirm in the actual circular.\n\n### Who pays the most?\n\nAs a general pattern: small agencies → local service and general IT firms → banks, NGOs and government projects with structured pay → large product companies, fintech and software exporters → remote jobs with foreign employers, which can pay more but bring contract and tax duties you must check yourself. Skill, English, system design ability and proven projects move you up faster than the job title.\n\n**Global comparison:** in the United States, the median pay for software developers was USD 135,980 a year in May 2025, for software QA analysts and testers USD 104,300, and for web developers USD 92,650 (US Bureau of Labor Statistics). Costs and employer expectations are very different, so do not compare the numbers directly.\n\n## Benefits beyond salary\n\n- Festival bonuses (two a year in several circulars) and a yearly salary review.\n- Performance bonus, provident fund, gratuity, and health and life insurance at larger employers (Aarong's ERP circular lists these).\n- Overtime or project allowances and mobile bill support in some circulars.\n- Learning budgets and mentoring in stronger teams; remote or hybrid options in some companies (confirm in writing).\n- Global options through remote work, export companies and relocation programmes.\n\n## Top employers: Bangladesh and the world\n\n**Bangladesh: examples seen in circulars, careers pages or news (alphabetical, not a ranking)**\n\n| Sector | Examples |\n|---|---|\n| Software and IT exporters | BASIS data listed these among the top ICT exporters as of June 2024: BJIT, Brain Station 23, Cefalo Bangladesh, Graphic People, KAZ Software, Secure Link Services Bangladesh, Service Engine, Therap (BD) |\n| Fintech, apps and telecom | bKash, Pathao, SSL Wireless, BRAC IT (Java roles in 2026) |\n| Companies with in-house teams | Aarong (ERP), Bdjobs.com Limited (.NET), mPower (full-stack), Newroz Technologies (Java), Renessa Info Systems (.NET and Angular) |\n| Development and public sector | icddr,b (Programmer), ICAB (Software Engineer, programme implementation), PKSF (contractual software and data roles) |\n\nAlways check each employer's own page for current vacancies. This is not a quality rating.\n\n**A fact worth knowing:** several 2026 circulars now ask for AI skills. Aarong's ERP circular asks for knowledge of integrating AI models or LLM features, and a Newroz Technologies circular asks developers to use AI and agentic tools effectively while independently reviewing and validating what the AI produces.\n\n**World:** global employers hire software engineers in every country. Bangladeshi engineers work for remote-first companies, for foreign clients through Bangladeshi firms, and abroad on skilled visas. Rules, taxes and contracts differ by country, so read the official pages for each route.\n\n## Skills employers ask for\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| One main language plus framework (for example Java, C#/.NET, JavaScript/TypeScript, Python, PHP) | Circulars name specific stacks | █████ |\n| Data structures, algorithms and problem solving | Interviews test it and it makes you faster | █████ |\n| Git, code review and teamwork | Daily practice in every team | █████ |\n| Databases and SQL | Almost every system stores data | ████ |\n| APIs, web basics and security basics | Frontend and backend meet here | ████ |\n| Testing and debugging | Quality is part of the job | ████ |\n| Cloud, Docker and DevOps basics | Appear more often in 2026 circulars | ███ |\n| English reading, writing and speaking | Documentation, clients and remote work | ████ |\n| Using AI tools and reviewing their output | Named in recent circulars | ████ |\n| System design basics | Separates mid and senior levels | ███ |\n\n*Demand bars are our reading of recent circulars, not a statistical survey.*\n\n## Free ways to build these skills\n\n- **CS50 (Harvard):** the free [CS50 course](https://cs50.harvard.edu) teaches how computers and code work underneath. A certificate costs money, but you can learn and build for free.\n- **freeCodeCamp:** [freecodecamp.org](https://www.freecodecamp.org) has free full courses and project-based certifications.\n- **The Odin Project:** a free, open-source full-stack curriculum at [theodinproject.com](https://www.theodinproject.com).\n- **MDN Web Docs:** Mozilla's free [reference and Learn Web Development path](https://developer.mozilla.org).\n- **University of Helsinki Full Stack Open:** a free, university-level course on modern web development (searchable by name).\n- **Government training:** the Hi-Tech Park's DEIED project lists [training in cloud, DevOps, cybersecurity and full-stack development](https://deied.bhtpa.gov.bd/training-on-scaling-of-it-skills), and IT Training and Incubation Centers have opened in several districts, for example Meherpur in January 2026 (BSS). Check eligibility on the official sites.\n- **Bangla e-learning:** [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **Build in public:** put every project on GitHub with a clear README and deploy at least two apps online.\n\n## Qualifications, licences, scholarships and study support\n\n| Step | Body | What it means |\n|---|---|---|\n| Bachelor's degree | Universities with CSE, CS, IT, EEE or similar | Most circulars ask for a related bachelor's degree |\n| No licence needed | | Software work does not need a state licence, but some roles (government, banks) require a specific degree |\n| Skills proof | GitHub, deployed projects, contests, internships | Often decisive for juniors |\n| Cloud and vendor certificates | AWS, Google Cloud, Microsoft and similar | Optional and usually paid; useful for cloud and DevOps roles |\n| Master's degree | Local or foreign universities | Helpful for data, AI, research and some foreign routes |\n| Japan pathway | B-JET (Bangladesh-Japan ICT Engineers' Training Program) by BCC, JICA and partners | Its 16th batch advertised \"Software Engineer in Japan's IT Sector\" posts with a 30 June 2026 deadline; check current batches on official sites |\n\n**Support to explore (check each official site for current rules):**\n\n- **Chevening (UK):** [chevening.org](https://www.chevening.org) for a funded master's in computing or data.\n- **Commonwealth Scholarships:** [cscuk.fcdo.gov.uk](https://cscuk.fcdo.gov.uk).\n- **DAAD (Germany):** [daad.de](https://www.daad.de/en/) for computer science and engineering programmes.\n- **Fulbright (USA):** through the US Embassy in Dhaka.\n- **University and Hi-Tech Park programmes:** ask your university and the Bangladesh Hi-Tech Park Authority about training and incubation support.\n\n> **Warning on overseas IT jobs:** never pay a \"visa fee\", \"job guarantee\" or \"placement\" fee to an individual. Press reports in 2026 describe Bangladeshis lured abroad with promised data entry, typist, computer operator or call centre jobs and then forced into online scam work in compounds in Cambodia. BMET data show 12,263 Bangladeshis received clearance to travel to Cambodia in 2025. A genuine software job abroad comes with a visible company, a written contract and a legal visa route. Verify any recruiting agency with the Ministry of Expatriates' Welfare and Overseas Employment and BMET. At home, avoid \"work from home\" offers that ask for money upfront (The Business Standard), and treat \"become a developer in 3 months, job guaranteed\" promises with great care.\n\n## Long-term career timeline\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-1 | Junior or Associate Software Engineer, QA trainee | One stack, Git, clean code, tests, asking good questions |\n| 1-3 | Software Engineer | Owning features, debugging production issues, databases, APIs |\n| 3-6 | Senior Software Engineer or Tech Lead | System design, mentoring, code review, estimates, performance and security |\n| 6-10 | Lead, Architect or Engineering Manager | Architecture, team leadership, hiring, working with product and business |\n| 10+ | Principal Engineer, Head of Engineering, CTO or founder | Technical strategy, budgets, risk, building teams and products |\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years in software)\n2. **My target role in 3 years:** ___\n3. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n4. **One proof-of-skill step this year:** (deploy a project / open-source contribution / internship / certificate)\n5. **My weekly coding hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 3.\n\n## Career shifts: where software engineers move\n\n- **Developer → QA or test automation**, and back.\n- **Developer → data, AI or machine learning engineer.**\n- **Developer → cloud, DevOps or cybersecurity.**\n- **Developer → product manager or business analyst.**\n- **Developer → engineering manager or CTO.**\n- **Developer → freelancer, agency owner or founder.**\n\n## Where will you find more peace of mind?\n\nWe have no survey that ranks the calm of different engineering jobs, so this is a general pattern. Product and export companies with clear processes often have steadier workflows, while small agencies and urgent client projects can mean tight deadlines and unpaid overtime. Freelance work gives freedom but irregular income, and internet outages can block platforms and delay payments. Three habits protect your peace: keep learning in small daily steps, keep code and notes clean so work is easy to hand over, and save part of every freelance payment for lean months. Ask about overtime, on-call duty and release pressure in the interview, and get the answers in writing. If stress becomes heavy, talk to a mentor or a mental health professional.\n\n## Faith and history: knowledge and trust\n\n**The Quran.** The first revelation begins with the command \"Read\" ([96:1 on quran.com](https://quran.com/96/1)). Ta-Ha teaches the prayer \"My Lord, increase me in knowledge\" ([20:114](https://quran.com/20/114)). Az-Zumar asks whether those who know are equal to those who do not ([39:9](https://quran.com/39/9)). In Al-Qasas, the best person to hire is described as strong and trustworthy ([28:26](https://quran.com/28/26)), a good standard for an engineer whose code others depend on.\n\n**Hadith.** The Prophet (peace be upon him) said that whoever travels a path seeking knowledge, Allah makes the path to Paradise easy for him (Sahih Muslim 2699).\n\n**History.** The word \"algorithm\" comes from the Latinised name of al-Khwarizmi, the 9th-century scholar of Baghdad whose book on calculation also gave us the word \"algebra\" (Britannica). Careful method, honest records and sharing knowledge are old traditions that every good engineer continues.\n\n## Your contribution to the nation\n\nAlmost every service in Bangladesh now runs on software: payments, ride-hailing, delivery, banking, government portals and health records. Reliable, secure software builds trust in the digital economy. BASIS says the country has more than 4,500 software and IT-enabled service companies employing over 300,000 professionals (The Business Standard), a major employer of young graduates that also brings in foreign currency. Engineers who build useful local products, protect user data and train juniors strengthen that base.\n\n## Your contribution to the world\n\nBangladeshi engineers already build software for clients in Europe, Japan, the US and elsewhere and join open-source and remote teams. Honest code, good documentation and security-minded design help users everywhere, and engineers who review AI output carefully help keep software safe.\n\n## If you want to be an entrepreneur\n\n- **Software agency** for local and foreign clients (start with small, clearly scoped contracts).\n- **SaaS or app for a local problem** such as school administration, clinic booking or small-shop accounting.\n- **Bangla-language tools and AI** that big global products serve poorly.\n- **E-commerce or Facebook-shop tooling** such as order management and delivery integration.\n- **Freelance consulting** in a narrow niche such as payment integration or performance tuning.\n\nStart small and legal: register your business as required, use proper contracts and protect customer data.\n\n## Research opportunities\n\n- Topics with real need in Bangladesh: Bangla natural language processing and speech, AI for agriculture and health, cybersecurity for fintech, software for low-bandwidth settings, and how AI changes junior developer jobs and skills.\n- Where to learn and publish: CSE departments at BUET, Dhaka University and other universities, BCC and Hi-Tech Park projects, open-source communities and international conferences.\n- Path: a final-year thesis → research assistant or software engineer in a research lab → master's or PhD (the scholarships above fund many of these).\n\n## Whom to follow and learn from\n\nFollow organisations first: BASIS for industry news, the Bangladesh Computer Council and Hi-Tech Park Authority for training notices, [MDN Web Docs](https://developer.mozilla.org) and [freeCodeCamp](https://www.freecodecamp.org) for learning, and The Business Standard and The Daily Star technology pages for AI and jobs news. On LinkedIn and GitHub, follow engineers who share real project code and lessons, and avoid accounts that sell shortcuts.\n\n## Where to find software jobs\n\n- [BDJobs](https://www.bdjobs.com) (search Software Engineer, Web Developer, Full-Stack, Mobile Developer, QA) and company career pages such as [BRAC IT](https://www.bracits.com) and [SSL Wireless](https://sslwireless.com/jobs/software-specialist-net).\n- Bangladeshi fintech and product companies' own career portals, for example [Pathao](https://careers.pathao.com).\n- NGO and research jobs: [icddr,b careers](https://career.icddrb.org) and similar portals.\n- LinkedIn, GitHub and developer communities; referrals from honest connections often matter.\n- Freelance platforms (Upwork, Fiverr, Freelancer.com) for experience and income, with care about fees and scams.\n- Use official company pages or verified circulars only. Do not pay anyone for a job, an interview or a placement.\n\n## Software Engineer CV: what to write\n\nYour CV should show projects, tools and results, not only a list of courses.\n\n| Weak line | Better line |\n|---|---|\n| Knows Java and web development. | Built a hospital appointment web app with Java Spring Boot and MySQL; deployed online; code on GitHub (add link). |\n| Worked on a team project. | Led a 3-person final-year project, wrote the REST API and 40 unit tests, reduced page load time by 35 percent (use your real numbers). |\n| Good at problem solving. | Solved 300+ problems on an online judge and reached the top 10 percent in a university contest (use your real record). |\n\n*Use only your real, provable details. Never exaggerate skills or invent projects.*\n\n**What to include:** a two-line summary, a skills section grouped by language, framework, database and tools, two to four projects with links, internships or work with dates, education, contests or open-source contributions, and English level. Put your GitHub and portfolio links at the top.\n\n**Career objective samples:**\n\n- *Fresher:* \"CSE graduate with strong Java and SQL skills and three deployed projects, seeking a Junior Software Engineer role to build reliable backend services.\"\n- *Experienced:* \"Software Engineer with 4 years in .NET and Angular, delivering fintech features and mentoring juniors, seeking a Senior Software Engineer role.\"\n\nBuild yours free with the HereWeGrow CV Builder and the Software Engineer CV template.\n\n## Common mistakes in applications\n\n- A CV with long skill lists but no project links or results.\n- Empty or messy GitHub profile, or copied tutorial projects with no changes of your own.\n- Applying with the same CV to every stack instead of matching the circular.\n- Not practising data structures, algorithms and basic SQL before interviews.\n- Putting AI-written code on your portfolio that you cannot explain line by line.\n- Paying for \"guaranteed job\" courses, interview seats or overseas \"IT jobs\" from strangers.\n\n## Sources and method\n\nFigures were checked on 16 November 2026 and will be reviewed regularly. Pay ranges combine the few circulars that show salary with a community-compiled table and are estimates. Companies change pay and tech stacks often, so check the actual circular and the employer's own site.\n\n- US Bureau of Labor Statistics: [Software Developers, QA Analysts and Testers](https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm); [Web Developers and Digital Designers](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm); [Computer Programmers](https://www.bls.gov/ooh/computer-and-information-technology/computer-programmers.htm)\n- The Business Standard: [$5b ICT export target missed by huge margin](https://www.tbsnews.net/economy/5b-ict-export-target-missed-huge-margin-heres-why-1281591); [Is AI prompting an evolution or an extinction for Bangladeshi coders?](https://www.tbsnews.net/node/1215031); [Rise in work-from-home job scams](https://www.tbsnews.net/node/705162)\n- The Daily Star: [AI shifts from threat to growth driver in software industry](https://www.thedailystar.net/business/news/ai-shifts-threat-growth-driver-software-industry-4207511)\n- Asia News Network / The Daily Star (20 October 2026): ['A ticking time bomb': AI threatens to deepen youth job crisis in Bangladesh](https://asianews.network/?p=309256)\n- The Daily Observer (13 June 2026): [freelancer statistics](https://observerbd.com/news/552089); LightCastle Partners (August 2026): [Bangladesh's freelance economy and AI value tiers](https://lightcastlepartners.com/insights/2026/08/bangladesh-freelance-economy-ai-value-tiers/)\n- Circulars and listings: [Avian BPO & IT, Software Engineer (Android/iOS)](https://career.avianbpo.com/job/S0J4akszSnl6RXdaZytESWpndTlPUT09); [Mac Technology Australia, Senior Full-stack Software Engineer](https://hotjobs1.bdjobs.com/mac-technology-australia/mactechau2.html); [Aarong, Senior Software Engineer, ERP](https://hotjobs.bdjobs.com/jobs/aarong/aarong198.htm); [mPower, Software Engineer (Full-Stack)](https://hotjobs.bdjobs.com/jobs/mpower/mpower222.htm); [BRAC IT, Software Engineer, Java](https://www.bracits.com/?p=19352); [icddr,b, Programmer](https://career.icddrb.org/vacancy-preview/32177); [ICAB, Software Engineer](https://hotjobs.bdjobs.com/jobs/icab/icab46.htm); [Newroz Technologies, Senior Java Developer (LinkedIn post)](https://bd.linkedin.com/in/imashrafuzzaman); PKSF contract roles (LinkedIn post, [source page](https://bd.linkedin.com/in/md-monir-uddin-6a0a10b5))\n- Community-compiled circular salaries: [What Bangladeshi tech companies are paying employees in 2025](https://tahanima.github.io/what-bangladeshi-tech-companies-are-paying-employees-in-2025) and [2026](https://tahanima.github.io/what-bangladeshi-tech-companies-are-paying-employees-in-2026/)\n- B-JET: [16th batch circular on BDJobs](https://hotjobs1.bdjobs.com/b-jet--bangladesh-japan-ict-engineers--training-program-/bjet27.html)\n- Hi-Tech Park: [DEIED training for scaling of IT skills](https://deied.bhtpa.gov.bd/training-on-scaling-of-it-skills); BSS (23 January 2026): [Meherpur IT Training and Incubation Center](https://www.bssnews.net/others/354136)\n- Prothom Alo: [Major Middle East labour markets shrink, fraud in the name of new markets](https://en.prothomalo.com/bangladesh/t1vxgzxlgz); The Star (Malaysia, 28 October 2026): [Bangladeshis lured by job offers and trafficked into scam compounds in Cambodia](https://www.thestar.com.my/aseanplus/aseanplus-news/2026/10/28/bangladeshis-lured-by-job-offers-and-trafficked-into-scam-compounds-in-cambodia)\n- Free learning: Scrimba's roundup of [free coding resources](https://scrimba.com/articles/how-to-learn-to-code-for-free-2026/amp/)\n\n**How to cite this page:** Daloyar Hassan Shishir, \"Software Engineer and Web Developer Career in Bangladesh\", HereWeGrow Career Hub, checked 16 November 2026.\n\n*This page is career information, not legal, financial or recruitment advice. Salaries, circulars and rules change, so confirm details with the employer and official sources.*\n",
+  "growth_plan": {
+    "y1": "Pick one stack, build and deploy two or three real projects, practise data structures, SQL and Git, and land a first role in software, QA or support engineering.",
+    "y2": "Own features end to end, deepen testing and debugging, learn cloud and Docker basics, and use AI tools while reviewing their output carefully.",
+    "y3": "Move toward senior responsibility: system design, mentoring juniors, performance and security, and choose a path in product, data, cloud or leadership."
+  },
+  "goal_sheet": [
+    "Week 1-2: Choose one main stack; finish a free beginner path (CS50, freeCodeCamp or The Odin Project)",
+    "Week 3-4: Set up GitHub, practise Git daily and build your first small project",
+    "Month 2: Learn SQL and APIs; build a project that stores data and deploy it online",
+    "Month 3: Practise 3 data structure and algorithm problems a week and write unit tests",
+    "Month 4: Build a second, bigger project; use AI tools but explain every line you keep",
+    "Month 5: Learn Docker and basic cloud deployment; write clear READMEs",
+    "Month 6: Update CV and portfolio, apply to 10 circulars, practise 20 interview questions"
+  ],
+  "test": [
+    {
+      "q": "What does Git mainly help a development team do?",
+      "options": [
+        "Design logos",
+        "Track changes to code and work together safely",
+        "Send emails",
+        "Host videos"
+      ],
+      "answer_idx": 1,
+      "explain": "Git records every change, lets people work in parallel on branches and merge safely.",
+      "skill_tag": "git"
+    },
+    {
+      "q": "A web page loads slowly. What is the best first step?",
+      "options": [
+        "Rewrite everything at once",
+        "Measure where the time goes, then fix the biggest cause",
+        "Blame the user's internet",
+        "Delete the database"
+      ],
+      "answer_idx": 1,
+      "explain": "Measure first, then optimise the real bottleneck instead of guessing.",
+      "skill_tag": "debugging"
+    },
+    {
+      "q": "What does an API do?",
+      "options": [
+        "Prints documents",
+        "Lets one piece of software talk to another using defined requests",
+        "Stores passwords in plain text",
+        "Draws screens"
+      ],
+      "answer_idx": 1,
+      "explain": "An API defines how software components request and exchange data.",
+      "skill_tag": "apis"
+    },
+    {
+      "q": "Which SQL command reads data from a table?",
+      "options": [
+        "INSERT",
+        "SELECT",
+        "DROP",
+        "GRANT"
+      ],
+      "answer_idx": 1,
+      "explain": "SELECT retrieves rows; INSERT adds rows, DROP removes objects and GRANT sets permissions.",
+      "skill_tag": "databases"
+    },
+    {
+      "q": "Why should passwords never be stored in plain text?",
+      "options": [
+        "It uses more disk space",
+        "If the database leaks, every account is exposed; store salted hashes instead",
+        "Plain text is faster to type",
+        "Browsers forbid it"
+      ],
+      "answer_idx": 1,
+      "explain": "Hashing with a salt protects users if data is stolen.",
+      "skill_tag": "security"
+    },
+    {
+      "q": "An AI assistant gives you a code snippet. What should you do?",
+      "options": [
+        "Paste it into production at once",
+        "Read it, understand it, test it and review it like any other code",
+        "Ask a friend to ignore it",
+        "Delete your tests"
+      ],
+      "answer_idx": 1,
+      "explain": "You are responsible for what you ship, whether a human or an AI wrote it.",
+      "skill_tag": "ai-literacy"
+    },
+    {
+      "q": "What is a unit test?",
+      "options": [
+        "A test of the whole company",
+        "A small automated test of one function or component",
+        "A salary review",
+        "A deployment step"
+      ],
+      "answer_idx": 1,
+      "explain": "Unit tests check small pieces of code so bugs are found early.",
+      "skill_tag": "testing"
+    },
+    {
+      "q": "What is the average time complexity of binary search on a sorted array?",
+      "options": [
+        "O(n)",
+        "O(log n)",
+        "O(n squared)",
+        "O(1) always"
+      ],
+      "answer_idx": 1,
+      "explain": "Binary search halves the search range each step, so it takes O(log n).",
+      "skill_tag": "algorithms"
+    },
+    {
+      "q": "In code review, the most useful comment is:",
+      "options": [
+        "'This is bad.'",
+        "A specific, respectful note on what to change and why",
+        "Silence",
+        "A rewrite of the whole file"
+      ],
+      "answer_idx": 1,
+      "explain": "Specific, kind feedback improves code and keeps the team healthy.",
+      "skill_tag": "teamwork"
+    },
+    {
+      "q": "A recruiter says: pay Tk 30,000 now and we guarantee you a software job abroad. You should:",
+      "options": [
+        "Pay at once",
+        "Refuse, and verify any agency with the Ministry and BMET before anything else",
+        "Send your passport",
+        "Share your bank PIN"
+      ],
+      "answer_idx": 1,
+      "explain": "Job-guarantee fees and fake overseas offers are common scams; never pay or hand over documents to an unverified person.",
+      "skill_tag": "safety"
+    },
+    {
+      "q": "Which is the best proof of your skill for a first software job?",
+      "options": [
+        "A long list of courses with no projects",
+        "Two or three deployed projects with clean code on GitHub",
+        "A CV with no links",
+        "A screenshot of a certificate only"
+      ],
+      "answer_idx": 1,
+      "explain": "Employers trust code they can read and apps they can run.",
+      "skill_tag": "portfolio"
+    },
+    {
+      "q": "What does 'works on my machine' warn you about?",
+      "options": [
+        "Your laptop is too fast",
+        "Code that depends on your local setup and may fail elsewhere; use consistent environments and tests",
+        "Git is broken",
+        "The internet is down"
+      ],
+      "answer_idx": 1,
+      "explain": "Environment differences cause bugs; containers, config and tests reduce them.",
+      "skill_tag": "debugging"
+    }
+  ],
+  "cv_template_notes": "Use the HWG Software Engineer CV (clean, one-column layout). Put your GitHub and portfolio links at the top, then a two-line summary, skills grouped by language, framework, database and tools, two to four projects with links and results, internships or work with dates, education, contests or open-source work, and English level. Keep it to 1 page for freshers and 2 pages at most. Use only provable details and never invent projects or numbers. File name: YourName_SoftwareEngineer_CV.pdf.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Software Engineer position advertised on [site/date]. I hold a [degree] from [university] and work mainly in [language/framework]. In my [project/internship] I [one provable detail, e.g. built and deployed a booking web app with a REST API and 40 unit tests; code at (GitHub link)].\n\nI write clear, tested code, read documentation in English comfortably, and review AI-generated code carefully before I use it. I would be glad to contribute to [Company name] and to keep growing in your team.\n\nI have attached my CV and portfolio links and would welcome an interview.\n\nSincerely,\n[Your name]\n[Phone] | [Email] | [GitHub]",
+  "interview_qs": [
+    "Tell me about yourself. (Tip: 45 seconds: education, main stack, one project, why this company.)",
+    "Why do you want to be a software engineer? (Tip: Give a real reason and mention what you have built.)",
+    "Walk me through your best project. (Tip: Problem, design, your part, tech used, result, what you would improve.)",
+    "Why did you choose this tech stack for that project? (Tip: Show you weighed alternatives.)",
+    "Explain the difference between an array and a linked list. (Tip: Access time, insertion cost and memory.)",
+    "What is the time complexity of binary search and why? (Tip: O(log n); the range halves each step.)",
+    "Explain REST APIs and common HTTP methods. (Tip: GET, POST, PUT, PATCH, DELETE and status codes.)",
+    "What is the difference between SQL and NoSQL databases? (Tip: Schema, relations, scale and use cases.)",
+    "What is an index in a database and when can it hurt? (Tip: Faster reads; extra storage and slower writes.)",
+    "Explain object-oriented programming principles. (Tip: Encapsulation, inheritance, polymorphism and abstraction, with a small example.)",
+    "How do you debug a bug that only happens in production? (Tip: Logs, reproduce, isolate, hypothesis, fix, add a test.)",
+    "How does Git branching and merging work? (Tip: Feature branches, pull requests, conflicts.)",
+    "What is the difference between authentication and authorisation? (Tip: Who you are versus what you may do.)",
+    "How would you store passwords safely? (Tip: Salted hashes with a strong algorithm; never plain text.)",
+    "What is SQL injection and how do you prevent it? (Tip: Parameterised queries and input validation.)",
+    "What is a unit test and why does it matter? (Tip: Small, fast, repeatable checks that catch regressions.)",
+    "How do you review someone else's code? (Tip: Be specific, kind, check logic, tests and readability.)",
+    "How do you use AI coding tools in your work? (Tip: Be honest: use them for speed, then read, test and own the result.)",
+    "Tell me about AI-generated code that was wrong and how you caught it. (Tip: Show review and testing habits.)",
+    "How would you design a simple URL shortener? (Tip: Requirements, API, database, ID generation, scale.)",
+    "How do you handle a tight deadline with unclear requirements? (Tip: Clarify, split work, communicate risks early.)",
+    "Tell me about a time you disagreed with a teammate. (Tip: Show respect, evidence and outcome.)",
+    "How do you keep learning new technology? (Tip: Name real sources, projects and habits.)",
+    "What is the difference between frontend and backend development? (Tip: User interface versus server logic, data and APIs.)",
+    "How do you make a web page load faster? (Tip: Measure, compress images, cache, reduce requests, lazy load.)",
+    "Have you worked with Docker or cloud services? (Tip: Answer honestly and describe what you actually did.)",
+    "Are you comfortable with on-call duty or overtime near releases? (Tip: Answer honestly and ask about how the team handles it.)",
+    "What are your salary expectations? (Tip: Give a range based on the circular and market; stay polite and flexible.)",
+    "Where do you see yourself in five years? (Tip: Name a role such as senior engineer or tech lead and the steps you are taking.)",
+    "Do you have any questions for us? (Tip: Ask about team size, code review, testing, growth and release process.)"
+  ],
+  "author_name": "Daloyar Hassan Shishir",
+  "author_url": "https://www.dhshishir.com"
+}

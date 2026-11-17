@@ -1,8 +1,10 @@
 import type { Bilingual } from '../../shared/catalog';
 
 export interface Layout {
-  /** True when the text came from a PDF (so layout checks apply). */
+  /** True when the text came from a PDF (so the PDF layout checks apply). */
   fromPdf: boolean;
+  /** True when the text came from a Word file: the one-column check applies, "readable" does not. */
+  fromDocx?: boolean;
   /** Share of text rows that are split into separate blocks side by side (0–1). */
   splitRowShare: number;
 }
@@ -57,6 +59,8 @@ export function analyzeCv(raw: string, layout: Layout): Analysis {
         bn: 'এই PDF থেকে খুব কম টেক্সট পড়া গেছে। এটি হয়তো স্ক্যান করা ছবি, যা ATS সফটওয়্যার পড়তে পারে না। Word বা Google Docs থেকে আবার PDF হিসেবে সেভ করুন।',
       },
     });
+  }
+  if (layout.fromPdf || layout.fromDocx) {
     add({
       id: 'columns',
       weight: 10,

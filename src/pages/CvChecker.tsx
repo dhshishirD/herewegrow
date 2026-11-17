@@ -2,7 +2,7 @@ import { PageHead, TOOLS_CRUMB } from '../components/PageHead';
 import { useEffect, useState } from 'react';
 import { findProduct } from '../../shared/catalog';
 import { useCheckout } from '../components/Checkout';
-import { analyzeCv, type Analysis } from '../lib/cvAnalysis';
+import { analyzeCv, type Analysis, type Layout } from '../lib/cvAnalysis';
 import { num, taka, useLang } from '../lib/lang';
 import { navigate } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
@@ -34,29 +34,46 @@ export function CvChecker() {
     );
   }, [t]);
 
-  const onPdf = async (file?: File) => {
+  const onFile = async (file?: File) => {
     if (!file) return;
     setError(null);
     setResult(null);
-    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-      setError(t({ en: 'Choose a PDF file. For Word files, save as PDF first, or paste the text instead.', bn: 'PDF ফাইল বেছে নিন। Word ফাইল হলে আগে PDF হিসেবে সেভ করুন, অথবা টেক্সট পেস্ট করুন।' }));
+    const lowerName = file.name.toLowerCase();
+    const isPdf = file.type === 'application/pdf' || lowerName.endsWith('.pdf');
+    const isDocx = lowerName.endsWith('.docx');
+    if (!isPdf && !isDocx) {
+      setError(
+        lowerName.endsWith('.doc')
+          ? t({ en: 'Old .doc files are not supported. Open it in Word and save as .docx or PDF, or paste the text instead.', bn: 'পুরনো .doc ফাইল পড়া যায় না। Word-এ খুলে .docx বা PDF হিসেবে সেভ করুন, অথবা টেক্সট পেস্ট করুন।' })
+          : t({ en: 'Choose a PDF or Word (.docx) file, or paste the text instead.', bn: 'PDF বা Word (.docx) ফাইল বেছে নিন, অথবা টেক্সট পেস্ট করুন।' }),
+      );
       return;
     }
     if (file.size > 8 * 1024 * 1024) {
-      setError(t({ en: 'This file is larger than 8 MB. A CV PDF is usually under 1 MB.', bn: 'ফাইলটি ৮ MB-এর বেশি। সিভির PDF সাধারণত ১ MB-এর কম হয়।' }));
+      setError(t({ en: 'This file is larger than 8 MB. A CV file is usually under 1 MB.', bn: 'ফাইলটি ৮ MB-এর বেশি। সিভির ফাইল সাধারণত ১ MB-এর কম হয়।' }));
       return;
     }
     setBusy(true);
     setFileName(file.name);
     try {
-      const { readPdf } = await import('../lib/pdfText');
-      const { text, layout } = await readPdf(file);
-      const r = analyzeCv(text, layout);
-      setCvText(text);
+      let read: { text: string; layout: Layout };
+      if (isPdf) {
+        const { readPdf } = await import('../lib/pdfText');
+        read = await readPdf(file);
+      } else {
+        const { readDocx } = await import('../lib/docxText');
+        read = await readDocx(file);
+      }
+      const r = analyzeCv(read.text, read.layout);
+      setCvText(read.text);
       setResult(r);
       track('checker_score', { score: r.score });
     } catch {
-      setError(t({ en: 'This PDF could not be read. It may be password-protected. Try pasting the text instead.', bn: 'PDF-টি পড়া যায়নি। হয়তো পাসওয়ার্ড দেওয়া। টেক্সট পেস্ট করে চেষ্টা করুন।' }));
+      setError(
+        isPdf
+          ? t({ en: 'This PDF could not be read. It may be password-protected. Try pasting the text instead.', bn: 'PDF-টি পড়া যায়নি। হয়তো পাসওয়ার্ড দেওয়া। টেক্সট পেস্ট করে চেষ্টা করুন।' })
+          : t({ en: 'This Word file could not be read. It may be damaged or password-protected. Save it again as .docx or PDF, or paste the text instead.', bn: 'Word ফাইলটি পড়া যায়নি। হয়তো নষ্ট বা পাসওয়ার্ড দেওয়া। আবার .docx বা PDF হিসেবে সেভ করুন, অথবা টেক্সট পেস্ট করুন।' }),
+      );
     }
     setBusy(false);
   };
@@ -106,28 +123,28 @@ export function CvChecker() {
             {(['pdf', 'text'] as Mode[]).map((m) => (
               <button key={m} role="tab" type="button" aria-selected={mode === m} onClick={() => setMode(m)}
                 className={`rounded-md px-4 py-2 font-display font-semibold ${mode === m ? 'bg-white text-leaf shadow-sm' : 'text-muted'}`}>
-                {m === 'pdf' ? t({ en: 'Upload PDF', bn: 'PDF আপলোড' }) : t({ en: 'Paste text', bn: 'টেক্সট পেস্ট' })}
+                {m === 'pdf' ? t({ en: 'Upload CV', bn: 'সিভি আপলোড' }) : t({ en: 'Paste text', bn: 'টেক্সট পেস্ট' })}
               </button>
             ))}
           </div>
 
           {mode === 'pdf' ? (
             <div className="mt-6">
-              <label className="label" htmlFor="cv-file">{t({ en: 'Your CV as a PDF', bn: 'আপনার সিভি (PDF)' })}</label>
+              <label className="label" htmlFor="cv-file">{t({ en: 'Your CV (PDF or Word)', bn: 'আপনার সিভি (PDF বা Word)' })}</label>
               <label
                 htmlFor="cv-file"
                 onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
                 onDragLeave={() => setDrag(false)}
-                onDrop={(e) => { e.preventDefault(); setDrag(false); onPdf(e.dataTransfer.files?.[0]); }}
+                onDrop={(e) => { e.preventDefault(); setDrag(false); void onFile(e.dataTransfer.files?.[0]); }}
                 className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors focus-within:ring-2 focus-within:ring-leaf ${drag ? 'border-leaf bg-leaf-soft' : 'border-line bg-mist hover:border-leaf'}`}
               >
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="h-9 w-9 text-leaf"><path d="M12 16V4m0 0L7 9m5-5l5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                <span className="font-display text-lg font-semibold">{busy ? t({ en: 'Reading your CV…', bn: 'সিভি পড়া হচ্ছে…' }) : t({ en: 'Drop your PDF here, or tap to choose', bn: 'PDF এখানে ফেলুন, অথবা চেপে বেছে নিন' })}</span>
-                <span className="text-sm text-muted">{fileName || t({ en: 'PDF up to 8 MB', bn: '৮ MB পর্যন্ত PDF' })}</span>
-                <input id="cv-file" type="file" accept="application/pdf,.pdf" disabled={busy} onChange={(e) => onPdf(e.target.files?.[0])} className="sr-only" />
+                <span className="font-display text-lg font-semibold">{busy ? t({ en: 'Reading your CV…', bn: 'সিভি পড়া হচ্ছে…' }) : t({ en: 'Drop your CV here, or tap to choose', bn: 'সিভি এখানে ফেলুন, অথবা চেপে বেছে নিন' })}</span>
+                <span className="text-sm text-muted">{fileName || t({ en: 'PDF or Word (.docx), up to 8 MB', bn: 'PDF বা Word (.docx), ৮ MB পর্যন্ত' })}</span>
+                <input id="cv-file" type="file" accept="application/pdf,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" disabled={busy} onChange={(e) => void onFile(e.target.files?.[0])} className="sr-only" />
               </label>
               <p className="mt-2 text-sm text-muted">
-                {t({ en: 'Use the same PDF you send to employers.', bn: 'নিয়োগকর্তাকে যে PDF পাঠান, সেটিই দিন।' })}
+                {t({ en: 'Use the same file you send to employers. Word files are checked for layout too.', bn: 'নিয়োগকর্তাকে যে ফাইল পাঠান, সেটিই দিন। Word ফাইলেও লেআউট চেক হয়।' })}
               </p>
             </div>
           ) : (
@@ -135,7 +152,7 @@ export function CvChecker() {
               <label className="label" htmlFor="cv-text">{t({ en: 'Paste your CV text', bn: 'সিভির টেক্সট পেস্ট করুন' })}</label>
               <textarea id="cv-text" rows={10} className="field" value={pasted} onChange={(e) => setPasted(e.target.value)} />
               <button type="button" className="btn btn-primary mt-3" onClick={onText}>{t({ en: 'Check my CV', bn: 'সিভি চেক করুন' })}</button>
-              <p className="mt-2 text-sm text-muted">{t({ en: 'Layout checks need the PDF; pasted text checks content only.', bn: 'লেআউট চেকের জন্য PDF লাগবে; পেস্ট করা টেক্সটে শুধু কনটেন্ট চেক হয়।' })}</p>
+              <p className="mt-2 text-sm text-muted">{t({ en: 'Layout checks need a PDF or Word file; pasted text checks content only.', bn: 'লেআউট চেকের জন্য PDF বা Word ফাইল লাগবে; পেস্ট করা টেক্সটে শুধু কনটেন্ট চেক হয়।' })}</p>
             </div>
           )}
 

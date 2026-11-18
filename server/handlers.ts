@@ -8,6 +8,8 @@ import { scopeFor } from '../shared/promo';
 import { getSessionUser, type User } from './auth';
 import { trackPurchase } from './analytics';
 import { downloadLinks } from './downloads';
+import { BIODATA_PACK } from '../shared/biodataPack';
+import { grantBiodataPack } from './biodataPack';
 import { grantPass, recordOrder } from './entitlements';
 import { findManualGrant, isManualInvoice, manualProUntil, manualReferenceTaken } from './manualAccess';
 import { callGateway, describeFailure, isAllowedOrigin, json, type Env } from './paymently';
@@ -54,6 +56,8 @@ export type QuoteFailure = { status: number; error: string; reason?: PromoError 
  */
 export async function quoteFor(env: Env, user: User | null, body: CheckoutBody, now = Date.now()): Promise<Quote | QuoteFailure> {
   const productId = clean(body.productId, 40);
+  // The Clean pack has one fixed price: no Pro discount, no promo code.
+  if (productId === BIODATA_PACK.id) return { list: BIODATA_PACK.price, base: BIODATA_PACK.price, price: BIODATA_PACK.price, promo: null, cartIds: [], proPlanId: '' };
   const plan = findPlan(productId);
   let list: number;
   let base: number;
@@ -97,7 +101,8 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
   const lang = body.lang === 'en' ? 'en' : 'bn';
 
   // A Pro pass is tied to an account, so the buyer must be logged in.
-  const isPlan = !!findPlan(clean(body.productId, 40));
+  const isPack = clean(body.productId, 40) === BIODATA_PACK.id;
+  const isPlan = !!findPlan(clean(body.productId, 40)) || isPack;
   const user = isPlan || env.DB ? await getSessionUser(env, request).catch(() => null) : null;
   if (isPlan && !user) return json({ ok: false, error: 'login' }, 401);
 
@@ -110,6 +115,7 @@ export async function handleCheckout(request: Request, env: Env): Promise<Respon
     await logPartnerEvent(env.DB, user!.id, 'PartnerCheckoutStart', { plan: q.plan.id });
   }
   if (q.plan) return startPayment(request, env, planPayload(q.plan, user!, lang, q.price, q.promo, clean(body.vid, 64)));
+  if (isPack) return startPayment(request, env, packPayload(user!, lang, clean(body.vid, 64)));
 
   const product = q.product!;
   const name = clean(body.name, 80);
@@ -154,6 +160,14 @@ const planPayload = (plan: Plan, user: User, lang: string, price: number, promo:
   email: user.email || 'orders@herewegrow.pro',
   amount: String(price),
   metadata: { product_id: plan.id, product_name: plan.name.en, user_id: user.id, phone: user.phone ?? '', lang, promo: promo?.code ?? '', vid },
+});
+
+/** Metadata for the Clean pack. The user id is set here, on the server, and read back at verify. */
+const packPayload = (user: User, lang: string, vid: string): PaymentPayload => ({
+  full_name: user.name || 'HereWeGrow customer',
+  email: user.email || 'orders@herewegrow.pro',
+  amount: String(BIODATA_PACK.price),
+  metadata: { product_id: BIODATA_PACK.id, product_name: BIODATA_PACK.name.en, user_id: user.id, phone: user.phone ?? '', lang, promo: '', vid },
 });
 
 async function startPayment(request: Request, env: Env, base: PaymentPayload): Promise<Response> {
@@ -237,6 +251,7 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
     const amount = Number(data.amount ?? data.charged_amount ?? 0);
     const status = String(data.status ?? '').toUpperCase();
 
+    if (productId === BIODATA_PACK.id) return verifyPack(env, invoiceId, meta, data, amount, status);
     const plan = findPlan(productId);
     if (plan) return verifyPlan(env, invoiceId, plan, meta, data, amount, status);
 
@@ -285,6 +300,30 @@ export async function handleVerify(request: Request, env: Env): Promise<Response
   } catch (err) {
     console.error('verify failed', err);
     return json({ ok: false, error: 'gateway' }, 502);
+  }
+}
+
+/** A Clean pack payment: check it, then unlock the account named in the payment's metadata (once per invoice). */
+async function verifyPack(env: Env, invoiceId: string, meta: Record<string, unknown>, data: Record<string, unknown>, amount: number, status: string): Promise<Response> {
+  const userId = String(meta.user_id ?? '');
+  const base = { ok: true, invoiceId, productId: BIODATA_PACK.id, amount, transactionId: typeof data.transaction_id === 'string' ? data.transaction_id : null, downloads: [] };
+  if (status === 'PENDING') return json({ ...base, status: 'pending' });
+  if (status !== 'COMPLETED') return json({ ...base, status: 'unpaid' });
+  if (amount < BIODATA_PACK.price || !userId || !env.DB) {
+    console.error('pack verify mismatch: no grant', { invoiceId, amount, hasUser: !!userId, hasDb: !!env.DB });
+    return json({ ...base, status: 'unpaid', error: 'mismatch' });
+  }
+  if (await manualReferenceTaken(env.DB, data.transaction_id).catch(() => false)) {
+    console.error('gateway payment already approved by hand: no second grant', { invoiceId, tx: data.transaction_id });
+    return json({ ...base, status: 'paid' });
+  }
+  try {
+    const granted = await grantBiodataPack(env.DB, { invoiceId, productId: BIODATA_PACK.id, amount, userId, phone: String(meta.phone ?? '') || null });
+    if (granted) await safeTrack(env.DB, { invoiceId, productId: BIODATA_PACK.id, amount, vid: String(meta.vid ?? '').slice(0, 64), userId });
+    return json({ ...base, status: 'paid' });
+  } catch (err) {
+    console.error('pack grant failed', invoiceId, err);
+    return json({ ok: false, error: 'grant' }, 502);
   }
 }
 

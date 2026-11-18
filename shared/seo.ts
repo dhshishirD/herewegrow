@@ -2,6 +2,7 @@
 // and the app (src/lib/seo.ts) so both always say the same thing.
 // Bangla first, with the English terms people also search for.
 
+import { biodataSeo } from './biodataStyles';
 import { PRODUCTS } from './catalog';
 import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
 import { findGuide } from './guides';
@@ -109,6 +110,8 @@ function isSharedTitle(en: string): boolean {
 
 export function routeSeo(path: string): RouteSeo | undefined {
   if (STATIC[path]) return STATIC[path];
+  const bio = biodataSeo(path);
+  if (bio) return { title: bio.title, description: bio.description };
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
   const guide = gm ? findGuide(gm[1]) : undefined;
   if (guide) return { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };

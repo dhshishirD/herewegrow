@@ -11,6 +11,8 @@ export interface AccountUser {
   isAdmin?: boolean;
   /** Plan id whose perks apply now (pro-7, pro-30, pro-365), else null/absent. */
   proPlan?: string | null;
+  /** Bought the biodata Clean pack. */
+  biodataPack?: boolean;
 }
 
 interface AuthValue {

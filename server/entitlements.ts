@@ -14,7 +14,7 @@ export interface PaidOrder {
   phone: string | null;
 }
 
-const orderInsert = (db: D1Like, o: PaidOrder, now: number) =>
+export const orderInsert = (db: D1Like, o: PaidOrder, now: number) =>
   db
     .prepare(
       `INSERT INTO orders (id, user_id, product_id, amount_bdt, status, gateway_ref, phone, created_at, paid_at)

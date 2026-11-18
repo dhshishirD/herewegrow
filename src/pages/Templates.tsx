@@ -11,6 +11,7 @@ import { DiscountLadder } from '../components/CartDrawer';
 import { useCart } from '../lib/cart';
 import { num, taka, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
+import { BIODATA_HUB_PATH, BIODATA_STYLES, biodataPreview, biodataStylePath } from '../../shared/biodataStyles';
 import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
 import { ON_SALE_COUNT, canonicalPathFor, isListed, isRetired, leadOf, shouldIndex, variantsOf } from '../../shared/templateTiers';
@@ -175,6 +176,23 @@ export function TemplatesPage() {
           )
         }
       />
+
+      <section className="wrap pt-8" aria-labelledby="bio-row">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 id="bio-row" className="font-display text-2xl">{t({ en: 'Marriage biodata: 10 designs to edit online', bn: 'বিয়ের বায়োডাটা: ১০টি ডিজাইন, অনলাইনে এডিট' })}</h2>
+          <Link href={BIODATA_HUB_PATH} className="font-semibold text-leaf hover:underline">{t({ en: 'See all 10', bn: 'সব ১০টি দেখুন' })}</Link>
+        </div>
+        <ul className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-5">
+          {BIODATA_STYLES.slice(0, 5).map((x) => (
+            <li key={x.id}>
+              <Link href={biodataStylePath(x.slug)}>
+                <img src={biodataPreview(x.slug)} width={600} height={849} loading="lazy" alt={`${x.name} marriage biodata format (sample)`} className="h-auto w-full rounded-lg border border-line bg-white" />
+                <span className="mt-1 block text-sm font-semibold">{x.name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="wrap pt-8" aria-labelledby="ladder-title">
         <div className="grid gap-5 rounded-2xl bg-white p-6 ring-1 ring-line md:grid-cols-[1fr_1.6fr] md:items-center">

@@ -9,6 +9,7 @@ import { tracker } from '../lib/track';
 import { DownloadButtons } from '../components/Downloads';
 import { productFor, saveOrder, verifyInvoice, type VerifyResponse } from '../lib/orders';
 import { takeCartPending, useCart } from '../lib/cart';
+import { BIODATA_PACK } from '../../shared/biodataPack';
 import { findPlan } from '../../shared/plans';
 import { useAuth } from '../lib/auth';
 
@@ -30,7 +31,7 @@ export function PaymentSuccess() {
     verifyInvoice(invoiceId)
       .then((data) => {
         if (data.ok && data.status === 'paid' && !data.free && !tracker.isDisabled()) pixelPurchase(data.amount ?? findPlan(data.productId ?? '')?.price ?? 0, invoiceId);
-        if (data.ok && data.status === 'paid' && findPlan(data.productId ?? '')) {
+        if (data.ok && data.status === 'paid' && (findPlan(data.productId ?? '') || data.productId === BIODATA_PACK.id)) {
           void refresh(); // the header and Builder see Pro straight away
         } else if (data.ok && data.status === 'paid' && data.productId) {
           saveOrder({ invoiceId, productId: data.productId, templateIds: data.templateIds, at: Date.now() });
@@ -42,6 +43,7 @@ export function PaymentSuccess() {
   }, [invoiceId]);
 
   const plan = state.kind === 'done' ? findPlan(state.data.productId ?? '') : undefined;
+  const isPack = state.kind === 'done' && state.data.productId === BIODATA_PACK.id;
   const product = state.kind === 'done' ? productFor(state.data.productId, state.data.templateIds) : undefined;
   const downloads = state.kind === 'done' && state.data.status === 'paid' ? state.data.downloads ?? [] : [];
   const ref = state.kind === 'done' ? state.data.transactionId || invoiceId : invoiceId;
@@ -58,6 +60,14 @@ export function PaymentSuccess() {
     <section className="wrap max-w-2xl py-16">
       {state.kind === 'checking' && (
         <p role="status" className="font-display text-2xl font-semibold">{t({ en: 'Confirming your payment…', bn: 'আপনার পেমেন্ট নিশ্চিত করা হচ্ছে…' })}</p>
+      )}
+
+      {state.kind === 'done' && state.data.status === 'paid' && isPack && (
+        <div>
+          <h1 className="text-4xl font-bold text-leaf">{t({ en: 'Clean pack is active', bn: 'ক্লিন প্যাক চালু হয়েছে' })}</h1>
+          <p className="mt-3 text-lg">{t({ en: 'All 10 biodata designs and colours, 3 pages, Word and PNG downloads, and no HereWeGrow line are now on your account.', bn: 'সব ১০টি বায়োডাটা ডিজাইন ও রং, ৩ পৃষ্ঠা, Word ও PNG ডাউনলোড এবং HereWeGrow লেখা ছাড়া, এখন আপনার অ্যাকাউন্টে চালু।' })}</p>
+          <Link href="/biodata" className="btn btn-primary mt-6">{t({ en: 'Back to the biodata maker', bn: 'বায়োডাটা মেকারে ফিরুন' })}</Link>
+        </div>
       )}
 
       {state.kind === 'done' && state.data.status === 'paid' && plan && (
@@ -147,7 +157,7 @@ export function PaymentSuccess() {
         </div>
       )}
 
-      {((state.kind === 'done' && (state.data.status === 'unpaid' || (state.data.status === 'paid' && !product && !plan))) || state.kind === 'error' || state.kind === 'missing') && (
+      {((state.kind === 'done' && (state.data.status === 'unpaid' || (state.data.status === 'paid' && !product && !plan && !isPack))) || state.kind === 'error' || state.kind === 'missing') && (
         <div>
           <h1 className="text-4xl font-bold">{t({ en: 'We could not confirm this payment', bn: 'এই পেমেন্ট নিশ্চিত করা যায়নি' })}</h1>
           <p className="mt-3 text-lg text-muted">

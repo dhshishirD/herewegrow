@@ -52,3 +52,19 @@ describe('paginate', () => {
     expect(r.overflow).toBe(true);
   });
 });
+
+describe('paginate options', () => {
+  const sec = (id: string, rows: number): Section => ({ id, title: id, rows: Array.from({ length: rows }, (_, i) => [`l${i}`, 'v'] as [string, string]) });
+  it('fits more on page 1 when the header is smaller', () => {
+    const list = [sec('a', 12), sec('b', 12), sec('c', 12)];
+    const big = paginate(list, 3, { headerH: 400 });
+    const none = paginate(list, 3, { headerH: 0 });
+    expect(none.pages[0].length).toBeGreaterThan(big.pages[0].length);
+  });
+  it('wraps long text sooner in a narrow column', () => {
+    const t: Section = { id: 't', title: 't', rows: [], text: 'x'.repeat(2000) };
+    const wide = paginate([sec('a', 10), t], 3, { charsPerLine: 90 });
+    const narrow = paginate([sec('a', 10), t], 3, { charsPerLine: 40 });
+    expect(narrow.pages.length).toBeGreaterThanOrEqual(wide.pages.length);
+  });
+});

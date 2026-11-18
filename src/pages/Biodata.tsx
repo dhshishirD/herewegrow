@@ -3,7 +3,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { PageHead } from '../components/PageHead';
 import { printCvIsolated } from '../builder/printIsolated';
 import { emptyBiodata, type BiodataData } from '../biodata/model';
-import { BiodataDocument, COLOURS, FREE_MAX_PAGES, PRO_MAX_PAGES, STYLES, printCss, type StyleId } from '../biodata/styles';
+import { BiodataDocument, COLOURS, FREE_COLOURS, FREE_MAX_PAGES, PRO_MAX_PAGES, STYLES, needsPro, printCss, type StyleId } from '../biodata/styles';
+import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
 import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
@@ -36,6 +37,7 @@ export function BiodataPage() {
   const { user } = useAuth();
   const pro = !!user?.pro;
   const [s, setS] = useState<Saved>(load);
+  const [gate, setGate] = useState(false);
   const { d } = s;
   const colour = COLOURS.find((c) => c.id === s.colour) ?? COLOURS[0];
 
@@ -54,10 +56,22 @@ export function BiodataPage() {
     r.readAsDataURL(f);
   };
 
-  const download = async () => {
-    track('biodata_export', { format: 'pdf', style: s.style });
-    const html = `<style>${printCss}</style>` + renderToStaticMarkup(doc);
+  const print = async (el: typeof doc) => {
+    const html = `<style>${printCss}</style>` + renderToStaticMarkup(el);
     await printCvIsolated(html, `${(d.name || 'My').replace(/\s+/g, '_')}_Biodata`);
+  };
+  const download = async () => {
+    if (!pro && needsPro(s.style, s.colour)) { track('paywall_view', { source: 'biodata', style: s.style, colour: s.colour }); setGate(true); return; }
+    track('biodata_export', { format: 'pdf', style: s.style });
+    await print(doc);
+  };
+  const useFree = async () => {
+    setGate(false);
+    setS((p) => ({ ...p, style: STYLES.find((x) => x.id === p.style)?.free ? p.style : 'classic-serif', colour: FREE_COLOURS.includes(p.colour) ? p.colour : 'navy' }));
+    const st = STYLES.find((x) => x.id === s.style)?.free ? s.style : 'classic-serif';
+    const co = COLOURS.find((c) => c.id === (FREE_COLOURS.includes(s.colour) ? s.colour : 'navy')) ?? COLOURS[0];
+    track('biodata_export', { format: 'pdf', style: st });
+    await print(<BiodataDocument d={d} style={st} colour={co} maxPages={FREE_MAX_PAGES} footer />);
   };
 
   return (
@@ -69,7 +83,7 @@ export function BiodataPage() {
             {STYLES.map((x) => (
               <button key={x.id} type="button" aria-pressed={s.style === x.id} onClick={() => setS((p) => ({ ...p, style: x.id }))}
                 className={`rounded-xl border-2 p-3 text-left ${s.style === x.id ? 'border-leaf' : 'border-line'}`}>
-                <div className="font-semibold">{x.name}</div><div className="text-sm text-muted">{x.note}</div>
+                <div className="font-semibold">{x.name} <span className="text-xs font-normal text-muted">{x.group}{x.free ? ' · Free' : ' · Pro'}</span></div><div className="text-sm text-muted">{x.note}</div>
               </button>
             ))}
           </div>
@@ -113,7 +127,7 @@ export function BiodataPage() {
             </fieldset>
           ))}
           <button type="button" className="btn btn-primary" onClick={download}>Download PDF</button>
-          {!pro && <p className="text-sm text-muted">Free: 2 styles, 3 colours, up to 2 pages, small herewegrow.pro line at the bottom.</p>}
+          {!pro && <p className="text-sm text-muted">Free download: Classic Serif or Minimal Clean in Navy, Emerald or Charcoal, up to 2 pages, with a small herewegrow.pro line. All 10 styles, 10 colours, 3 pages and no line come with Pro.</p>}
         </div>
         <div className="no-print">
           <div className="sticky top-4 overflow-auto rounded-xl border border-line bg-mist p-3" aria-label="Preview">
@@ -121,6 +135,7 @@ export function BiodataPage() {
           </div>
         </div>
       </div>
+      {gate && <ProGate designName={{ en: STYLES.find((x) => x.id === s.style)?.name ?? '', bn: STYLES.find((x) => x.id === s.style)?.name ?? '' }} onClose={() => setGate(false)} onUseFree={useFree} />}
     </>
   );
 }

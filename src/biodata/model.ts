@@ -82,14 +82,23 @@ export const PAGE_H = 1123;
 const PAD = 56;
 const HEADER_H = 200; // name + photo block on page 1
 const FOOTER_H = 30;
-const sectionH = (s: Section) => 44 + s.rows.length * 28 + (s.text ? Math.ceil(s.text.length / 85) * 24 + 8 : 0);
 
-export function paginate(sections: Section[], maxPages: number): { pages: Section[][]; overflow: boolean } {
+export interface PageOpts {
+  /** Height used on page 1 before the first section (default: the standard header). */
+  headerH?: number;
+  /** Characters per line of free text; smaller for narrow columns. */
+  charsPerLine?: number;
+}
+
+const sectionH = (s: Section, cpl: number) => 44 + s.rows.length * 28 + (s.text ? Math.ceil(s.text.length / cpl) * 24 + 8 : 0);
+
+export function paginate(sections: Section[], maxPages: number, o: PageOpts = {}): { pages: Section[][]; overflow: boolean } {
+  const cpl = o.charsPerLine ?? 85;
   const pages: Section[][] = [[]];
-  let used = HEADER_H;
+  let used = o.headerH ?? HEADER_H;
   let overflow = false;
   for (const s of sections) {
-    const h = sectionH(s);
+    const h = sectionH(s, cpl);
     const room = PAGE_H - PAD * 2 - FOOTER_H;
     if (used + h > room && pages[pages.length - 1].length > 0) {
       if (pages.length >= maxPages) { overflow = true; continue; }

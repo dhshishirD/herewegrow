@@ -99,6 +99,28 @@ export function BiodataPage() {
     } catch { setBuyError('Could not start the payment. Please try again.'); }
     setBuying(false);
   };
+  const [importMsg, setImportMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const importFile = async (f: File | undefined) => {
+    if (!f) return;
+    setImportMsg(null);
+    try {
+      const [{ readCvFile, ImportError }, { parseBiodata }] = await Promise.all([import('../builder/importCv'), import('../biodata/importBiodata')]);
+      let text = '';
+      try { text = await readCvFile(f); } catch (err) {
+        const code = err instanceof ImportError ? err.code : 'read';
+        setImportMsg({ ok: false, text: code === 'doc' ? 'Old .doc files cannot be read. Save it as .docx or PDF and try again.' : code === 'type' ? 'Please choose a PDF, a Word .docx or a .txt file.' : 'Could not read this file. Try another copy.' });
+        return;
+      }
+      if (text.replace(/\s/g, '').length < 40) { setImportMsg({ ok: false, text: 'No text found. A scanned picture cannot be read; use a PDF or Word file with real text.' }); return; }
+      const r = parseBiodata(text);
+      if (r.filled < 3) { setImportMsg({ ok: false, text: 'We could not find biodata details in this file. You can still type them in below.' }); return; }
+      const hasData = !!(d.name || d.dob || d.occupation || d.father);
+      if (hasData && !window.confirm('Replace what you have typed with the details from this file?')) return;
+      track('biodata_import', { filled: r.filled });
+      setS((p) => ({ ...p, d: { ...r.data, photo: p.d.photo } }));
+      setImportMsg({ ok: true, text: `Filled ${r.filled} fields from your file. Please check every field below.` });
+    } catch { setImportMsg({ ok: false, text: 'Could not read this file. Try another copy.' }); }
+  };
   const fileBase = () => `${(d.name || 'My').replace(/\s+/g, '_')}_Biodata`;
   /** Word and PNG are part of the paid pack; free users see the same paywall as a paid style. */
   const downloadWord = async () => {
@@ -144,6 +166,14 @@ export function BiodataPage() {
                 <span className="h-4 w-4 rounded-full" style={{ background: `linear-gradient(135deg, ${c.main} 50%, ${c.tint} 50%)` }} />{c.name}
               </button>
             ))}
+          </div>
+          <div className="rounded-xl border border-line bg-mist p-4">
+            <label className="block text-sm font-semibold">Already have a biodata? Upload it (Word, PDF or text) and we fill the form
+              <input type="file" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="field mt-2"
+                onChange={(e) => { void importFile(e.target.files?.[0]); e.target.value = ''; }} />
+            </label>
+            <p className="mt-1 text-xs text-muted">Read in your browser, not uploaded. Works best with lines like “Height: 5'4”. Photos are not taken from the file.</p>
+            {importMsg && <p role="status" className={`mt-2 text-sm ${importMsg.ok ? 'text-leaf' : 'text-red-700'}`}>{importMsg.text}</p>}
           </div>
           <label className="block text-sm font-semibold">Photo (optional)
             <input type="file" accept="image/*" className="field mt-1" onChange={(e) => onPhoto(e.target.files?.[0])} />

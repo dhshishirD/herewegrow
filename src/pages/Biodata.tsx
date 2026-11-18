@@ -79,6 +79,22 @@ export function BiodataPage() {
     track('biodata_export', { format: 'pdf', style: s.style });
     await print(doc);
   };
+  const fileBase = () => `${(d.name || 'My').replace(/\s+/g, '_')}_Biodata`;
+  /** Word and PNG are part of the paid pack; free users see the same paywall as a paid style. */
+  const downloadWord = async () => {
+    if (!pro) { track('paywall_view', { source: 'biodata_word' }); setGate(true); return; }
+    track('biodata_export', { format: 'docx', style: s.style });
+    const { buildBiodataDocx } = await import('../biodata/word');
+    const { saveBlob } = await import('../biodata/png');
+    saveBlob(await buildBiodataDocx(d, colour, { footer: false }), `${fileBase()}.docx`);
+  };
+  const downloadPng = async () => {
+    if (!pro) { track('paywall_view', { source: 'biodata_png' }); setGate(true); return; }
+    track('biodata_export', { format: 'png', style: s.style });
+    const { pageMarkups, pageToPng, saveBlob } = await import('../biodata/png');
+    const pages = pageMarkups(renderToStaticMarkup(doc));
+    for (let i = 0; i < pages.length; i++) saveBlob(await pageToPng(pages[i]), `${fileBase()}_page-${i + 1}.png`);
+  };
   const useFree = async () => {
     setGate(false);
     setS((p) => ({ ...p, style: STYLES.find((x) => x.id === p.style)?.free ? p.style : 'classic-serif', colour: FREE_COLOURS.includes(p.colour) ? p.colour : 'navy' }));
@@ -140,8 +156,12 @@ export function BiodataPage() {
               )}
             </fieldset>
           ))}
-          <button type="button" className="btn btn-primary" onClick={download}>Download PDF</button>
-          {!pro && <p className="text-sm text-muted">Free download: Classic Serif or Minimal Clean in Navy, Emerald or Charcoal, up to 2 pages, with a small herewegrow.pro line. All 10 styles, 10 colours, 3 pages and no line come with Pro.</p>}
+          <div className="flex flex-wrap gap-3">
+            <button type="button" className="btn btn-primary" onClick={download}>Download PDF</button>
+            <button type="button" className="btn btn-quiet" onClick={downloadWord}>Download Word{pro ? '' : ' (Pro)'}</button>
+            <button type="button" className="btn btn-quiet" onClick={downloadPng}>Download PNG{pro ? '' : ' (Pro)'}</button>
+          </div>
+          {!pro && <p className="text-sm text-muted">Free download: PDF in Classic Serif or Minimal Clean, Navy, Emerald or Charcoal, up to 2 pages, with a small herewegrow.pro line. Pro adds all 10 styles and colours, 3 pages, no line, plus Word and PNG.</p>}
         </div>
         <div className="no-print">
           <div className="sticky top-4 overflow-auto rounded-xl border border-line bg-mist p-3" aria-label="Preview">

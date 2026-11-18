@@ -95,7 +95,7 @@ export function biodataSeo(path: string): PageSeo | undefined {
 export const BIODATA_FAQ: { q: string; a: string }[] = [
   { q: 'What should a marriage biodata include?', a: 'Your name, age, height, education, work, family, religion and a few lines about yourself. Add a guardian contact and, if you wish, what you look for in a partner. Keep it short: two pages is best.' },
   { q: 'Is the biodata maker free?', a: 'Yes. Two designs (Classic Serif and Minimal Clean) in three colours download free as a PDF, with a small herewegrow.pro line at the bottom. All 10 designs, all 10 colours and a third page come with Pro.' },
-  { q: 'Can I download a Word file or a WhatsApp image?', a: 'The maker gives a PDF today. Word and image downloads are planned. If you want a Word file now, see the Word marriage biodata templates on this page.' },
+  { q: 'Can I download a Word file or a WhatsApp image?', a: 'The maker gives a PDF free. Pro also gives a Word file and a PNG image per page for WhatsApp. Ready-made Word marriage biodata templates start at ৳29.' },
   { q: 'Are my details saved on your server?', a: 'No. The form is filled in your browser and kept on your own device only. We do not send your biodata to a server.' },
   { q: 'How long should a biodata be?', a: 'One or two A4 pages. Add a third only if you really need it. Long text is easier to read when it is split into short sections.' },
   { q: 'Which design is best for printing and which for WhatsApp?', a: 'Minimal Clean and Classic Serif print well, even in black and white. Top Banner and Sidebar read well on a phone screen.' },

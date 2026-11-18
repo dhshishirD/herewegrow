@@ -42,6 +42,12 @@ const LazyBuilder = () => (
   </Suspense>
 );
 
+const BiodataPageLazy = lazy(() => import('./pages/Biodata').then((m) => ({ default: m.BiodataPage })));
+const LazyBiodata = () => (
+  <Suspense fallback={null}>
+    <BiodataPageLazy />
+  </Suspense>
+);
 const PartnerRoute = lazy(() => import('./pages/Partner').then((m) => ({ default: m.PartnerRoute })));
 const PartnerIntake = lazy(() => import('./pages/PartnerIntake').then((m) => ({ default: m.PartnerIntake })));
 const AdminPartnersLazy = lazy(() => import('./pages/AdminPartners').then((m) => ({ default: m.AdminPartnersPage })));
@@ -63,6 +69,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/tools': ToolsPage,
   '/tools/cv-checker': CvChecker,
   '/builder': LazyBuilder,
+  '/biodata': LazyBiodata,
   '/tools/photo-signature-resizer': PhotoResizer,
   '/tools/application-letter': ApplicationLetter,
   '/tools/job-match': JobMatch,

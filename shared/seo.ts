@@ -50,6 +50,10 @@ const STATIC: Record<string, RouteSeo> = {
     title: 'চাকরিপ্রার্থীদের জন্য ফ্রি টুলস | Free job tools | HereWeGrow',
     description: 'ফ্রি সিভি চেকার ও টেলিটক সরকারি চাকরির ফর্মের জন্য ছবি-স্বাক্ষর রিসাইজার। Free CV checker and photo and signature resizer, no sign-up.',
   },
+  '/biodata': {
+    title: 'Marriage Biodata Maker: Free Biodata for Marriage (PDF)',
+    description: 'Free marriage biodata maker: fill in a simple form, pick a style and colour, and download a clean A4 PDF. Biodata for boys and girls. Works on mobile.',
+  },
   '/builder': {
     title: 'Free CV Maker Bangladesh: ফ্রি সিভি তৈরি অনলাইনে, PDF | HereWeGrow',
     description: `Free CV maker for Bangladesh: ফর্ম পূরণ করে ${bn(DESIGN_LIST.length)}টি ডিজাইনে সিভি বানান (${bn(FREE_DESIGN_COUNT)}টি ফ্রি), PDF ও Word ডাউনলোড। ব্যাংক, শিক্ষক, নার্স, আইটি, গালফ। বাংলাদেশি তথ্য ও ছবিসহ, সাইন-আপ ছাড়া, মোবাইলে চলে।`,

@@ -1,6 +1,7 @@
 // Cloudflare Worker for herewegrow.pro.
 // /api/* is handled here; every other path is served from the built site in ./dist.
 
+import { isAppShellPath } from '../shared/appPaths';
 import { handleCheckout, handleClaim, handleVerify } from '../server/handlers';
 import { handleAdmin } from '../server/admin';
 import { handleAdminBlog } from '../server/blogAdmin';
@@ -65,6 +66,11 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
       if (pathname === '/careers' || pathname === '/careers/') return serveCareersIndex(env);
       const page = await serveCareerPage(env, pathname);
       if (page) return page;
+    }
+
+    // Partner links and workspace: the app decides what to show, so serve the app shell with 200
+    if ((request.method === 'GET' || request.method === 'HEAD') && isAppShellPath(pathname)) {
+      return env.ASSETS.fetch(new Request(new URL('/', request.url).toString(), { method: request.method, headers: request.headers }));
     }
 
     return env.ASSETS.fetch(request);

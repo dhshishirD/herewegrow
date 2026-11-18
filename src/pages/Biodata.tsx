@@ -7,6 +7,9 @@ import { emptyBiodata, type BiodataData } from '../biodata/model';
 import { BiodataDocument, COLOURS, FREE_COLOURS, FREE_MAX_PAGES, PRO_MAX_PAGES, STYLES, needsPro, printCss, type StyleId } from '../biodata/styles';
 import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
+import { BIODATA_PACK } from '../../shared/biodataPack';
+import { goToPayment } from '../lib/paymentStart';
+import { tracker } from '../lib/track';
 import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
 
@@ -44,12 +47,16 @@ const GROUPS: { title: string; fields: [TextKey, string, boolean?][] }[] = [
 const BIO_PERKS = [
   { en: 'All 10 biodata designs and all 10 colours', bn: 'সব ১০টি বায়োডাটা ডিজাইন ও ১০টি রং' },
   { en: 'Up to 3 pages, no HereWeGrow line', bn: '৩ পৃষ্ঠা পর্যন্ত, HereWeGrow লেখা ছাড়া' },
-  { en: 'Also unlocks every CV design and saved CVs', bn: 'সব সিভি ডিজাইন ও সেভ করা সিভিও আনলক' },
+  { en: 'Word and PNG downloads', bn: 'Word ও PNG ডাউনলোড' },
+  { en: 'Any Pro pass also unlocks everything here, plus every CV design', bn: 'যেকোনো প্রো পাসেও এসব আনলক, সঙ্গে সব সিভি ডিজাইন' },
 ];
 
 export function BiodataPage() {
-  const { user } = useAuth();
-  const pro = !!user?.pro;
+  const { user, openLogin } = useAuth();
+  // Any Pro pass or the Clean pack unlocks everything
+  const pro = !!user?.pro || !!user?.biodataPack;
+  const [buying, setBuying] = useState(false);
+  const [buyError, setBuyError] = useState('');
   const [s, setS] = useState<Saved>(load);
   const [gate, setGate] = useState(false);
   const { d } = s;
@@ -78,6 +85,19 @@ export function BiodataPage() {
     if (!pro && needsPro(s.style, s.colour)) { track('paywall_view', { source: 'biodata', style: s.style, colour: s.colour }); setGate(true); return; }
     track('biodata_export', { format: 'pdf', style: s.style });
     await print(doc);
+  };
+  const buyPack = async () => {
+    setBuyError('');
+    if (!user) { setGate(false); openLogin(); return; }
+    setBuying(true);
+    track('checkout_click', { product: BIODATA_PACK.id });
+    try {
+      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: BIODATA_PACK.id, lang: 'en', vid: tracker.vid() }) });
+      const d = (await res.json().catch(() => ({}))) as { ok?: boolean; paymentUrl?: string; error?: string };
+      if (d.ok && d.paymentUrl) { goToPayment(d.paymentUrl, BIODATA_PACK.id); return; }
+      if (d.error === 'login') { setGate(false); openLogin(); } else setBuyError('Could not start the payment. Please try again.');
+    } catch { setBuyError('Could not start the payment. Please try again.'); }
+    setBuying(false);
   };
   const fileBase = () => `${(d.name || 'My').replace(/\s+/g, '_')}_Biodata`;
   /** Word and PNG are part of the paid pack; free users see the same paywall as a paid style. */
@@ -113,7 +133,7 @@ export function BiodataPage() {
             {STYLES.map((x) => (
               <button key={x.id} type="button" aria-pressed={s.style === x.id} onClick={() => setS((p) => ({ ...p, style: x.id }))}
                 className={`rounded-xl border-2 p-3 text-left ${s.style === x.id ? 'border-leaf' : 'border-line'}`}>
-                <div className="font-semibold">{x.name} <span className="text-xs font-normal text-muted">{x.group}{x.free ? ' · Free' : ' · Pro'}</span></div><div className="text-sm text-muted">{x.note}</div>
+                <div className="font-semibold">{x.name} <span className="text-xs font-normal text-muted">{x.group}{x.free ? ' · Free' : ' · Clean pack'}</span></div><div className="text-sm text-muted">{x.note}</div>
               </button>
             ))}
           </div>
@@ -158,10 +178,10 @@ export function BiodataPage() {
           ))}
           <div className="flex flex-wrap gap-3">
             <button type="button" className="btn btn-primary" onClick={download}>Download PDF</button>
-            <button type="button" className="btn btn-quiet" onClick={downloadWord}>Download Word{pro ? '' : ' (Pro)'}</button>
-            <button type="button" className="btn btn-quiet" onClick={downloadPng}>Download PNG{pro ? '' : ' (Pro)'}</button>
+            <button type="button" className="btn btn-quiet" onClick={downloadWord}>Download Word{pro ? '' : ' (Clean pack)'}</button>
+            <button type="button" className="btn btn-quiet" onClick={downloadPng}>Download PNG{pro ? '' : ' (Clean pack)'}</button>
           </div>
-          {!pro && <p className="text-sm text-muted">Free download: PDF in Classic Serif or Minimal Clean, Navy, Emerald or Charcoal, up to 2 pages, with a small herewegrow.pro line. Pro adds all 10 styles and colours, 3 pages, no line, plus Word and PNG.</p>}
+          {!pro && <p className="text-sm text-muted">Free download: PDF in Classic Serif or Minimal Clean, Navy, Emerald or Charcoal, up to 2 pages, with a small herewegrow.pro line. The Clean pack (৳49) or any Pro pass adds all 10 styles and colours, 3 pages, no line, plus Word and PNG.</p>}
         </div>
         <div className="no-print">
           <div className="sticky top-4 overflow-auto rounded-xl border border-line bg-mist p-3" aria-label="Preview">
@@ -169,7 +189,7 @@ export function BiodataPage() {
           </div>
         </div>
       </div>
-      {gate && <ProGate perks={BIO_PERKS} useFreeLabel={{ en: 'Download free with a free design', bn: 'ফ্রি ডিজাইনে ফ্রি ডাউনলোড করুন' }} designName={{ en: STYLES.find((x) => x.id === s.style)?.name ?? '', bn: STYLES.find((x) => x.id === s.style)?.name ?? '' }} onClose={() => setGate(false)} onUseFree={useFree} />}
+      {gate && <ProGate secondary={{ label: { en: `Buy the Clean pack for ${BIODATA_PACK.price} taka`, bn: `ক্লিন প্যাক কিনুন ${BIODATA_PACK.price} টাকায়` }, onClick: buyPack, busy: buying, error: buyError }} perks={BIO_PERKS} useFreeLabel={{ en: 'Download free with a free design', bn: 'ফ্রি ডিজাইনে ফ্রি ডাউনলোড করুন' }} designName={{ en: STYLES.find((x) => x.id === s.style)?.name ?? '', bn: STYLES.find((x) => x.id === s.style)?.name ?? '' }} onClose={() => setGate(false)} onUseFree={useFree} />}
     </>
   );
 }

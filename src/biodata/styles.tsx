@@ -245,7 +245,7 @@ const Footer = () => <div style={{ position: 'absolute', bottom: 18, right: 28, 
 function Pages({ children, overflow }: { children: ReactNode; overflow: boolean }) {
   return (
     <>
-      {overflow ? <div className="bio-notice no-print" style={{ background: '#fff7e0', border: '1px solid #e2b865', padding: 10, fontFamily: SANS, fontSize: 13, color: '#6b4e00' }}>Some sections do not fit in the page limit and are left out. Shorten the text, or use Pro for 3 pages.</div> : null}
+      {overflow ? <div className="bio-notice no-print" style={{ background: '#fff7e0', border: '1px solid #e2b865', padding: 10, fontFamily: SANS, fontSize: 13, color: '#6b4e00' }}>Some sections do not fit in the page limit and are left out. Shorten the text, or unlock the Clean pack for 3 pages.</div> : null}
       {children}
     </>
   );

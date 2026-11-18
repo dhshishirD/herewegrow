@@ -7,7 +7,7 @@ import { navigate } from '../lib/router';
 type B = { en: string; bn: string };
 
 /** Shown when a free user tries to download a Pro design. Never a dead end: they can switch to a free design. */
-export function ProGate({ designName, onClose, onUseFree, perks: customPerks, useFreeLabel }: { designName: B; onClose: () => void; onUseFree: () => void; perks?: B[]; useFreeLabel?: B }) {
+export function ProGate({ designName, onClose, onUseFree, perks: customPerks, useFreeLabel, secondary }: { designName: B; onClose: () => void; onUseFree: () => void; perks?: B[]; useFreeLabel?: B; secondary?: { label: B; onClick: () => void; busy?: boolean; error?: string } }) {
   const { t } = useLang();
   const primary = useRef<HTMLButtonElement>(null);
   const from = Math.min(...PLANS.map((p) => p.price));
@@ -53,7 +53,13 @@ export function ProGate({ designName, onClose, onUseFree, perks: customPerks, us
             ))}
           </ul>
           <p className="mt-4 text-sm text-muted">{t({ en: 'Your CV stays as it is. After paying you come straight back here to download.', bn: 'আপনার সিভি যেমন আছে তেমনই থাকবে। পেমেন্টের পর এখানে ফিরে এসেই ডাউনলোড করবেন।' })}</p>
-          <button ref={primary} type="button" className="btn btn-primary mt-5 w-full" onClick={() => navigate('/pro')}>
+          {secondary && (
+            <>
+              <button ref={primary} type="button" disabled={secondary.busy} className="btn btn-primary mt-5 w-full" onClick={secondary.onClick}>{t(secondary.label)}</button>
+              {secondary.error && <p role="alert" className="mt-2 text-sm text-red-700">{secondary.error}</p>}
+            </>
+          )}
+          <button ref={secondary ? undefined : primary} type="button" className={`btn mt-5 w-full ${secondary ? 'btn-quiet' : 'btn-primary'}`} onClick={() => navigate('/pro')}>
             {t({ en: 'See Pro passes', bn: 'প্রো পাস দেখুন' })}
           </button>
           <button type="button" className="btn btn-quiet mt-2 w-full" onClick={onUseFree}>

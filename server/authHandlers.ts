@@ -1,5 +1,6 @@
 // HTTP handlers for /api/auth/*. Business logic is in auth.ts and google.ts.
 
+import { hasBiodataPack } from './biodataPack';
 import { activePlan } from './templatePerks';
 import {
   clearCookie, createSession, destroySession, getSessionUser, publicUser, requestOtp, sessionCookie,
@@ -32,7 +33,8 @@ export async function handleAuth(request: Request, env: AuthEnv, pathname: strin
   if (pathname === '/api/auth/me' && request.method === 'GET') {
     const user = await getSessionUser(env, request);
     const proPlan = user && env.DB ? ((await activePlan(env.DB, user.id).catch(() => null))?.id ?? null) : null;
-    return json({ ok: true, user: user ? { ...publicUser(user), proPlan } : null, google: googleConfigured(env) });
+    const biodataPack = user && env.DB ? await hasBiodataPack(env.DB, user.id) : false;
+    return json({ ok: true, user: user ? { ...publicUser(user), proPlan, biodataPack } : null, google: googleConfigured(env) });
   }
 
   if (pathname === '/api/auth/google/start' && request.method === 'GET') {

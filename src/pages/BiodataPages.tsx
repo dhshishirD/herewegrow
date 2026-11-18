@@ -66,14 +66,15 @@ export function BiodataHubPage() {
           </ul>
         </section>
         <section>
-          <h2 className="text-2xl">Free and Pro</h2>
+          <h2 className="text-2xl">Free and Clean pack</h2>
           <table className="mt-3 w-full max-w-2xl text-left text-sm">
-            <thead><tr className="border-b border-line"><th className="py-2 pr-4"> </th><th className="py-2 pr-4">Free</th><th className="py-2">Pro</th></tr></thead>
+            <thead><tr className="border-b border-line"><th className="py-2 pr-4"> </th><th className="py-2 pr-4">Free</th><th className="py-2">Clean pack (৳49) or Pro</th></tr></thead>
             <tbody>
               <tr className="border-b border-line"><td className="py-2 pr-4 font-semibold">Designs</td><td className="pr-4">Classic Serif, Minimal Clean</td><td>All 10</td></tr>
               <tr className="border-b border-line"><td className="py-2 pr-4 font-semibold">Colours</td><td className="pr-4">Navy, Emerald, Charcoal</td><td>All 10</td></tr>
               <tr className="border-b border-line"><td className="py-2 pr-4 font-semibold">Pages</td><td className="pr-4">Up to 2</td><td>Up to 3</td></tr>
-              <tr><td className="py-2 pr-4 font-semibold">Small herewegrow.pro line</td><td className="pr-4">Yes</td><td>No</td></tr>
+              <tr className="border-b border-line"><td className="py-2 pr-4 font-semibold">Small herewegrow.pro line</td><td className="pr-4">Yes</td><td>No</td></tr>
+              <tr><td className="py-2 pr-4 font-semibold">Word and PNG download</td><td className="pr-4">No</td><td>Yes</td></tr>
             </tbody>
           </table>
         </section>
@@ -106,7 +107,7 @@ export function BiodataStylePage({ slug }: { slug: string }) {
         <div className="space-y-5">
           <p className="max-w-2xl text-lg">{s.blurb}</p>
           <p><strong>Best for:</strong> {s.bestFor}</p>
-          <p><strong>{s.free ? 'Free design.' : 'Pro design.'}</strong> {s.free ? 'Download a PDF free in Navy, Emerald or Charcoal.' : 'Preview it free; downloading needs Pro. Any of the 10 colours.'} The sample shows made-up details, not a real person.</p>
+          <p><strong>{s.free ? 'Free design.' : 'Clean pack design.'}</strong> {s.free ? 'Download a PDF free in Navy, Emerald or Charcoal.' : 'Preview it free; downloading needs the Clean pack (৳49) or any Pro pass. Any of the 10 colours.'} The sample shows made-up details, not a real person.</p>
           <p><Link href={`${BIODATA_MAKER_PATH}?style=${s.slug}`} className="btn btn-primary">Use this design</Link></p>
           <p>See all 10 designs in <Link href={BIODATA_HUB_PATH} className="font-semibold text-leaf hover:underline">biodata formats for marriage</Link>, or open the <Link href={BIODATA_MAKER_PATH} className="font-semibold text-leaf hover:underline">biodata maker</Link>. Prefer a Word file? See the <Link href="/templates" className="font-semibold text-leaf hover:underline">Word marriage templates</Link>.</p>
           <div>

@@ -15,6 +15,7 @@ import { ABROAD_PAGES } from '../shared/abroadPages';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
+import { APP_ONLY_PATHS } from '../shared/appPaths';
 import { BIODATA_FAQ, BIODATA_HUB, BIODATA_HUB_BN, BIODATA_HUB_PATH, BIODATA_MAKER, BIODATA_MAKER_PATH, BIODATA_STYLES, BIODATA_UPDATED, biodataPreview, biodataStylePath } from '../shared/biodataStyles';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
@@ -60,6 +61,9 @@ const crumbs = (items: [string, string][]) => ({
 });
 
 const link = (path: string, text: string) => `<a href="${path}">${esc(text)}</a>`;
+
+/** Paths of every page the build writes (used by tests). */
+export const seoPagePaths = () => pages().map((p) => p.path);
 
 function pages(): Page[] {
   const services = PRODUCTS.filter((p) => p.kind === 'service');
@@ -456,6 +460,15 @@ export function seoPages(): Plugin {
         const html = renderPage(template, p);
         writeFileSync(file, p.noindex ? html.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>') : html);
       }
+      // App-only pages (account, admin, payment result): the shell, kept out of search results
+      const noindexShell = template.replace('</head>', '<meta name="robots" content="noindex,follow" /></head>');
+      for (const path of APP_ONLY_PATHS) {
+        const file = join(outDir, `${path}.html`);
+        mkdirSync(dirname(file), { recursive: true });
+        writeFileSync(file, noindexShell);
+      }
+      // The real 404 page: Cloudflare serves it with status 404 for any address that has no file (wrangler.toml: not_found_handling)
+      writeFileSync(join(outDir, '404.html'), noindexShell.replace(/<title>[^<]*<\/title>/, '<title>Page not found | HereWeGrow</title>'));
       writeFileSync(join(outDir, 'sitemap.xml'), sitemap(list));
       // Retired template pages: 301 rules applied by Cloudflare before it serves any asset (the Worker is not reached for /templates/*).
       writeFileSync(join(outDir, '_redirects'), redirectsFile());

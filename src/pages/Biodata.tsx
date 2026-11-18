@@ -1,3 +1,4 @@
+import { BIODATA_MAKER } from '../../shared/biodataStyles';
 import { useEffect, useMemo, useState } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { PageHead } from '../components/PageHead';
@@ -10,12 +11,19 @@ import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
 
 const KEY = 'hwg-biodata-v1';
-const TITLE = 'Marriage Biodata Maker: Free Biodata for Marriage (PDF)';
-const INTRO = 'Fill in the form, pick a style and colour, download a clean A4 PDF. Your details stay on your device.';
+const TITLE = BIODATA_MAKER.title;
+const INTRO = BIODATA_MAKER.description;
 
 interface Saved { d: BiodataData; style: StyleId; colour: string }
 
 function load(): Saved {
+  const q = new URLSearchParams(typeof location === 'undefined' ? '' : location.search);
+  const fromUrl = STYLES.find((x) => x.id === q.get('style'))?.id;
+  const base = loadSaved();
+  return fromUrl ? { ...base, style: fromUrl } : base;
+}
+
+function loadSaved(): Saved {
   try {
     const s = JSON.parse(localStorage.getItem(KEY) ?? 'null') as Saved | null;
     if (s?.d) return { d: { ...emptyBiodata(), ...s.d }, style: s.style ?? 'classic-serif', colour: s.colour ?? 'navy' };
@@ -31,6 +39,12 @@ const GROUPS: { title: string; fields: [TextKey, string, boolean?][] }[] = [
   { title: 'Address', fields: [['presentAddress', 'Present address'], ['permanentAddress', 'Permanent address']] },
   { title: 'About and expectations', fields: [['about', 'About me', true], ['expectations', 'Partner expectations', true]] },
   { title: 'Contact (guardian)', fields: [['guardianName', 'Guardian name'], ['guardianRelation', 'Relation'], ['phone', 'Phone'], ['email', 'Email']] },
+];
+
+const BIO_PERKS = [
+  { en: 'All 10 biodata designs and all 10 colours', bn: 'সব ১০টি বায়োডাটা ডিজাইন ও ১০টি রং' },
+  { en: 'Up to 3 pages, no HereWeGrow line', bn: '৩ পৃষ্ঠা পর্যন্ত, HereWeGrow লেখা ছাড়া' },
+  { en: 'Also unlocks every CV design and saved CVs', bn: 'সব সিভি ডিজাইন ও সেভ করা সিভিও আনলক' },
 ];
 
 export function BiodataPage() {
@@ -135,7 +149,7 @@ export function BiodataPage() {
           </div>
         </div>
       </div>
-      {gate && <ProGate designName={{ en: STYLES.find((x) => x.id === s.style)?.name ?? '', bn: STYLES.find((x) => x.id === s.style)?.name ?? '' }} onClose={() => setGate(false)} onUseFree={useFree} />}
+      {gate && <ProGate perks={BIO_PERKS} useFreeLabel={{ en: 'Download free with a free design', bn: 'ফ্রি ডিজাইনে ফ্রি ডাউনলোড করুন' }} designName={{ en: STYLES.find((x) => x.id === s.style)?.name ?? '', bn: STYLES.find((x) => x.id === s.style)?.name ?? '' }} onClose={() => setGate(false)} onUseFree={useFree} />}
     </>
   );
 }

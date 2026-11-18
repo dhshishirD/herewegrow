@@ -48,6 +48,8 @@ const LazyBiodata = () => (
     <BiodataPageLazy />
   </Suspense>
 );
+const BiodataHub = lazy(() => import('./pages/BiodataPages').then((m) => ({ default: m.BiodataHubPage })));
+const BiodataStyle = lazy(() => import('./pages/BiodataPages').then((m) => ({ default: m.BiodataStylePage })));
 const PartnerRoute = lazy(() => import('./pages/Partner').then((m) => ({ default: m.PartnerRoute })));
 const PartnerIntake = lazy(() => import('./pages/PartnerIntake').then((m) => ({ default: m.PartnerIntake })));
 const AdminPartnersLazy = lazy(() => import('./pages/AdminPartners').then((m) => ({ default: m.AdminPartnersPage })));
@@ -99,6 +101,9 @@ function Page() {
   if (path === '/partner' || path.startsWith('/partner/')) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerRoute path={path} /></Suspense>;
   const intake = path.match(/^\/p\/([a-z0-9]{6,16})$/);
   if (intake) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerIntake key={path} code={intake[1]} /></Suspense>;
+  if (path === '/templates/category/marriage-biodata') return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><BiodataHub /></Suspense>;
+  const bio = path.match(/^\/templates\/biodata-([a-z0-9-]+)$/);
+  if (bio) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><BiodataStyle key={path} slug={bio[1]} /></Suspense>;
   const tpl = path.match(/^\/templates\/([a-z0-9-]+)$/);
   if (tpl) return <TemplateDetail key={path} id={tpl[1]} />;
   const guide = path.match(/^\/guides\/([a-z0-9-]+)$/);

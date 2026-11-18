@@ -15,6 +15,7 @@ import { ABROAD_PAGES } from '../shared/abroadPages';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
+import { BIODATA_FAQ, BIODATA_HUB, BIODATA_HUB_BN, BIODATA_HUB_PATH, BIODATA_MAKER, BIODATA_MAKER_PATH, BIODATA_STYLES, BIODATA_UPDATED, biodataPreview, biodataStylePath } from '../shared/biodataStyles';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
@@ -322,6 +323,52 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['Career guides', '/guides'], [g.title.en, `/guides/${g.slug}`]]),
       ],
       priority: 0.8,
+    });
+  }
+
+  // Marriage biodata: maker, hub and one page per layout
+  const bioPreview = (slug: string) => `${SITE}${biodataPreview(slug)}`;
+  list.push({
+    path: BIODATA_MAKER_PATH,
+    title: BIODATA_MAKER.title,
+    description: BIODATA_MAKER.description,
+    body: `<h1>${esc(BIODATA_MAKER.h1)}</h1><p>${esc(BIODATA_MAKER.description)}</p><p>${link(BIODATA_HUB_PATH, 'Biodata format for marriage: 10 designs')}</p>`,
+    jsonLd: [
+      { '@type': 'WebApplication', name: 'Marriage Biodata Maker', url: `${SITE}${BIODATA_MAKER_PATH}`, applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' }, publisher: { '@id': `${SITE}/#org` } },
+      crumbs([['HereWeGrow', '/'], ['Marriage biodata maker', BIODATA_MAKER_PATH]]),
+    ],
+    priority: 0.8,
+    lastmod: BIODATA_UPDATED,
+  });
+  list.push({
+    path: BIODATA_HUB_PATH,
+    title: BIODATA_HUB.title,
+    description: BIODATA_HUB.description,
+    image: bioPreview(BIODATA_STYLES[0].slug),
+    body: `<h1>${esc(BIODATA_HUB.h1)}</h1><p>${esc(BIODATA_HUB_BN[0])} ${esc(BIODATA_HUB_BN[1])}</p><ul>${BIODATA_STYLES.map((x) => `<li>${link(biodataStylePath(x.slug), `${x.name} marriage biodata`)}: ${esc(x.note)}</li>`).join('')}</ul><p>${link(BIODATA_MAKER_PATH, 'Open the biodata maker')} · ${link('/templates', 'Word marriage templates')}</p><h2>Questions about marriage biodata</h2><ul>${BIODATA_FAQ.map((f) => `<li><strong>${esc(f.q)}</strong> ${esc(f.a)}</li>`).join('')}</ul>`,
+    jsonLd: [
+      { '@type': 'CollectionPage', name: BIODATA_HUB.h1, url: `${SITE}${BIODATA_HUB_PATH}`, description: BIODATA_HUB.description, dateModified: BIODATA_UPDATED, publisher: { '@id': `${SITE}/#org` } },
+      { '@type': 'ItemList', itemListElement: BIODATA_STYLES.map((x, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}${biodataStylePath(x.slug)}`, name: `${x.name} marriage biodata` })) },
+      crumbs([['HereWeGrow', '/'], ['Templates', '/templates'], ['Marriage biodata', BIODATA_HUB_PATH]]),
+    ],
+    priority: 0.9,
+    lastmod: BIODATA_UPDATED,
+    images: BIODATA_STYLES.map((x) => bioPreview(x.slug)),
+  });
+  for (const x of BIODATA_STYLES) {
+    list.push({
+      path: biodataStylePath(x.slug),
+      title: x.seo.title,
+      description: x.seo.description,
+      image: bioPreview(x.slug),
+      body: `<h1>${esc(x.seo.h1)}</h1><p>${esc(x.blurb)}</p><p>Best for ${esc(x.bestFor)}</p><p>${link(BIODATA_MAKER_PATH, 'Use this design in the biodata maker')} · ${link(BIODATA_HUB_PATH, 'All 10 marriage biodata formats')}</p>`,
+      jsonLd: [
+        { '@type': 'WebPage', name: x.seo.h1, url: `${SITE}${biodataStylePath(x.slug)}`, description: x.seo.description, dateModified: BIODATA_UPDATED, primaryImageOfPage: { '@type': 'ImageObject', url: bioPreview(x.slug), width: 600, height: 849 } },
+        crumbs([['HereWeGrow', '/'], ['Templates', '/templates'], ['Marriage biodata', BIODATA_HUB_PATH], [x.name, biodataStylePath(x.slug)]]),
+      ],
+      priority: 0.7,
+      lastmod: BIODATA_UPDATED,
+      images: [bioPreview(x.slug)],
     });
   }
 

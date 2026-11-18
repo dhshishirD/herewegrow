@@ -31,6 +31,8 @@ export const LINK_GROUPS: LinkGroup[] = [
       BUILDER_LINK,
       { href: '/templates', label: { en: 'CV templates', bn: 'সিভি টেমপ্লেট' } },
       { href: '/cv-for-gulf-jobs', label: { en: 'Gulf job CV', bn: 'গালফ চাকরির সিভি' } },
+      { href: '/templates/category/marriage-biodata', label: { en: 'Marriage biodata formats', bn: 'বিয়ের বায়োডাটা ফরম্যাট' } },
+      { href: '/biodata', label: { en: 'Marriage biodata maker', bn: 'বিয়ের বায়োডাটা মেকার' } },
       { href: '/tools/cv-checker', label: { en: 'Free CV checker', bn: 'ফ্রি সিভি চেকার' } },
     ],
   },

@@ -3,7 +3,9 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { buildSections, paginate, type BiodataData, type Section } from './model';
 
-export type StyleId = 'classic-serif' | 'royal-frame' | 'sidebar' | 'top-banner' | 'minimal-clean' | 'split-card' | 'photo-first' | 'timeline' | 'premium-full-page' | 'two-tone-diagonal';
+import { BIODATA_STYLES, type BiodataStyleId } from '../../shared/biodataStyles';
+
+export type StyleId = BiodataStyleId;
 export interface Colour { id: string; name: string; main: string; dark: string; tint: string }
 
 const mk = (id: string, name: string, main: string, tint: string, dark: string): Colour => ({ id, name, main, dark, tint });
@@ -20,18 +22,7 @@ export const COLOURS: Colour[] = [
   mk('olive', 'Olive & Gold', '#4f5a2e', '#dcc77c', '#343c1e'),
 ];
 
-export const STYLES: { id: StyleId; name: string; group: string; note: string; free?: boolean }[] = [
-  { id: 'classic-serif', name: 'Classic Serif', group: 'Dignified', note: 'Traditional serif with a gold rule.', free: true },
-  { id: 'royal-frame', name: 'Royal Frame', group: 'Dignified', note: 'Double border frame, centred and formal.' },
-  { id: 'sidebar', name: 'Sidebar', group: 'Modern', note: 'Colour column with photo and contact.' },
-  { id: 'top-banner', name: 'Top Banner', group: 'Modern', note: 'Bold colour banner with name and photo.' },
-  { id: 'minimal-clean', name: 'Minimal Clean', group: 'Modern', note: 'Lots of white space, one accent line.', free: true },
-  { id: 'split-card', name: 'Split Card', group: 'Modern', note: 'Soft cards in two columns.' },
-  { id: 'photo-first', name: 'Photo First', group: 'Personality', note: 'Large photo leads the page.' },
-  { id: 'timeline', name: 'Timeline', group: 'Personality', note: 'Sections along a vertical line.' },
-  { id: 'premium-full-page', name: 'Premium Full Page', group: 'Significant', note: 'Full-colour header and section bars.' },
-  { id: 'two-tone-diagonal', name: 'Two-Tone Diagonal', group: 'Significant', note: 'Diagonal colour cut behind the name.' },
-];
+export const STYLES = BIODATA_STYLES.map((x) => ({ id: x.id, name: x.name, group: x.group, note: x.note, free: x.free }));
 
 export const FREE_COLOURS = ['navy', 'emerald', 'charcoal'];
 export const FREE_MAX_PAGES = 2;

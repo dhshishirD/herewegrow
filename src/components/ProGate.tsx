@@ -7,7 +7,7 @@ import { navigate } from '../lib/router';
 type B = { en: string; bn: string };
 
 /** Shown when a free user tries to download a Pro design. Never a dead end: they can switch to a free design. */
-export function ProGate({ designName, onClose, onUseFree }: { designName: B; onClose: () => void; onUseFree: () => void }) {
+export function ProGate({ designName, onClose, onUseFree, perks: customPerks, useFreeLabel }: { designName: B; onClose: () => void; onUseFree: () => void; perks?: B[]; useFreeLabel?: B }) {
   const { t } = useLang();
   const primary = useRef<HTMLButtonElement>(null);
   const from = Math.min(...PLANS.map((p) => p.price));
@@ -19,7 +19,7 @@ export function ProGate({ designName, onClose, onUseFree }: { designName: B; onC
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  const perks: B[] = [
+  const perks: B[] = customPerks ?? [
     { en: 'Download PDF and Word without the HereWeGrow mark', bn: 'HereWeGrow চিহ্ন ছাড়া PDF ও Word ডাউনলোড' },
     { en: `All ${PRO_DESIGN_COUNT} premium designs`, bn: `সব ${num(PRO_DESIGN_COUNT, 'bn')}টি প্রিমিয়াম ডিজাইন` },
     { en: `Save up to ${PRO_LIMITS.savedCvs} CVs, open on any device`, bn: `${num(PRO_LIMITS.savedCvs, 'bn')}টি পর্যন্ত সিভি সেভ, যেকোনো ডিভাইসে` },
@@ -57,7 +57,7 @@ export function ProGate({ designName, onClose, onUseFree }: { designName: B; onC
             {t({ en: 'See Pro passes', bn: 'প্রো পাস দেখুন' })}
           </button>
           <button type="button" className="btn btn-quiet mt-2 w-full" onClick={onUseFree}>
-            {t({ en: 'Download free with the Classic design', bn: 'ক্লাসিক ডিজাইনে ফ্রি ডাউনলোড করুন' })}
+            {t(useFreeLabel ?? { en: 'Download free with the Classic design', bn: 'ক্লাসিক ডিজাইনে ফ্রি ডাউনলোড করুন' })}
           </button>
         </div>
       </div>

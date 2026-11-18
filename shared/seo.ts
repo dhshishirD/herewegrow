@@ -2,6 +2,7 @@
 // and the app (src/lib/seo.ts) so both always say the same thing.
 // Bangla first, with the English terms people also search for.
 
+import { biodataSeo } from './biodataStyles';
 import { PRODUCTS } from './catalog';
 import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
 import { findGuide } from './guides';
@@ -49,10 +50,6 @@ const STATIC: Record<string, RouteSeo> = {
   '/tools': {
     title: 'চাকরিপ্রার্থীদের জন্য ফ্রি টুলস | Free job tools | HereWeGrow',
     description: 'ফ্রি সিভি চেকার ও টেলিটক সরকারি চাকরির ফর্মের জন্য ছবি-স্বাক্ষর রিসাইজার। Free CV checker and photo and signature resizer, no sign-up.',
-  },
-  '/biodata': {
-    title: 'Marriage Biodata Maker: Free Biodata for Marriage (PDF)',
-    description: 'Free marriage biodata maker: fill in a simple form, pick a style and colour, and download a clean A4 PDF. Biodata for boys and girls. Works on mobile.',
   },
   '/builder': {
     title: 'Free CV Maker Bangladesh: ফ্রি সিভি তৈরি অনলাইনে, PDF | HereWeGrow',
@@ -113,6 +110,8 @@ function isSharedTitle(en: string): boolean {
 
 export function routeSeo(path: string): RouteSeo | undefined {
   if (STATIC[path]) return STATIC[path];
+  const bio = biodataSeo(path);
+  if (bio) return { title: bio.title, description: bio.description };
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
   const guide = gm ? findGuide(gm[1]) : undefined;
   if (guide) return { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };

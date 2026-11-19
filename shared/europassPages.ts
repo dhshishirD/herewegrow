@@ -6,6 +6,7 @@
 // Rules: say "Europass-style", never "official"; no Europass logo or EU flag; no promises of jobs, visas, admission or scholarships.
 // Europass is run by the European Union. Re-check the sources below and update EUROPASS_CHECKED before each edit goes live.
 
+import { PRODUCTS, SUPPORT_WHATSAPP } from './catalog';
 import { PLANS, templatePrice } from './plans';
 import { SINGLE_TEMPLATE_PRICE, TEMPLATES, type Template } from './templates';
 import { isListed, isRetired, isVariant } from './templateTiers';
@@ -28,6 +29,28 @@ export const EUROPASS_BN_KEYWORD = 'ইউরোপাস সিভি';
 
 /** The one template left out of the download list (owner decision). Its variants stay on sale, but are not listed either. */
 export const EUROPASS_EXCLUDED_IDS: readonly string[] = ['hwg-cv-europass-europass-003'];
+
+/**
+ * Library thumbnails (thumb.webp and page-1.webp) that show the Europass logo and EU flag in the top corner.
+ * Checked by eye on 2026-11-19. Rule: no Europass logo or EU flag on these pages, so these are listed only when no clean template exists.
+ */
+export const EUROPASS_LOGO_FLAGGED_IDS: readonly string[] = [
+  'hwg-cv-europass-europass-010', 'hwg-cv-europass-europass-015', 'hwg-cv-europass-europass-016',
+  'hwg-cv-europass-europass-001', 'hwg-cv-europass-europass-002', 'hwg-cv-europass-europass-003', 'hwg-cv-europass-europass-009', 'hwg-cv-europass-europass-011',
+  'hwg-cv-europass-europass-004', 'hwg-cv-europass-europass-007',
+];
+
+/** Our own preview of the builder preset (sample data, no logo, no flag). Rendered from the real layout; see public/europass. */
+/** Social share image for all three pages: 1200 x 630, our own layout, no logo or flag. */
+export const EUROPASS_OG = { src: '/europass/europass-style-cv-og-1200x630.jpg', w: 1200, h: 630 } as const;
+
+/** Our own preview of the builder preset (sample data, no logo, no flag). Rendered from the real layout; see public/europass. */
+export const EUROPASS_PREVIEW = {
+  src: '/europass/europass-style-cv-preview-a4.webp', w: 1588, h: 2246,
+  thumb: '/europass/europass-style-cv-preview-a4-thumb.webp', tw: 360, th: 509,
+  alt: 'ইউরোপাস সিভি: Europass-style CV made in the HereWeGrow builder, page 1 preview with profile, work, education and a CEFR language grid (sample data)',
+  caption: 'Europass-style layout made in our builder. Sample data (invented).',
+} as const;
 
 export interface PageSeo { title: string; description: string; h1: string }
 
@@ -104,6 +127,12 @@ export interface HubTemplate {
 
 /** Europass templates that may be listed: on sale, a lead (not a variant), and not the excluded one. Same rules as the Templates page (shared/templateTiers.ts). */
 export function europassHubTemplates(): HubTemplate[] {
+  const all = europassHubCandidates();
+  const clean = all.filter((t) => !EUROPASS_LOGO_FLAGGED_IDS.includes(t.id));
+  return clean.length > 0 ? clean : all;
+}
+
+function europassHubCandidates(): HubTemplate[] {
   return TEMPLATES.filter((t: Template) => t.hub === 'europass' && !isRetired(t.id) && !isVariant(t.id) && isListed(t.id) && !EUROPASS_EXCLUDED_IDS.includes(t.id))
     .sort((a, b) => a.pages - b.pages || a.id.localeCompare(b.id))
     .map((t) => ({
@@ -380,6 +409,77 @@ export const WORD_FAQ: Faq[] = [
   { q: 'How many languages can I add?', a: 'Add as many as you really use. Copy a row in the language table for each one, mother tongue first.' },
 ];
 
+// ---------- Choice cards, helper quiz and layout helpers (shared by the app and the prerender) ----------
+export interface Choice { id: 'build' | 'word' | 'expert'; title: string; bn: string; micro: string; cta: string; href: string; external?: boolean }
+
+const CV_WRITING_FROM = Math.min(...PRODUCTS.filter((p) => p.kind === 'service' && p.id.startsWith('cv-') && p.id !== 'cv-review').map((p) => p.price));
+export const EUROPASS_EXPERT_PATH = '/services';
+export const EUROPASS_WHATSAPP_HREF = `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent('Hello HereWeGrow, I need help writing my CV.')}`;
+
+/** The three things a visitor can do. `wordHref` differs by page: the Word page scrolls to its own template list. */
+export function europassChoices(wordHref: string): Choice[] {
+  return [
+    { id: 'build', title: 'Build it free now', bn: 'এখনই ফ্রিতে বানান', micro: 'Free, no sign-up, PDF is free. About 10 minutes on your phone.', cta: 'Build free', href: EUROPASS_BUILDER_HREF },
+    { id: 'word', title: 'Get an editable Word template', bn: 'এডিট করা যায় এমন Word টেমপ্লেট', micro: `Preview first. One template is ${EUROPASS_PRICES.single}, or use a Pro pass.`, cta: 'See Word templates', href: wordHref },
+    { id: 'expert', title: 'Want an expert to write it for you?', bn: 'বিশেষজ্ঞ দিয়ে লিখিয়ে নিতে চান?', micro: `Our CV team writes it. CV writing from ${bdt(CV_WRITING_FROM)}, fixed price.`, cta: 'See CV writing service', href: EUROPASS_EXPERT_PATH },
+  ];
+}
+
+export const CHOICES_HEADING = { en: 'What do you want to do?', bn: 'আপনি কী করতে চান?' };
+
+export interface QuizOption { id: string; label: string }
+export interface QuizQuestion { id: 'where' | 'own' | 'asked'; q: string; bn: string; options: QuizOption[] }
+export const QUIZ_HEADING = { en: 'Do I need a Europass CV?', bn: 'আমার কি ইউরোপাস সিভি লাগবে?' };
+export const QUIZ_INTRO = 'Answer three quick questions. No sign-up, nothing is sent anywhere.';
+export const QUIZ: QuizQuestion[] = [
+  { id: 'where', q: 'Where is the job, internship or course?', bn: 'চাকরি, ইন্টার্নশিপ বা কোর্স কোথায়?', options: [{ id: 'europe', label: 'In Europe' }, { id: 'other', label: 'In another country' }, { id: 'bd', label: 'In Bangladesh' }] },
+  { id: 'own', q: 'Does the employer or programme give its own CV form or template?', bn: 'নিয়োগকর্তা বা প্রোগ্রাম কি নিজস্ব সিভি ফর্ম বা টেমপ্লেট দিয়েছে?', options: [{ id: 'yes', label: 'Yes' }, { id: 'no', label: 'No' }, { id: 'unsure', label: 'Not sure' }] },
+  { id: 'asked', q: 'Does the advert ask for a “Europass CV” or a “European CV”?', bn: 'বিজ্ঞপ্তিতে কি “Europass CV” চাওয়া হয়েছে?', options: [{ id: 'yes', label: 'Yes' }, { id: 'no', label: 'No' }, { id: 'unsure', label: 'Not sure' }] },
+];
+
+export type QuizAnswers = Partial<Record<QuizQuestion['id'], string>>;
+export interface QuizResult {
+  id: 'europass' | 'theirs' | 'local';
+  title: string;
+  bn: string;
+  body: string;
+  actions: { label: string; href: string; primary?: boolean }[];
+}
+export const QUIZ_RESULTS: Record<QuizResult['id'], QuizResult> = {
+  europass: {
+    id: 'europass', title: 'Use a Europass-style CV', bn: 'ইউরোপাস স্টাইল সিভি ব্যবহার করুন',
+    body: 'It is a good fit: a familiar order, languages rated A1 to C2. It does not decide the result, it only makes your CV easy to read. If the advert needs the file from the EU’s own editor, make it at europass.europa.eu.',
+    actions: [{ label: 'Build free now', href: EUROPASS_BUILDER_HREF, primary: true }, { label: 'Word template', href: EUROPASS_WORD_PATH }],
+  },
+  theirs: {
+    id: 'theirs', title: 'Follow the programme’s own format', bn: 'প্রোগ্রামের নিজস্ব ফরম্যাট অনুসরণ করুন',
+    body: 'When an employer or programme gives its own form, use theirs, even if it looks plain. Our builder can still help you prepare clean wording for each section first.',
+    actions: [{ label: 'Check my CV text free', href: '/tools/cv-checker', primary: true }, { label: 'Ask for CV writing help', href: EUROPASS_EXPERT_PATH }],
+  },
+  local: {
+    id: 'local', title: 'Use a normal Bangladeshi-style CV', bn: 'সাধারণ বাংলাদেশি স্টাইলের সিভি ব্যবহার করুন',
+    body: 'Local employers and other countries often use their own style, and the advert decides. Keep it short, specific and honest. A Europass-style CV is not needed here.',
+    actions: [{ label: 'Build a CV free', href: '/builder', primary: true }, { label: 'Check my CV free', href: '/tools/cv-checker' }],
+  },
+};
+
+/** The decision rule. The advert and the programme come first; Europe is the default for Europass-style. */
+export function quizResult(a: QuizAnswers): QuizResult | null {
+  if (!a.where || !a.own || !a.asked) return null;
+  if (a.own === 'yes') return QUIZ_RESULTS.theirs;
+  if (a.asked === 'yes') return QUIZ_RESULTS.europass;
+  if (a.where === 'bd') return QUIZ_RESULTS.local;
+  if (a.where === 'europe') return QUIZ_RESULTS.europass;
+  return QUIZ_RESULTS.local;
+}
+
+/** Long reference parts shown as accordions (content stays in the HTML). */
+export const PILLAR_FOLDED: readonly string[] = ['sections', 'cefr', 'vs-bd', 'bangladesh'];
+export const WORD_FOLDED: readonly string[] = ['fill', 'edit', 'compat', 'print', 'check'];
+
+export const HOW_HEADING = { en: 'How it works', bn: 'কীভাবে কাজ করে' };
+export const HOW_LABELS = ['Fill the form', 'Check the preview', 'Download'] as const;
+
 // ---------- JSON-LD / HTML helpers shared by scripts/seo.ts ----------
 export const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
 
@@ -400,6 +500,8 @@ export function allEuropassText(): string {
   return [
     ...Object.values(EUROPASS_SEO).flatMap((s) => [s.title, s.description, s.h1]),
     PILLAR_ANSWER, ...PILLAR_INTRO, ...PILLAR_BLOCKS.map(blockText), ...PILLAR_FAQ.map((f) => `${f.q} ${f.a}`),
+    QUIZ_INTRO, ...QUIZ.flatMap((q) => [q.q, ...q.options.map((o) => o.label)]), ...Object.values(QUIZ_RESULTS).map((r) => `${r.title} ${r.body}`),
+    ...europassChoices('#').map((c) => `${c.title} ${c.micro}`),
     HUB_INTRO, ...HUB_CHOOSE, ...HUB_FAQ.map((f) => `${f.q} ${f.a}`),
     WORD_ANSWER, ...WORD_BLOCKS.map(blockText), ...WORD_FAQ.map((f) => `${f.q} ${f.a}`),
   ].join('\n');

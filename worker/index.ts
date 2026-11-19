@@ -20,6 +20,7 @@ import { sendReminders } from '../server/entitlements';
 import { rollupOld } from '../server/retention';
 import { weeklyBackup } from '../server/backup';
 import { withSecurityHeaders } from '../server/securityHeaders';
+import { withBuilderRobots } from '../server/builderRobots';
 import { bulkSmsBd } from '../server/sms';
 import { json, type Env } from '../server/paymently';
 import { handleTemplateOverrides } from '../server/templatePublic';
@@ -78,7 +79,7 @@ async function handle(request: Request, env: WorkerEnv): Promise<Response> {
 
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
-    return withSecurityHeaders(await handle(request, env));
+    return withSecurityHeaders(withBuilderRobots(request, await handle(request, env)));
   },
 
   /** Daily Cron Trigger (wrangler.toml): Pro renewal reminders by SMS, and the 90-day analytics rollup. Independent: one failing does not stop the other. */

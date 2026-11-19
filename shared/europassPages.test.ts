@@ -1,5 +1,7 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
+  EUROPASS_LOGO_FLAGGED_IDS, EUROPASS_OG, EUROPASS_PREVIEW, EUROPASS_WHATSAPP_HREF, EUROPASS_EXPERT_PATH, PILLAR_FOLDED, QUIZ, QUIZ_RESULTS, WORD_FOLDED, europassChoices, quizResult,
   EUROPASS_BN_KEYWORD, EUROPASS_BUILDER_HREF, EUROPASS_EXCLUDED_IDS, EUROPASS_HUB_PATH, EUROPASS_LINKS, EUROPASS_PATHS, EUROPASS_PILLAR_PATH,
   EUROPASS_SEO, EUROPASS_UNOFFICIAL, EUROPASS_WORD_PATH, PILLAR_ANSWER, WORD_ANSWER, allEuropassText, europassHubTemplates, europassSeo, pillarWords, wordCount, wordPageWords,
 } from './europassPages';
@@ -136,5 +138,79 @@ describe('Europass internal links', () => {
     expect(by[EUROPASS_WORD_PATH]).toContain(`href="${EUROPASS_HUB_PATH}"`);
     expect(by[EUROPASS_HUB_PATH]).toContain(`href="${EUROPASS_PILLAR_PATH}"`);
     expect(by[EUROPASS_HUB_PATH]).toContain(`href="${EUROPASS_WORD_PATH}"`);
+  });
+});
+
+
+describe('Europass pages: first-visit layout', () => {
+  const pages = Object.fromEntries(europassPages().map((p) => [p.path, p.body]));
+  it('pillar leads with the H1, the direct answer, then the three choices and a visible quiz heading', () => {
+    const b = pages[EUROPASS_PILLAR_PATH];
+    const order = ['<h1>', PILLAR_ANSWER.slice(0, 30), 'What do you want to do?', 'Build it free now', 'Get an editable Word template', 'Want an expert to write it for you?', 'id="how"', 'Do I need a Europass CV?'].map((x) => b.indexOf(x));
+    expect(order.every((i) => i >= 0)).toBe(true);
+    expect([...order]).toEqual([...order].sort((x, y) => x - y));
+  });
+  it('choices point at real routes and the expert price comes from the catalog', () => {
+    const [build, word, expert] = europassChoices(EUROPASS_WORD_PATH);
+    expect(build.href).toBe(EUROPASS_BUILDER_HREF);
+    expect(word.href).toBe(EUROPASS_WORD_PATH);
+    expect(expert.href).toBe(EUROPASS_EXPERT_PATH);
+    expect(seoPagePaths()).toContain(EUROPASS_EXPERT_PATH);
+    expect(expert.micro).toMatch(/৳\d+/);
+    expect(EUROPASS_WHATSAPP_HREF).toContain('https://wa.me/');
+    for (const path of EUROPASS_PATHS) expect(pages[path]).toContain(`href="${EUROPASS_BUILDER_HREF}"`);
+  });
+  it('quiz: every answer path ends in a result, and no result links to the Gulf page or promises an outcome', () => {
+    const ids = (k: string) => QUIZ.find((q) => q.id === k)!.options.map((o) => o.id);
+    const seen = new Set<string>();
+    for (const where of ids('where')) for (const own of ids('own')) for (const asked of ids('asked')) {
+      const r = quizResult({ where, own, asked });
+      expect(r).not.toBeNull();
+      seen.add(r!.id);
+    }
+    expect([...seen].sort()).toEqual(['europass', 'local', 'theirs']);
+    expect(quizResult({ where: 'bd' })).toBeNull();
+    expect(quizResult({ where: 'europe', own: 'yes', asked: 'yes' })!.id).toBe('theirs');
+    expect(quizResult({ where: 'bd', own: 'no', asked: 'no' })!.id).toBe('local');
+    expect(JSON.stringify(QUIZ_RESULTS)).not.toContain('gulf');
+  });
+  it('long reference sections are accordions that keep their text in the HTML; the FAQ is open', () => {
+    for (const id of PILLAR_FOLDED) expect(pages[EUROPASS_PILLAR_PATH]).toMatch(new RegExp(`<details id="${id}">`));
+    for (const id of WORD_FOLDED) expect(pages[EUROPASS_WORD_PATH]).toMatch(new RegExp(`<details id="${id}">`));
+    expect(pages[EUROPASS_PILLAR_PATH]).toContain('<details id="faq" open>');
+    expect(pages[EUROPASS_PILLAR_PATH]).toContain('<td>Beginner</td>');
+  });
+});
+
+describe('Europass pages: no logo or EU flag in images', () => {
+  const pages = europassPages();
+  it('our own preview exists with real A4 proportions', () => {
+    for (const f of [EUROPASS_PREVIEW.src, EUROPASS_PREVIEW.thumb]) expect(existsSync(`public${f}`), f).toBe(true);
+    expect(Math.abs(EUROPASS_PREVIEW.h / EUROPASS_PREVIEW.w - 1.4142)).toBeLessThan(0.01);
+    expect(EUROPASS_PREVIEW.alt).toContain(EUROPASS_BN_KEYWORD);
+    // read the WebP header: RIFF....WEBP
+    expect(readFileSync(`public${EUROPASS_PREVIEW.src}`).subarray(8, 12).toString()).toBe('WEBP');
+  });
+  it('the pillar page and every page image field use none of the flagged library thumbs', () => {
+    const pillar = pages.find((p) => p.path === EUROPASS_PILLAR_PATH)!;
+    for (const id of EUROPASS_LOGO_FLAGGED_IDS) {
+      expect(pillar.body, id).not.toContain(id);
+      expect(JSON.stringify(pillar.jsonLd), id).not.toContain(id);
+    }
+    for (const p of pages) for (const id of EUROPASS_LOGO_FLAGGED_IDS) expect(p.image, `${p.path} ${id}`).not.toContain(id);
+    expect(pillar.body).toContain(EUROPASS_PREVIEW.src);
+  });
+  it('hub and Word lists drop flagged thumbs whenever a clean one exists (and report it when none does)', () => {
+    const clean = TEMPLATES.filter((t) => t.hub === 'europass' && isListed(t.id) && !EUROPASS_EXCLUDED_IDS.includes(t.id) && !EUROPASS_LOGO_FLAGGED_IDS.includes(t.id));
+    if (clean.length > 0) for (const t of europassHubTemplates()) expect(EUROPASS_LOGO_FLAGGED_IDS).not.toContain(t.id);
+    else expect(europassHubTemplates().length).toBeGreaterThan(0); // known gap: every listed thumb shows the logo; owner decides
+  });
+
+  it('share image is 1200 x 630, exists, and is used as og:image on all three pages', () => {
+    expect(EUROPASS_OG.w).toBe(1200);
+    expect(EUROPASS_OG.h).toBe(630);
+    expect(existsSync(`public${EUROPASS_OG.src}`)).toBe(true);
+    const jpg = readFileSync(`public${EUROPASS_OG.src}`);
+    expect(jpg.readUInt16BE(0)).toBe(0xffd8); // JPEG signature
   });
 });

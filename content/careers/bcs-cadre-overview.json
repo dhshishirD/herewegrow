@@ -1,0 +1,355 @@
+{
+  "slug": "bcs-cadre-overview",
+  "title_en": "BCS Cadre Service (Overview)",
+  "title_bn": "বিসিএস ক্যাডার সার্ভিস (পরিচিতি)",
+  "field": "Government & Civil Service",
+  "seo_title": "BCS Cadre Guide Bangladesh: Exam, Age, Salary, Cadres (2026)",
+  "seo_desc": "BCS in Bangladesh: 26 cadres, exam steps, age limit 32, new 9th pay scale, 50th BCS numbers, roadmap and a free skill test. Checked Nov 2026.",
+  "summary": "BCS (Bangladesh Civil Service) is the government's cadre service, with 26 cadres recruited by the Bangladesh Public Service Commission. You apply online, then pass a 200-mark preliminary, a 900-mark written exam and a 100-mark viva. Cadre officers join at Grade 9 and rise through fixed service rules. This page shows the exam steps, real numbers from the 50th BCS, the new pay scale, a preparation roadmap and a free skill test.",
+  "salary": {
+    "entry": "BDT 44,000 basic per month at Grade 9 (new 9th pay scale, phased in; old scale BDT 22,000), plus allowances",
+    "mid": "BDT 71,000 - 86,000 basic per month (Grade 6 to 5: Senior Assistant Secretary and Deputy Secretary level)",
+    "senior": "BDT 1,13,000 - 1,56,000 basic per month (Grade 3 to 1: Joint Secretary up to Secretary level)",
+    "note": "Checked 19 Nov 2026. 9th pay scale approved 31 Aug 2026, phased in to Jul 2027. Figures are from a teacher-portal summary, not the gazette; check the gazette.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Stable government job with a fixed pay scale and clear grades",
+    "House rent and medical allowance, with house rent depending on posting location",
+    "Festival bonuses at both Eids and a Bengali New Year allowance",
+    "Provident fund, pension and leave under government service rules",
+    "Training in Bangladesh (BPATC and cadre academies) and chances to study abroad",
+    "A public role with real authority and a clear promotion ladder"
+  ],
+  "companies": [
+    "Administration cadre: field posts (upazila, district, division) and ministries",
+    "Police cadre: Bangladesh Police units and districts",
+    "Foreign Affairs cadre: the Ministry of Foreign Affairs and missions abroad",
+    "Taxation and Customs & Excise cadres: National Board of Revenue offices",
+    "Audit & Accounts cadre: audit and accounts offices of the republic",
+    "Health cadre: government hospitals, upazila health complexes and medical colleges",
+    "General Education cadre: government colleges and teacher-training colleges",
+    "Agriculture, Engineering and other technical cadres: relevant departments and agencies"
+  ],
+  "season": [
+    "BPSC aims to publish the general BCS circular each November and finish within one year",
+    "The 52nd (general) BCS circular was planned for November 2026; watch bpsc.gov.bd",
+    "Special BCS (single-cadre) can appear at any time, such as health or education special BCS",
+    "Applications usually stay open for about four weeks; fee payment follows within 72 hours",
+    "Prepare for 6 to 12 months before the circular, not after it"
+  ],
+  "skills": [
+    {
+      "name": "Bangla writing, grammar and comprehension",
+      "level": "Core",
+      "tag": "language"
+    },
+    {
+      "name": "English writing, grammar and comprehension",
+      "level": "Core",
+      "tag": "english"
+    },
+    {
+      "name": "Bangladesh Affairs (history, constitution, economy, geography)",
+      "level": "Core",
+      "tag": "bangladesh"
+    },
+    {
+      "name": "Answer-writing speed and structure for nine papers",
+      "level": "Core",
+      "tag": "writing"
+    },
+    {
+      "name": "International Affairs (organisations, treaties, current events)",
+      "level": "Important",
+      "tag": "international"
+    },
+    {
+      "name": "Mathematical reasoning and mental ability",
+      "level": "Important",
+      "tag": "math"
+    },
+    {
+      "name": "General science and technology (including ICT)",
+      "level": "Important",
+      "tag": "science"
+    },
+    {
+      "name": "Ethics, values and good governance",
+      "level": "Important",
+      "tag": "governance"
+    },
+    {
+      "name": "Viva communication and confident, honest answers",
+      "level": "Important",
+      "tag": "viva"
+    },
+    {
+      "name": "Daily current-affairs reading",
+      "level": "Growing",
+      "tag": "international"
+    }
+  ],
+  "gaps_checklist": [
+    "I know my exact age limit and cut-off date from the latest circular",
+    "I have downloaded the latest BPSC syllabus and read it fully",
+    "I can write a 300-word Bangla essay in 30 minutes",
+    "I can write a clear English paragraph without grammar mistakes",
+    "I have solved at least 3 years of preliminary questions in timed mode",
+    "I can explain the main articles and structure of the Constitution",
+    "I read one national daily and keep a current-affairs notebook",
+    "I have a first, second and third cadre choice I can explain",
+    "I have a written plan B if this round does not work out"
+  ],
+  "courses": [
+    {
+      "title": "BPSC circulars, syllabus and exam notices",
+      "provider": "Bangladesh Public Service Commission (BPSC)",
+      "url": "https://www.bpsc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "bangladesh"
+    },
+    {
+      "title": "Service rules, notices and promotion policy",
+      "provider": "Ministry of Public Administration",
+      "url": "https://mopa.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "governance"
+    },
+    {
+      "title": "Civil servant training programmes and calendars",
+      "provider": "BPATC",
+      "url": "https://bpatc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "governance"
+    },
+    {
+      "title": "Free Bangla e-learning courses",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "language"
+    },
+    {
+      "title": "BCS preparation and English, maths courses",
+      "provider": "10 Minute School",
+      "url": "https://10minuteschool.com",
+      "is_affiliate": false,
+      "skill_tag": "english"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a BCS cadre officer?",
+      "a": "Cadre officers join at Grade 9. Under the new 9th pay scale the starting basic pay is listed at BDT 44,000 (old scale BDT 22,000), paid in stages up to July 2027, plus allowances. Senior grades rise to BDT 1,56,000 basic at Grade 1. Check the gazette, as the figures here come from a summary and checked on 18 Nov 2026."
+    },
+    {
+      "q": "How many BCS cadres are there?",
+      "a": "26 cadres, in two families: general (such as Administration, Police, Foreign Affairs, Taxation, Customs & Excise, Audit & Accounts) and technical/professional (such as Health, Engineering, Agriculture, Education). Sources count the split slightly differently, so use BPSC's circular for your exam."
+    },
+    {
+      "q": "What is the age limit for BCS?",
+      "a": "21 to 32 years on the cut-off date in the circular (1 November 2025 for the 50th BCS). A law passed on 5 April 2026 fixed 32 as the maximum age for all BCS cadres and non-cadre government jobs."
+    },
+    {
+      "q": "What are the BCS exam steps and marks?",
+      "a": "A preliminary MCQ of 200 marks, a written exam of 900 marks (nine papers for general cadres), then a viva of 100 marks. Merit is decided on written plus viva, 1,000 marks in total. Medical and police verification follow."
+    },
+    {
+      "q": "How long does one BCS take?",
+      "a": "The 47th BCS took about 18 months from circular to final result. BPSC now aims to finish one BCS within one year, starting with the 50th."
+    },
+    {
+      "q": "How many cadre posts were in the 50th BCS?",
+      "a": "1,755 cadre posts and 395 non-cadre posts, 2,150 in all. Health had 650, Administration 200, Education 185, Police 117 and Agriculture 120. 290,951 people applied for the preliminary."
+    },
+    {
+      "q": "Which BCS cadre is best?",
+      "a": "There is no official ranking, and the best cadre depends on the work you want to do and your degree. Administration, Police, Foreign Affairs, Taxation, Customs and Audit are general cadres open to any graduate; Health, Education and Engineering need specific degrees. Read each guide in this series before choosing."
+    },
+    {
+      "q": "Does BCS need a CV or career objective?",
+      "a": "BCS does not choose by CV. You fill an online form and marks decide. A short honest profile still helps in the viva and in backup job and scholarship applications. For example: 'Graduate in Political Science preparing for the BCS general cadre, with strong Bangla and English writing and experience in community volunteering.'"
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 18 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** BCS (Bangladesh Civil Service) is the government's cadre service. It has 26 cadres and is recruited by the Bangladesh Public Service Commission (BPSC). You apply online (age 21 to 32), then pass a 200-mark MCQ preliminary, a 900-mark written exam and a 100-mark viva. Cadre officers join at Grade 9. Under the new 9th pay scale the starting basic pay for Grade 9 is listed at BDT 44,000, paid in stages. Competition is very tough: the 50th BCS drew 290,951 applicants for 1,755 cadre posts.\n\n## Key facts: BCS (as of 18 November 2026)\n\n| Question | Short answer |\n|---|---|\n| Who recruits? | Bangladesh Public Service Commission (BPSC) |\n| How many cadres? | 26, split into general and technical/professional |\n| Age | 21 to 32 years on the cut-off date in the circular |\n| Exam steps | Preliminary (MCQ, 200) → Written (900) → Viva (100) |\n| Merit marks | Written 900 + viva 100 = 1,000 |\n| Entry grade | Grade 9 for most cadre entry posts |\n| Application fee | About BDT 200 plus a small verification fee (51st special BCS: BDT 200 + 5) |\n| Target time | BPSC now aims to finish one BCS within one year |\n\n## What is BCS, and what is a cadre?\n\nA cadre is a group of civil servants organised by the kind of work they do: administration, police, tax, health, education and so on. The idea goes back to the colonial period, and after several mergers and reorganisations the number of cadres is now 26. BCS (Administration) is described as the successor of the generalist cadre that was once called the steel frame of the British civil service.\n\nCadres fall in two families:\n\n- **General cadres** (for example Administration, Police, Foreign Affairs, Taxation, Customs & Excise, Audit & Accounts). Any graduate can apply.\n- **Technical / professional cadres** (for example Health, Engineering, Agriculture, Education). These ask for a specific professional degree, and the written exam includes post-related subjects.\n\n*Note:* sources count the split differently. One report says 14 general and 12 technical cadres; another says 10 general, 12 professional and 4 cadres with both kinds of posts. BPSC's own circular lists every cadre and post, so always use the circular for your exam.\n\n## The HereWeGrow BCS series\n\nWe are writing one guide per major cadre. These were picked because candidates ask about them most and their careers look very different. It is not an official ranking.\n\n| # | Guide | Entry post |\n|---|---|---|\n| 0 | **BCS overview (this page)** | – |\n| 1 | [BCS Administration](https://herewegrow.pro/careers/bcs-administration-cadre) | Assistant Commissioner / Assistant Secretary |\n| 2 | [BCS Police](https://herewegrow.pro/careers/bcs-police-cadre) | Assistant Superintendent of Police (ASP) |\n| 3 | [BCS Foreign Affairs](https://herewegrow.pro/careers/bcs-foreign-affairs-cadre) | Assistant Secretary |\n| 4 | [BCS Taxation](https://herewegrow.pro/careers/bcs-taxation-cadre) | Assistant Commissioner of Taxes |\n| 5 | [BCS Customs & Excise](https://herewegrow.pro/careers/bcs-customs-excise-cadre) | Assistant Commissioner (Customs / Excise) |\n| 6 | [BCS Audit & Accounts](https://herewegrow.pro/careers/bcs-audit-accounts-cadre) | Assistant Accountant General |\n| 7 | [BCS Health](https://herewegrow.pro/careers/bcs-health-cadre) | Assistant Surgeon / Assistant Dental Surgeon |\n| 8 | [BCS General Education](https://herewegrow.pro/careers/bcs-general-education-cadre) | Lecturer |\n\nGuides for all eight cadres are written (links work once each page is live). Start with the one that interests you, and read the others to compare.\n\n## Who can apply for BCS?\n\n- **Age:** 21 to 32 on the cut-off date in the circular. In the 50th BCS the cut-off was 1 November 2025. A law passed by parliament on 5 April 2026 fixed 32 as the maximum age for all BCS cadres and for non-cadre government jobs.\n- **Education:** a bachelor's degree or equivalent from a recognised university for general cadres. Technical cadres need the specific professional degree. Always check the exact degree and result rules in the circular.\n- **Attempts:** the rule about how many times you may sit changed several times in 2024 (three, then four, then talk of no limit inside the age bar). Read the current circular before you plan.\n- **Quota:** a notification on quota reform kept a small reserved share (reported as 7 per cent: 5 per cent for children of freedom fighters and martyrs, 1 per cent for ethnic minorities, 1 per cent for people with disabilities and the third gender), with the rest on merit. Confirm in the circular.\n\n## How does the BCS exam work?\n\n| Step | Marks | What it tests |\n|---|---|---|\n| Preliminary (MCQ) | 200, two hours | A filter: do you know the basics? |\n| Written | 900, nine papers (general cadre) | Can you understand and explain? |\n| Viva | 100 | Can you think, speak and act like an officer? |\n\nWritten papers for **general cadres:** Bangla 200, English 200, Bangladesh Affairs 200, International Affairs 100, Mathematical Reasoning and Mental Ability 100, General Science and Technology 100. **Technical cadres** write the common papers plus two post-related papers.\n\n**Viva marks fell from 200 to 100** (from the 47th BCS), so total marks for merit went from 1,100 to 1,000. The government has said the 100-mark viva will stay.\n\n**New in the 50th BCS:** the preliminary stays at 200 marks, but the weight of some subjects changed. Bangla, English and Bangladesh Affairs each lost 5 marks, while International Affairs, Mathematical Reasoning and Ethics, Values and Good Governance each gained 5. Read the latest syllabus on BPSC's site before you plan.\n\nAfter the viva come medical examination and police verification, then the recommendation, gazette and training.\n\n## How many people pass each stage? The 50th BCS funnel\n\n| Stage | Number or date |\n|---|---|\n| Circular | 26 November 2025 |\n| Application window | 4 to 31 December 2025 |\n| Applicants (preliminary) | 290,951 |\n| Posts | 1,755 cadre + 395 non-cadre = 2,150 |\n| Preliminary exam | 30 January 2026; 12,385 passed |\n| Written exam | 9 April to 7 May 2026; 6,165 passed (result 23 July 2026) |\n| Viva | Started 11 August 2026 |\n| Planned final result | 25 November 2026 |\n\nCadre posts: Health 650, Administration 200, Education 185, Police 117, Agriculture 120, plus others.\n\nOur arithmetic from those numbers: about 4.3 per cent of applicants passed the preliminary, about half of those passed the written, and the 1,755 cadre posts equal about 0.6 per cent of all applicants. For Administration alone, 200 posts for 290,951 applicants is roughly 1 post for every 1,450 applicants, although candidates compete across many cadres.\n\n**Visual: where applicants stay in the race (50th BCS)**\n\n| Stage | Share of applicants | Visual |\n|---|---|---|\n| Applied | 100% | ████████████████████ |\n| Passed preliminary | 4.3% | █ |\n| Passed written | 2.1% | ▌ |\n| Cadre posts available | 0.6% | ▏ |\n\n## The previous round, the 47th BCS\n\nThe circular came in December 2024 with 3,487 cadre and 201 non-cadre posts. 10,644 passed the preliminary and 3,631 passed the written. The final result in June 2026 nominated 1,320 candidates to cadres and 201 to non-cadre posts. The 47th took about 18 months from circular to result, which is why BPSC set a \"one BCS, one year\" target from the 50th.\n\n## What is coming next\n\n- **50th BCS:** viva done or ongoing; final result planned for 25 November 2026.\n- **51st (special) BCS:** health cadre only. 5,000 posts (4,700 Assistant Surgeon, 300 Assistant Dental Surgeon). Applications ran 1 to 25 October 2026. The preliminary is on 11 December 2026.\n- **52nd (general) BCS:** BPSC's calendar planned the circular for November 2026. We did not find a published circular on 18 November, so watch bpsc.gov.bd.\n- **Special BCS in the past:** the 48th (3,000 doctors) and 49th (683 college lecturers) were one-cadre special BCS. Each of these special BCS recruited for one cadre only.\n\nBPSC's plan is to publish the circular each November and finish by the following October.\n\n## What is the BCS salary under the new 9th pay scale?\n\nThe 9th National Pay Scale was approved by cabinet on 31 August 2026 and takes effect on 1 July 2026. The 20 grades stay. Basic pay is paid in stages up to July 2027 (reports describe three or four steps), and allowances are reset from January 2028. So take-home pay in the first months is lower than the final figure.\n\n| Grade | Typical BCS posts | Old basic (BDT) | New basic (BDT) |\n|---|---|---|---|\n| 9 | Entry post of most cadres | 22,000 | 44,000 |\n| 6 | Senior Assistant Secretary and equivalent | 35,500 | 71,000 |\n| 5 | Deputy Secretary and equivalent | 43,000 | 86,000 |\n| 3 | Joint Secretary and equivalent | 56,500 | 1,13,000 |\n| 2 | Additional Secretary and equivalent | 66,000 | 1,32,000 |\n| 1 | Secretary | 78,000 | 1,56,000 |\n\n*These figures come from a teacher-portal summary of the new scale, not the gazette. The Daily Star separately confirms Grade 1 at BDT 1,56,000. Verify with the Finance Division gazette before you quote a number.*\n\n**Benefits** on top of basic pay include house rent, medical allowance and two festival bonuses, with pay rising with grade.\n\n## The first two years\n\nNew cadre officers serve a probation period before they are confirmed. Foundation training for new entrants is run by the Bangladesh Public Administration Training Centre (BPATC), and some cadres have their own academy. Probation is real: in November 2025 the government removed three probationary assistant commissioners of one batch during basic training.\n\n## Skills the BCS exam rewards\n\n| Skill | Why it matters | Weight |\n|---|---|---|\n| Bangla writing and grammar | 200 marks written | █████ |\n| English writing and grammar | 200 marks written | █████ |\n| Bangladesh Affairs | 200 marks written, strong in viva | █████ |\n| Answer-writing speed | Nine papers in a short window | ████ |\n| International Affairs | 100 marks | ███ |\n| Mathematical reasoning | 100 marks, preliminary too | ███ |\n| General science and ICT | 100 marks | ███ |\n| Ethics and good governance | Weight rose in the 50th preliminary | ███ |\n| Viva communication | 100 marks, decides ranks | ████ |\n\n*Bars show relative marks and our reading of the syllabus, not a survey.*\n\n## Free ways to prepare\n\n- **Syllabus and circular:** [bpsc.gov.bd](https://www.bpsc.gov.bd). Download the latest syllabus and the past circulars first.\n- **Rules and policy:** [mopa.gov.bd](https://mopa.gov.bd), the Ministry of Public Administration, for service rules and notices.\n- **Training knowledge:** [bpatc.gov.bd](https://bpatc.gov.bd) for what officers learn after joining.\n- **Bangla e-learning:** [muktopaath.gov.bd](https://muktopaath.gov.bd).\n- **Daily reading:** one national Bangla and one English daily, with a notebook for current affairs.\n- **Mock tests:** take the free skill test on this page, then weekly timed papers.\n\n## Long-term path (a typical one)\n\n| Phase | What happens |\n|---|---|\n| Year 0 to 1 | Prepare, apply, pass preliminary, written and viva |\n| Year 1 to 2 | Medical, verification, gazette, foundation training, probation |\n| Years 3 to 10 | Field posting and early promotions |\n| Years 10 and above | Senior scale and higher posts through service rules |\n\n*A typical path, not a guarantee. Rules, quotas and vacancies change with each circular.*\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My age on the next cut-off date:** ___ (must be 32 or under)\n2. **My first-choice cadre and a second choice:** ___, ___\n3. **Three weakest subjects** (use the checklist on this page): ___, ___, ___\n4. **Hours I can study each day for the next 6 months:** ___\n5. **My backup plan if I miss this round:** ___\n\nThen take the free skill test and compare the result with line 3.\n\n## If BCS does not work out this time\n\nMost candidates do not get in on the first attempt, so plan for that early. The same preparation helps in other exams:\n\n- **Non-cadre posts through BPSC.** The 50th BCS also had 395 non-cadre posts: 71 in Grade 9, 42 in Grade 10, 278 in Grade 11 and 4 in Grade 12.\n- **Bank and other government recruitment exams.** The English, Bangla, maths and general knowledge you built are the same skills.\n- **Private-sector jobs.** Keep your degree-level CV current and apply while you prepare. HereWeGrow's CV Builder is made for this.\n- **Further study.** A master's or a professional certificate keeps your options open.\n\n## Where will you find more peace of mind?\n\nBCS preparation is a long, uncertain race, and most people who try will not be selected in a given round. That is not a verdict on your worth. Three habits help: a fixed study timetable with a rest day, a plan B you update every few months, and one honest friend or mentor you talk to. If the pressure becomes heavy, talk to someone you trust.\n\n## Faith and history: public service as trust\n\n**The Quran.** Surah An-Nisa 4:58 tells believers to deliver trusts to those they are due and, when judging between people, to judge with justice ([read it on quran.com](https://quran.com/4/58)). A public post is an amanah, a trust.\n\n**Hadith.** The Prophet (peace be upon him) said that each of you is a shepherd and each is responsible for his flock, and a ruler is responsible for those under him (Sahih al-Bukhari 893; Sahih Muslim 1829).\n\n**History.** Modern cadre services grew out of the colonial civil services. In the Indian subcontinent the Aitchison Commission shaped the provincial services, and Bangladesh's cadres today are a product of repeated mergers since independence.\n\n## Your contribution to the nation\n\nOfficers run the work that citizens meet every day: land records, magistracy, tax and customs offices, health services, schools and police stations. Each cadre has a different job, but the common test is whether a farmer, a student or a small trader gets fair service without paying a bribe. Honest officers at every level are one of the strongest tools for good governance.\n\n## Your contribution to the world\n\nBangladeshi civil servants study abroad and work with development partners. Foreign Affairs officers represent the country in embassies and at the UN, and police officers can serve in peacekeeping missions. Skills like policy writing, negotiation and public-service ethics travel well.\n\n## Research opportunities\n\n- Topics with real need: local government, land administration, public service delivery, civil service recruitment, digital governance and the effects of pay reform.\n- Where to learn and publish: BPATC research programmes, public administration and political science departments, and policy think tanks.\n- Path: a strong master's thesis, a research assistant job, then MPhil or PhD (the scholarships below fund many of these).\n\n## Study support and scholarships (check each official site)\n\n- **Chevening (UK):** [chevening.org](https://www.chevening.org).\n- **Commonwealth Scholarships:** [cscuk.fcdo.gov.uk](https://cscuk.fcdo.gov.uk).\n- **DAAD (Germany):** [daad.de](https://www.daad.de/en/).\n- **Fulbright (USA):** through the US Embassy in Dhaka.\n\n## Whom to follow and learn from\n\nFollow institutions, not personalities: [BPSC](https://www.bpsc.gov.bd), the [Ministry of Public Administration](https://mopa.gov.bd), [BPATC](https://bpatc.gov.bd) and the education pages of national dailies. Be careful with coaching centre claims: nobody can promise you a cadre.\n\n## Where do I find BCS circulars?\n\n- BPSC's official site: [bpsc.gov.bd](https://www.bpsc.gov.bd).\n- Teletalk's BPSC application portal: bpsc.teletalk.com.bd.\n- Daily newspapers' job pages (cross-check any date or number with the circular).\n\n**Do not use \"tadbir\" (lobbying).** Any lobbying during the application process is treated as grounds for disqualification.\n\n## Your BCS-stage documents and CV\n\nBCS does not select by CV. You fill an online form (personal information, education, cadre choice), and your marks decide the rest. A short, honest one-page profile still helps in three places: the viva (the board reads your application), backup job applications, and scholarship forms.\n\n| Weak line | Better line |\n|---|---|\n| Interested in public service. | Volunteered 120 hours with a union parishad digital help desk and wrote a 10-page report on service delays. |\n| Good communication. | Presented at three university debates; reached the divisional round. |\n| Hard-working. | Studied 6 hours daily for 8 months, with a weekly log of mock-test scores. |\n\n*Use only real, provable figures.*\n\nBuild yours free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- Not reading the latest circular and syllabus.\n- Studying everything and revising nothing.\n- Skipping written practice until the preliminary result comes.\n- Ignoring English and maths.\n- Believing coaching or social media rumours about \"guaranteed\" rank.\n- Having no plan B.\n\n## Changelog\n\n- **19 Nov 2026 (update):** Linked all eight cadre guides. No figures changed.\n- **19 Nov 2026:** Added dated key facts, question-style headings and this changelog. No figures changed.\n- **18 Nov 2026:** First version.\n- Next planned review: when the 52nd BCS circular is published.\n\n## Sources and method\n\nFacts were checked on 18 November 2026. Numbers can change with each circular; BPSC's notice is the final authority.\n\n- Banglapedia: [Cadre Service](https://en.banglapedia.org/index.php/Cadre_Service)\n- The Daily Star: [Entry into public jobs: Govt raises age bar to 32](https://www.thedailystar.net/news/bangladesh/news/entry-public-jobs-govt-raises-age-bar-32-3735386)\n- Prothom Alo: [Parliament passes age-32 bill](https://www.prothomalo.com/bangladesh/zbk2rcge4h); [BCS viva 100 marks](https://www.prothomalo.com/chakri/chakri-news/xay85bdigq); [50th BCS: one-year roadmap and changes](https://www.prothomalo.com/chakri/chakri-news/p3q07b6zdt)\n- The Daily Star Bangla: [Viva cut to 100](https://bangla.thedailystar.net/youth/career/govt-job/news-634111); [50th BCS circular](https://bangla.thedailystar.net/youth/career/govt-job/news-717736); [51st special BCS](https://bangla.thedailystar.net/youth/career/govt-job/news-3964471); [47th BCS circular](https://bangla.thedailystar.net/youth/career/govt-job/news-632691)\n- bdnews24: [50th preliminary result](https://bangla.bdnews24.com/bangladesh/54329e13fe8c); [50th written result](https://bangla.bdnews24.com/bangladesh/e72f95b8172c)\n- Bangla Tribune: [50th BCS circular](https://www.banglatribune.com/jobs/924355/%E0%A7%AB%E0%A7%A6%E0%A6%A4%E0%A6%AE-%E0%A6%AC%E0%A6%BF%E0%A6%B8%E0%A6%BF%E0%A6%8F%E0%A6%B8%E0%A7%87%E0%A6%B0-%E0%A6%AC%E0%A6%BF%E0%A6%9C%E0%A7%8D%E0%A6%9E%E0%A6%AA%E0%A7%8D%E0%A6%A4%E0%A6%BF-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%95%E0%A6%BE%E0%A6%B6-%E0%A7%A7%E0%A7%AD%E0%A7%AB%E0%A7%AB-%E0%A6%AA%E0%A6%A6%E0%A7%87-%E0%A6%86%E0%A6%AC%E0%A7%87%E0%A6%A6%E0%A6%A8)\n- Jugantor: [viva stays at 100](https://www.jugantor.com/national/1116830); [52nd BCS timing](https://www.jugantor.com/national/1160304)\n- The Daily Star Bangla: [9th pay scale cost and Grade 1 pay](https://bangla.thedailystar.net/news/bangladesh/news-3963276); teacher portal summary of the [9th pay scale](https://www.teachers.gov.bd/index.php/blog/details/849702)\n- bdnews24: [probationary assistant commissioners removed](https://bangla.bdnews24.com/bangladesh/c87c9202d3d4)\n- The Observer: [BCS (Administration) cadre](https://observerbd.com/news/497750)\n- BPATC: [training calendar](https://bpatc.portal.gov.bd/sites/default/files/files/bpatc.portal.gov.bd/page/eb309f4c_b2e7_4cad_b649_c13b7a55cbab/2024-04-23-10-06-6c346a3e491b7d805b5f31fe3ae5d48d.pdf)\n\n**How to cite this page:** Shishir, D. H. (2026). *BCS cadre service in Bangladesh: exam, salary, cadres and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/bcs-cadre-overview\n\n*This guide gives general career information. It does not promise a job, rank or cadre, and it is not legal or religious advice. The BPSC circular is the final authority.*\n",
+  "growth_plan": {
+    "y1": "Read the latest circular and syllabus, fix your weakest two subjects, practise timed writing every day, finish three years of preliminary papers and apply to every circular you are eligible for.",
+    "y2": "Clear the preliminary comfortably, build written-exam speed with weekly mock papers, prepare a viva portfolio with your own district and public-service examples, and keep a plan B ready.",
+    "y3": "Sit the written and viva with a full revision cycle, refine your cadre choices, and in parallel keep a backup route (non-cadre, banks, private sector or further study) moving."
+  },
+  "goal_sheet": [
+    "Week 1-2: Download the BPSC syllabus and the latest circular; list your weakest subjects",
+    "Week 3-4: Build a daily routine: reading, writing practice, one timed paper per week",
+    "Month 2: Bangla and English grammar and essay practice; Bangladesh Affairs notes",
+    "Month 3: International Affairs, science and ICT revision; solve 3 years of preliminary papers",
+    "Month 4: Mathematical reasoning and mental ability; answer-writing drills for all nine papers",
+    "Month 5: Current affairs, ethics and good governance; start viva practice with a friend or mentor",
+    "Month 6: Full mock exam week; update your plan B; apply when the circular opens"
+  ],
+  "test": [
+    {
+      "q": "Which body conducts the BCS recruitment exam?",
+      "options": [
+        "National Board of Revenue",
+        "Bangladesh Public Service Commission",
+        "Ministry of Finance",
+        "BPATC"
+      ],
+      "answer_idx": 1,
+      "explain": "BPSC recruits officers for the cadre services.",
+      "skill_tag": "bangladesh"
+    },
+    {
+      "q": "How many marks does the BCS preliminary (MCQ) carry?",
+      "options": [
+        "100",
+        "150",
+        "200",
+        "300"
+      ],
+      "answer_idx": 2,
+      "explain": "The preliminary is a 200-mark MCQ test of two hours.",
+      "skill_tag": "bangladesh"
+    },
+    {
+      "q": "How many marks does the written exam carry for general cadres?",
+      "options": [
+        "600",
+        "800",
+        "900",
+        "1100"
+      ],
+      "answer_idx": 2,
+      "explain": "Nine papers make a total of 900 marks.",
+      "skill_tag": "writing"
+    },
+    {
+      "q": "From the 47th BCS, how many marks does the viva carry?",
+      "options": [
+        "100",
+        "200",
+        "300",
+        "50"
+      ],
+      "answer_idx": 0,
+      "explain": "The viva was cut from 200 to 100 marks; the government has said it will stay at 100.",
+      "skill_tag": "viva"
+    },
+    {
+      "q": "What is the maximum age for entering BCS cadres after the 2026 law?",
+      "options": [
+        "30",
+        "32",
+        "35",
+        "40"
+      ],
+      "answer_idx": 1,
+      "explain": "Parliament fixed 32 years for all BCS cadres on 5 April 2026.",
+      "skill_tag": "bangladesh"
+    },
+    {
+      "q": "How many BCS cadres exist at present?",
+      "options": [
+        "20",
+        "24",
+        "26",
+        "30"
+      ],
+      "answer_idx": 2,
+      "explain": "The number of cadres is now 26.",
+      "skill_tag": "bangladesh"
+    },
+    {
+      "q": "Most BCS cadre entry posts sit in which pay grade?",
+      "options": [
+        "Grade 5",
+        "Grade 7",
+        "Grade 9",
+        "Grade 12"
+      ],
+      "answer_idx": 2,
+      "explain": "Entry posts of the cadres, such as Assistant Commissioner, are in Grade 9.",
+      "skill_tag": "governance"
+    },
+    {
+      "q": "A trader buys goods for BDT 800 and sells them for BDT 920. What is the profit percentage?",
+      "options": [
+        "10%",
+        "12%",
+        "15%",
+        "20%"
+      ],
+      "answer_idx": 2,
+      "explain": "Profit is 120 on a cost of 800, so 120/800 = 15%.",
+      "skill_tag": "math"
+    },
+    {
+      "q": "Choose the correct sentence.",
+      "options": [
+        "Neither of the two answers are correct.",
+        "Neither of the two answers is correct.",
+        "Neither of the two answers were correct.",
+        "Neither of the two answers have been correct."
+      ],
+      "answer_idx": 1,
+      "explain": "'Neither' is singular and takes 'is'.",
+      "skill_tag": "english"
+    },
+    {
+      "q": "On what date did the Constitution of Bangladesh come into effect?",
+      "options": [
+        "26 March 1971",
+        "16 December 1971",
+        "16 December 1972",
+        "4 November 1972"
+      ],
+      "answer_idx": 2,
+      "explain": "It was adopted on 4 November 1972 and came into effect on 16 December 1972.",
+      "skill_tag": "bangladesh"
+    },
+    {
+      "q": "Where is the headquarters of the World Trade Organization?",
+      "options": [
+        "New York",
+        "Geneva",
+        "Paris",
+        "Vienna"
+      ],
+      "answer_idx": 1,
+      "explain": "The WTO is headquartered in Geneva.",
+      "skill_tag": "international"
+    },
+    {
+      "q": "Someone with influence offers you a gift to speed up a file. What is the best response?",
+      "options": [
+        "Accept quietly and finish the file",
+        "Decline politely, follow the rules and record the offer",
+        "Ignore it and delay the file",
+        "Ask for a larger gift"
+      ],
+      "answer_idx": 1,
+      "explain": "Public trust needs clean, documented decisions; decline and keep a record.",
+      "skill_tag": "governance"
+    }
+  ],
+  "cv_template_notes": "BCS does not select by CV, so use a clean one-page academic-style HWG layout (single column, no heavy graphics) for your viva profile, backup job applications and scholarships. Lead with education and results, then projects, volunteering, leadership and languages. Add real numbers (hours volunteered, events led, papers written). Keep it to one page. File name: YourName_BCS_Aspirant_CV.pdf. Use only facts you can prove in a viva.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the [position] advertised on [site/date]. I hold a [degree] from [university] and have strong Bangla and English writing and research skills built while preparing for the BCS. In [project/volunteering role] I [one provable result, e.g. led a 12-member team that completed a community survey].\n\nMy CV is attached as a PDF. I would be glad to attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email]\n\n(Note: BCS itself needs no cover letter. Use this for backup non-BCS applications.)",
+  "interview_qs": [
+    "Tell me about yourself. (Tip: 45 seconds: education, one real achievement, why public service. Do not recite your CV.)",
+    "Why do you want to join the civil service? (Tip: Give a specific reason from your own experience, not a slogan.)",
+    "Which cadre did you choose first, and why? (Tip: Explain the work, not the status. Show you read about the cadre.)",
+    "What does your subject teach you that helps in government work? (Tip: Link one concept to a real public-service problem.)",
+    "Tell us about your district and its main problems. (Tip: Give two facts, two problems and one realistic solution.)",
+    "What is the difference between policy and implementation? (Tip: Use a simple example, such as a food relief programme.)",
+    "What would you do if a powerful person pressured you to break a rule? (Tip: Follow the rule, document it, inform your supervisor, stay polite.)",
+    "Which current national issue worries you most? (Tip: Pick one issue you read about; give causes and one practical step.)",
+    "What is the Constitution's role in daily administration? (Tip: Mention fundamental rights and the rule of law, with a short example.)",
+    "How do you handle stress and failure? (Tip: Share a real setback and what you changed.)",
+    "Describe a time you led a team. (Tip: Situation, your action, result in numbers if possible.)",
+    "What is good governance? (Tip: Transparency, accountability, participation, rule of law; one example each is enough.)",
+    "Have you read about any recent reform in the civil service? (Tip: Name one real reform (for example the age limit or viva marks) and give your view.)",
+    "What will you do if you are not selected? (Tip: Show a calm plan B; do not sound defeated or desperate.)",
+    "Do you have any questions for us? (Tip: Ask about training, not about pay or posting.)"
+  ]
+}

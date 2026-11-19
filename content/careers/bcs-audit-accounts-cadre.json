@@ -1,0 +1,355 @@
+{
+  "slug": "bcs-audit-accounts-cadre",
+  "title_en": "BCS Audit and Accounts Cadre (Assistant Accountant General)",
+  "title_bn": "বিসিএস অডিট ও অ্যাকাউন্টস ক্যাডার (সহকারী হিসাব মহানিয়ন্ত্রক)",
+  "field": "Government & Civil Service",
+  "seo_title": "BCS Audit and Accounts Cadre: Career, Salary, Exam (2026)",
+  "seo_desc": "BCS Audit and Accounts cadre in Bangladesh: CAG office, FIMA training, new audit law, 9th pay scale, exam path and a free skill test.",
+  "summary": "The BCS (Audit and Accounts) cadre checks how Bangladesh spends public money and keeps the government's accounts under the Office of the Comptroller and Auditor General. New officers join at Grade 9, train at the Financial Management Academy in Dhaka, and work in audit directorates and accounting departments. This page covers the real job, the 2025-26 audit law, the new pay scale, the exam path and a free skill test.",
+  "salary": {
+    "entry": "BDT 44,000 basic per month at Grade 9 (new 9th pay scale, phased in; old scale BDT 22,000), plus allowances",
+    "mid": "BDT 71,000 - 86,000 basic per month at Grades 6 and 5 (which audit ranks sit at these grades is not verified here)",
+    "senior": "BDT 1,13,000 - 1,56,000 basic per month at Grades 3 to 1 (senior OCAG posts; check the gazette for the exact grade of each rank)",
+    "note": "Checked 19 Nov 2026. 9th pay scale approved 31 Aug 2026, phased in to Jul 2027. Figures are from a teacher-portal summary, not the gazette; check the gazette.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Government job at Grade 9 with a fixed scale and a rank ladder",
+    "House rent and medical allowance, festival bonuses, leave and pension under government rules",
+    "Foundation training at the Financial Management Academy and specialist audit courses",
+    "Constitutional protection for the audit function under Article 128",
+    "Chances for training abroad and exposure to international audit practice",
+    "A direct role in making public spending honest and open"
+  ],
+  "companies": [
+    "Office of the Comptroller and Auditor General (OCAG)",
+    "Civil Audit Directorate",
+    "Revenue Audit Directorate",
+    "Commercial Audit Directorate",
+    "Controller General of Accounts (CGA)",
+    "Controller General Defence Finance (CGDF)",
+    "Railway finance wing",
+    "Financial Management Academy (FIMA), Dhaka"
+  ],
+  "season": [
+    "Recruitment is through the general BCS; BPSC plans a circular each November",
+    "The Audit and Accounts post count for the 50th BCS was not confirmed; check the circular",
+    "The 52nd (general) BCS circular was planned for November 2026; watch bpsc.gov.bd",
+    "Posting orders for new officers come from OCAG after the final result",
+    "Watch news on the Public Accounts Audit Act before choosing this cadre"
+  ],
+  "skills": [
+    {
+      "name": "Accounting and financial statements",
+      "level": "Core",
+      "tag": "accounting"
+    },
+    {
+      "name": "Audit standards and procedure",
+      "level": "Core",
+      "tag": "auditstd"
+    },
+    {
+      "name": "Integrity and independence",
+      "level": "Core",
+      "tag": "ethics"
+    },
+    {
+      "name": "Public finance and procurement law",
+      "level": "Important",
+      "tag": "pfm"
+    },
+    {
+      "name": "Data and IT audit",
+      "level": "Growing",
+      "tag": "digital"
+    },
+    {
+      "name": "Audit report writing",
+      "level": "Important",
+      "tag": "writing"
+    },
+    {
+      "name": "Communication with audited offices",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "Quantitative reasoning and sampling",
+      "level": "Core",
+      "tag": "maths"
+    },
+    {
+      "name": "Governance and accountability understanding",
+      "level": "Important",
+      "tag": "governance"
+    },
+    {
+      "name": "BCS exam skills: Bangla, English, Bangladesh Affairs",
+      "level": "Core",
+      "tag": "exam"
+    }
+  ],
+  "gaps_checklist": [
+    "I know the BCS exam steps and marks: 200 preliminary, 900 written, 100 viva",
+    "I can explain what an audit is and how it differs from accounting",
+    "I can read a simple balance sheet and income statement",
+    "I know what Article 128 says about the CAG",
+    "I can solve percentage and ratio problems quickly",
+    "I can answer an ethical pressure question calmly and clearly",
+    "I can write a 300-word note on a public spending issue in 30 minutes",
+    "I have a real example of handling money or records honestly",
+    "I have a written plan B if this round does not work out"
+  ],
+  "courses": [
+    {
+      "title": "BPSC circulars, syllabus and exam notices",
+      "provider": "Bangladesh Public Service Commission (BPSC)",
+      "url": "https://www.bpsc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "exam"
+    },
+    {
+      "title": "Audit directorates, circulars and training policy",
+      "provider": "Office of the Comptroller and Auditor General",
+      "url": "https://www.cag.org.bd",
+      "is_affiliate": false,
+      "skill_tag": "auditstd"
+    },
+    {
+      "title": "Public financial management training",
+      "provider": "Financial Management Academy (FIMA)",
+      "url": "https://www.cag.org.bd",
+      "is_affiliate": false,
+      "skill_tag": "pfm"
+    },
+    {
+      "title": "Free Bangla e-learning courses",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "accounting"
+    },
+    {
+      "title": "BCS preparation and English, maths courses",
+      "provider": "10 Minute School",
+      "url": "https://10minuteschool.com",
+      "is_affiliate": false,
+      "skill_tag": "maths"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What are the entry posts of the BCS Audit and Accounts cadre?",
+      "a": "Posts such as Assistant Accountant General, Assistant Director in an audit directorate and Assistant Chief Accounts and Finance Officer, at Grade 9, according to the cadre table and CGA pages."
+    },
+    {
+      "q": "What is the salary of a BCS Audit and Accounts officer?",
+      "a": "Under the new 9th pay scale the Grade 9 basic is listed at BDT 44,000 (old scale BDT 22,000), paid in stages up to July 2027, plus allowances. Check the gazette for exact figures and the grade of each rank."
+    },
+    {
+      "q": "Where do new audit officers train?",
+      "a": "At the Financial Management Academy (FIMA) in Dhaka, the training wing of the Office of the Comptroller and Auditor General, set up in 1997."
+    },
+    {
+      "q": "What does the CAG do?",
+      "a": "The Comptroller and Auditor General audits the public accounts of the Republic under Article 128 of the Constitution and is not subject to the direction or control of any other person or authority in doing so."
+    },
+    {
+      "q": "What is the new audit law?",
+      "a": "The Public Accounts Audit Ordinance 2025 was gazetted on 4 May 2025, and a Public Accounts Audit Bill was passed in Parliament on 8 April 2026. TIB asked for further changes. We did not confirm the final text, so check current sources."
+    },
+    {
+      "q": "How many Audit and Accounts posts are advertised?",
+      "a": "We could not confirm the 50th BCS number, so check the circular. The 50th BCS had 1,755 cadre posts in total."
+    },
+    {
+      "q": "Do I need an accounting degree for BCS Audit and Accounts?",
+      "a": "It is a general cadre, so any recognised bachelor's degree usually qualifies. Accounting, finance and economics help, but check the circular."
+    },
+    {
+      "q": "Does BCS Audit and Accounts need a CV?",
+      "a": "BCS does not choose by CV, and marks decide. A short honest profile helps in the viva and in backup applications. For example: 'Accounting graduate preparing for the BCS general cadre, with a study of a school budget and experience keeping a club ledger.'"
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 19 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** BCS (Audit and Accounts) is the cadre that checks how the government spends public money and keeps the government's books. New officers join at Grade 9 (entry posts include Assistant Accountant General and Assistant Director in an audit directorate), train at the Financial Management Academy (FIMA) in Dhaka, and work under the Office of the Comptroller and Auditor General (OCAG) in audit directorates and in accounting departments such as the Controller General of Accounts (CGA) and Controller General of Defence Finance (CGDF). The cadre uses the same BCS exam as every general cadre (200-mark preliminary, 900-mark written, 100-mark viva). Under the new 9th pay scale the Grade 9 basic pay is listed at BDT 44,000, phased in up to July 2027. A Public Accounts Audit Bill was passed in Parliament on 8 April 2026, so the legal frame is changing; check it before you decide. We could not confirm the Audit and Accounts post count for the 50th BCS.\n\n## Key facts (as of 19 November 2026)\n\n| Question | Answer | Source type |\n|---|---|---|\n| Entry grade | Grade 9 | BCS entry-grade table |\n| Entry posts | Assistant Accountant General, Assistant Director (Audit Directorate), Assistant Chief Accounts and Finance Officer and similar | Wikipedia cadre table; CGA portal |\n| Controlling office | Office of the Comptroller and Auditor General (OCAG), Dhaka | OCAG |\n| Training academy | Financial Management Academy (FIMA), Dhaka; set up in 1997, built on earlier audit and accounts training from 1962 | FIMA |\n| Starting basic pay | BDT 44,000 (new 9th scale, phased in to July 2027); old scale BDT 22,000 | Daily Star Bangla; teacher-portal summary |\n| Audit objections unresolved | About BDT 31 lakh crore since independence, according to a former CAG | The Business Standard |\n| Audit law | Public Accounts Audit Ordinance 2025 (gazette 4 May 2025); bill passed in Parliament 8 April 2026 | Prothom Alo; BSS |\n| Exam | Preliminary 200 MCQ, written 900, viva 100 | BPSC |\n| 50th BCS size | 1,755 cadre posts; Audit and Accounts count not confirmed | UNB; Prothom Alo |\n\n*Numbers can change with each circular. The BPSC circular and the gazette are the final authority.*\n\n## What does an Audit and Accounts officer do?\n\nThe cadre has two halves that sit under one constitutional office.\n\n- **Audit.** The Constitution (Article 128) lets the Comptroller and Auditor General (CAG) audit the public accounts of the Republic, including courts, authorities and officers, and says the CAG is not subject to the direction or control of any other person or authority in doing so. OCAG's directorates include Civil, Revenue, Commercial, Constitutional Bodies and Mission Audit.\n- **Accounts.** Accounting departments keep the government's books and pay and pension records. They include the Controller General of Accounts (CGA), the Controller General of Defence Finance (CGDF) and the Railway finance wing.\n- **Training and policy.** Officers also work at FIMA and in the CAG's office on audit standards and reform.\n\nIn practice you read vouchers, contracts and bank records, test whether money was spent lawfully and for the intended purpose, write findings, and defend them in meetings with the office you audited. Audit reports go to the President to be laid before Parliament.\n\n## What is changing in the audit law?\n\n- **2025 ordinance.** The Public Accounts Audit Ordinance, 2025 was approved on 17 April and gazetted on 4 May 2025. Prothom Alo noted that Bangladesh had never had a formal public audit law since independence.\n- **Criticism.** Transparency International Bangladesh (TIB) said some provisions could limit the CAG's independence, including leaving revenue assessment and collection out of audit and needing government approval for rules. The ordinance did not separate the Audit and Accounts cadre.\n- **2026 bill.** The Public Accounts Audit Bill 2026 was passed in the Jatiya Sangsad on 8 April 2026. BSS reported that audit reports must be made public once laid before Parliament.\n- **Open questions.** TIB still called for changes to the audit law after that. The US State Department's 2026 Fiscal Transparency Report also urged stronger CAG independence. We did not confirm the final text of the Act.\n\nFor a candidate, the lesson is simple: the cadre's role is protected by the Constitution but the rules around it are still moving, so read the latest law before you rank this cadre.\n\n## What is the career ladder?\n\n| Level | Examples (titles reported on OCAG and CGA pages) |\n|---|---|\n| Entry (Grade 9) | Assistant Accountant General; Assistant Director (Audit); Assistant Chief Accounts and Finance Officer |\n| Middle | Deputy Director or Deputy Accountant General level, then Director level, in directorates and accounts offices |\n| Senior | Additional Director General, Director General, Controller General of Accounts, Controller General of Defence Finance |\n| Top | Comptroller and Auditor General (a constitutional post) |\n\n*We have not verified the exact title or pay grade at each step, so check OCAG and the gazette.*\n\nPast officeholders show the paths. One former CGA joined the service in the 10th BCS. Another CAG came from the 8th BCS (Audit and Accounts) batch and had served as CGA and in defence finance. Directors General of FIMA have been drawn from the cadre too.\n\n## How many posts are there, and how hard is it?\n\nWe could not find the Audit and Accounts post count for the 50th BCS in the sources we checked, so check the circular. The 50th BCS advertised 1,755 cadre posts, with 650 in Health, 200 in Administration, 117 in Police and 120 in Agriculture, and 290,951 applied. Of those, 12,385 passed the preliminary and 6,165 passed the written exam (result of 23 July 2026). Cadre allocation depends on your merit position, your cadre choices and vacancies.\n\n## What happens in training?\n\n- **FIMA, Dhaka.** FIMA describes itself as the only training wing of OCAG. It was set up in 1997 and traces its roots to the Audit and Accounts Centre of 1962. Newly joined officers attend a foundation course there, then attach to offices such as the CGA.\n- **Specialist courses.** FIMA has run IT audit courses and a Certified Information Systems Auditor (CISA) course for OCAG officials, with EU support.\n- **Other training.** OCAG's training plan also refers to BPATC courses, CIPFA and international programmes.\n\nCourse length for your batch can change, so ask the academy.\n\n## What is the salary and what are the benefits?\n\nThe 9th National Pay Scale was approved by cabinet on 31 August 2026 and takes effect from 1 July 2026. Basic pay is raised in stages up to July 2027. Allowances are reset from January 2028.\n\n| Grade | Old basic (BDT) | New basic (BDT) |\n|---|---|---|\n| 9 (entry) | 22,000 | 44,000 |\n| 6 | 35,500 | 71,000 |\n| 5 | 43,000 | 86,000 |\n| 3 | 56,500 | 1,13,000 |\n| 2 | 66,000 | 1,32,000 |\n| 1 | 78,000 | 1,56,000 |\n\n*Source note: these figures come from a teacher-portal summary, not the gazette. The Daily Star Bangla confirms Grade 1 at BDT 1,56,000. We have not matched each audit rank to a grade.*\n\n**Benefits beyond basic pay** (check your appointment terms): house rent and medical allowance, festival bonuses, leave and pension under government rules, and overseas training chances through OCAG programmes.\n\n## Which skills does an auditor need?\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Accounting and financial statements | The basis of all audit work | █████ |\n| Audit standards and procedure | Government Auditing Standards of Bangladesh (GASB) and international standards | █████ |\n| Integrity and independence | Findings can upset powerful offices | █████ |\n| Public finance and procurement law | Public Procurement Act 2006 and Rules 2008 | ████ |\n| Data and IT audit | e-GP, digital records, CISA-style skills | ████ |\n| Report writing | Findings must be clear and evidence-based | ████ |\n| Communication | Exit meetings and responses | ███ |\n| Numbers and analysis | Sampling, ratios, trends | ████ |\n\n*Bars show our reading of the role, not a survey.*\n\n## How do I get in? The exam path\n\nThe cadre uses the general BCS exam: a 200-mark MCQ preliminary, a 900-mark written exam (Bangla 200, English 200, Bangladesh Affairs 200, International Affairs 100, Mathematical Reasoning and Mental Ability 100, General Science and Technology 100) and a 100-mark viva. See our BCS overview for the full guide.\n\n**To aim for Audit and Accounts:**\n\n1. List it as a cadre choice only if you like detail work and writing, and add realistic second and third choices.\n2. Learn basic accounting: journal, ledger, trial balance, financial statements.\n3. Read about the CAG's role and the audit law debate.\n4. Build maths speed.\n5. Practise written answers on governance and public money.\n6. Keep a plan B, such as CA or CMA study.\n\n## Where will you find more peace of mind?\n\nNo cadre is stress-free, and we have no survey to rank them. Audit work is steady and document-driven, with deadlines around report seasons, and some postings are in Dhaka while others are in district and defence finance offices. The pressure is mostly about independence: an honest finding can annoy a powerful office. A former CAG has said the Auditor General's \"boss\" is his conscience, which shows the standard the work expects. Three habits help: write down every finding with evidence, keep personal distance from audited offices, and build a small circle of trusted colleagues.\n\n## Plan your own path (5-minute worksheet)\n\n1. **My age on the next cut-off date:** ___ (must be 32 or under)\n2. **My cadre choices:** 1) Audit and Accounts 2) ___ 3) ___\n3. **My comfort with accounting and numbers (score out of 10):** ___\n4. **Three weakest subjects:** ___, ___, ___\n5. **Daily practice minutes (writing and maths):** ___ (aim for 90)\n6. **My plan B if I do not get a cadre:** ___\n\nThen take the free skill test on this page and compare the result with line 4.\n\n## Faith and history: keeping honest records\n\n**The Quran.** Surah Al-Baqarah 2:282 tells believers to write down debts and have them recorded fairly ([read it on quran.com](https://quran.com/2/282)). It is among the earliest calls in scripture for careful accounts.\n\n**Hadith.** The Prophet (peace be upon him) said that each of you is a shepherd and each is responsible for his flock (Sahih al-Bukhari 893; Sahih Muslim 1829). For an auditor, public money is such a trust.\n\n**History.** OCAG's own history page says the office of Comptroller and Auditor General was formally named in 1884 under colonial rule. The Constitution of Bangladesh now provides for the office in Articles 127 to 132.\n\n## Your contribution to the nation\n\nAudit shows citizens whether tax money reached its purpose, and it helps Parliament hold the government to account. A good audit finding can stop a leak, change a rule or bring back lost money. The same former CAG has pointed out that unresolved audit objections have piled up to about BDT 31 lakh crore, which shows why follow-up matters as much as finding.\n\n## Your contribution to the world\n\nSupreme audit institutions share methods worldwide. FIMA has trained auditors from other countries such as Sri Lanka and East Timor, and OCAG officers join international programmes and missions. Skills in public finance, procurement and IT audit travel well to development and international organisations.\n\n## If you do not get BCS Audit and Accounts\n\n- **Other BCS cadres.** The same exam leads to Taxation, Customs, Administration, Police and more.\n- **Professional route.** CA, ACCA, CMA or CIA, then audit firms, banks and companies.\n- **Departmental route.** Subordinate Accounts Service (SAS) posts in OCAG through separate recruitment; check current circulars.\n- **Development and NGO finance roles.** Donors need compliance and audit staff.\n\n## Research opportunities\n\n- Topics with real need: audit follow-up, e-procurement, performance audit, local government finance and public financial management reform.\n- Where to learn: accounting, finance and public administration departments, and public finance think tanks.\n- Path: a strong master's thesis, a research assistant post, then MPhil or PhD.\n\n## Whom to follow and learn from\n\nFollow institutions: [BPSC](https://www.bpsc.gov.bd), the [Office of the Comptroller and Auditor General](https://www.cag.org.bd) and [FIMA](https://www.cag.org.bd). Treat coaching centre promises and social media rank claims with caution.\n\n## Where do I find circulars?\n\n- BPSC's official site: [bpsc.gov.bd](https://www.bpsc.gov.bd).\n- Teletalk's BPSC application portal: bpsc.teletalk.com.bd.\n- OCAG's career and circular pages for departmental posts.\n- Daily newspapers' job pages (cross-check every date and number with the circular).\n\n**No lobbying.** Tadbir during the application process is treated as grounds for disqualification.\n\n## How should I write my profile and CV?\n\nBCS does not choose candidates from a CV. Marks decide. A short, honest profile helps in the viva and in backup applications.\n\n| Weak line | Better line |\n|---|---|\n| Good at accounting. | Scored 80% in Financial Accounting and kept a full ledger for a 40-member club. |\n| Interested in audit. | Wrote a 12-page study on a local school's spending against its budget. |\n| Honest and careful. | Found a BDT 8,000 error in a club statement and corrected it in writing. |\n\n*Use only real, provable figures.*\n\nBuild yours free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- Choosing Audit without enjoying accounts and detail.\n- Ignoring maths and basic accounting.\n- Skipping written practice.\n- Treating the viva as a place for memorised answers.\n- Having no plan B.\n- Believing rumours about marks or posts instead of the circular.\n\n## Changelog\n\n- **19 Nov 2026:** First version. The Audit and Accounts post count for the 50th BCS was not found; the final text of the Public Accounts Audit Act and rank-by-rank titles and grades were not confirmed. All flagged in the text.\n- Next planned review: when the 52nd BCS circular is published or the audit law is clarified.\n\n## Sources and method\n\nFacts were checked on 19 November 2026. Vacancy numbers, pay and rules can change; BPSC and the gazette are the final authority.\n\n- OCAG: [History of the Audit and Accounts Department](https://www.cag.org.bd/History-of-Audit-and-Accounts-Department-of-Bangladesh); [CAG's Governance Framework](https://cag.org.bd/storage/app/uploads/public/62b/80e/682/62b80e682f29f030101149.pdf); [Annual Training Plan](https://www.cag.org.bd/storage/app/uploads/public/660/3c8/50d/6603c850d7351111078285.pdf); [News and offices](https://cag.org.bd/post/news)\n- FIMA: [Introduction of the academy](https://front-end-delta-lac.vercel.app/introduction-academy)\n- CGA: [Controller General of Accounts portal](https://cga.portal.gov.bd/site/news/a09899ac-7c16-4072-a1a3-2bc52ef6e035/nolink/-)\n- Wikipedia: [Bangladesh Civil Service cadre table](https://www.wikipedia.org/wiki/Bangladesh_Civil_Service)\n- Prothom Alo: [Is the Audit Ordinance consistent with the constitution?](https://en.prothomalo.com/opinion/op-ed/rllefm7hhl); [50th BCS circular](https://en.prothomalo.com/youth/employment/75pyal56mp)\n- BSS: [Public Accounts Audit Bill, 2026 passed in JS](https://www.bssnews.net/js-session/375631)\n- UNB: [Parliament passes Public Accounts Audit Bill](https://unb.com.bd/category/Bangladesh/parliament-passes-public-accounts-audit-bill-to-strengthen-audit-transparency/183168); [50th BCS examination](https://unb.com.bd/news/tag/146319); [IT audit training at FIMA](https://unb.com.bd/category/Bangladesh/advanced-information-technology-it-audit-training-certificate-awarding-ceremony-held/122445)\n- The Business Standard: [State keeps spending, but accountability loop never closes](https://www.tbsnews.net/node/1466036); [TIB on the Public Audit Ordinance](https://www.tbsnews.net/node/1125951); [CISA course at FIMA](https://www.tbsnews.net/node/664822)\n- Transparency International Bangladesh: [Public Audit Ordinance, 2025](https://ti-bangladesh.org/articles/press-release/7248)\n- The Daily Star: [Draft audit ordinance threatens CAG's independence](https://www.thedailystar.net/business/news/draft-audit-ordinance-threatens-cags-independence-tib-3879646)\n- Dhaka Tribune: [US State Department urges stronger CAG independence](https://www.dhakatribune.com/bangladesh/foreign-affairs/417313/us-urges-bangladesh-to-disclose-govt-procurement)\n- The Observer: [Why Audit and Accounts Cadre should not be split](https://www.observerbd.com/news/549005)\n- The Daily Star Bangla: [9th pay scale cost and Grade 1 pay](https://bangla.thedailystar.net/news/bangladesh/news-3963276)\n- Teacher portal: [9th pay scale summary](https://www.teachers.gov.bd/index.php/blog/details/849702)\n\n**How to cite this page:** Shishir, D. H. (2026, November 19). *BCS Audit and Accounts cadre: career, salary, audit law, exam and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/bcs-audit-accounts-cadre\n\n*This guide gives general career information. It does not promise a job, rank or cadre, and it is not legal or religious advice. The BPSC circular is the final authority.*\n",
+  "growth_plan": {
+    "y1": "Download the latest circular and syllabus, build maths and basic accounting, read about the CAG and the audit law, fix your weakest two subjects and apply when the circular opens.",
+    "y2": "Clear the preliminary comfortably, build written-exam speed, learn how an audit is done, prepare viva answers with real examples, and keep a backup route moving.",
+    "y3": "Sit written and viva with a full revision cycle; if selected, prepare for FIMA training; if not, use your plan B (CA or CMA, audit firms, other cadres) and re-apply within the age limit."
+  },
+  "goal_sheet": [
+    "Week 1-2: Read the latest BPSC circular and syllabus; list weak subjects",
+    "Week 3-4: Daily routine: reading, writing practice, maths; one timed paper per week",
+    "Month 2: Bangla and English grammar and essays; Bangladesh Affairs notes",
+    "Month 3: Basic accounting; solve 3 years of preliminary papers",
+    "Month 4: Mathematical reasoning; nine-paper answer-writing drills",
+    "Month 5: Governance, public finance and audit law notes; start viva practice with a mentor",
+    "Month 6: Full mock exam week; update plan B; apply when the circular opens"
+  ],
+  "test": [
+    {
+      "q": "Which constitutional office audits the public accounts of Bangladesh?",
+      "options": [
+        "Public Service Commission",
+        "Comptroller and Auditor General",
+        "National Board of Revenue",
+        "Anti-Corruption Commission"
+      ],
+      "answer_idx": 1,
+      "explain": "Article 128 gives this role to the Comptroller and Auditor General.",
+      "skill_tag": "governance"
+    },
+    {
+      "q": "Which academy trains new BCS Audit and Accounts officers?",
+      "options": [
+        "Police Academy, Sardah",
+        "CEVTA, Chattogram",
+        "Foreign Service Academy",
+        "Financial Management Academy, Dhaka"
+      ],
+      "answer_idx": 3,
+      "explain": "FIMA is the training wing of the Office of the Comptroller and Auditor General.",
+      "skill_tag": "pfm"
+    },
+    {
+      "q": "What is the purpose of an audit?",
+      "options": [
+        "To check whether records and spending are accurate and lawful",
+        "To set tax rates",
+        "To make laws",
+        "To recruit staff"
+      ],
+      "answer_idx": 0,
+      "explain": "Audit tests evidence against rules and reports findings.",
+      "skill_tag": "auditstd"
+    },
+    {
+      "q": "In double-entry bookkeeping, total debits must equal:",
+      "options": [
+        "Total assets only",
+        "Total profit",
+        "Total credits",
+        "Total cash"
+      ],
+      "answer_idx": 2,
+      "explain": "Every transaction has equal debit and credit entries.",
+      "skill_tag": "accounting"
+    },
+    {
+      "q": "An audit finding needs mainly:",
+      "options": [
+        "A guess",
+        "Evidence and a clear criterion",
+        "A rumour",
+        "A friend's opinion"
+      ],
+      "answer_idx": 1,
+      "explain": "Good findings are supported by evidence and measured against a rule or standard.",
+      "skill_tag": "auditstd"
+    },
+    {
+      "q": "An official offers you a gift while his office is being audited. The best action is to:",
+      "options": [
+        "Accept quietly",
+        "Accept and soften the finding",
+        "Ignore it and say nothing",
+        "Decline, record the offer and inform your superior"
+      ],
+      "answer_idx": 3,
+      "explain": "A gift tied to an official decision is a bribe; follow the rules and report it.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Which law governs public procurement in Bangladesh?",
+      "options": [
+        "Public Procurement Act, 2006",
+        "Customs Act, 2023",
+        "VAT and SD Act, 2012",
+        "Police Act"
+      ],
+      "answer_idx": 0,
+      "explain": "The Public Procurement Act 2006 and Rules 2008 set procurement rules.",
+      "skill_tag": "pfm"
+    },
+    {
+      "q": "Which system is used for government e-tendering?",
+      "options": [
+        "ASYCUDA",
+        "Facebook",
+        "e-GP",
+        "Excel only"
+      ],
+      "answer_idx": 2,
+      "explain": "The electronic Government Procurement (e-GP) portal handles tenders.",
+      "skill_tag": "digital"
+    },
+    {
+      "q": "What is 12% of BDT 5,00,000?",
+      "options": [
+        "BDT 12,000",
+        "BDT 60,000",
+        "BDT 6,000",
+        "BDT 50,000"
+      ],
+      "answer_idx": 1,
+      "explain": "0.12 x 500,000 = 60,000.",
+      "skill_tag": "maths"
+    },
+    {
+      "q": "Choose the correct sentence:",
+      "options": [
+        "The auditor has submitted the report.",
+        "The auditor have submitted the report.",
+        "The auditor submit the report yesterday.",
+        "The auditor are submitting the report."
+      ],
+      "answer_idx": 0,
+      "explain": "A singular subject takes 'has' with the past participle.",
+      "skill_tag": "writing"
+    },
+    {
+      "q": "Parliament receives audit reports through:",
+      "options": [
+        "The police",
+        "A newspaper",
+        "A bank",
+        "The President"
+      ],
+      "answer_idx": 3,
+      "explain": "The CAG submits audit reports to the President, who lays them before Parliament.",
+      "skill_tag": "governance"
+    },
+    {
+      "q": "How many marks is the BCS written exam?",
+      "options": [
+        "200",
+        "100",
+        "900",
+        "1,000"
+      ],
+      "answer_idx": 2,
+      "explain": "Written is 900 marks; preliminary 200 and viva 100.",
+      "skill_tag": "exam"
+    }
+  ],
+  "cv_template_notes": "BCS does not select by CV, so use a clean one-page academic-style HWG layout (single column, no heavy graphics) for your viva profile, backup applications and scholarships. Lead with education and results, then accounting or finance coursework, internships, volunteering and any research. Add real numbers (budgets managed, hours served, scores). Keep it to one page. File name: YourName_BCS_Audit_Aspirant_CV.pdf. Use only facts you can prove in a viva.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the [position] advertised on [site/date]. I hold a [degree] from [university] and have strong accounting, analytical and writing skills built while preparing for the BCS Audit and Accounts cadre. In [project/volunteering role] I [one provable result, e.g. kept a full ledger for a 40-member club and published a yearly account].\n\nMy CV is attached as a PDF. I would be glad to attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email]\n\n(Note: BCS itself needs no cover letter. Use this for backup non-BCS applications.)",
+  "interview_qs": [
+    "Why do you want to join the Audit and Accounts cadre? (Tip: Give a real reason from experience; talk about public money and accountability, not status.)",
+    "What does the Comptroller and Auditor General do? (Tip: Mention Article 128, audit of public accounts and reports to Parliament.)",
+    "What is the difference between audit and accounting? (Tip: Accounting records and reports; audit checks the records independently.)",
+    "Why does the CAG's independence matter? (Tip: Auditors must be free from pressure to report honestly; mention the constitution.)",
+    "What is your view on the new Public Accounts Audit law? (Tip: Show you know both views: the first national audit law and critics' concerns; stay calm and neutral.)",
+    "What would you do if a senior officer asked you to drop a finding? (Tip: Follow standards, document, escalate through the proper channel, stay polite.)",
+    "What is an audit objection and why do so many remain unresolved? (Tip: Raised issue awaiting a response; mention follow-up gaps and the need for action.)",
+    "How can technology improve audit? (Tip: Data analytics, e-GP records, IT audit; mention privacy and verification.)",
+    "What is the difference between compliance audit and performance audit? (Tip: Compliance checks rules; performance checks value for money and results.)",
+    "Tell us about your district and how public money is used there. (Tip: Two facts, two problems, one realistic idea.)",
+    "Why not Taxation or another cadre? (Tip: Show you know the other cadre; explain your fit with Audit and Accounts.)",
+    "How do you handle repetitive detail work? (Tip: Give a real example of careful checking and how you stay accurate.)",
+    "Describe a time you handled money or records honestly. (Tip: Situation, action, result in numbers if possible.)",
+    "What will you do if you are not selected this time? (Tip: Show a calm plan B; do not sound defeated.)",
+    "Do you have any questions for us? (Tip: Ask about training or learning, not about pay or posting.)"
+  ]
+}

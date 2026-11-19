@@ -1,0 +1,355 @@
+{
+  "slug": "bcs-foreign-affairs-cadre",
+  "title_en": "BCS Foreign Affairs Cadre (Diplomat)",
+  "title_bn": "বিসিএস পররাষ্ট্র ক্যাডার (কূটনীতিক)",
+  "field": "Government & Civil Service",
+  "seo_title": "BCS Foreign Affairs Cadre: Diplomat Career, Salary (2026)",
+  "seo_desc": "BCS Foreign Affairs cadre in Bangladesh: Assistant Secretary entry, Foreign Service Academy, mission ranks, ambassador quota, 9th pay scale and a free test.",
+  "summary": "The BCS (Foreign Affairs) cadre is Bangladesh's career diplomatic service. New officers join the Ministry of Foreign Affairs as Assistant Secretary at Grade 9, train at the Foreign Service Academy, and are posted to missions abroad, rising from Third Secretary to Ambassador. This page covers the real job, the rank ladder, the 70 per cent career-ambassador rule, the new pay scale, exam path and a free skill test.",
+  "salary": {
+    "entry": "BDT 44,000 basic per month at Grade 9 (new 9th pay scale, phased in; old scale BDT 22,000), plus allowances",
+    "mid": "BDT 71,000 - 86,000 basic per month (First Secretary at Grade 6, Counsellor at Grade 5)",
+    "senior": "BDT 1,13,000 - 1,56,000 basic per month (Minister or DG at Grade 3 up to A-grade Ambassador at Grade 1)",
+    "note": "Checked 19 Nov 2026. 9th pay scale approved 31 Aug 2026, phased in to Jul 2027. Figures are from a teacher-portal summary, not the gazette; check the gazette.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Government job at Grade 9 with a fixed scale and a clear rank ladder",
+    "Postings in missions abroad with overseas allowances (rates not verified here)",
+    "Training at the Foreign Service Academy and refresher courses in mid-career",
+    "House rent, medical allowance, festival bonuses, leave and pension under government rules",
+    "Chances to work in bilateral, multilateral and trade diplomacy",
+    "Ambassador and High Commissioner posts at senior levels"
+  ],
+  "companies": [
+    "Ministry of Foreign Affairs, Dhaka (regional and subject wings)",
+    "Offices of the Foreign Minister and Foreign Secretary",
+    "Embassies and High Commissions abroad",
+    "Consulates General and Deputy High Commissions",
+    "Permanent Missions to the UN (New York, Geneva) and other bodies",
+    "Foreign Service Academy (training and research)",
+    "Protocol and Inspector General of Missions offices",
+    "International organisations and think tanks (on study leave or after service)"
+  ],
+  "season": [
+    "Recruitment is through the general BCS; BPSC plans a circular each November",
+    "The Foreign Affairs post count is small; check the circular for the number",
+    "The 52nd (general) BCS circular was planned for November 2026; watch bpsc.gov.bd",
+    "Applications stay open for about four weeks; pay the fee within 72 hours",
+    "New officers join the ministry and attend the Specialized Diplomatic Training Course"
+  ],
+  "skills": [
+    {
+      "name": "English speaking and writing",
+      "level": "Core",
+      "tag": "english"
+    },
+    {
+      "name": "International relations and foreign policy",
+      "level": "Core",
+      "tag": "ir"
+    },
+    {
+      "name": "Official writing: notes, reports, cables",
+      "level": "Core",
+      "tag": "writing"
+    },
+    {
+      "name": "Integrity and discretion",
+      "level": "Core",
+      "tag": "ethics"
+    },
+    {
+      "name": "Communication and negotiation",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "Economic and trade understanding",
+      "level": "Important",
+      "tag": "economy"
+    },
+    {
+      "name": "A second foreign language",
+      "level": "Growing",
+      "tag": "language"
+    },
+    {
+      "name": "Protocol and etiquette",
+      "level": "Important",
+      "tag": "protocol"
+    },
+    {
+      "name": "Crisis handling and citizen protection abroad",
+      "level": "Growing",
+      "tag": "crisis"
+    },
+    {
+      "name": "BCS exam skills: Bangla, English, Bangladesh Affairs, maths",
+      "level": "Core",
+      "tag": "exam"
+    }
+  ],
+  "gaps_checklist": [
+    "I know the BCS exam steps and marks: 200 preliminary, 900 written, 100 viva",
+    "I can explain the mission rank ladder from Third Secretary to Ambassador",
+    "I can speak and write English fluently on public issues",
+    "I read one national and one international news source daily",
+    "I can explain Bangladesh's key foreign relations (neighbours, major powers, the UN)",
+    "I can write a 300-word note on a foreign policy issue in 30 minutes",
+    "I can answer an ethical pressure question calmly and clearly",
+    "I have clean documents ready for verification",
+    "I have a written plan B if this round does not work out"
+  ],
+  "courses": [
+    {
+      "title": "BPSC circulars, syllabus and exam notices",
+      "provider": "Bangladesh Public Service Commission (BPSC)",
+      "url": "https://www.bpsc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "exam"
+    },
+    {
+      "title": "Foreign policy, missions and notices",
+      "provider": "Ministry of Foreign Affairs",
+      "url": "https://mofa.portal.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "ir"
+    },
+    {
+      "title": "Diplomatic training information",
+      "provider": "Foreign Service Academy",
+      "url": "https://fsa.portal.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "protocol"
+    },
+    {
+      "title": "Free Bangla e-learning courses",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "writing"
+    },
+    {
+      "title": "BCS preparation and English, maths courses",
+      "provider": "10 Minute School",
+      "url": "https://10minuteschool.com",
+      "is_affiliate": false,
+      "skill_tag": "english"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the entry post of the BCS Foreign Affairs cadre?",
+      "a": "Assistant Secretary in the Ministry of Foreign Affairs, at Grade 9. Officers are later posted to missions abroad as Third or Second Secretary."
+    },
+    {
+      "q": "What is the salary of a Foreign Affairs officer?",
+      "a": "Under the new 9th pay scale the Grade 9 basic is listed at BDT 44,000 (old scale BDT 22,000), paid in stages up to July 2027, plus allowances. Senior grades rise to BDT 1,56,000 at Grade 1. Check the gazette for exact figures."
+    },
+    {
+      "q": "Where do Bangladesh's diplomats train?",
+      "a": "At the Foreign Service Academy, set up in 1996. Entry-level officers attend the Specialized Diplomatic Training Course, and mid-career officers attend refresher courses."
+    },
+    {
+      "q": "Are all ambassadors career diplomats?",
+      "a": "No. By established rule about 70 per cent of heads of mission come from the career cadre and the rest from outside, though reports say the quota is not always followed."
+    },
+    {
+      "q": "What are the diplomatic ranks in a Bangladesh mission?",
+      "a": "Third Secretary, Second Secretary, First Secretary, Counsellor, Minister or Deputy Chief of Mission, and Ambassador or High Commissioner. First Secretary equals Senior Assistant Secretary and Counsellor equals Deputy Secretary."
+    },
+    {
+      "q": "How many Foreign Affairs posts are advertised?",
+      "a": "The cadre is small. We could not confirm the 50th BCS number, so check the circular. In the 47th BCS only 1,320 of 3,487 cadre posts were filled overall."
+    },
+    {
+      "q": "Do I need a specific degree for Foreign Affairs?",
+      "a": "It is a general cadre, so any recognised bachelor's degree usually qualifies. International relations, law, economics and English help, but check the circular."
+    },
+    {
+      "q": "Does BCS Foreign Affairs need a CV?",
+      "a": "BCS does not choose by CV, and marks decide. A short honest profile helps in the viva and in backup applications. For example: 'Graduate preparing for the BCS general cadre, with Model UN experience and published articles on regional trade.'"
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 19 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** BCS (Foreign Affairs) is the career diplomatic cadre of Bangladesh. New officers join the Ministry of Foreign Affairs as Assistant Secretary at Grade 9, train at the Foreign Service Academy, and are later posted to embassies as Third and Second Secretary, then First Secretary, Counsellor, Minister or deputy head of mission, and finally Ambassador or High Commissioner. The cadre is small and very competitive, recruited through the same BCS exam as every other general cadre (200-mark preliminary, 900-mark written, 100-mark viva). Under the new 9th pay scale the Grade 9 basic pay is listed at BDT 44,000, phased in up to July 2027. We could not confirm how many Foreign Affairs posts the 50th BCS advertised, so check the circular.\n\n## Key facts (as of 19 November 2026)\n\n| Question | Answer | Source type |\n|---|---|---|\n| What is the entry post? | Assistant Secretary, Ministry of Foreign Affairs | Wikipedia cadre table |\n| Entry grade | Grade 9 | Daily Star pay-scale table |\n| Starting basic pay | BDT 44,000 (new 9th scale, phased in to July 2027); old scale BDT 22,000 | Daily Star Bangla; teacher-portal summary |\n| Who trains diplomats? | Foreign Service Academy (FSA), set up in 1996 | Ministry of Foreign Affairs |\n| Foundation course | Specialized Diplomatic Training Course (SDTC) | Ministry of Foreign Affairs |\n| Share of ambassadors from the career cadre | At least 70% in principle, not always followed | Banglapedia; Dhaka Tribune |\n| Exam | Preliminary 200 MCQ, written 900, viva 100 | BPSC |\n| 47th BCS size | 3,487 cadre posts advertised, 1,320 recommended; 374,747 applicants | Observer; Prothom Alo |\n| 50th BCS size | 1,755 cadre posts; 290,951 applicants | bdnews24; Dhaka Times |\n\n*Numbers can change with each circular. The BPSC circular and the gazette are the final authority.*\n\n## What does a Foreign Affairs officer do?\n\nA Foreign Affairs officer represents Bangladesh and works on its relations with other countries and international bodies. The work moves between two settings.\n\n- **Dhaka headquarters.** Officers work in wings of the Ministry of Foreign Affairs that cover regions and subjects, in the offices of the Foreign Minister and Foreign Secretary, and in protocol and training roles. A mid-career officer's record in one public CV shows a typical rhythm: postings in missions in Manila, Brussels, Beijing and Moscow, with Dhaka postings in between.\n- **Missions abroad.** Embassies, high commissions, consulates and permanent missions to bodies such as the UN. Work covers political reporting, trade and investment, consular help for Bangladeshi citizens, multilateral negotiations and public diplomacy.\n\nNot every officer in a mission comes from this cadre. Reports show civil servants from other cadres posted to embassies in labour-wing roles, and the government has also posted army officers and outsiders as ambassadors. Treat Foreign Affairs as the core career route, not the only door.\n\n## What is the career ladder?\n\n| Mission rank | Equivalent civil-service rank | Notes |\n|---|---|---|\n| Third Secretary | Assistant Secretary (Grade 9) | Entry level |\n| Second Secretary | Assistant Secretary | |\n| First Secretary | Senior Assistant Secretary (Grade 6) | |\n| Counsellor | Deputy Secretary (Grade 5) | |\n| Minister / Deputy Chief of Mission / Deputy High Commissioner | Ambassador C grade (joint secretary rank, Grade 3) | |\n| Ambassador / High Commissioner | A, B or C grade: A equals secretary, B additional secretary, C joint secretary | Heads of mission |\n\n*Source: Banglapedia and The Daily Star. Real posting titles depend on the mission and the ministry's decisions.*\n\n**Facts to know about ambassador posts:**\n\n- By established rule, about 70 per cent of heads of mission are career diplomats, and the rest come from outside, at the head of government's discretion, according to Banglapedia.\n- A Dhaka Tribune report says a maximum of 30 per cent are contractual appointments and that the quota is not always followed. It also notes that ambassadors usually come from the foreign cadre.\n- Promotions can be slow. The same report describes senior officers from earlier batches still waiting to become ambassadors while a later batch already serves.\n- Promotion lists often include officers serving in missions. One August 2026 gazette promoted 277 senior assistant secretaries to deputy secretary, including 15 serving in embassies.\n\n## How many Foreign Affairs posts are there, and how hard is it?\n\nWe could not find the Foreign Affairs post count for the 50th BCS in the sources we checked. A coaching-centre table for the 45th BCS lists 10 Foreign Affairs posts, which suggests the cadre is among the smallest. Check the circular for the real number.\n\n| Exam | Total cadre posts | Applicants |\n|---|---|---|\n| 47th BCS | 3,487 advertised; 1,320 recommended | 374,747 |\n| 50th BCS | 1,755 | 290,951 |\n\nIn the 47th BCS only 1,320 cadre candidates were recommended against 3,487 advertised posts, which left 2,167 cadre posts vacant, according to Prothom Alo. In the 50th BCS, 12,385 passed the preliminary and 6,165 passed the written exam (result published 23 July 2026). Foreign Affairs is a top choice for many candidates, so a high merit position matters. Allocation depends on your merit rank, your cadre choices and the vacancies.\n\n**A real risk to know about.** A Prothom Alo report from February 2026 describes the first-ranked Foreign Service candidate of the 44th BCS left off the gazette because of a police verification complication. Keep your documents clean and complete, and keep a plan B.\n\n## What happens in training?\n\n- **Foreign Service Academy (FSA).** It was set up in 1996 to meet the training needs of foreign service officers. Earlier training was run by the Foreign Affairs Training Institute, which merged into the BCS Administration Academy in 1987.\n- **Specialized Diplomatic Training Course (SDTC).** A foundation course the academy runs regularly for entry-level officers of the ministry. A certificate ceremony for the 28th SDTC was reported by the Daily Sun.\n- **Refresher courses** for mid-career diplomats cover evolving global and diplomatic challenges, according to BSS.\n- **Joint training.** The academy has run programmes with the University of Dhaka, and foreign embassies have joined training for young Bangladeshi diplomats.\n\n## What is the salary and what are the benefits?\n\nThe 9th National Pay Scale was approved by cabinet on 31 August 2026 and takes effect from 1 July 2026. Basic pay is raised in stages up to July 2027, so early pay is below the final figure. Allowances are reset from January 2028.\n\n| Rank (civil-service equivalent) | Grade | Old basic (BDT) | New basic (BDT) |\n|---|---|---|---|\n| Assistant Secretary / Third and Second Secretary | 9 | 22,000 | 44,000 |\n| Senior Assistant Secretary / First Secretary | 6 | 35,500 | 71,000 |\n| Deputy Secretary / Counsellor | 5 | 43,000 | 86,000 |\n| Joint Secretary / Minister, DG, Consul General | 3 | 56,500 | 1,13,000 |\n| Additional Secretary | 2 | 66,000 | 1,32,000 |\n| Secretary / A-grade Ambassador | 1 | 78,000 | 1,56,000 |\n\n*Source note: these figures come from a teacher-portal summary of the new scale, not the gazette. The Daily Star Bangla separately confirms Grade 1 at BDT 1,56,000. Overseas postings carry extra allowances, but we have not verified the rates, so check with serving officers and the ministry.*\n\n## Which skills does a diplomat need?\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| English: speaking and writing | Cables, negotiation, speeches | █████ |\n| International relations and foreign policy | Core knowledge for the viva and the job | █████ |\n| Official writing and reporting | Daily work is drafting notes and reports | █████ |\n| Integrity and discretion | Handling sensitive information | █████ |\n| Communication and negotiation | Meetings, lobbying, crisis talks | ████ |\n| Economic and trade understanding | Trade and investment promotion | ████ |\n| A second foreign language | Helps in many missions | ███ |\n| Protocol and etiquette | Official events and visits | ███ |\n| Crisis handling | Evacuations, citizen protection abroad | ███ |\n\n*Bars show our reading of the role, not a survey.*\n\n## How do I get in? The exam path\n\nForeign Affairs uses the general BCS exam: a 200-mark MCQ preliminary, a 900-mark written exam (Bangla 200, English 200, Bangladesh Affairs 200, International Affairs 100, Mathematical Reasoning and Mental Ability 100, General Science and Technology 100) and a 100-mark viva. See our BCS overview for the full guide.\n\n**To aim for Foreign Affairs:**\n\n1. Put it first on your cadre choice list only if you want the career, and add realistic second and third choices.\n2. Build English early. It decides both marks and daily work.\n3. Study International Affairs deeply: South Asia, major powers, the UN, trade and climate diplomacy.\n4. Read one national daily and one international source every day, and write a 150-word summary.\n5. Practise viva answers in English and Bangla. Typical viva questions ask you to represent the country to a foreign investor or explain the cadre's rank ladder.\n6. Keep a plan B and keep your documents clean for verification.\n\n## Where will you find more peace of mind?\n\nNo cadre is free of pressure, and we have no survey to rank them. Diplomatic life brings frequent moves, time away from family and schooling disruptions, as well as postings in difficult places. Dhaka postings can be file-heavy. Three habits protect your peace: plan family decisions early, keep a professional network across cadres, and stay close to colleagues who can speak honestly.\n\n## Plan your own path (5-minute worksheet)\n\nCopy these lines and fill them in today:\n\n1. **My age on the next cut-off date:** ___ (must be 32 or under)\n2. **My cadre choices:** 1) Foreign Affairs 2) ___ 3) ___\n3. **My English level (honest score out of 10):** ___\n4. **Three weakest subjects:** ___, ___, ___\n5. **Daily news-reading and summary minutes:** ___ (aim for 60)\n6. **My plan B if I do not get a cadre:** ___\n\nThen take the free skill test on this page and compare the result with line 4.\n\n## Faith and history: the call to know one another\n\n**The Quran.** Surah Al-Hujurat 49:13 says God made people into nations and tribes so that they may know one another ([read it on quran.com](https://quran.com/49/13)). It is a fitting verse for a career built on understanding other peoples.\n\n**Hadith.** The Prophet (peace be upon him) said that each of you is a shepherd and each is responsible for his flock (Sahih al-Bukhari 893; Sahih Muslim 1829). A diplomat is responsible for the dignity and interests of the people he or she represents.\n\n**History.** Foreign service training began in the 1980s at the Foreign Affairs Training Institute, which later merged with the BCS Administration Academy in 1987. The Foreign Service Academy was established in 1996 as a specialised institution for diplomatic training.\n\n## Your contribution to the nation\n\nA diplomat opens doors for trade, jobs and investment, protects citizens in trouble abroad and speaks for the country in negotiations. A clear report from an embassy helps Dhaka decide on a market or a crisis. Careful, honest work here supports millions of workers, exporters and students.\n\n## Your contribution to the world\n\nBangladeshi diplomats take part in multilateral work on climate, migration, peacekeeping and development. Officers build skills in negotiation and international law that carry into the UN system, research and international organisations after or alongside government service.\n\n## If you do not get BCS Foreign Affairs\n\n- **Other BCS cadres.** The same exam leads to Administration, Police, Taxation, Customs, Audit and more. Administration officers can also be posted to missions in some roles, as labour-wing postings show.\n- **Other international careers.** UN agencies, development organisations, NGOs, trade bodies and multinational companies.\n- **Study and research.** A master's in international relations or public policy abroad, then research or teaching.\n- **Non-cadre BPSC posts** and other government exams.\n\n## Research opportunities\n\n- Topics with real need: Bangladesh's trade diplomacy, labour migration diplomacy, climate negotiations, regional connectivity, the Rohingya crisis and diplomatic training.\n- Where to learn: international relations departments, think tanks and the Foreign Service Academy's own journal for officers.\n- Path: a strong master's thesis, a research assistant post, then MPhil or PhD.\n\n## Whom to follow and learn from\n\nFollow institutions: [BPSC](https://www.bpsc.gov.bd), the [Ministry of Foreign Affairs](https://mofa.portal.gov.bd) and the [Foreign Service Academy](https://fsa.portal.gov.bd). Treat coaching centre promises and social media rank claims with caution.\n\n## Where do I find circulars?\n\n- BPSC's official site: [bpsc.gov.bd](https://www.bpsc.gov.bd).\n- Teletalk's BPSC application portal: bpsc.teletalk.com.bd.\n- Daily newspapers' job pages (cross-check every date and number with the circular).\n\n**No lobbying.** Tadbir during the application process is treated as grounds for disqualification.\n\n## How should I write my profile and CV?\n\nBCS does not choose candidates from a CV. Marks decide. A short, honest profile helps in the viva and in backup applications.\n\n| Weak line | Better line |\n|---|---|\n| Interested in international affairs. | Wrote 8 published articles on regional trade and presented at a Model UN with 120 delegates. |\n| Good English. | IELTS 7.5; moderated 10 English debates; translated a 6,000-word report. |\n| Leader. | Led a 12-member student team that raised and accounted for BDT 1.5 lakh for flood relief. |\n\n*Use only real, provable figures.*\n\nBuild yours free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- Choosing Foreign Affairs only for travel or status.\n- Weak English and thin International Affairs reading.\n- Memorising answers instead of forming opinions you can defend.\n- Ignoring document verification until the last stage.\n- Having no plan B.\n- Believing rumours about marks or posts instead of the circular.\n\n## Changelog\n\n- **19 Nov 2026:** First version. Foreign Affairs post count for the 50th BCS not found; flagged in the text.\n- Next planned review: when the 52nd BCS circular is published.\n\n## Sources and method\n\nFacts were checked on 19 November 2026. Vacancy numbers, pay and rules can change; BPSC and the gazette are the final authority.\n\n- Wikipedia: [Bangladesh Civil Service (cadre table)](https://www.wikipedia.org/wiki/Bangladesh_Civil_Service)\n- Banglapedia: [Diplomatic Missions](https://en.banglapedia.org/index.php/Diplomatic_Missions); [Foreign Service Academy](https://en.banglapedia.org/index.php/Foreign_Service_Academy)\n- Ministry of Foreign Affairs: [Foreign Service Academy](https://mofa.portal.gov.bd/site/page/5da52ab2-7191-4236-8937-a6171997eea4)\n- Dhaka Tribune: [Terms of 16 ambassadors ending sparks succession](https://www.dhakatribune.com/bangladesh/foreign-affairs/339396/terms-of-16-ambassadors-ending-sparks-succession); [277 officials promoted to deputy secretary](https://www.dhakatribune.com/bangladesh/government-affairs/417709/277-officials-promoted-to-deputy-secretary); [Momen on the 28th SDTC](https://www.dhakatribune.com/bangladesh/foreign-affairs/303945/momen-bangladeshi-diplomats-will-have-to-play)\n- The Daily Star: [Nine foreign ministry officials get promotion](https://www.thedailystar.net/nine-foreign-ministry-officials-get-promotion-34357); [How much do government employees get paid?](https://www.thedailystar.net/tech-startup/news/how-much-do-government-employees-get-paid-3050446)\n- BSS: [Refreshers' course for mid-career diplomats](https://www.bssnews.net/news/401902)\n- Prothom Alo: [Police verification complication leaves top foreign service candidate off gazette](https://en.prothomalo.com/youth/employment/uqhbscyn4k); [47th BCS final results: why more than 2,000 cadre posts vacant](https://en.prothomalo.com/youth/employment/wct409dbvh)\n- The Observer: [47th BCS results](https://observerbd.com/news/581255)\n- bdnews24: [50th BCS written result](https://bangla.bdnews24.com/bangladesh/e72f95b8172c)\n- Dhaka Times: [50th BCS preliminary result](https://www.dhakatimes24.com/2026/02/10/401332)\n- Udvash-Unmesh: [45th BCS cadre-wise table](https://udvash-unmesh.com/media/Files/Result/BCS/45/45BCSCadreWise.pdf) (coaching centre, treat as indicative)\n- Ajker Patrika: [common viva questions for the Foreign Affairs cadre](https://ajkerpatrika.com/job/ajpayttxwj1an)\n- Desh Rupantor: [civil servants appointed to embassies](https://www.deshrupantor.com/622450/%E0%A6%AC%E0%A6%BF%E0%A6%AD%E0%A6%BF%E0%A6%A8%E0%A7%8D%E0%A6%A8-%E0%A6%A6%E0%A7%87%E0%A6%B6%E0%A7%87%E0%A6%B0-%E0%A6%A6%E0%A7%82%E0%A6%A4%E0%A6%BE%E0%A6%AC%E0%A6%BE%E0%A6%B8%E0%A7%87-%E0%A7%A7%E0%A7%AD-%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%B6%E0%A6%BE%E0%A6%B8%E0%A6%A8%E0%A6%BF%E0%A6%95-%E0%A6%95%E0%A6%B0%E0%A7%8D%E0%A6%AE%E0%A6%95%E0%A6%B0%E0%A7%8D%E0%A6%A4%E0%A6%BE%E0%A6%B0)\n- The Financial Express: [Army officers appointed as ambassadors](https://thefinancialexpress.com.bd/national/former-dgfi-chief-two-other-army-officers-appointed-as-ambassadors)\n- Developing 8: [CV of a serving Director General (service pattern)](https://developing8.org/wp-content/uploads/2024/10/CV-of-Mr-Tareq.pdf)\n- The Daily Star Bangla: [9th pay scale cost and Grade 1 pay](https://bangla.thedailystar.net/news/bangladesh/news-3963276)\n- Teacher portal: [9th pay scale summary](https://www.teachers.gov.bd/index.php/blog/details/849702)\n\n**How to cite this page:** Shishir, D. H. (2026, November 19). *BCS Foreign Affairs cadre: diplomat career, ranks, salary, exam and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/bcs-foreign-affairs-cadre\n\n*This guide gives general career information. It does not promise a job, rank or cadre, and it is not legal or religious advice. The BPSC circular is the final authority.*\n",
+  "growth_plan": {
+    "y1": "Download the latest circular and syllabus, build daily English reading and writing, study International Affairs, fix your two weakest subjects and apply when the circular opens.",
+    "y2": "Clear the preliminary comfortably, build written-exam speed, practise foreign policy answers in English, and keep a backup route moving.",
+    "y3": "Sit written and viva with a full revision cycle; if selected, prepare for the Specialized Diplomatic Training Course; if not, use your plan B and re-apply within the age limit."
+  },
+  "goal_sheet": [
+    "Week 1-2: Read the latest BPSC circular and syllabus; list weak subjects",
+    "Week 3-4: Daily routine: news reading, 150-word summary, English writing; one timed paper per week",
+    "Month 2: Bangla and English grammar and essays; Bangladesh Affairs notes",
+    "Month 3: International Affairs: South Asia, major powers, the UN; solve 3 years of preliminary papers",
+    "Month 4: Mathematical reasoning; nine-paper answer-writing drills",
+    "Month 5: Trade, climate and migration diplomacy; start English viva practice with a mentor",
+    "Month 6: Full mock exam week; update plan B; apply when the circular opens"
+  ],
+  "test": [
+    {
+      "q": "What is the entry post of a BCS Foreign Affairs officer?",
+      "options": [
+        "Third Secretary at an embassy",
+        "Assistant Secretary, Ministry of Foreign Affairs",
+        "Counsellor",
+        "Deputy High Commissioner"
+      ],
+      "answer_idx": 1,
+      "explain": "New officers join as Assistant Secretary at the ministry and are later posted abroad.",
+      "skill_tag": "ir"
+    },
+    {
+      "q": "Which institution trains Bangladesh's diplomats?",
+      "options": [
+        "BPATC, Savar",
+        "Foreign Service Academy",
+        "Police Academy, Sardah",
+        "National Defence College"
+      ],
+      "answer_idx": 1,
+      "explain": "The Foreign Service Academy was established in 1996 for foreign service training.",
+      "skill_tag": "protocol"
+    },
+    {
+      "q": "What is the foundation course for new diplomats called?",
+      "options": [
+        "Basic Land Management Course",
+        "Specialized Diplomatic Training Course",
+        "Advanced Course on Administration and Development",
+        "Junior Staff Course"
+      ],
+      "answer_idx": 1,
+      "explain": "The Specialized Diplomatic Training Course (SDTC) is the foundation course for entry-level officers.",
+      "skill_tag": "protocol"
+    },
+    {
+      "q": "A Counsellor in a mission holds a rank equal to:",
+      "options": [
+        "Assistant Secretary",
+        "Senior Assistant Secretary",
+        "Deputy Secretary",
+        "Secretary"
+      ],
+      "answer_idx": 2,
+      "explain": "Banglapedia places Counsellor at deputy secretary rank.",
+      "skill_tag": "ir"
+    },
+    {
+      "q": "A First Secretary holds a rank equal to:",
+      "options": [
+        "Assistant Secretary",
+        "Senior Assistant Secretary",
+        "Joint Secretary",
+        "Additional Secretary"
+      ],
+      "answer_idx": 1,
+      "explain": "First Secretary is equal to Senior Assistant Secretary (Grade 6).",
+      "skill_tag": "ir"
+    },
+    {
+      "q": "By established rule, what share of heads of mission come from career diplomats?",
+      "options": [
+        "30 per cent",
+        "50 per cent",
+        "70 per cent",
+        "100 per cent"
+      ],
+      "answer_idx": 2,
+      "explain": "About 70 per cent come from the career cadre and the rest from outside.",
+      "skill_tag": "protocol"
+    },
+    {
+      "q": "An A-grade ambassador holds a rank equal to:",
+      "options": [
+        "Joint Secretary",
+        "Additional Secretary",
+        "Secretary",
+        "Deputy Secretary"
+      ],
+      "answer_idx": 2,
+      "explain": "A grade equals secretary, B additional secretary, C joint secretary.",
+      "skill_tag": "protocol"
+    },
+    {
+      "q": "How many marks is the BCS written exam for general cadres?",
+      "options": [
+        "600",
+        "800",
+        "900",
+        "1,000"
+      ],
+      "answer_idx": 2,
+      "explain": "The written exam is 900 marks; with the 100-mark viva the merit total is 1,000.",
+      "skill_tag": "exam"
+    },
+    {
+      "q": "A country's exports rise from USD 40 billion to USD 50 billion. What is the percentage growth?",
+      "options": [
+        "10%",
+        "20%",
+        "25%",
+        "50%"
+      ],
+      "answer_idx": 2,
+      "explain": "(50 - 40) / 40 = 0.25, so 25 per cent.",
+      "skill_tag": "economy"
+    },
+    {
+      "q": "Choose the correct sentence.",
+      "options": [
+        "The delegation have arrived yesterday.",
+        "The delegation arrived yesterday.",
+        "The delegation arriving yesterday.",
+        "The delegation has arrive yesterday."
+      ],
+      "answer_idx": 1,
+      "explain": "A past-time word needs the simple past: arrived.",
+      "skill_tag": "english"
+    },
+    {
+      "q": "A host-country official offers you an expensive personal gift during a negotiation. The best action is to:",
+      "options": [
+        "Accept it quietly",
+        "Politely decline or declare it under the rules and tell your superior",
+        "Accept and ask for a favour",
+        "Ignore the offer and say nothing"
+      ],
+      "answer_idx": 1,
+      "explain": "Gifts during negotiations can compromise integrity; follow the rules and report.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Which of these is the best opening for a short official note?",
+      "options": [
+        "A long background first",
+        "A one-sentence summary of the issue and the recommended action",
+        "A list of every meeting held",
+        "Your personal opinion about the minister"
+      ],
+      "answer_idx": 1,
+      "explain": "Busy readers need the point and the action first, then the detail.",
+      "skill_tag": "writing"
+    }
+  ],
+  "cv_template_notes": "BCS does not select by CV, so use a clean one-page academic-style HWG layout (single column, no heavy graphics) for your viva profile, backup applications and scholarships. Lead with education and results, then languages, Model UN or debating, volunteering and any writing or research. Add real numbers (articles published, language scores, people led). Keep it to one page. File name: YourName_BCS_ForeignAffairs_Aspirant_CV.pdf. Use only facts you can prove in a viva.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the [position] advertised on [site/date]. I hold a [degree] from [university] and have strong English and Bangla writing, research and communication skills built while preparing for the BCS Foreign Affairs cadre. In [project/volunteering role] I [one provable result, e.g. wrote 8 published articles on regional trade and led a 12-member Model UN team].\n\nMy CV is attached as a PDF. I would be glad to attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email]\n\n(Note: BCS itself needs no cover letter. Use this for backup non-BCS applications.)",
+  "interview_qs": [
+    "Why do you want to join the Foreign Service? (Tip: Give a specific reason from real experience; talk about serving the country, not travel or status.)",
+    "Represent your country to a foreign investor. How would you attract him to invest here? (Tip: Use real strengths: young workforce, market size, economic zones; stay factual and honest about challenges.)",
+    "Explain the rank ladder in the Foreign Service. (Tip: Third Secretary up to Ambassador; mention civil-service equivalents.)",
+    "What are Bangladesh's key foreign policy priorities? (Tip: Trade, labour migration, climate, regional connectivity, and the Rohingya issue; give two balanced points each.)",
+    "How would you explain a controversial government decision to a foreign audience? (Tip: Stay accurate, calm and balanced; do not mislead.)",
+    "What would you do if a Bangladeshi worker is in trouble in your host country? (Tip: Consular help: contact, legal support, coordination with local authorities and Dhaka.)",
+    "What is the difference between an embassy and a high commission? (Tip: High commissions are between Commonwealth members; both represent the state.)",
+    "Tell us about Bangladesh's relations with a neighbour. (Tip: Two facts, two issues, one realistic way forward.)",
+    "What does the UN do for Bangladesh and what does Bangladesh give to the UN? (Tip: Mention peacekeeping, development support and multilateral work.)",
+    "How would you deal with an offer of a gift from a host-country official? (Tip: Follow the rules; decline or declare; stay polite.)",
+    "How do you handle living away from family and moving often? (Tip: Show a realistic plan and support network.)",
+    "Describe a time you led or organised people. (Tip: Situation, action, result in numbers if possible.)",
+    "Why not Administration or another cadre? (Tip: Show you know the other cadre; explain your fit with Foreign Affairs.)",
+    "What will you do if you are not selected this time? (Tip: Show a calm plan B; do not sound defeated.)",
+    "Do you have any questions for us? (Tip: Ask about training or learning, not about pay or postings.)"
+  ]
+}

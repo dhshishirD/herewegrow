@@ -1,0 +1,355 @@
+{
+  "slug": "bcs-health-cadre",
+  "title_en": "BCS Health Cadre (Assistant Surgeon / Medical Officer)",
+  "title_bn": "বিসিএস স্বাস্থ্য ক্যাডার (সহকারী সার্জন)",
+  "field": "Government & Civil Service",
+  "seo_title": "BCS Health Cadre: Government Doctor Career, Salary (2026)",
+  "seo_desc": "BCS Health cadre in Bangladesh: Assistant Surgeon entry, 650 posts in the 50th BCS, 51st Special BCS, 9th pay scale, promotion reality and a free test.",
+  "summary": "The BCS (Health) cadre is the government doctor service. MBBS graduates join as Assistant Surgeon or Medical Officer and BDS graduates as Assistant Dental Surgeon at Grade 9, mostly in upazila health complexes, district hospitals and medical colleges. This page covers the 2026 hiring drive and the 51st Special BCS, the doctor shortage, the slow-promotion catch, the new pay scale, the exam path and a free skill test.",
+  "salary": {
+    "entry": "BDT 44,000 basic per month at Grade 9 (new 9th pay scale, phased in; old scale BDT 22,000), plus allowances",
+    "mid": "BDT 71,000 - 86,000 basic per month at Grades 6 and 5 (for example Assistant Professor or Junior Consultant; exact grade of each post not verified here)",
+    "senior": "BDT 1,13,000 - 1,56,000 basic per month at Grades 3 to 1 (rare senior posts such as Director or Additional Director General; check the gazette)",
+    "note": "Checked 19 Nov 2026. 9th pay scale approved 31 Aug 2026, phased in to Jul 2027. Figures are from a teacher-portal summary, not the gazette; check the gazette.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Government job at Grade 9 with a fixed scale and pension",
+    "House rent and medical allowance, festival bonuses and leave under government rules",
+    "Large number of posts, so entry is less crowded than some other cadres",
+    "Postgraduate study chances (MD, MS, FCPS, diplomas) while in service",
+    "Direct patient impact, especially in rural upazilas",
+    "Paths into teaching, public health administration and international health work"
+  ],
+  "companies": [
+    "Upazila health complexes",
+    "District and general hospitals",
+    "Government medical colleges and hospitals",
+    "Specialised and postgraduate hospitals",
+    "Directorate General of Health Services (DGHS)",
+    "Civil Surgeon offices",
+    "Union health centres and community clinics",
+    "Ministry of Health and Family Welfare"
+  ],
+  "season": [
+    "The 50th BCS includes 650 health posts; final result was planned for 25 November 2026",
+    "The 51st Special BCS opened for 5,000 doctors; applications ran 1 to 25 October 2026",
+    "Special BCS exams for doctors are held when the health ministry requests them",
+    "The 52nd (general) BCS circular was planned for November 2026; watch bpsc.gov.bd",
+    "Posting orders usually follow the final result; foundation training follows posting"
+  ],
+  "skills": [
+    {
+      "name": "Clinical knowledge and judgement",
+      "level": "Core",
+      "tag": "clinical"
+    },
+    {
+      "name": "Emergency and primary care",
+      "level": "Core",
+      "tag": "emergency"
+    },
+    {
+      "name": "Public health basics",
+      "level": "Important",
+      "tag": "publichealth"
+    },
+    {
+      "name": "Ethics and patient respect",
+      "level": "Core",
+      "tag": "ethics"
+    },
+    {
+      "name": "Communication with patients and staff",
+      "level": "Important",
+      "tag": "communication"
+    },
+    {
+      "name": "Record keeping and digital tools",
+      "level": "Growing",
+      "tag": "digital"
+    },
+    {
+      "name": "Leadership and teamwork",
+      "level": "Important",
+      "tag": "leadership"
+    },
+    {
+      "name": "Writing and reporting",
+      "level": "Important",
+      "tag": "writing"
+    },
+    {
+      "name": "Research and evidence reading",
+      "level": "Growing",
+      "tag": "research"
+    },
+    {
+      "name": "BCS exam skills: Bangla, English, Bangladesh Affairs",
+      "level": "Core",
+      "tag": "exam"
+    }
+  ],
+  "gaps_checklist": [
+    "I know the difference between the general BCS and the special BCS for doctors",
+    "I have my MBBS or BDS, internship and BMDC registration documents ready",
+    "I have checked the age limit and rules in the latest circular",
+    "I can describe the first hour of emergency care for a common case",
+    "I can explain one public health programme in Bangladesh",
+    "I can answer an ethical pressure question calmly and clearly",
+    "I know what a rural upazila posting involves and I am ready for it",
+    "I have a postgraduate study plan with a subject and a year",
+    "I have a written plan B if this round does not work out"
+  ],
+  "courses": [
+    {
+      "title": "BPSC circulars, syllabus and exam notices",
+      "provider": "Bangladesh Public Service Commission (BPSC)",
+      "url": "https://www.bpsc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "exam"
+    },
+    {
+      "title": "Health services notices, posting and training",
+      "provider": "Directorate General of Health Services (DGHS)",
+      "url": "https://dghs.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "clinical"
+    },
+    {
+      "title": "Foundation training for BCS officers",
+      "provider": "Bangladesh Public Administration Training Centre (BPATC)",
+      "url": "https://bpatc.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "leadership"
+    },
+    {
+      "title": "Free Bangla e-learning courses",
+      "provider": "Muktopaath",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "publichealth"
+    },
+    {
+      "title": "BCS preparation and English, maths courses",
+      "provider": "10 Minute School",
+      "url": "https://10minuteschool.com",
+      "is_affiliate": false,
+      "skill_tag": "exam"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the entry post of the BCS Health cadre?",
+      "a": "Assistant Surgeon or Medical Officer for MBBS holders and Assistant Dental Surgeon for BDS holders, at Grade 9."
+    },
+    {
+      "q": "What is the salary of a BCS Health officer?",
+      "a": "Under the new 9th pay scale the Grade 9 basic is listed at BDT 44,000 (old scale BDT 22,000), paid in stages up to July 2027, plus allowances. Check the gazette for exact figures and health-specific allowances."
+    },
+    {
+      "q": "What is the 51st Special BCS?",
+      "a": "A special exam for 5,000 doctors: 4,700 assistant surgeons and 300 assistant dental surgeons. The circular was published on 24 September 2026 and applications ran from 1 to 25 October 2026, with a fee of BDT 200."
+    },
+    {
+      "q": "How many health posts are in the 50th BCS?",
+      "a": "650 of the 1,755 cadre posts, the largest share of any cadre, according to the circular reports."
+    },
+    {
+      "q": "Why does the government need so many doctors?",
+      "a": "The health minister told Parliament in September 2026 that government hospitals had 41,806 approved doctor posts, 30,311 doctors working and 11,495 vacancies, with about 88,909 doctors needed to meet the WHO minimum of 0.50 per 1,000 people."
+    },
+    {
+      "q": "Is promotion slow in the health cadre?",
+      "a": "Prothom Alo reported that many health cadre officers remain at Grade 9 while peers in other cadres move to Grade 6. We did not find a 2026 update, so check current rules and ask serving doctors."
+    },
+    {
+      "q": "Where do new doctors train?",
+      "a": "A foundation course at BPATC or another government-designated institution, followed by service-related professional training."
+    },
+    {
+      "q": "Does BCS Health need a CV?",
+      "a": "BCS does not choose by CV. A short honest profile helps in the viva and in backup applications. For example: 'MBBS graduate with a 12-month internship, including three months in a district hospital emergency ward.'"
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 19 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** BCS (Health) is the government doctor cadre. MBBS graduates join as Assistant Surgeon (or Medical Officer) and BDS graduates as Assistant Dental Surgeon, both at Grade 9, and are posted mostly to upazila health complexes, district hospitals and medical colleges. It is the biggest cadre in the 50th BCS (650 of 1,755 cadre posts), and a separate 51st Special BCS for 5,000 doctors (4,700 assistant surgeons and 300 assistant dental surgeons) opened applications from 1 to 25 October 2026. Government hospitals had 11,495 vacant doctor posts in September 2026, so demand is high. The trade-off is slow promotion: many health cadre officers stay at Grade 9 for years. Under the new 9th pay scale the Grade 9 basic pay is listed at BDT 44,000, phased in up to July 2027.\n\n## Key facts (as of 19 November 2026)\n\n| Question | Answer | Source type |\n|---|---|---|\n| Entry posts | Assistant Surgeon / Medical Officer (MBBS); Assistant Dental Surgeon (BDS) | BPSC circular reports |\n| Entry grade | Grade 9 | BCS entry-grade table |\n| Starting basic pay | BDT 44,000 (new 9th scale, phased in to July 2027); old scale BDT 22,000 | Daily Star Bangla; teacher-portal summary |\n| 50th BCS health posts | 650 of 1,755 cadre posts | Prothom Alo; bdnews24 |\n| 51st Special BCS | 4,700 assistant surgeons and 300 assistant dental surgeons; applications 1-25 Oct 2026; fee BDT 200 | bdnews24; Prothom Alo |\n| Doctor posts in government hospitals | 41,806 approved; 30,311 working; 11,495 vacant (7 Sep 2026) | Health minister in Parliament, via Dhaka Tribune and Observer |\n| Upazila health complexes | 13,036 sanctioned doctor posts; 6,288 vacant (48%) | UNB |\n| Foundation training | At BPATC or another government-designated institution | BSS; Financial Express |\n| Exam | General BCS: preliminary 200, written 900, viva 100; special BCS formats are set in each circular | BPSC |\n\n*Numbers can change with each circular. The BPSC circular and the gazette are the final authority.*\n\n## What does a BCS Health officer do?\n\nYou work as a government doctor. Typical postings and duties:\n\n- **Upazila health complexes (UHCs).** Outpatient care, emergency, maternal and child health, and referral. The Daily Star reported that each UHC was set to get four to five doctors, including two emergency medical officers, and Asia News Network reported that a UHC doctor can see 100 to 150 outpatients a day.\n- **Union-level and community clinics.** Rural primary care.\n- **District and general hospitals.** Ward duty, emergency, surgery and medicine.\n- **Medical colleges and specialised hospitals.** After postgraduate training, teaching and specialist care.\n- **Public health administration.** Roles such as Upazila Health and Family Planning Officer, Civil Surgeon and posts in the Directorate General of Health Services (DGHS).\n\n## Why is the health cadre in the news?\n\n- **Big shortage.** The health minister told Parliament on 7 September 2026 that Bangladesh needs about 88,909 doctors to meet the WHO minimum of 0.50 doctors per 1,000 people, that government hospitals have 41,806 approved doctor posts, 30,311 doctors are working and 11,495 posts are vacant.\n- **Rural gap.** Nearly half of the sanctioned doctor posts at upazila health complexes were reported vacant, and many doctors did not stay at their posting.\n- **Hiring drive.** The 2026-27 budget speech promised to recruit 5,000 MBBS doctors at once. The state health minister told Parliament on 16 November 2026 that recruitment was under way for about 4,000 doctors and the same number of nurses and nursing staff, and that assistant surgeon posts were being filled through the 46th, 47th and 50th BCS.\n- **Special BCS.** Special BCS exams are generally organised for the health cadre. The 48th Special BCS led to 3,263 appointments in January 2026, and the 51st Special BCS circular was published on 24 September 2026.\n\n## What is the career ladder, and what is the catch?\n\n| Stage | Notes |\n|---|---|\n| Assistant Surgeon / Medical Officer / Assistant Dental Surgeon (Grade 9) | Entry post |\n| Senior scale (Grade 6) | For example Assistant Professor or Junior Consultant, after meeting promotion conditions |\n| Higher posts | Upazila Health and Family Planning Officer, Civil Surgeon, Director, and occasionally Additional Director General |\n\n**The catch.** Prothom Alo reported that many BCS officers of other cadres move from Grade 9 to Grade 6, while most health cadre officers stay stuck at Grade 9, and that officers must meet three conditions for the first promotion. A dental surgeon from the 13th BCS said colleagues from other cadres who joined in 1994 had reached Grade 3. We did not find a 2026 update on the promotion rules, so ask serving doctors and check the current rules before you decide.\n\n## How many posts are there, and how hard is it?\n\n| Exam | Health posts | Notes |\n|---|---|---|\n| 50th BCS (general) | 650 of 1,755 cadre posts | 290,951 applied; 12,385 passed the preliminary; 6,165 passed the written exam (23 July 2026); viva from August; final result planned 25 November 2026 |\n| 51st Special BCS | 4,700 assistant surgeons, 300 assistant dental surgeons | Applications 1-25 October 2026 |\n| 48th Special BCS | 2,984 assistant surgeons and 279 assistant dental surgeons recruited | Reported 22 January 2026 |\n\nBecause health posts are so many, the competition per post is usually lower than for Administration or Foreign Affairs, but doctors in the general BCS also compete for the other cadres if they list them. A special BCS lets you apply for health only. The special BCS exam format is set in each circular, so read the 51st circular for the details we have not verified here.\n\n## What happens in training?\n\n- **Foundation course.** The Public Administration Ministry has said new doctors and dentists attend a foundation course at the Bangladesh Public Administration Training Centre (BPATC) or another government-designated training institution, followed by service-related professional training.\n- **Earlier practice.** For example, a special foundation course of two months at the Bangladesh Rural Development Academy in Bogura was announced for an earlier batch.\n- **Then on the job.** Field posting, then postgraduate study (MD, MS, diplomas, FCPS) as seats and rules allow.\n\nCourse length for your batch can change, so check your appointment letter.\n\n## What is the salary and what are the benefits?\n\nThe 9th National Pay Scale was approved by cabinet on 31 August 2026 and takes effect from 1 July 2026. Basic pay is raised in stages up to July 2027. Allowances are reset from January 2028.\n\n| Grade | Old basic (BDT) | New basic (BDT) |\n|---|---|---|\n| 9 (entry) | 22,000 | 44,000 |\n| 6 | 35,500 | 71,000 |\n| 5 | 43,000 | 86,000 |\n| 3 | 56,500 | 1,13,000 |\n| 2 | 66,000 | 1,32,000 |\n| 1 | 78,000 | 1,56,000 |\n\n*Source note: these figures come from a teacher-portal summary, not the gazette. The Daily Star Bangla confirms Grade 1 at BDT 1,56,000. Health-specific allowances (for example for rural posting or practice) were not verified.*\n\n**Benefits** (check your appointment terms): house rent and medical allowance, festival bonuses, leave, pension, and a chance to study for postgraduate degrees. A government committee proposed a private-sector minimum pay of BDT 30,000 to 35,000 for new doctors, according to the Financial Express, which shows the pay floor that government work competes with.\n\n## Which skills does a government doctor need?\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Clinical knowledge and judgement | Core of the job | █████ |\n| Emergency and primary care | UHC doctors often face emergencies first | █████ |\n| Public health basics | Immunisation, maternal and child health, outbreak response | ████ |\n| Ethics and patient respect | Trust in public hospitals | █████ |\n| Communication with patients and staff | Short consultations, difficult news | ████ |\n| Record keeping and digital tools | Registers, DHIS2-type reporting | ███ |\n| Leadership and teamwork | Working with nurses, technologists and administrators | ███ |\n| Exam skills for general BCS | Bangla, English, Bangladesh Affairs, maths | ████ |\n\n*Bars show our reading of the role, not a survey.*\n\n## How do I get in? The exam path\n\nYou need an MBBS (or BDS for dental posts) or an equivalent recognised degree and must meet the circular's rules. The entry age limit has been 21 to 32 in the 50th BCS. The ministry had proposed raising the health cadre entry age to 34, but we did not confirm whether that is in force, so check the circular.\n\n**Two routes:**\n\n1. **General BCS.** The 200-mark MCQ preliminary, 900-mark written exam (Bangla 200, English 200, Bangladesh Affairs 200, International Affairs 100, Mathematical Reasoning and Mental Ability 100, General Science and Technology 100) and 100-mark viva. You can list health as a cadre choice. See our BCS overview.\n2. **Special BCS.** A recruitment exam only for doctors, held when the ministry asks for it. The 51st Special BCS is the current one; read its circular for the format and dates.\n\n**To prepare:** finish internship, register with the Bangladesh Medical and Dental Council (BMDC), keep documents ready, and practise the exam style in the circular. Keep a plan B, such as postgraduate study.\n\n## Where will you find more peace of mind?\n\nNo cadre is stress-free, and we have no survey to rank them. Government clinical work brings steady income and patient access, but the first postings are often rural, with heavy outpatient loads and limited equipment, and some doctors report that they live away from family. BSS reported that the state health minister said accommodation for doctors would be included in the designs of new upazila health complexes. Slow promotion adds to the stress for some. Three habits help: learn the local referral network early, keep a study plan for postgraduate exams, and keep contact with seniors you trust.\n\n## Plan your own path (5-minute worksheet)\n\n1. **My age on the next cut-off date:** ___ (check the circular's limit)\n2. **My route:** special BCS / general BCS with health first choice / both\n3. **My comfort working in a rural upazila (score out of 10):** ___\n4. **My postgraduate plan (subject and year):** ___\n5. **Documents ready (MBBS or BDS certificate, internship, BMDC registration):** yes / no\n6. **My plan B if I do not get a post:** ___\n\nThen take the free skill test on this page.\n\n## Faith and history: the trust of healing\n\n**The Quran.** Surah Al-Ma'idah 5:32 says that whoever saves one life, it is as if he saved all of mankind ([read it on quran.com](https://quran.com/5/32)). For a doctor, it describes the weight of the work.\n\n**Hadith.** The Prophet (peace be upon him) said that Allah has not sent down a disease without sending down its cure (Sahih al-Bukhari 5678). It encourages treatment, study and research.\n\n**History.** The government recruited 3,263 doctors and dentists through the 48th Special BCS (reported 22 January 2026) and opened a 5,000-post special BCS in September 2026, a sign of how central the cadre is to the public health system.\n\n## Your contribution to the nation\n\nA government doctor at an upazila complex is often the only qualified physician within reach of thousands of people. Filling empty posts, staying at the posting and treating patients with respect is the direct way to help close the gap the health minister described.\n\n## Your contribution to the world\n\nBangladeshi doctors work with WHO, UN agencies and research groups on maternal health, immunisation and outbreak response. Training in epidemiology and public health, such as field epidemiology programmes, opens paths to international work.\n\n## If you do not get BCS Health\n\n- **Next special BCS.** Special BCS exams for doctors are held when the ministry requests them.\n- **Postgraduate study.** MD, MS, FCPS or MPH, then re-apply as a specialist.\n- **Other public posts.** Autonomous hospitals, armed forces medical services and DGFP (family planning) posts through their own circulars.\n- **Private hospitals, NGOs and research.** Check minimum pay and working hours carefully.\n\n## Research opportunities\n\n- Topics with real need: rural health workforce retention, emergency care at upazila level, maternal and child health, non-communicable diseases and antibiotic resistance.\n- Where to learn: medical colleges, public health institutes and research organisations such as icddr,b.\n- Path: a strong dissertation, a research assistant role, then MPH, MPhil or PhD.\n\n## Whom to follow and learn from\n\nFollow institutions: [BPSC](https://www.bpsc.gov.bd), the [Directorate General of Health Services](https://dghs.gov.bd), the Ministry of Health and Family Welfare and BMDC. Treat coaching centre promises and social media rank claims with caution.\n\n## Where do I find circulars?\n\n- BPSC's official site: [bpsc.gov.bd](https://www.bpsc.gov.bd), including the 51st Special BCS circular.\n- Teletalk's BPSC application portal: bpsc.teletalk.com.bd.\n- DGHS notices for posting and training.\n- Daily newspapers' job pages (cross-check every date and number with the circular).\n\n**No lobbying.** Tadbir during the application process is treated as grounds for disqualification.\n\n## How should I write my profile and CV?\n\nBCS does not choose candidates from a CV. Marks decide. A short, honest profile helps in the viva and in backup applications.\n\n| Weak line | Better line |\n|---|---|\n| Hard-working doctor. | Completed a 12-month internship, including 3 months in a district hospital emergency ward. |\n| Interested in public health. | Led a 2-day free health camp that screened 180 people for blood pressure and diabetes. |\n| Good communicator. | Counselled families in Bangla and English during night duty and kept a log of cases. |\n\n*Use only real, provable figures.*\n\nBuild yours free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- Choosing the cadre without thinking about rural postings and slow promotion.\n- Missing the special BCS window and the document checklist.\n- Expecting the general BCS to be like medical exams, and skipping written practice.\n- Treating the viva as a place for memorised answers.\n- Having no postgraduate plan.\n- Believing rumours about posts or promotion instead of the circular.\n\n## Changelog\n\n- **19 Nov 2026:** First version. The special BCS exam format, current promotion rules, health-specific allowances and the entry age limit for the 51st Special BCS were not confirmed; flagged in the text.\n- Next planned review: when the 50th BCS final result is published or the 51st Special BCS exam schedule is announced.\n\n## Sources and method\n\nFacts were checked on 19 November 2026. Vacancy numbers, pay and rules can change; BPSC and the gazette are the final authority.\n\n- Prothom Alo: [50th BCS circular](https://en.prothomalo.com/youth/employment/75pyal56mp); [51st special BCS circular](https://en.prothomalo.com/youth/education/su7x69iyig); [Recruitment of 5,000 physicians begins](https://en.prothomalo.com/youth/employment/okj5wpoqhy); [Public healthcare workforce shortages](https://en.prothomalo.com/amp/story/youth/employment/5m6hdjx20g); [Health cadre officers deprived of promotions](https://en.prothomalo.com/bangladesh/government/health-cadre-officers-deprived-of-promotions)\n- bdnews24: [51st special BCS opens 5,000 posts for doctors](https://bdnews24.com/bangladesh/a9yhj99o10); [50th BCS circular](https://bdnews24.com/bangladesh/c88f389e425e); [50th BCS viva schedule](https://bdnews24.com/bangladesh/baa398faba73)\n- The Observer: [Doctor shortage figures, 7-8 September 2026](https://observerbd.com/news/592201); [48th Special BCS appointments](https://www.observerbd.com/news/563274); [50th BCS written result](https://observerbd.com/news/584719)\n- Dhaka Tribune: [Health minister on doctors serving](https://www.dhakatribune.com/bangladesh/parliament/419275/health-minister-only-30-311-doctors-serving-in); [Govt to recruit 5,000 doctors](https://www.dhakatribune.com/bangladesh/health/412361/govt-to-recruit-5-000-doctors-100-000-health); [State minister on recruitment](https://www.dhakatribune.com/bangladesh/health/421775/state-minister-government-begins-recruitment-of)\n- UNB: [Only half of doctor posts at UHCs filled](https://unb.com.bd/category/Bangladesh/only-half-of-all-doctors-posts-earmarked-for-uhcs-filled-health-minister/200601); [184 more doctors under 48th BCS Special](https://unb.com.bd/category/Bangladesh/govt-appoints-184-more-doctors-under-48th-bcs-special/193879)\n- BSS: [Govt to recruit 8,000 doctors and nurses](https://www.bssnews.net/js-session/446616); [3,263 officers under special BCS](https://www.bssnews.net/news-flash/353818)\n- The Financial Express: [184 officers appointed to BCS health cadre](https://thefinancialexpress.com.bd/health/184-officers-appointed-to-bcs-health-cadre); [Committee recommends minimum salary for new doctors](https://thefinancialexpress.com.bd/health/committee-recommends-tk-30000-salary-floor-with-bonuses-for-new-doctors)\n- The Daily Star: [3,200 doctors to join field services](https://online-d11.thedailystar.net/health/healthcare/hospitals/news/3200-doctors-join-field-services-10-days-4095391); [Special BCS on the cards](https://www.thedailystar.net/health/news/recruitment-2000-doctors-special-bcs-the-cards-3847021)\n- Asia News Network: [Vacant posts in public hospitals](https://asianews.network/over-23000-doctor-nurse-health-worker-posts-vacant-in-public-hospitals-bangladesh-health-minister/); [Short of healing hands](https://asianews.network/?p=310399)\n- The Daily Star Bangla: [9th pay scale cost and Grade 1 pay](https://bangla.thedailystar.net/news/bangladesh/news-3963276)\n- Teacher portal: [9th pay scale summary](https://www.teachers.gov.bd/index.php/blog/details/849702)\n\n**How to cite this page:** Shishir, D. H. (2026, November 19). *BCS Health cadre: government doctor career, salary, special BCS, exam and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/bcs-health-cadre\n\n*This guide gives general career information. It does not promise a job, rank or cadre, and it is not medical, legal or religious advice. The BPSC circular is the final authority.*\n",
+  "growth_plan": {
+    "y1": "Finish internship and BMDC registration, decide between special and general BCS, download the latest circular, build your document file and apply when a circular opens.",
+    "y2": "Prepare for the exam format in the circular, build speed in the general-BCS subjects if you are going that route, and plan your postgraduate subject.",
+    "y3": "If selected, prepare for BPATC foundation training and a field posting; if not, use your plan B (postgraduate study, other public posts, NGOs) and re-apply within the age limit."
+  },
+  "goal_sheet": [
+    "Week 1-2: Read the latest BPSC circular; list required documents and deadlines",
+    "Week 3-4: Collect certificates, internship letter and BMDC registration proof",
+    "Month 2: Revise core clinical topics and common public health programmes",
+    "Month 3: Practise MCQs under timed conditions; start Bangla and English if going general BCS",
+    "Month 4: Mathematical reasoning and General Science; written-answer drills",
+    "Month 5: Health policy, doctor shortage and rural care notes; start viva practice",
+    "Month 6: Full mock exam week; update plan B and postgraduate plan"
+  ],
+  "test": [
+    {
+      "q": "What is the entry post of an MBBS doctor in the BCS Health cadre?",
+      "options": [
+        "Assistant Secretary",
+        "Assistant Commissioner of Taxes",
+        "Assistant Surgeon / Medical Officer",
+        "Lecturer"
+      ],
+      "answer_idx": 2,
+      "explain": "MBBS graduates join as Assistant Surgeon or Medical Officer at Grade 9.",
+      "skill_tag": "clinical"
+    },
+    {
+      "q": "What is the 51st Special BCS mainly for?",
+      "options": [
+        "Recruiting doctors",
+        "Recruiting police officers",
+        "Recruiting teachers only",
+        "Recruiting engineers"
+      ],
+      "answer_idx": 0,
+      "explain": "It is a special BCS for 5,000 doctors.",
+      "skill_tag": "exam"
+    },
+    {
+      "q": "Which body runs BCS recruitment exams?",
+      "options": [
+        "Directorate General of Health Services",
+        "Bangladesh Bank",
+        "Election Commission",
+        "Bangladesh Public Service Commission"
+      ],
+      "answer_idx": 3,
+      "explain": "BPSC conducts BCS exams; DGHS handles health service administration.",
+      "skill_tag": "exam"
+    },
+    {
+      "q": "Which facility is usually the first public point of care for rural patients at upazila level?",
+      "options": [
+        "Medical university",
+        "Upazila health complex",
+        "Private clinic abroad",
+        "Airport clinic"
+      ],
+      "answer_idx": 1,
+      "explain": "Upazila health complexes provide primary and referral care.",
+      "skill_tag": "publichealth"
+    },
+    {
+      "q": "A patient arrives unconscious. The first step in emergency care is to:",
+      "options": [
+        "Check the airway, breathing and circulation",
+        "Wait for relatives",
+        "Give oral medicine",
+        "Send him home"
+      ],
+      "answer_idx": 0,
+      "explain": "Airway, breathing and circulation come first in emergency assessment.",
+      "skill_tag": "emergency"
+    },
+    {
+      "q": "A patient's relative offers you a gift for a quicker bed. The best action is to:",
+      "options": [
+        "Accept quietly",
+        "Accept and skip the queue",
+        "Ignore the rule and say nothing",
+        "Decline politely and follow the admission rules"
+      ],
+      "answer_idx": 3,
+      "explain": "A gift tied to a decision is improper; follow the rules and report pressure.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Immunisation protects a community mainly by:",
+      "options": [
+        "Curing every disease",
+        "Replacing hospitals",
+        "Reducing the spread of preventable disease",
+        "Stopping all travel"
+      ],
+      "answer_idx": 2,
+      "explain": "Vaccines prevent disease and reduce transmission.",
+      "skill_tag": "publichealth"
+    },
+    {
+      "q": "When explaining a diagnosis to a worried patient you should:",
+      "options": [
+        "Use only medical terms",
+        "Use simple words and check understanding",
+        "Avoid eye contact",
+        "Rush to the next patient"
+      ],
+      "answer_idx": 1,
+      "explain": "Clear, simple language builds trust and helps patients follow treatment.",
+      "skill_tag": "communication"
+    },
+    {
+      "q": "According to the health minister, the WHO minimum cited for doctors is about:",
+      "options": [
+        "0.50 doctors per 1,000 people",
+        "5 doctors per 1,000 people",
+        "0.05 doctors per 1,000 people",
+        "50 doctors per 1,000 people"
+      ],
+      "answer_idx": 0,
+      "explain": "The minister cited 0.50 doctors per 1,000 people in September 2026.",
+      "skill_tag": "research"
+    },
+    {
+      "q": "What is 15% of 1,200 patients seen in a month?",
+      "options": [
+        "150",
+        "120",
+        "200",
+        "180"
+      ],
+      "answer_idx": 3,
+      "explain": "0.15 x 1,200 = 180.",
+      "skill_tag": "exam"
+    },
+    {
+      "q": "Which is the best way to record a patient's treatment?",
+      "options": [
+        "Memory only",
+        "Verbal message to a friend",
+        "Clear, dated notes in the register",
+        "No record"
+      ],
+      "answer_idx": 2,
+      "explain": "Dated, accurate records protect patients and doctors.",
+      "skill_tag": "digital"
+    },
+    {
+      "q": "How many marks is the BCS written exam in the general BCS?",
+      "options": [
+        "200",
+        "900",
+        "100",
+        "1,000"
+      ],
+      "answer_idx": 1,
+      "explain": "Written is 900 marks; preliminary 200 and viva 100.",
+      "skill_tag": "exam"
+    }
+  ],
+  "cv_template_notes": "BCS does not select by CV, so use a clean one-page HWG layout (single column, no heavy graphics) for your viva profile, backup applications and postgraduate or NGO jobs. Lead with MBBS or BDS, internship, BMDC registration, then clinical rotations, health camps, volunteering and any research. Add real numbers (patients seen, camps led, hours served). Keep it to one page. File name: YourName_BCS_Health_Aspirant_CV.pdf. Use only facts you can prove in a viva.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the [position] advertised on [site/date]. I hold an [MBBS/BDS] from [college] and completed a [12-month] internship, including [rotation or emergency experience]. In [camp/volunteering role] I [one provable result, e.g. led a health camp that screened 180 people].\n\nMy CV is attached as a PDF. I would be glad to attend an interview.\n\nSincerely,\n[Your name] | [BMDC registration no.] | [Phone] | [Email]\n\n(Note: BCS itself needs no cover letter. Use this for backup non-BCS applications.)",
+  "interview_qs": [
+    "Why do you want to join the BCS Health cadre? (Tip: Give a real reason from experience; talk about public service, not just job security.)",
+    "Are you ready to work in a rural upazila? (Tip: Be honest; show readiness and a practical plan for family, housing and learning.)",
+    "Why does Bangladesh have a doctor shortage in rural areas? (Tip: Posts vacant, doctors reluctant to stay, facilities and housing; offer one realistic fix.)",
+    "What would you do if you were the only doctor on duty and an emergency arrived with no equipment? (Tip: Stabilise, use what you have, call for help and refer; stay calm.)",
+    "What is your view on slow promotion in the health cadre? (Tip: Acknowledge the concern calmly; stress service and postgraduate growth.)",
+    "How would you handle a patient's relative who demands special treatment? (Tip: Stay polite, follow triage rules, explain clearly.)",
+    "Name one national health programme and explain it. (Tip: For example immunisation; state purpose, who it serves and one challenge.)",
+    "What is primary health care? (Tip: First-level, community-based care; prevention, treatment and referral.)",
+    "How would you reduce patient waiting time at an upazila complex? (Tip: Triage, scheduling, staff roles and records; one realistic step.)",
+    "How do you deal with stress and long duty hours? (Tip: Give real habits: sleep, teamwork, breaks and seeking help.)",
+    "Why BCS Health instead of private practice or going abroad? (Tip: Show you weighed both; explain service, training and stability.)",
+    "What is antibiotic resistance and how can doctors help control it? (Tip: Misuse makes bacteria resistant; prescribe carefully and educate patients.)",
+    "Describe a time you handled a difficult patient or colleague. (Tip: Situation, action, result; show calm and respect.)",
+    "What will you do if you are not selected this time? (Tip: Show a calm plan B such as postgraduate study; do not sound defeated.)",
+    "Do you have any questions for us? (Tip: Ask about training or learning, not about pay or posting.)"
+  ]
+}

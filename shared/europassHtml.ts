@@ -3,6 +3,7 @@
 
 import { esc } from './pageHtml';
 import {
+  CHOICES_HEADING, EUROPASS_PREVIEW, EUROPASS_WHATSAPP_HREF, PILLAR_FOLDED, QUIZ, QUIZ_HEADING, QUIZ_INTRO, QUIZ_RESULTS, WORD_FOLDED, europassChoices,
   EUROPASS_AUTHOR, EUROPASS_BUILDER_HREF, EUROPASS_CHECKED, EUROPASS_HUB_PATH, EUROPASS_PILLAR_PATH, EUROPASS_PRICES, EUROPASS_PRIVACY,
   EUROPASS_SEO, EUROPASS_SOURCES, EUROPASS_UNOFFICIAL, EUROPASS_UPDATED, EUROPASS_WORD_PATH, HUB_CHOOSE, HUB_FAQ, HUB_INTRO,
   PILLAR_ANSWER, PILLAR_BLOCKS, PILLAR_FAQ, PILLAR_INTRO, WORD_ANSWER, WORD_BLOCKS, WORD_FAQ, europassHubTemplates, imageAlt,
@@ -24,14 +25,30 @@ export interface EuropassPage {
   images: string[];
 }
 
-export function blockHtml(b: Block): string {
+export function blockHtml(b: Block, folded: readonly string[] = []): string {
   const table = b.table
     ? `<table><thead><tr>${b.table.head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`
     : '';
-  return `<section id="${b.id}"><h2>${esc(b.h2)}</h2>${(b.p ?? []).map((x) => `<p>${esc(x)}</p>`).join('')}${b.ul ? `<ul>${b.ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${b.ol ? `<ol>${b.ol.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}${table}</section>`;
+  const inner = `${(b.p ?? []).map((x) => `<p>${esc(x)}</p>`).join('')}${b.ul ? `<ul>${b.ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${b.ol ? `<ol>${b.ol.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}${table}`;
+  return folded.includes(b.id) ? `<details id="${b.id}"><summary><h2>${esc(b.h2)}</h2></summary>${inner}</details>` : `<section id="${b.id}"><h2>${esc(b.h2)}</h2>${inner}</section>`;
 }
 
-const faqHtml = (items: Faq[]) => `<section id="faq"><h2>Questions about the Europass-style CV</h2>${items.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}</section>`;
+const choicesHtml = (wordHref: string) => {
+  const [build, word, expert] = europassChoices(wordHref);
+  return `<section id="choose-path"><h2>${CHOICES_HEADING.en} <span lang="bn">${CHOICES_HEADING.bn}</span></h2><ul>`
+    + `<li><h3>${esc(build.title)}</h3><p lang="bn">${esc(build.bn)}</p><p>${esc(build.micro)}</p><p>${a(build.href, build.cta)}</p></li>`
+    + `<li><h3>${esc(word.title)}</h3><p lang="bn">${esc(word.bn)}</p><p>${esc(word.micro)}</p><p>${a(word.href, word.cta)}</p></li>`
+    + `<li><h3>${esc(expert.title)}</h3><p lang="bn">${esc(expert.bn)}</p><p>${esc(expert.micro)}</p><p>${a(expert.href, expert.cta)} · <a href="${EUROPASS_WHATSAPP_HREF}" rel="noopener">Ask on WhatsApp</a></p></li>`
+    + `</ul></section>`;
+};
+
+const quizHtml = () =>
+  `<section id="do-i-need"><h2>${QUIZ_HEADING.en} <span lang="bn">${QUIZ_HEADING.bn}</span></h2><p>${esc(QUIZ_INTRO)}</p><ol>${QUIZ.map((q) => `<li>${esc(q.q)} ${q.options.map((o) => esc(o.label)).join(' / ')}</li>`).join('')}</ol><ul>${Object.values(QUIZ_RESULTS).map((r) => `<li><strong>${esc(r.title)}.</strong> ${esc(r.body)}</li>`).join('')}</ul></section>`;
+
+const ownPreviewHtml = () =>
+  `<figure><img src="${EUROPASS_PREVIEW.src}" width="${EUROPASS_PREVIEW.w}" height="${EUROPASS_PREVIEW.h}" alt="${esc(EUROPASS_PREVIEW.alt)}" loading="eager" fetchpriority="high" /><figcaption>${esc(EUROPASS_PREVIEW.caption)}</figcaption></figure>`;
+
+const faqHtml = (items: Faq[]) => `<details id="faq" open><summary><h2>Questions about the Europass-style CV</h2></summary>${items.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}</details>`;
 
 const footerHtml = (withSources: boolean) =>
   `${withSources ? `<section id="sources"><h2>Sources</h2><ul>${EUROPASS_SOURCES.map((s) => `<li><a href="${s.url}" rel="noopener">${esc(s.title)}</a></li>`).join('')}</ul></section>` : ''}<p>Last updated ${EUROPASS_UPDATED}. Last checked ${EUROPASS_CHECKED}. By <a href="${EUROPASS_AUTHOR.url}" rel="author">${EUROPASS_AUTHOR.name}</a>, CV consultant, Career Solutions.</p><p>${esc(EUROPASS_PRIVACY)}</p><p>${esc(EUROPASS_UNOFFICIAL)}</p>`;
@@ -62,7 +79,6 @@ const imgHtml = (t: HubTemplate, eager: boolean, full = false) =>
 
 export function europassPages(): EuropassPage[] {
   const tpls = europassHubTemplates();
-  const lead = tpls[0];
   const pillar = EUROPASS_SEO[EUROPASS_PILLAR_PATH];
   const hub = EUROPASS_SEO[EUROPASS_HUB_PATH];
   const word = EUROPASS_SEO[EUROPASS_WORD_PATH];
@@ -70,10 +86,10 @@ export function europassPages(): EuropassPage[] {
   const pillarPage: EuropassPage = {
     path: EUROPASS_PILLAR_PATH,
     ...pillar,
-    image: `${SITE}${lead.full}`,
-    body: `<article><h1>${esc(pillar.h1)}</h1><p><strong>${esc(PILLAR_ANSWER)}</strong></p>${PILLAR_INTRO.map((x) => `<p>${esc(x)}</p>`).join('')}<p>${a(EUROPASS_BUILDER_HREF, 'Build free')} · ${a(EUROPASS_WORD_PATH, 'Word template')} · ${a(EUROPASS_HUB_PATH, 'All Europass-style templates')}</p><figure>${imgHtml(lead, true, true)}<figcaption>Europass-style layout preview, sample data (invented).</figcaption></figure>${PILLAR_BLOCKS.map(blockHtml).join('')}${faqHtml(PILLAR_FAQ)}<p>${a('/tools/cv-checker', 'Free CV checker')} · ${a('/pro', 'Pro')} · ${a('/services', 'CV writing service')}</p>${footerHtml(true)}</article>`,
+    image: `${SITE}${EUROPASS_PREVIEW.src}`,
+    body: `<article><h1>${esc(pillar.h1)}</h1><p><strong>${esc(PILLAR_ANSWER)}</strong></p>${choicesHtml(EUROPASS_WORD_PATH)}${PILLAR_INTRO.map((x) => `<p>${esc(x)}</p>`).join('')}<p>${a(EUROPASS_HUB_PATH, 'All Europass-style templates')}</p>${ownPreviewHtml()}${blockHtml(PILLAR_BLOCKS.find((b) => b.id === 'how')!)}${quizHtml()}${PILLAR_BLOCKS.filter((b) => b.id !== 'how').map((b) => blockHtml(b, PILLAR_FOLDED)).join('')}${faqHtml(PILLAR_FAQ)}<p>${a('/tools/cv-checker', 'Free CV checker')} · ${a('/pro', 'Pro')} · ${a('/services', 'CV writing service')}</p>${footerHtml(true)}</article>`,
     jsonLd: [
-      webPageLd(EUROPASS_PILLAR_PATH, 'WebPage', { primaryImageOfPage: imageLd(lead) }),
+      webPageLd(EUROPASS_PILLAR_PATH, 'WebPage', { primaryImageOfPage: { '@type': 'ImageObject', contentUrl: `${SITE}${EUROPASS_PREVIEW.src}`, url: `${SITE}${EUROPASS_PREVIEW.src}`, name: 'Europass-style CV preview (sample data)', caption: EUROPASS_PREVIEW.alt, width: EUROPASS_PREVIEW.w, height: EUROPASS_PREVIEW.h } }),
       {
         '@type': 'WebApplication',
         name: 'HereWeGrow Europass-style CV builder',
@@ -88,14 +104,14 @@ export function europassPages(): EuropassPage[] {
     ],
     priority: 0.9,
     lastmod: EUROPASS_UPDATED,
-    images: [`${SITE}${lead.full}`],
+    images: [`${SITE}${EUROPASS_PREVIEW.src}`],
   };
 
   const hubPage: EuropassPage = {
     path: EUROPASS_HUB_PATH,
     ...hub,
-    image: `${SITE}${lead.thumb}`,
-    body: `<article><h1>${esc(hub.h1)}</h1><p>${esc(HUB_INTRO)}</p><p>${a(EUROPASS_BUILDER_HREF, 'Build free online')} · ${a(EUROPASS_PILLAR_PATH, 'Europass CV guide')} · ${a(EUROPASS_WORD_PATH, 'Word template details')}</p><ul>${tpls.map((t, i) => `<li><a href="${t.path}">${imgHtml(t, i === 0)}</a><h3>${a(t.path, t.name)}</h3><p>${t.pages} ${t.pages === 1 ? 'page' : 'pages'}, ${esc(t.color.toLowerCase())}. Word template ${EUROPASS_PRICES.single}.</p></li>`).join('')}</ul><section id="choose"><h2>How to choose a Europass-style template</h2><ul>${HUB_CHOOSE.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></section>${faqHtml(HUB_FAQ)}<p>${a('/templates', 'All CV templates')} · ${a('/tools/cv-checker', 'Free CV checker')} · ${a('/pro', 'Pro')}</p>${footerHtml(false)}</article>`,
+    image: `${SITE}${EUROPASS_PREVIEW.thumb}`,
+    body: `<article><h1>${esc(hub.h1)}</h1><p>${esc(HUB_INTRO)}</p>${choicesHtml('#templates')}<p>${a(EUROPASS_PILLAR_PATH, 'Europass CV guide')} · ${a(EUROPASS_WORD_PATH, 'Word template details')}</p><ul id="templates">${tpls.map((t, i) => `<li><a href="${t.path}">${imgHtml(t, i === 0)}</a><h3>${a(t.path, t.name)}</h3><p>${t.pages} ${t.pages === 1 ? 'page' : 'pages'}, ${esc(t.color.toLowerCase())}. Word template ${EUROPASS_PRICES.single}.</p></li>`).join('')}</ul><section id="choose"><h2>How to choose a Europass-style template</h2><ul>${HUB_CHOOSE.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></section>${faqHtml(HUB_FAQ)}<p>${a('/templates', 'All CV templates')} · ${a('/tools/cv-checker', 'Free CV checker')} · ${a('/pro', 'Pro')}</p>${footerHtml(false)}</article>`,
     jsonLd: [
       webPageLd(EUROPASS_HUB_PATH, 'CollectionPage', {
         mainEntity: { '@type': 'ItemList', numberOfItems: tpls.length, itemListElement: tpls.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}${t.path}`, name: t.name, image: `${SITE}${t.thumb}` })) },
@@ -111,8 +127,8 @@ export function europassPages(): EuropassPage[] {
   const wordPage: EuropassPage = {
     path: EUROPASS_WORD_PATH,
     ...word,
-    image: `${SITE}${lead.full}`,
-    body: `<article><h1>${esc(word.h1)}</h1><p><strong>${esc(WORD_ANSWER)}</strong></p><p>${a(EUROPASS_BUILDER_HREF, 'Build free online')} · ${a(EUROPASS_PILLAR_PATH, 'Europass CV guide')} · ${a(EUROPASS_HUB_PATH, 'All Europass-style templates')}</p><ul>${wordTpls.map((t, i) => `<li><a href="${t.path}">${imgHtml(t, i === 0, true)}</a><p>${a(t.path, t.name)}</p></li>`).join('')}</ul>${WORD_BLOCKS.map(blockHtml).join('')}${faqHtml(WORD_FAQ)}<p>${a('/templates', 'All CV templates')} · ${a('/tools/cv-checker', 'Free CV checker')} · ${a('/pro', 'Pro')}</p>${footerHtml(false)}</article>`,
+    image: `${SITE}${EUROPASS_PREVIEW.src}`,
+    body: `<article><h1>${esc(word.h1)}</h1><p><strong>${esc(WORD_ANSWER)}</strong></p>${choicesHtml('#templates')}<p>${a(EUROPASS_PILLAR_PATH, 'Europass CV guide')} · ${a(EUROPASS_HUB_PATH, 'All Europass-style templates')}</p><ul id="templates">${wordTpls.map((t, i) => `<li><a href="${t.path}">${imgHtml(t, i === 0, true)}</a><p>${a(t.path, t.name)}</p></li>`).join('')}</ul>${WORD_BLOCKS.map((b) => blockHtml(b, WORD_FOLDED)).join('')}${faqHtml(WORD_FAQ)}<p>${a('/templates', 'All CV templates')} · ${a('/tools/cv-checker', 'Free CV checker')} · ${a('/pro', 'Pro')}</p>${footerHtml(false)}</article>`,
     jsonLd: [
       webPageLd(EUROPASS_WORD_PATH, 'WebPage', { primaryImageOfPage: imageLd(wordTpls[0]) }),
       ...wordTpls.map(imageLd),

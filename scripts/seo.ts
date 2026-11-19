@@ -12,6 +12,7 @@ import { PRODUCTS } from '../shared/catalog';
 import { GUIDES, type Block } from '../shared/guides';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
 import { ABROAD_PAGES } from '../shared/abroadPages';
+import { europassPages } from '../shared/europassHtml';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
@@ -77,6 +78,8 @@ function pages(): Page[] {
         link('/services', 'সিভি রাইটিং ও রিভিউ'),
         link('/templates', 'সিভি টেমপ্লেট'),
         link('/tools/cv-checker', 'ফ্রি সিভি চেকার'),
+        link('/europass-cv', 'ইউরোপাস সিভি (Europass-style CV)'),
+        link('/cv-for-gulf-jobs', 'গাল্ফ চাকরির সিভি'),
         link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার'),
       ].map((l) => `<li>${l}</li>`).join('')}</ul>`,
       jsonLd: [ORG, { '@type': 'WebSite', '@id': `${SITE}/#site`, name: 'HereWeGrow', url: `${SITE}/`, inLanguage: ['bn', 'en'], publisher: { '@id': `${SITE}/#org` } }],
@@ -376,6 +379,9 @@ function pages(): Page[] {
     });
   }
 
+  // Europass-style CV: pillar, template hub and Word page (copy in shared/europassPages.ts)
+  list.push(...europassPages());
+
   for (const t of TEMPLATES) {
     if (isRetired(t.id)) continue; // no page: the Worker answers 301
     const sector = SECTORS.find((s) => s.id === t.sector)!;
@@ -439,6 +445,9 @@ function sitemap(list: Page[]): string {
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 }
+
+/** The sitemap as the build writes it (used by tests). */
+export const sitemapXml = () => sitemap(pages());
 
 export function seoPages(): Plugin {
   let outDir = 'dist';

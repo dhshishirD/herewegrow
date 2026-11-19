@@ -1,4 +1,6 @@
 import type { DesignId } from '../../shared/designList';
+import { normaliseLanguage, type LanguageEntry } from './cefr';
+export type { LanguageEntry } from './cefr';
 // The CV builder's data: what the person fills in, kept on their own device.
 
 export interface Experience {
@@ -91,7 +93,15 @@ export interface CvData {
   presentAddress: string;
   permanentAddress: string;
   references: Reference[];
-  /** Order of sections on the CV. Keys: summary, experience, education, skills, training, personal, references, or custom:<id>. */
+  /** CEFR language levels (Europass-style layout). Mother tongues first. */
+  langLevels: LanguageEntry[];
+  /** Digital skills, free text (Europass-style layout). */
+  digitalSkills: string;
+  /** Driving licence, e.g. "Category B" (optional). */
+  drivingLicence: string;
+  /** Education above work experience, for freshers. */
+  educationFirst: boolean;
+  /** Order of sections on the CV. Keys: summary, experience, education, skills, training, personal, references, custom:<id>, and when added: cefr, digital, driving. */
   order: string[];
   /** Built-in sections the person has hidden. */
   hidden: string[];
@@ -123,7 +133,12 @@ export interface BuilderState {
   headings?: HeadingLang;
   /** Font id from builder/fonts.ts. Unset keeps the design's own fonts. */
   font?: string;
+  /** Special layout drawn instead of a design. 'europass' is our own Europass-style layout (free: it sits on the free Classic design). */
+  layout?: 'europass';
 }
+
+/** Sections that exist only once added (the Europass-style layout adds them); every CV has the built-in ones. */
+export const OPTIONAL_SECTIONS = ['cefr', 'digital', 'driving'] as const;
 
 export const BUILT_IN = ['summary', 'experience', 'education', 'skills', 'training', 'personal', 'references'] as const;
 
@@ -135,6 +150,7 @@ export const LABELS: Record<HeadingLang, Record<string, string>> = {
     personal: 'Personal Details', references: 'References', contact: 'Contact', present: 'Present',
     father: "Father's name", mother: "Mother's name", dob: 'Date of birth', gender: 'Gender', marital: 'Marital status', nationality: 'Nationality',
     religion: 'Religion', nid: 'NID', present_address: 'Present address', permanent: 'Permanent address',
+    digitalSkills: 'Digital skills', drivingLicence: 'Driving licence', motherTongue: 'Mother tongue', otherLanguages: 'Other languages',
   },
   bn: {
     summary: 'পেশাগত সারসংক্ষেপ', profile: 'পরিচিতি', experience: 'কাজের অভিজ্ঞতা', career: 'কর্মজীবন', education: 'শিক্ষাগত যোগ্যতা',
@@ -142,6 +158,7 @@ export const LABELS: Record<HeadingLang, Record<string, string>> = {
     personal: 'ব্যক্তিগত তথ্য', references: 'রেফারেন্স', contact: 'যোগাযোগ', present: 'বর্তমান',
     father: 'পিতার নাম', mother: 'মাতার নাম', dob: 'জন্মতারিখ', gender: 'লিঙ্গ', marital: 'বৈবাহিক অবস্থা', nationality: 'জাতীয়তা',
     religion: 'ধর্ম', nid: 'জাতীয় পরিচয়পত্র', present_address: 'বর্তমান ঠিকানা', permanent: 'স্থায়ী ঠিকানা',
+    digitalSkills: 'ডিজিটাল দক্ষতা', drivingLicence: 'ড্রাইভিং লাইসেন্স', motherTongue: 'মাতৃভাষা', otherLanguages: 'অন্যান্য ভাষা',
   },
 };
 
@@ -178,6 +195,10 @@ export const emptyCv = (): CvData => ({
   education: [],
   skills: '',
   languages: '',
+  langLevels: [],
+  digitalSkills: '',
+  drivingLicence: '',
+  educationFirst: false,
   training: [],
   custom: [],
   showPersonal: false,
@@ -257,7 +278,13 @@ export function normalise(raw: Partial<CvData>): CvData {
   });
   d.experience = (d.experience ?? []).map((e) => newExperience(e));
   d.custom = (d.custom ?? []).map((c) => ({ ...c, items: c.items.map((i) => newCustomItem(i)) }));
-  const keys = new Set([...BUILT_IN, ...d.custom.map((c) => `custom:${c.id}`)]);
+  d.langLevels = (Array.isArray(d.langLevels) ? d.langLevels : []).map((l) => normaliseLanguage(l));
+  d.digitalSkills = typeof d.digitalSkills === 'string' ? d.digitalSkills : '';
+  d.drivingLicence = typeof d.drivingLicence === 'string' ? d.drivingLicence : '';
+  d.educationFirst = d.educationFirst === true;
+  // Added sections (cefr, digital, driving) stay only where the CV already lists them, so older CVs keep their exact order
+  const added = OPTIONAL_SECTIONS.filter((k) => (raw.order ?? []).includes(k));
+  const keys = new Set<string>([...BUILT_IN, ...added, ...d.custom.map((c) => `custom:${c.id}`)]);
   const order = (d.order ?? []).filter((k) => keys.has(k));
   for (const k of keys) if (!order.includes(k)) order.push(k);
   d.order = order;

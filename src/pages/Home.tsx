@@ -273,6 +273,20 @@ export function Home() {
       <ExpertSection />
       <ReviewsSection />
 
+      {/* CV for abroad */}
+      <section aria-label={t({ en: 'CV for abroad', bn: 'বিদেশের জন্য সিভি' })} className="wrap pt-20">
+        <div className="rounded-3xl bg-leaf-soft p-7 ring-1 ring-leaf/20 md:flex md:items-center md:justify-between md:gap-8 md:p-10">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl sm:text-3xl">{t({ en: 'CV for abroad', bn: 'বিদেশের জন্য সিভি' })}</h2>
+            <p className="mt-2 text-muted">{t({ en: 'Applying outside Bangladesh? Build a CV in the layout that country expects, free on your phone.', bn: 'বাংলাদেশের বাইরে আবেদন করছেন? যে দেশে আবেদন, তাদের পরিচিত ফরম্যাটে ফোনেই বিনামূল্যে সিভি বানান।' })}</p>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:shrink-0">
+            <Link href="/europass-cv" onClick={() => track('cta_click', { where: 'home_abroad_europass' })} className="btn btn-primary">{t({ en: 'Europass-style CV', bn: 'ইউরোপাস সিভি' })}</Link>
+            <Link href="/cv-for-gulf-jobs" onClick={() => track('cta_click', { where: 'home_abroad_gulf' })} className="btn border border-line bg-white hover:border-leaf">{t({ en: 'Gulf job CV', bn: 'গাল্ফ চাকরির সিভি' })}</Link>
+          </div>
+        </div>
+      </section>
+
       {/* Free tools */}
       <section className="wrap py-20">
         <h2 className="text-3xl sm:text-4xl">{t({ en: 'Free tools for your application', bn: 'আবেদনের জন্য ফ্রি টুলস' })}</h2>

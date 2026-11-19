@@ -34,6 +34,7 @@ import {
 import type { IParagraphOptions } from 'docx';
 import type { DesignId } from '../../shared/designList';
 import { contactLine, degreeLine, personalRows } from './designs';
+import { languageLines } from './cefr';
 import { LABELS, clampMargin, lines, list, type BuilderState, type CvData } from './model';
 
 const A4 = { width: 11906, height: 16838 };
@@ -155,6 +156,8 @@ export function sidebarSpec(design: DesignId, accent: string): SidebarSpec | nul
 
 /** watermark: free downloads carry a small "Made with HereWeGrow.pro" footer; Pro files do not. */
 export async function buildDocx(state: BuilderState, opts: { watermark?: boolean; brand?: string } = {}): Promise<Blob> {
+  // The Europass-style layout has its own file (dates left, details right, a real CEFR table)
+  if (state.layout === 'europass') return (await import('./wordEuropass')).buildEuropassDocx(state, opts);
   const d = state.data;
   const L = LABELS[state.headings ?? 'en'];
   const accent = hex(state.accent);
@@ -303,6 +306,15 @@ export async function buildDocx(state: BuilderState, opts: { watermark?: boolean
       if (d.skills) out.push(plain(list(d.skills).join(', ')));
       if (d.languages) out.push(new Paragraph({ children: [new TextRun({ text: `${L.languages}: `, bold: true }), new TextRun(d.languages)] }));
     }
+    if (k === 'cefr' && languageLines(d.langLevels).length) {
+      out.push(...heading(L.languages));
+      for (const x of languageLines(d.langLevels)) out.push(plain(x));
+    }
+    if (k === 'digital' && d.digitalSkills.trim()) {
+      out.push(...heading(L.digitalSkills));
+      details(out, d.digitalSkills);
+    }
+    if (k === 'driving' && d.drivingLicence.trim()) out.push(...heading(L.drivingLicence), plain(d.drivingLicence.trim()));
     if (k === 'training' && d.training.length) {
       out.push(...heading(L.training));
       for (const t of d.training) entry(out, t.name, [t.org, t.duration].filter(Boolean).join(', '), t.year, t.details);

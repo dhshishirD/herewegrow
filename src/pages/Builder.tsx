@@ -46,6 +46,8 @@ import { ProGate } from '../components/ProGate';
 import { useAuth } from '../lib/auth';
 import { presetFor } from '../../shared/templatePresets';
 import { abroadPreset } from '../../shared/abroadPresets';
+import { CEFR_LEVELS, CEFR_LEVEL_INFO, CEFR_NOTE, CEFR_SKILLS, CEFR_SKILL_LABEL, newLanguage, setSameLevel, sharedLevel, type CefrLevel, type LanguageEntry } from '../builder/cefr';
+import { EUROPASS_NOTE, applyEducationFirst, withEuropass } from '../builder/europass';
 import { analyzeCv } from '../lib/cvAnalysis';
 import { getClient, markDelivered, partnerErrorText, partnerMe, saveClientCv } from '../lib/partner';
 import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
@@ -294,7 +296,7 @@ function DesignGallery({ state, pro, onPick, t }: { state: BuilderState; pro: bo
       </div>
       <div role="radiogroup" aria-label={t({ en: 'Design', bn: 'ডিজাইন' })} className="grid grid-cols-[repeat(auto-fill,minmax(7.75rem,1fr))] gap-3 pb-2 pt-2 max-md:flex max-md:snap-x max-md:overflow-x-auto">
         {list.map((x) => {
-          const on = state.design === x.id;
+          const on = !state.layout && state.design === x.id;
           return (
             <button key={x.id} type="button" role="radio" aria-checked={on} title={t(x.note)} onClick={() => onPick(x.id)}
               className={`group shrink-0 snap-start justify-self-start rounded-xl p-1.5 text-left transition ${on ? 'bg-white ring-2 ring-leaf shadow-md' : 'ring-1 ring-line hover:bg-white hover:ring-leaf/50'}`}>
@@ -343,7 +345,9 @@ export function BuilderPage() {
     const p = presetFor(tplId);
     if (p) return { ...base, design: p.design, accent: p.accent };
     const a = abroadPreset(abroadId);
-    return a ? { ...base, design: a.design, accent: a.accent, data: { ...base.data, showPersonal: a.showPersonal } } : base;
+    if (a?.layout === 'europass') return withEuropass(base);
+    // Any other design pick or preset leaves the special layout behind
+    return a ? { ...base, layout: undefined, design: a.design, accent: a.accent, data: { ...base.data, showPersonal: a.showPersonal } } : base;
   }, builderHistoryShape);
   const [open, setOpen] = useState<string>('import');
   // Phones show one step at a time (fill the form, pick a design, download); wide screens show form and preview together
@@ -461,7 +465,11 @@ export function BuilderPage() {
   }, [view]);
 
   const d = state.data;
+  const euOn = state.layout === 'europass';
+  const showEuFields = euOn || d.langLevels.length > 0 || !!d.digitalSkills || !!d.drivingLicence;
   const score = useMemo(() => analyzeCv(cvText(d), { fromPdf: false, splitRowShare: 0 }), [d]);
+  /** A blank CV; the Europass-style layout keeps its section order. */
+  const freshData = (s: BuilderState): BuilderState => (s.layout === 'europass' ? withEuropass({ ...s, layout: undefined, data: emptyCv() }) : { ...s, data: emptyCv() });
   const set = (patch: Partial<CvData>) => setState((s) => ({ ...s, data: { ...s.data, ...patch } }));
 
   // "Removed. Undo" message for 6 seconds after something is deleted or cleared
@@ -515,6 +523,10 @@ export function BuilderPage() {
   };
   const mv = (key: ListKey, i: number, dir: -1 | 1) => set({ [key]: move(d[key] as { id: string }[], i, dir) } as Partial<CvData>);
 
+  // Language levels (Europass-style layout)
+  const setLang = (id: string, next: LanguageEntry) => set({ langLevels: d.langLevels.map((x) => (x.id === id ? next : x)) });
+  const updLang = (id: string, patch: Partial<LanguageEntry>) => set({ langLevels: d.langLevels.map((x) => (x.id === id ? { ...x, ...patch } : x)) });
+
   // Custom sections
   const updSection = (id: string, patch: Partial<CustomSection>) => set({ custom: d.custom.map((c) => (c.id === id ? { ...c, ...patch } : c)) });
   const updItem = (sid: string, iid: string, patch: Partial<CustomItem>) =>
@@ -536,6 +548,7 @@ export function BuilderPage() {
       summary: { en: 'Summary', bn: 'সামারি' }, experience: { en: 'Work experience', bn: 'কাজের অভিজ্ঞতা' }, education: { en: 'Education', bn: 'শিক্ষাগত যোগ্যতা' },
       skills: { en: 'Skills and languages', bn: 'দক্ষতা ও ভাষা' }, training: { en: 'Training and certificates', bn: 'প্রশিক্ষণ ও সার্টিফিকেট' },
       personal: { en: 'Personal details', bn: 'ব্যক্তিগত তথ্য' }, references: { en: 'References', bn: 'রেফারেন্স' },
+      cefr: { en: 'Languages (CEFR levels)', bn: 'ভাষা (CEFR স্তর)' }, digital: { en: 'Digital skills', bn: 'ডিজিটাল দক্ষতা' }, driving: { en: 'Driving licence', bn: 'ড্রাইভিং লাইসেন্স' },
     };
     if (names[k]) return t(names[k]);
     return d.custom.find((c) => `custom:${c.id}` === k)?.title || t({ en: 'Untitled section', bn: 'শিরোনামহীন অংশ' });
@@ -558,7 +571,11 @@ export function BuilderPage() {
       const { data, found } = parseCv(text);
       const hasContent = d.name || d.experience.length || d.education.length;
       if (hasContent && !window.confirm(t({ en: 'Replace what you have typed with the uploaded CV?', bn: 'আপনার লেখা তথ্যের জায়গায় আপলোড করা সিভি বসাবেন?' }))) return;
-      setState((s) => ({ ...s, data: normalise({ ...data, photo: s.data.photo }) }));
+      setState((s) => {
+        // Language levels, digital skills and driving licence are not in an uploaded CV's text, so they stay
+        const next = { ...s, data: normalise({ ...data, photo: s.data.photo, langLevels: s.data.langLevels, digitalSkills: s.data.digitalSkills, drivingLicence: s.data.drivingLicence, educationFirst: s.data.educationFirst }) };
+        return s.layout === 'europass' ? withEuropass(next) : next;
+      });
       if (hasContent) notify(t({ en: 'Your earlier CV was replaced.', bn: 'আগের সিভির জায়গায় নতুন তথ্য বসেছে।' }));
       const counts = found.filter((f) => f.includes(':')).map((f) => f.split(':')).filter(([, n]) => /^\d+$/.test(n));
       const parts = [
@@ -609,7 +626,7 @@ export function BuilderPage() {
     setWordBusy(true);
     try {
       const { buildDocx } = await import('../builder/word');
-      const blob = await buildDocx(asAts ? { ...state, design: 'classic' } : state, { watermark: !pro, brand: clientId && brandOn && !asAts ? BRAND_LINE : undefined });
+      const blob = await buildDocx(asAts ? { ...state, design: 'classic', layout: undefined } : state, { watermark: !pro, brand: clientId && brandOn && !asAts ? BRAND_LINE : undefined });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV${asAts ? '_ATS' : ''}.docx`;
@@ -632,7 +649,7 @@ export function BuilderPage() {
   };
   const pickDesign = (id: DesignId) => {
     track('design_pick', { design: id });
-    setState((s) => ({ ...s, design: id }));
+    setState((s) => ({ ...s, design: id, layout: undefined }));
   };
 
   const saveToAccount = async () => {
@@ -673,7 +690,7 @@ export function BuilderPage() {
   const newCv = () => {
     if (!window.confirm(t({ en: 'Start a new CV? The current one stays saved in your account.', bn: 'নতুন সিভি শুরু করবেন? বর্তমানটি আপনার অ্যাকাউন্টে সেভ থাকবে।' }))) return;
     setCvId(null);
-    setState((s) => ({ ...s, data: emptyCv() }));
+    setState(freshData);
     setSync('idle');
     notify(t({ en: 'New CV started.', bn: 'নতুন সিভি শুরু হয়েছে।' }));
   };
@@ -810,6 +827,22 @@ export function BuilderPage() {
           {/* Form */}
           <div className={`min-w-0 space-y-3 ${view !== 'edit' ? 'max-md:hidden' : ''}`}>
             <h2 className="font-display text-2xl font-semibold max-md:hidden"><span className="mr-2 text-leaf">2</span>{t({ en: 'Add your details', bn: 'আপনার তথ্য দিন' })}</h2>
+            {(euOn || abroadId === 'europass') && (
+              <section className="rounded-2xl bg-white p-5 ring-1 ring-line max-md:p-4" aria-label="Europass-style layout">
+                <label className="flex items-start gap-2">
+                  <input type="checkbox" className="mt-1.5" checked={euOn} onChange={(e) => setState((s) => (e.target.checked ? withEuropass(s) : { ...s, layout: undefined }))} />
+                  <span className="font-semibold">{t({ en: 'Europass-style layout: dates on the left, details on the right, dates as MM/YYYY', bn: 'Europass-স্টাইল লেআউট: তারিখ বামে, বিবরণ ডানে, তারিখ MM/YYYY ফরম্যাটে' })}</span>
+                </label>
+                {euOn && (
+                  <label className="mt-3 flex items-start gap-2">
+                    <input type="checkbox" className="mt-1.5" checked={d.educationFirst} onChange={(e) => setState((s) => ({ ...s, data: { ...s.data, educationFirst: e.target.checked, order: applyEducationFirst(s.data.order, e.target.checked) } }))} />
+                    <span>{t({ en: 'Education first (for freshers with little work experience)', bn: 'শিক্ষা আগে (যাদের কাজের অভিজ্ঞতা কম, সেই ফ্রেশারদের জন্য)' })}</span>
+                  </label>
+                )}
+                <p className="mt-3 text-sm text-muted">{t(EUROPASS_NOTE)}</p>
+                {euOn && <p className="mt-1 text-sm text-muted">{t({ en: 'Only your name and email are needed. Everything else is optional. Photo, date of birth, nationality and gender stay off unless you add them.', bn: 'শুধু নাম ও ইমেইল দরকার, বাকি সব ঐচ্ছিক। ছবি, জন্মতারিখ, জাতীয়তা ও লিঙ্গ আপনি না দিলে সিভিতে আসবে না।' })}</p>}
+              </section>
+            )}
             {/* Saved CVs */}
             <section className="rounded-2xl bg-white p-5 ring-1 ring-line max-md:p-4">
               {!user ? (
@@ -958,6 +991,58 @@ export function BuilderPage() {
               <Field label={t({ en: 'Languages', bn: 'ভাষা' })} value={d.languages} onChange={(v) => set({ languages: v })} placeholder="Bangla (native), English (fluent)" />
             </Section>
 
+            {showEuFields && (
+              <Section title={sectionName('cefr')} open={open === 'cefr'} onToggle={() => toggle('cefr')} count={d.langLevels.length}>
+                <p className="rounded-lg bg-saffron/15 px-3 py-2 text-sm font-semibold">{t(CEFR_NOTE.warn)}</p>
+                {d.langLevels.map((e, i) => (
+                  <ItemBox key={e.id} t={t} title={e.name || t({ en: 'New language', bn: 'নতুন ভাষা' })} onRemove={() => { set({ langLevels: d.langLevels.filter((x) => x.id !== e.id) }); notify(removedMsg()); }}
+                    onUp={i > 0 ? () => set({ langLevels: move(d.langLevels, i, -1) }) : undefined} onDown={i < d.langLevels.length - 1 ? () => set({ langLevels: move(d.langLevels, i, 1) }) : undefined}>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Field label={t({ en: 'Language', bn: 'ভাষা' })} value={e.name} onChange={(v) => updLang(e.id, { name: v })} placeholder="Bangla, English" />
+                      <label className="flex items-end gap-2 pb-2">
+                        <input type="checkbox" checked={e.mother} onChange={(ev) => updLang(e.id, { mother: ev.target.checked })} />
+                        <span>{t(CEFR_NOTE.mother)}</span>
+                      </label>
+                    </div>
+                    {!e.mother && (
+                      <>
+                        <div>
+                          <span className="label">{t(CEFR_NOTE.same)}</span>
+                          <div className="flex flex-wrap gap-1.5" role="group" aria-label={t(CEFR_NOTE.same)}>
+                            {CEFR_LEVELS.map((lv) => (
+                              <button key={lv} type="button" aria-pressed={sharedLevel(e) === lv} title={`${lv} ${t(CEFR_LEVEL_INFO[lv].name)}: ${t(CEFR_LEVEL_INFO[lv].text)}`} onClick={() => setLang(e.id, setSameLevel(e, lv))}
+                                className={`rounded-full px-3 py-1 text-sm font-semibold ring-1 ${sharedLevel(e) === lv ? 'bg-leaf text-white ring-leaf' : 'bg-white ring-line hover:ring-leaf/50'}`}>{lv}</button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                          {CEFR_SKILLS.map((sk) => (
+                            <label key={sk} className="block">
+                              <span className="label">{t(CEFR_SKILL_LABEL[sk])}</span>
+                              <select className="field" value={e[sk]} onChange={(ev) => updLang(e.id, { [sk]: ev.target.value as CefrLevel | '' })}
+                                title={e[sk] ? `${e[sk]}: ${t(CEFR_LEVEL_INFO[e[sk] as CefrLevel].text)}` : undefined}>
+                                <option value="">—</option>
+                                {CEFR_LEVELS.map((lv) => <option key={lv} value={lv}>{`${lv} · ${t(CEFR_LEVEL_INFO[lv].text)}`}</option>)}
+                              </select>
+                            </label>
+                          ))}
+                        </div>
+                        <Field label={t(CEFR_NOTE.certificate)} value={e.certificate} onChange={(v) => updLang(e.id, { certificate: v })} placeholder="IELTS 7.0, 2024" />
+                      </>
+                    )}
+                  </ItemBox>
+                ))}
+                <AddButton onClick={() => set({ langLevels: [...d.langLevels, newLanguage({ mother: d.langLevels.length === 0 })] })}>{t({ en: 'Add a language', bn: 'ভাষা যোগ করুন' })}</AddButton>
+                <p className="text-sm text-muted">{t({ en: 'Mother tongue is listed first and has no grid. A1 to C2 is the European scale: A1 basic, B1 independent, C2 proficient.', bn: 'মাতৃভাষা সবার আগে আসে, তার কোনো গ্রিড নেই। A1 থেকে C2 ইউরোপীয় স্কেল: A1 প্রাথমিক, B1 স্বাধীন, C2 দক্ষ।' })}</p>
+              </Section>
+            )}
+            {showEuFields && (
+              <Section title={t({ en: 'Digital skills and driving licence', bn: 'ডিজিটাল দক্ষতা ও ড্রাইভিং লাইসেন্স' })} open={open === 'digital'} onToggle={() => toggle('digital')}>
+                <Area label={t({ en: 'Digital skills (optional, one per line)', bn: 'ডিজিটাল দক্ষতা (ঐচ্ছিক, প্রতি লাইনে একটি)' })} value={d.digitalSkills} onChange={(v) => set({ digitalSkills: v })} rows={3} placeholder="MS Office: advanced&#10;Google Workspace&#10;Canva" />
+                <Field label={t({ en: 'Driving licence (optional)', bn: 'ড্রাইভিং লাইসেন্স (ঐচ্ছিক)' })} value={d.drivingLicence} onChange={(v) => set({ drivingLicence: v })} placeholder="Category B (car)" />
+              </Section>
+            )}
+
             <Section title={sectionName('training')} open={open === 'training'} onToggle={() => toggle('training')} count={d.training.length}>
               {d.training.map((x, i) => (
                 <ItemBox key={x.id} t={t} title={x.name || t({ en: 'New training', bn: 'নতুন প্রশিক্ষণ' })} onRemove={() => del('training', x.id)}
@@ -1077,7 +1162,7 @@ export function BuilderPage() {
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-sm text-muted">
               <span>{t({ en: 'Saved on this device as you type.', bn: 'লেখার সাথে সাথে এই ডিভাইসে সেভ হচ্ছে।' })}</span>
-              <button type="button" className="text-alert underline underline-offset-4" onClick={() => { if (window.confirm(t({ en: 'Clear everything and start again?', bn: 'সব মুছে নতুন করে শুরু করবেন?' }))) { set(emptyCv()); notify(t({ en: 'Everything cleared.', bn: 'সব মুছে গেছে।' })); } }}>
+              <button type="button" className="text-alert underline underline-offset-4" onClick={() => { if (window.confirm(t({ en: 'Clear everything and start again?', bn: 'সব মুছে নতুন করে শুরু করবেন?' }))) { setState(freshData); notify(t({ en: 'Everything cleared.', bn: 'সব মুছে গেছে।' })); } }}>
                 {t({ en: 'Start again', bn: 'নতুন করে শুরু' })}
               </button>
             </div>
@@ -1140,7 +1225,7 @@ export function BuilderPage() {
                 <div style={{ height: pages * A4_PX * scale }}>
                   <div style={{ width: 794, transform: `scale(${scale})`, transformOrigin: 'top left', position: 'relative' }} className="shadow-lg">
                     <div ref={docBox}>
-                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} />
+                      <CvDocument d={d} design={state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} layout={state.layout} />
                     </div>
                     {Array.from({ length: pages - 1 }, (_, i) => (
                       <div key={i} aria-hidden="true" className="pointer-events-none absolute inset-x-0 border-t-2 border-dashed border-red-400" style={{ top: (i + 1) * A4_PX }}>
@@ -1184,7 +1269,7 @@ export function BuilderPage() {
 
       {/* What gets printed: the CV alone, at full A4 size */}
       <div id="cv-print" aria-hidden="true">
-        <CvDocument d={d} design={ats ? 'classic' : state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} />
+        <CvDocument d={d} design={ats ? 'classic' : state.design} accent={state.accent} headings={state.headings} margins={state.margins} font={state.font} layout={ats ? undefined : state.layout} />
         {clientId && brandOn && !ats && <div className="cv-brand-last">{BRAND_LINE}</div>}
         {!pro && <div className="cv-watermark">Made with HereWeGrow.pro</div>}
       </div>

@@ -1,5 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { DESIGN_LIST } from '../../shared/designList';
+import { CEFR_LEVEL_INFO, CEFR_NOTE, CEFR_SKILLS, CEFR_SKILL_LABEL, languageLines, usableLanguages } from './cefr';
+import { EUROPASS_LABELS_BN, EUROPASS_LABELS_EN, euDate } from './europass';
 import { findFont } from './fonts';
 import { DEFAULT_MARGINS, LABELS, clampMargin, lines, list, type CvData, type DesignId, type HeadingLang, type Margins } from './model';
 
@@ -57,6 +59,8 @@ interface Theme {
   Title: (p: { children: ReactNode }) => ReactNode;
   /** One entry: title, a grey line under it, a date, and details. */
   Entry: (p: { title: ReactNode; sub?: string; date?: string; children?: ReactNode }) => ReactNode;
+  /** The language levels. Designs without a grid print them as plain lines. */
+  Languages?: (p: { d: CvData }) => ReactNode;
 }
 
 function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) {
@@ -97,6 +101,20 @@ function Section({ k, d, L, T }: { k: string; d: CvData; L: Labels; T: Theme }) 
         {d.languages && <p style={{ margin: '4px 0 0' }}><strong>{L.languages}:</strong> {d.languages}</p>}
       </section>
     );
+
+  if (k === 'cefr' && usableLanguages(d.langLevels).length)
+    return (
+      <section>
+        <Title>{L.languages}</Title>
+        {T.Languages ? <T.Languages d={d} /> : languageLines(d.langLevels).map((x) => <p key={x} style={{ margin: '0 0 2px' }}>{x}</p>)}
+      </section>
+    );
+
+  if (k === 'digital' && d.digitalSkills.trim())
+    return <section><Title>{L.digitalSkills}</Title>{lines(d.digitalSkills).length > 1 ? <Details text={d.digitalSkills} /> : <p style={{ margin: 0 }}>{d.digitalSkills.trim()}</p>}</section>;
+
+  if (k === 'driving' && d.drivingLicence.trim())
+    return <section><Title>{L.drivingLicence}</Title><p style={{ margin: 0 }}>{d.drivingLicence.trim()}</p></section>;
 
   if (k === 'training' && d.training.length)
     return (
@@ -1073,11 +1091,96 @@ function Styled({ d, accent, L, look }: { d: CvData; accent: string; L: Labels; 
   );
 }
 
+/* ── Europass-style: one column, dates on the left and details on the right, international dates (MM/YYYY) ── */
+
+const EU_RULE = '#cbd5e1';
+
+/** The CEFR grid: one row per language, one column per skill. Real table text, so ATS software reads it. */
+function CefrGrid({ d, accent }: { d: CvData; accent: string }) {
+  const all = usableLanguages(d.langLevels);
+  const mother = all.filter((x) => x.mother);
+  const other = all.filter((x) => !x.mother);
+  const th: CSSProperties = { textAlign: 'left', fontSize: 10, fontWeight: 700, color: accent, padding: '3px 6px 3px 0', verticalAlign: 'bottom', borderBottom: `1px solid ${EU_RULE}` };
+  return (
+    <div className="cv-entry">
+      {mother.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: '128px 1fr', gap: 16, marginBottom: 8 }}>
+          <div style={{ color: GREY }}>{CEFR_NOTE.mother.en}</div>
+          <div><strong>{mother.map((x) => x.name.trim()).join(', ')}</strong></div>
+        </div>
+      )}
+      {other.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: '128px 1fr', gap: 16 }}>
+          <div style={{ color: GREY }}>{CEFR_NOTE.other.en}</div>
+          <table style={{ borderCollapse: 'collapse', width: '100%', tableLayout: 'fixed', fontSize: 'inherit', lineHeight: 'inherit' }}>
+            <thead>
+              <tr>
+                <th style={{ ...th, width: '22%' }} />
+                {CEFR_SKILLS.map((sk) => <th key={sk} style={th}>{CEFR_SKILL_LABEL[sk].en}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {other.map((e) => (
+                <tr key={e.id}>
+                  <td style={{ padding: '4px 6px 4px 0', fontWeight: 700, verticalAlign: 'top', borderBottom: `1px solid ${EU_RULE}` }}>
+                    {e.name.trim()}
+                    {e.certificate.trim() && <div style={{ fontWeight: 400, fontSize: 10.5, color: GREY }}>{e.certificate.trim()}</div>}
+                  </td>
+                  {CEFR_SKILLS.map((sk) => <td key={sk} title={e[sk] ? `${e[sk]}: ${CEFR_LEVEL_INFO[e[sk] as keyof typeof CEFR_LEVEL_INFO].text.en}` : undefined} style={{ padding: '4px 6px 4px 0', verticalAlign: 'top', borderBottom: `1px solid ${EU_RULE}` }}>{e[sk]}</td>)}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Europass({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const names = L === LABELS.bn ? EUROPASS_LABELS_BN : EUROPASS_LABELS_EN;
+  const EL: Labels = { ...L, ...names };
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 13, fontWeight: 700, letterSpacing: '0.04em', color: accent, borderBottom: `1.5px solid ${accent}`, paddingBottom: 3, margin: '16px 0 8px' }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ display: 'grid', gridTemplateColumns: '128px 1fr', gap: 16, marginBottom: 9 }}>
+        <div style={{ color: GREY }}>{date}</div>
+        <div><strong>{title}</strong>{sub && <div style={{ color: GREY }}>{sub}</div>}{children}</div>
+      </div>
+    ),
+    Languages: ({ d: cv }) => <CefrGrid d={cv} accent={accent} />,
+  };
+  // Dates read MM/YYYY. The free-text languages line gives way to the grid once levels are filled in.
+  const dd: CvData = {
+    ...d,
+    languages: usableLanguages(d.langLevels).length ? '' : d.languages,
+    experience: d.experience.map((e) => ({ ...e, start: euDate(e.start), end: euDate(e.end) })),
+    education: d.education.map((e) => ({ ...e, year: euDate(e.year) })),
+    training: d.training.map((e) => ({ ...e, year: euDate(e.year) })),
+    custom: d.custom.map((c) => ({ ...c, items: c.items.map((i) => ({ ...i, date: euDate(i.date) })) })),
+  };
+  return (
+    <div className="cv-page cv-pad" style={{ ...PAGE, padding: `${my(46)} ${mx(56)}` }}>
+      <header className="cv-keep" style={{ display: 'flex', gap: 18, alignItems: 'center', borderBottom: `3px solid ${accent}`, paddingBottom: 12 }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 84, height: 84, borderRadius: 4, objectFit: 'cover', flexShrink: 0 }} />}
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: 27, fontWeight: 650, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '2px 0 0', fontSize: 14, color: accent, fontWeight: 600 }}>{d.headline}</p>}
+          <p style={{ margin: '6px 0 0', color: GREY }}>{contactLine(d).join('  |  ')}</p>
+        </div>
+      </header>
+      {d.order.map((k) => <Section key={k} k={k} d={dd} L={EL} T={T} />)}
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
 
-export function CvDocument({ d, design, accent, headings = 'en', margins, font }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins; font?: string }) {
+export function CvDocument({ d, design, accent, headings = 'en', margins, font, layout }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins; font?: string; layout?: 'europass' }) {
   const L = LABELS[headings];
   const f = findFont(font);
   // No wrapper box (display: contents), only the two scale variables for the paddings
@@ -1085,7 +1188,7 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font }
     ...(margins ? { '--cvx': clampMargin(margins.x) / DEFAULT_MARGINS.x, '--cvy': clampMargin(margins.y) / DEFAULT_MARGINS.y } : {}),
     ...(f.body ? { '--cv-font': f.body, '--cv-head': f.head } : {}),
   } as CSSProperties;
-  return <div style={{ display: 'contents', ...vars }}><Layout d={d} design={design} accent={accent} L={L} /></div>;
+  return <div style={{ display: 'contents', ...vars }}>{layout === 'europass' ? <Europass d={d} accent={accent} L={L} /> : <Layout d={d} design={design} accent={accent} L={L} />}</div>;
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {

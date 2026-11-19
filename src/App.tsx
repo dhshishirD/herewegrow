@@ -50,6 +50,11 @@ const LazyBiodata = () => (
 );
 const BiodataHub = lazy(() => import('./pages/BiodataPages').then((m) => ({ default: m.BiodataHubPage })));
 const BiodataStyle = lazy(() => import('./pages/BiodataPages').then((m) => ({ default: m.BiodataStylePage })));
+const EuropassPillar = lazy(() => import('./pages/EuropassPages').then((m) => ({ default: m.EuropassPillarPage })));
+const EuropassHub = lazy(() => import('./pages/EuropassPages').then((m) => ({ default: m.EuropassHubPage })));
+const EuropassWord = lazy(() => import('./pages/EuropassPages').then((m) => ({ default: m.EuropassWordPage })));
+const EuropassPillarRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassPillar /></Suspense>;
+const EuropassWordRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassWord /></Suspense>;
 const PartnerRoute = lazy(() => import('./pages/Partner').then((m) => ({ default: m.PartnerRoute })));
 const PartnerIntake = lazy(() => import('./pages/PartnerIntake').then((m) => ({ default: m.PartnerIntake })));
 const AdminPartnersLazy = lazy(() => import('./pages/AdminPartners').then((m) => ({ default: m.AdminPartnersPage })));
@@ -91,6 +96,8 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/linkedin-profile-optimization': LinkedInPage,
   '/bdjobs-profile-optimization': BdjobsPage,
   '/cv-for-gulf-jobs': GulfPage,
+  '/europass-cv': EuropassPillarRoute,
+  '/europass-cv-template-word': EuropassWordRoute,
   '/contact': ContactPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,
@@ -101,6 +108,7 @@ function Page() {
   if (path === '/partner' || path.startsWith('/partner/')) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerRoute path={path} /></Suspense>;
   const intake = path.match(/^\/p\/([a-z0-9]{6,16})$/);
   if (intake) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><PartnerIntake key={path} code={intake[1]} /></Suspense>;
+  if (path === '/templates/category/europass-cv') return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassHub /></Suspense>;
   if (path === '/templates/category/marriage-biodata') return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><BiodataHub /></Suspense>;
   const bio = path.match(/^\/templates\/biodata-([a-z0-9-]+)$/);
   if (bio) return <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><BiodataStyle key={path} slug={bio[1]} /></Suspense>;

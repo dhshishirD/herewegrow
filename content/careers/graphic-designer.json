@@ -1,0 +1,355 @@
+{
+  "slug": "graphic-designer",
+  "title_en": "Graphic Designer",
+  "title_bn": "গ্রাফিক ডিজাইনার",
+  "field": "Creative & Design",
+  "seo_title": "Graphic Designer in Bangladesh: Salary, Skills, AI Impact (2026)",
+  "seo_desc": "Graphic Designer career in Bangladesh: indicative pay, Photoshop, Illustrator and Figma skills, portfolio tips, AI impact, freelancing, CV advice, roadmap and a free skill test.",
+  "summary": "A Graphic Designer makes social creatives, ads, logos, packaging and print for businesses. Entry pay is roughly BDT 12,000-25,000 a month (indicative; thin data). Employers ask for Photoshop, Illustrator, Figma and a portfolio, and increasingly for AI-tool skills. This guide covers the job, pay caveats, how AI is changing the work, how to build a portfolio, a CV, a roadmap and a free test.",
+  "salary": {
+    "entry": "BDT 12,000 - 25,000 per month (indicative; Paylab, WorldSalaries and a blog; not verified)",
+    "mid": "BDT 25,000 - 45,000 per month at 3-5 years (indicative; weakest evidence)",
+    "senior": "BDT 45,000 - 80,000+ per month for lead roles (indicative; wide variation by employer)",
+    "note": "Checked 19 Nov 2026. No official wage survey exists and sources disagree. Payscale BD figures were inconsistent so not used. Confirm in live circulars.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Festival and performance bonus (confirm in the offer letter)",
+    "Licensed software and a good computer provided by the employer",
+    "Varied work and fast learning, especially in agencies",
+    "Remote and dollar-paid options in some listings",
+    "Freelance and studio-owner options once you have a portfolio",
+    "Path to Senior Designer, Art Director or Creative Head"
+  ],
+  "companies": [
+    "Digital marketing and advertising agencies",
+    "Software and fintech companies",
+    "E-commerce and f-commerce brands",
+    "Garment, fashion and promotional-product firms",
+    "Manufacturers and FMCG brands",
+    "Real-estate and construction firms",
+    "Print and packaging houses",
+    "NGOs and publishers"
+  ],
+  "season": [
+    "Pre-Eid and Eid campaigns (peak demand for creatives)",
+    "Winter wedding and fashion season",
+    "Admission season for schools and universities",
+    "Pohela Boishakh and Ekushey book fair period",
+    "Year-end brand refresh and budget months"
+  ],
+  "skills": [
+    {
+      "name": "Photoshop and Illustrator",
+      "level": "Core",
+      "tag": "tools"
+    },
+    {
+      "name": "Typography, layout and colour",
+      "level": "Core",
+      "tag": "design"
+    },
+    {
+      "name": "Portfolio and brand thinking",
+      "level": "Core",
+      "tag": "brand"
+    },
+    {
+      "name": "Figma and UI basics",
+      "level": "Important",
+      "tag": "ui"
+    },
+    {
+      "name": "InDesign and print production",
+      "level": "Important",
+      "tag": "print"
+    },
+    {
+      "name": "Motion: After Effects, Premiere, CapCut",
+      "level": "Important",
+      "tag": "motion"
+    },
+    {
+      "name": "Social media and ad creative sense",
+      "level": "Important",
+      "tag": "social"
+    },
+    {
+      "name": "Communication and revision handling",
+      "level": "Important",
+      "tag": "comms"
+    },
+    {
+      "name": "AI tools: Firefly, Midjourney and similar",
+      "level": "Growing",
+      "tag": "ai"
+    },
+    {
+      "name": "Licensing and design ethics",
+      "level": "Growing",
+      "tag": "ethics"
+    }
+  ],
+  "gaps_checklist": [
+    "I have a portfolio of 6-10 finished pieces with a live link",
+    "I have one full brand identity project with applications",
+    "I can set type with clear hierarchy and good spacing",
+    "I can prepare print-ready files (size, bleed, colour mode)",
+    "I can build a simple screen or icon set in Figma",
+    "I have used at least one motion tool on a short piece",
+    "I use licensed fonts, images and software only",
+    "I have a written scope and revision limit template for clients",
+    "I can explain my design decisions in two sentences"
+  ],
+  "courses": [
+    {
+      "title": "Adobe Learn: Photoshop and Illustrator tutorials",
+      "provider": "Adobe",
+      "url": "https://helpx.adobe.com/learn.html",
+      "is_affiliate": false,
+      "skill_tag": "tools"
+    },
+    {
+      "title": "Figma Learn and Figma tutorials",
+      "provider": "Figma",
+      "url": "https://help.figma.com",
+      "is_affiliate": false,
+      "skill_tag": "ui"
+    },
+    {
+      "title": "Canva Design School",
+      "provider": "Canva",
+      "url": "https://www.canva.com/learn/design/",
+      "is_affiliate": false,
+      "skill_tag": "design"
+    },
+    {
+      "title": "Muktopaath free online courses",
+      "provider": "Government of Bangladesh (a2i)",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "comms"
+    },
+    {
+      "title": "Coursera: graphic design and branding courses (audit free)",
+      "provider": "Coursera",
+      "url": "https://www.coursera.org",
+      "is_affiliate": false,
+      "skill_tag": "brand"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a Graphic Designer in Bangladesh?",
+      "a": "There is no official survey. As of 19 November 2026, our indicative range is about BDT 12,000-25,000 a month at entry level, BDT 25,000-45,000 at 3-5 years and BDT 45,000-80,000 or more for lead roles. These come from Paylab, WorldSalaries and a blog, which disagree, so check live circulars."
+    },
+    {
+      "q": "Do I need a degree to become a graphic designer?",
+      "a": "Not always. Some circulars ask for a degree or diploma in design, fine arts or multimedia, while others accept HSC or a bachelor's degree with relevant experience. Almost all ask for a portfolio, and applications without one may be rejected."
+    },
+    {
+      "q": "Which software should I learn first?",
+      "a": "Start with Photoshop and Illustrator, which are named in nearly every circular, then add Figma and InDesign. Learn a motion tool such as After Effects, Premiere or CapCut later. Canva is useful but usually listed as an extra."
+    },
+    {
+      "q": "Will AI take graphic design jobs?",
+      "a": "AI is changing the work. Some circulars now list Adobe Firefly, Midjourney and ChatGPT, and simple logo work is under price pressure. Skills that stay valuable are typography, brand thinking, print knowledge and finishing AI output well. Use AI for ideas, not to skip fundamentals."
+    },
+    {
+      "q": "How do I build a portfolio with no experience?",
+      "a": "Make 6-10 strong pieces: a full brand identity, a social media set, a print piece and a redesign of something real with permission. Add a short case study for each explaining the brief, your choices and the result."
+    },
+    {
+      "q": "Can I earn in dollars as a designer?",
+      "a": "Yes, through freelance platforms or remote jobs, but rates vary widely and entry-level work is competitive. Ignore any single profile's rate, agree scope and price in writing and never pay for a guaranteed job or client."
+    },
+    {
+      "q": "Is it legal to use any font or image I find online?",
+      "a": "No. Fonts, stock images and software have licences. Use free-to-use or purchased licensed assets, keep a note of the licence and never use pirated software. Copying someone else's design and calling it yours can end your career."
+    },
+    {
+      "q": "Is freelancing or a job better to start with?",
+      "a": "A first job or internship at an agency usually teaches faster because you see real briefs, feedback and print or ad specifications. Freelancing on the side builds your portfolio and confidence."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 19 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** A Graphic Designer in Bangladesh makes visual material for a business: social media posts, ads, logos, packaging, brochures, banners and sometimes motion graphics. Employers mostly ask for Adobe Photoshop and Illustrator, often InDesign and Figma, and always a portfolio. Pay data is thin and uneven. As a rough guide, entry-level pay is about BDT 12,000-25,000 a month, mid-level (3-5 years) about BDT 25,000-45,000, and senior or lead roles BDT 45,000-80,000 or more. Remote roles paid in US dollars exist but are a small slice. The biggest change since 2024 is AI: employers now list tools such as Adobe Firefly and Midjourney, and basic logo and template work is under price pressure. Designers who can think about brands, not only make pictures, are safer.\n\n## Key facts (as of 19 November 2026)\n\n| Question | Answer | Source type |\n|---|---|---|\n| What does the role do? | Social creatives, ads, branding, print, packaging, UI assets, sometimes motion | Job circulars |\n| Minimum education? | Degree or diploma in graphic design, fine arts or multimedia is common; some employers accept HSC with a strong portfolio | Circulars (The Tork, Sigma Oil) |\n| Experience asked | Entry posts accept 0-2 years; mid posts 2-5 years; senior 7+ years | Circulars |\n| Tools named most | Photoshop, Illustrator, InDesign, Figma; After Effects and Premiere for motion; Canva as extra | Circulars |\n| AI tools in circulars | Adobe Firefly, Midjourney, ChatGPT named in some posts | Sheltech circular; Sigma Oil circular |\n| Entry pay (indicative) | About BDT 12,000-25,000 a month. Survey and blog estimates, not verified | Paylab; WorldSalaries; blog |\n| Portfolio needed? | Yes. Circulars say applications without a relevant portfolio may be rejected | Circulars |\n| Licence needed? | No. But you must use licensed fonts, images and software | General practice |\n\n*Pay and market figures are estimates. Check live circulars before you negotiate.*\n\n## What does a Graphic Designer do?\n\nYou turn a message into a picture people understand quickly. Job circulars list the same duties again and again:\n\n- **Social media creatives:** posts, stories, carousels and ad images for Facebook, Instagram and TikTok.\n- **Branding:** logos, colour and type choices, brand guidelines and templates so a business looks consistent.\n- **Print and packaging:** brochures, flyers, labels, product packaging and press-ready files (a Dhaka circular asks for real print-production experience).\n- **Product image work:** retouching, mock-ups, realistic shadows and reflections for online shops.\n- **Digital ads and motion:** banners, rich-media ads and short animations (one March 2026 circular asks for HTML5 and After Effects skills).\n- **UI assets:** icons and screens in Figma for software teams.\n\n**A normal day:** read a brief, collect references, sketch, make two or three options, get feedback, fix and export the file in the right size and format. Much of the work is revision, so clear communication saves hours.\n\n## How is AI changing the job?\n\n- **Employers now expect AI literacy.** Some circulars name Adobe Firefly, Midjourney and ChatGPT; one asks designers to use AI tools for fast concepts and then finish the work in Adobe Creative Suite.\n- **Cheap logo work is under pressure.** A freelance-industry article from 2026 argues that the \"USD 5 logo\" market has collapsed under Canva's AI tools and Midjourney, and that money has moved to UI kits, packaging, pitch decks and brand systems. It is a single opinion piece, so treat it as a signal, not a statistic.\n- **The Daily Star has warned** that many learners in Bangladesh are still studying tools that are no longer industry standard while the rest of the world designs with AI.\n- **What stays valuable:** taste, typography, brand thinking, understanding a customer, print knowledge and the ability to fix and finish what a tool generates. Use AI to explore ideas faster, not to skip learning fundamentals.\n\n## What is the career ladder?\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-1 | Intern / Trainee Designer | Photoshop and Illustrator basics, typography, file preparation |\n| 1-3 | Graphic Designer / Junior Designer | Social and ad creatives, brand consistency, working to deadlines |\n| 3-5 | Senior Designer / Brand Designer | Identity systems, packaging, print production, mentoring |\n| 5-8 | Lead / Art Director | Creative direction, briefing others, client presentations |\n| 8+ | Creative Head / Design Manager / Studio owner | Team, budgets, strategy, hiring |\n\n*A typical path, not a guarantee. Many designers also move into UI/UX, motion or freelancing.*\n\n## What is the salary and what are the benefits?\n\n| Level | Typical experience | Monthly pay (BDT, indicative) |\n|---|---|---|\n| Entry | 0-2 years | 12,000 - 25,000 |\n| Mid | 3-5 years | 25,000 - 45,000 |\n| Senior / lead | 6+ years | 45,000 - 80,000+ |\n\n**How we got these numbers, and why to be careful.** No official wage survey covers graphic designers in Bangladesh, and the public sources disagree:\n\n- **Paylab** reports that 80 percent of Graphic Designers in Bangladesh earn between about BDT 154,989 and 366,806 a year (about BDT 12,900-30,600 a month). Its page for Junior Graphic Designer shows a monthly range of BDT 8,656 to 35,759.\n- **WorldSalaries** estimates an average of about BDT 20,800 a month for a graphics and web designer, with a reported range of roughly BDT 9,700 to 33,200.\n- **A freelance-industry blog** says junior designers in Bangladesh cost an employer about BDT 12,000-18,000 a month. This is a blog, not a survey.\n- **Payscale** pages for Bangladesh show widely scattered and inconsistent figures (some entries clearly mix annual, monthly and hourly data), so we did not use them for the ranges above.\n\nWe took the overlap of the more consistent sources and widened it for mid and senior levels, where evidence is weakest. Pay differs sharply between agencies, software firms, manufacturers and remote roles paid in dollars. Always confirm in the actual circular.\n\n**Benefits to look for:** festival bonus, paid software licences, a good computer, performance bonus, training budget and a clear promotion path. Ask about licensed software, because pirated tools put your career at risk.\n\n## Which skills do employers ask for?\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Photoshop and Illustrator | Named in nearly every circular | █████ |\n| Typography, layout and colour | The base of good design | █████ |\n| Portfolio and brand thinking | Circulars reject applications without one | █████ |\n| Figma and UI basics | Software and fintech employers ask for it | ████ |\n| InDesign and print production | Packaging, brochures, labels | ███ |\n| Motion (After Effects, Premiere, CapCut) | Ads and social video | ███ |\n| Social media and ad creative sense | Most hiring is for marketing teams | ████ |\n| AI tools (Firefly, Midjourney and similar) | Increasingly named in circulars | ███ |\n| Communication and revision handling | Most time is spent on feedback | ████ |\n| Licensing and ethics (fonts, images, originality) | Avoids legal trouble and lost trust | ███ |\n\n*Demand bars are our reading of circulars, not a statistical survey.*\n\n## How do I get in?\n\n1. **Learn the fundamentals before the tools:** alignment, hierarchy, contrast, colour, type pairing and spacing. Free learning is available from official tutorials and Muktopaath.\n2. **Master Photoshop and Illustrator, then add Figma.** Learn one motion tool later.\n3. **Build a portfolio of 6-10 strong pieces,** not 40 weak ones. Include a full brand identity (logo, colours, type, three applications), a social media set, a print piece and a short case study of your thinking.\n4. **Redesign something real** (a local shop's menu, a club's poster) and show before and after, with permission.\n5. **Use licensed material.** Use free-to-use fonts and images with clear licences, and name them in your notes.\n6. **Apply widely.** Bdjobs, LinkedIn, agency and software-company pages, and direct messages to small brands. Be ready for a design test: a short brief with a time limit.\n7. **Treat internships seriously.** A marketing intern (graphic designer) role in a tech firm can teach Canva, the Adobe suite, video editing and social strategy in one place.\n\n## Where will you find more peace of mind?\n\nDesign work has bursts of pressure: tight deadlines, many revisions and clients who change their mind late. Agencies mean variety and speed; in-house roles mean steadier hours and one brand. Three habits help:\n\n- **Agree the number of revisions and the deadline in writing** before you start.\n- **Save versions and source files** so a late change does not mean starting over.\n- **Rest your eyes and body.** Long screen sessions cause strain, so take short breaks.\n\nIf stress becomes constant, speak to a mentor or a mental health professional early.\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years designing)\n2. **The type of design I want to be known for:** (social, branding, packaging, UI, motion)\n3. **The real project I will finish this month:** ___\n4. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n5. **My weekly practice hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 4.\n\n## Faith and history: beauty with trust\n\n**Hadith.** The Prophet (peace be upon him) said that Allah is beautiful and loves beauty (Sahih Muslim). A designer's work is to make things clear and pleasing, but pride and show are warned against in the same narration. Another report, in al-Bayhaqi, says Allah loves that when one of you does a job he does it with excellence; scholars differ on how strong that chain is, so read it with care.\n\n**The Quran.** The longest verse, Al-Baqarah 2:282, tells believers to write down agreements. For a freelancer this is practical advice: put scope, price and deadline in writing ([2:282 on quran.com](https://quran.com/2/282)). Surah Al-Mutaffifin condemns cheating in measure ([83:1-3](https://quran.com/83/1-3)), which includes passing off copied or stolen work as your own.\n\n**History.** Calligraphy, geometric pattern and book design are old arts across the Muslim world and Bengal. Many of today's ideas about balance, rhythm and ornament come from that heritage, so studying it will give your own work depth.\n\n## Your contribution to the nation\n\nEvery small business that sells online needs a clear logo, a good product photo and a tidy post. A designer who works well helps a shop owner look trustworthy, which brings sales, jobs and tax. Good Bangla typography and design also keep the language and local culture visible in a digital world mostly designed in English.\n\n## Your contribution to the world\n\nBangladeshi designers serve clients in the USA, UK, Canada and Australia through agencies and freelance platforms. A June 2026 report in The Observer says freelancers in Bangladesh work across graphic design, digital marketing, content writing, web and app development and AI-based tasks, with design and marketing leading in earnings. Reliable delivery, clear contracts and original work build the whole country's reputation.\n\n## If you do not get a design job at once\n\n- **Freelance for small local clients** while you build your portfolio, with a written scope and price.\n- **Move sideways:** social media assistant, content creator, print-shop designer or video editor roles lead into design.\n- **Join an agency as an intern,** even at low pay, if you handle real client work.\n- **Specialise:** packaging, UI assets, motion or product retouching each have steady demand.\n- **Learn to sell your thinking,** not only your hours.\n\n## If you want to be an entrepreneur\n\n- **A small studio or freelance practice** for local SMEs, with a clear package (logo, colours, three templates).\n- **Selling templates and assets** (social media kits, Bangla fonts or icon sets), with original work and the right licences.\n- **Print and packaging design services** for local manufacturers.\n- **Training or content** only with real portfolio results and no false income promises.\n\nRegister and keep accounts as you grow. Check platform payment rules and tax obligations before you accept foreign payments.\n\n## Research opportunities\n\n- **Topics with real need in Bangladesh:** Bangla typography and font quality, packaging for local products, accessible design, and how AI tools change small-business branding.\n- **Where to learn and publish:** art and design departments in universities, design associations and your own case studies on LinkedIn or a portfolio site.\n- **Path:** case studies → teaching or workshops → creative-director roles or higher studies in design.\n\n## Whom to follow and learn from\n\nFollow official learning hubs and good design publications first: [Adobe Learn](https://helpx.adobe.com/learn.html), [Figma Learn](https://help.figma.com), [Canva Design School](https://www.canva.com/learn/design/) and [Muktopaath](https://muktopaath.gov.bd). On LinkedIn, follow Bangladeshi designers and art directors who explain their thinking, not only post finished images.\n\n## Where do I find jobs?\n\n- [Bdjobs](https://www.bdjobs.com) (Design category) and company career pages.\n- LinkedIn and software, e-commerce, fintech and agency career pages.\n- Marketplace freelancing, once you have a portfolio.\n- Direct outreach to small brands with a short redesign sample.\n\n## How should I write my CV and portfolio?\n\nA designer's portfolio matters more than the CV. The CV should be one clean page.\n\n| Weak line | Better line |\n|---|---|\n| Designed social posts. | Designed 20 Facebook post templates for a fashion page; the page's average post engagement rose after the redesign (use your real figures). |\n| Made a logo. | Designed a full brand identity (logo, colours, type, label and social set) for a local bakery, delivered in 10 days with 2 revision rounds (use your real details). |\n| Good at Photoshop. | Retouched 200 product images with consistent shadows and colour for an online shop (use your real numbers). |\n\n*Use only real, provable work. Never present AI output or someone else's design as your own manual work.*\n\n**What to include:** tools (Photoshop, Illustrator, InDesign, Figma, After Effects, Premiere, Canva, AI tools), a link to your portfolio, 2-3 case studies and a professional email address. Build the CV free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- A portfolio full of unfinished or copied work.\n- No case study, only pictures with no explanation.\n- Using pirated software or unlicensed fonts and images.\n- Starting a project without a written scope, price and revision limit.\n- Sending files in the wrong size, colour mode or format.\n- Ignoring the brief and designing what you like.\n- Competing only on low price for cheap logos.\n- Paying anyone for a \"guaranteed job\" or a fake certificate.\n\n## Changelog\n\n- **19 November 2026:** First version. Pay ranges, AI notes and market facts checked on this date.\n- **To review:** pay ranges when better data is available; AI-tool circular requirements each quarter.\n\n## Sources and method\n\nFigures were checked on 19 November 2026. Pay ranges combine Paylab, WorldSalaries and a blog and are estimates. Where sources disagreed or were unclear, we said so.\n\n- Paylab: [Graphic Designer, Bangladesh](https://paylab.com/bd/salaryinfo/marketing-advertising-pr/graphic-designer?lang=en); [Junior Graphic Designer](https://www.paylab.com/bd/salaryinfo/journalism-printing-arts-media/junior-graphic-designer?lang=en)\n- WorldSalaries: [Average graphics web designer salary in Bangladesh](https://worldsalaries.com/average-graphics-web-designer-salary-in-bangladesh/)\n- Freelance Dhaka (blog, treat as indicative): [How to start a graphic design business in Bangladesh 2026](https://freelancedhaka.pages.dev/en/49-how-to-start-graphic-design-business-bangladesh-2026/)\n- Job circulars: [Eskimi via Marketing Monk](https://www.marketingmonk.so/jobboard/jobs/graphic-designer-programmatic-and-rich-media-at-eskimi-e1fkqm); [The Tork via Arc](https://arc.dev/remote-jobs/j/the-tork-graphics-designer-p61qslp9xr); [Betafore (LinkedIn)](https://bd.linkedin.com/in/jalal-uddin-anik); [Meerab Global (Lever)](https://jobs.lever.co/skillerszone/a0a7aea7-fbfa-4e75-9d03-67b718d026bb); [Sheltech via Arc](https://arc.dev/remote-jobs/j/bdjobs-com-visualizer-graphic-designer-for-sheltech-pvt-ltd-job-id-1506741-p51tw2libu); [Sigma Oil (Bdjobs)](https://hotjobs.bdjobs.com/jobs/sigmaoil/sigmaoil42.htm); [SourceEazy (Techstars)](https://jobs.techstars.com/companies/sourceeazy/jobs/88560944-sourceeazy-mock-up-graphic-designer-fashion); [Polygon Technology intern](https://designproject.io/jobs/marketing-intern-graphic-designer-at-polygon-technology-sicp34); [Green Harvest (Bikroy)](https://bikroy.com/bn/mohammadpur-beribadh/computing-and-it-jobs/graphic-designer-gpffqxBbyqL2CCmWDkzxtBGu.html)\n- The Daily Star: [The new canvas: how generative AI is changing the future of creative work in Bangladesh](https://www.thedailystar.net/node/3896806)\n- Lilach Bullock (opinion): [Freelance graphic design jobs in Bangladesh](https://www.lilachbullock.com/freelance-graphic-design-jobs-bangladesh/)\n- The Observer (13 June 2026): [Freelancing in Bangladesh](https://observerbd.com/news/552089)\n- Quran: [quran.com](https://quran.com)\n\n**How to cite this page:** Shishir, D. H. (2026, November 19). *Graphic Designer career in Bangladesh: salary, skills, AI impact and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/graphic-designer\n\n*This guide gives general career information. It does not promise a job, salary or client results. It is not legal, tax or religious advice. Pay and job requirements change, so check live circulars.*\n",
+  "growth_plan": {
+    "y1": "Master Photoshop and Illustrator, finish a 6-piece portfolio with one brand identity, learn Figma basics and land an internship or junior role.",
+    "y2": "Handle social, ad and print work end to end, add one motion tool, publish two case studies and move to a better employer or a Designer title.",
+    "y3": "Specialise (brand, packaging, UI or motion), mentor a junior, present to clients and aim for Senior Designer, Brand Designer or Art Director."
+  },
+  "goal_sheet": [
+    "Finish one full brand identity project with applications",
+    "Publish a live portfolio link with 6 pieces",
+    "Complete one Adobe or Figma learning path",
+    "Redesign one real local item with permission and write a case study",
+    "Prepare a print-ready file correctly once",
+    "Apply to 10 agencies or in-house teams",
+    "Review pay data in live circulars and set a target salary"
+  ],
+  "test": [
+    {
+      "q": "Which file type is best for a logo that must scale to any size?",
+      "options": [
+        "Low-resolution JPG",
+        "Vector (for example SVG or AI from Illustrator)",
+        "Screenshot PNG",
+        "GIF"
+      ],
+      "answer_idx": 1,
+      "explain": "Vector artwork scales without losing sharpness, which is why logos are made in Illustrator.",
+      "skill_tag": "tools"
+    },
+    {
+      "q": "RGB colour mode is mainly used for:",
+      "options": [
+        "Screens such as social media and websites",
+        "Offset printing only",
+        "Engraving",
+        "Fax"
+      ],
+      "answer_idx": 0,
+      "explain": "RGB is for light-based screens; print work normally uses CMYK.",
+      "skill_tag": "design"
+    },
+    {
+      "q": "What does 'bleed' mean in print files?",
+      "options": [
+        "A colour mistake",
+        "A font file",
+        "Extra artwork beyond the trim edge",
+        "A compression setting"
+      ],
+      "answer_idx": 2,
+      "explain": "Bleed extends artwork past the trim line so no white edge shows after cutting.",
+      "skill_tag": "print"
+    },
+    {
+      "q": "Which tool is most associated with UI screens and collaborative design?",
+      "options": [
+        "A printing press",
+        "Pen and ink only",
+        "Excel",
+        "Figma"
+      ],
+      "answer_idx": 3,
+      "explain": "Figma is widely used for UI design, components and team collaboration.",
+      "skill_tag": "ui"
+    },
+    {
+      "q": "What is 'visual hierarchy'?",
+      "options": [
+        "The age of a design",
+        "Arranging elements so the most important is seen first",
+        "The number of colours",
+        "A type of file"
+      ],
+      "answer_idx": 1,
+      "explain": "Hierarchy uses size, contrast, colour and spacing to guide the eye.",
+      "skill_tag": "design"
+    },
+    {
+      "q": "A client asks for unlimited changes. The best first step is to:",
+      "options": [
+        "Agree scope, price and revision limit in writing",
+        "Accept and hope",
+        "Refuse to talk",
+        "Raise the price after delivery"
+      ],
+      "answer_idx": 0,
+      "explain": "A written scope and revision limit protects both sides and is the practical lesson of recording agreements.",
+      "skill_tag": "comms"
+    },
+    {
+      "q": "Which is the best use of AI in design work?",
+      "options": [
+        "Submit raw AI output as manual art",
+        "Skip learning typography",
+        "Explore ideas fast and then refine them yourself",
+        "Ignore client briefs"
+      ],
+      "answer_idx": 2,
+      "explain": "AI helps with fast concepts, but finishing, brand fit and honesty remain your job.",
+      "skill_tag": "ai"
+    },
+    {
+      "q": "Using a font or stock image without checking its licence can cause:",
+      "options": [
+        "Better colours",
+        "Faster export",
+        "Nothing at all",
+        "Legal and financial trouble"
+      ],
+      "answer_idx": 3,
+      "explain": "Licences set legal terms. Unlicensed use can lead to claims and lost clients.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Which gives the strongest proof of skill to an employer?",
+      "options": [
+        "A portfolio with case studies",
+        "A long list of software names only",
+        "A fancy email address",
+        "Many certificates with no work"
+      ],
+      "answer_idx": 0,
+      "explain": "Circulars ask for portfolios and may reject applications without one.",
+      "skill_tag": "brand"
+    },
+    {
+      "q": "A short looping animation for a social ad is typically made in:",
+      "options": [
+        "Notepad",
+        "After Effects, Premiere or CapCut",
+        "A spreadsheet",
+        "A calculator"
+      ],
+      "answer_idx": 1,
+      "explain": "Motion tools such as After Effects, Premiere and CapCut produce video and animated ads.",
+      "skill_tag": "motion"
+    },
+    {
+      "q": "Which post format is designed for Instagram stories?",
+      "options": [
+        "Wide 16:9 only",
+        "Square 1:1 only",
+        "Vertical 9:16",
+        "Any random size"
+      ],
+      "answer_idx": 2,
+      "explain": "Stories are vertical (9:16), so design with safe margins for the app interface.",
+      "skill_tag": "social"
+    },
+    {
+      "q": "Which of these is a sign of strong typography?",
+      "options": [
+        "Five fonts on one page",
+        "Tiny low-contrast text",
+        "Random alignment",
+        "Clear size contrast and readable spacing"
+      ],
+      "answer_idx": 3,
+      "explain": "Good type uses limited fonts, clear hierarchy and readable spacing.",
+      "skill_tag": "design"
+    }
+  ],
+  "cv_template_notes": "Use a clean one-page layout, but put your portfolio link at the top because it matters more than the CV. List tools (Photoshop, Illustrator, InDesign, Figma, After Effects, Premiere, Canva, AI tools), then projects with real details (client type, deliverables, time, result). Add 2-3 one-line case studies. Name the file YourName_Graphic_Designer_CV.pdf. Show only work you made and have the right to show.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Graphic Designer position advertised on [site/date]. I design social, brand and print material using Photoshop, Illustrator and Figma. For [project/client] I [one provable result, e.g. delivered a full brand identity in 10 days with two revision rounds].\n\nMy portfolio is at [link] and my CV is attached. I would be glad to complete a design test or attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email] | [Portfolio link]\n",
+  "interview_qs": [
+    "Walk me through one portfolio project. (Tip: Brief, your thinking, two options, the final and the result.)",
+    "How do you start a design when the brief is vague? (Tip: Ask questions, collect references and agree a direction before designing.)",
+    "How do you handle many rounds of revisions? (Tip: Scope and revision limit in writing, versions saved, calm tone.)",
+    "What is the difference between RGB and CMYK? (Tip: Screens versus print, and when you convert.)",
+    "How do you prepare a file for print? (Tip: Size, bleed, CMYK, resolution and outlined or packaged fonts.)",
+    "Which fonts would you choose for a bank and for a children's brand, and why? (Tip: Link type personality to audience.)",
+    "How do you use AI in your work? (Tip: Ideas and drafts, then your own finishing; be honest about it.)",
+    "How do you make sure your assets are licensed? (Tip: Name sources, keep licence notes, avoid piracy.)",
+    "Tell me about a design that failed. (Tip: Show what you learned and changed.)",
+    "How would you redesign our social media look? (Tip: Study current posts first, then propose a system, not one post.)",
+    "What is visual hierarchy? Show an example. (Tip: Size, contrast and spacing guiding the eye.)",
+    "How do you work with a marketing manager who has a different taste? (Tip: Use the goal and the audience, not personal taste.)",
+    "What would you do if a client demanded a copy of another brand's logo? (Tip: Refuse politely and offer an original idea.)",
+    "Which design tools do you want to learn next? (Tip: Show a plan, such as Figma or motion.)",
+    "Why do you want this role and where do you see yourself in three years? (Tip: Link a real project to a clear next step.)"
+  ]
+}

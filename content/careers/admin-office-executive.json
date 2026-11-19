@@ -1,0 +1,355 @@
+{
+  "slug": "admin-office-executive",
+  "title_en": "Admin / Office Executive",
+  "title_bn": "অ্যাডমিন / অফিস এক্সিকিউটিভ",
+  "field": "Administration",
+  "seo_title": "Admin / Office Executive in Bangladesh: Salary, Skills (2026)",
+  "seo_desc": "Admin and Office Executive career in Bangladesh: indicative pay, MS Office and vendor skills, NGO and RMG employers, automation risk, CV tips, roadmap and a free skill test.",
+  "summary": "An Admin or Office Executive runs office operations: records, purchasing, vendors, events, staff support and sometimes HR and accounts tasks. Entry pay is roughly BDT 15,000-28,000 a month (indicative; thin data). Employers ask for strong MS Office and good communication. Routine office-support work is exposed to automation, so this guide shows how to move toward process, vendor and people responsibility.",
+  "salary": {
+    "entry": "BDT 15,000 - 28,000 per month (indicative; Paylab and circulars; not verified)",
+    "mid": "BDT 28,000 - 50,000 per month at 3-6 years (indicative; titles vary widely)",
+    "senior": "BDT 50,000 - 80,000+ per month for administration managers (indicative; one NGO circular Tk 54,250)",
+    "note": "Checked 19 Nov 2026. No official wage survey exists; titles vary and many circulars say negotiable. Payscale BD figures were inconsistent so not used.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Festival bonus (confirm in the offer letter)",
+    "Provident fund or gratuity in many larger firms and NGOs",
+    "Health insurance and training in NGOs and larger companies",
+    "Lunch or transport support in some workplaces",
+    "Stable hours in universities and some NGOs",
+    "Path to Admin Manager, HR, procurement or operations roles"
+  ],
+  "companies": [
+    "RMG and manufacturing groups",
+    "NGOs and donor-funded projects",
+    "Universities and schools",
+    "BPO and IT companies",
+    "Banks and financial institutions",
+    "Hospitals and clinics",
+    "Real-estate and construction firms",
+    "Startups and e-commerce companies"
+  ],
+  "season": [
+    "Fiscal year-end (June): budgets, audits and procurement",
+    "Donor reporting and annual audit periods in NGOs",
+    "Pre-Eid months: bonus processing, leave and festival logistics",
+    "Admission and registration periods in universities",
+    "January-February: annual compliance and licence renewals"
+  ],
+  "skills": [
+    {
+      "name": "MS Office, especially Excel and Outlook",
+      "level": "Core",
+      "tag": "office"
+    },
+    {
+      "name": "Bangla and English communication",
+      "level": "Core",
+      "tag": "comms"
+    },
+    {
+      "name": "Organisation and time management",
+      "level": "Core",
+      "tag": "organise"
+    },
+    {
+      "name": "Document management and filing",
+      "level": "Important",
+      "tag": "docs"
+    },
+    {
+      "name": "Purchasing, vendors and negotiation",
+      "level": "Important",
+      "tag": "purchase"
+    },
+    {
+      "name": "HR basics and labour-law awareness",
+      "level": "Important",
+      "tag": "hr"
+    },
+    {
+      "name": "Systems: ERP, HRIS, project tools",
+      "level": "Important",
+      "tag": "systems"
+    },
+    {
+      "name": "Basic accounts and budgeting",
+      "level": "Growing",
+      "tag": "accounts"
+    },
+    {
+      "name": "AI and automation tools",
+      "level": "Growing",
+      "tag": "ai"
+    },
+    {
+      "name": "Discretion, trust and ethics",
+      "level": "Growing",
+      "tag": "ethics"
+    }
+  ],
+  "gaps_checklist": [
+    "I can build an Excel sheet with formulas and a pivot table",
+    "I can write a clear professional email in English and Bangla",
+    "I have organised real records or a real budget at least once",
+    "I can collect and compare three vendor quotations",
+    "I know basic filing and digital archive naming rules",
+    "I understand basic leave, attendance and Labour Act concepts",
+    "I have used at least one HRIS, ERP or project tool",
+    "I can write a short meeting minute and a monthly report",
+    "I have a CV with real numbers and a professional email address"
+  ],
+  "courses": [
+    {
+      "title": "Microsoft Learn: Excel and Office training",
+      "provider": "Microsoft",
+      "url": "https://learn.microsoft.com",
+      "is_affiliate": false,
+      "skill_tag": "office"
+    },
+    {
+      "title": "Muktopaath free online courses",
+      "provider": "Government of Bangladesh (a2i)",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "comms"
+    },
+    {
+      "title": "Coursera: office administration and business communication (audit free)",
+      "provider": "Coursera",
+      "url": "https://www.coursera.org",
+      "is_affiliate": false,
+      "skill_tag": "organise"
+    },
+    {
+      "title": "Google Workspace Learning Center",
+      "provider": "Google",
+      "url": "https://support.google.com/a/users",
+      "is_affiliate": false,
+      "skill_tag": "systems"
+    },
+    {
+      "title": "Bangladesh Labour Act: Ministry of Labour and Employment notices",
+      "provider": "Ministry of Labour and Employment",
+      "url": "https://mole.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "hr"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of an Admin Executive in Bangladesh?",
+      "a": "There is no official survey. As of 19 November 2026, our indicative range is about BDT 15,000-28,000 a month at entry level, BDT 28,000-50,000 at 3-6 years and BDT 50,000-80,000 or more for administration managers. These come from Paylab and a few circulars, and many circulars say negotiable, so check live circulars."
+    },
+    {
+      "q": "What qualifications do I need to be an Office Executive?",
+      "a": "Many circulars ask for a bachelor's degree in any discipline, with BBA or MBA preferred in some. Strong MS Office, good Bangla and English, and organisation matter more than the subject. Some circulars say freshers are encouraged to apply."
+    },
+    {
+      "q": "Is the Admin Executive job disappearing because of AI?",
+      "a": "Routine office-support tasks are being automated. The Daily Star says AI assistants, scheduling bots and document tools are reshaping administrative and secretarial roles. Jobs that involve vendors, people, judgement and compliance last longer, so build those skills and learn automation tools."
+    },
+    {
+      "q": "What is the difference between Admin and HR Executive?",
+      "a": "Admin handles office operations, records, purchasing and facilities; HR handles recruitment, payroll, performance and employee relations. Many circulars combine them as HR and Admin, especially in RMG and BPO companies."
+    },
+    {
+      "q": "Which software should I learn?",
+      "a": "Start with Excel, Word and Outlook. Then learn one system such as an HRIS, ERP or project tool, and basic accounting software if you want to move toward admin and finance."
+    },
+    {
+      "q": "How can a fresher get the first job?",
+      "a": "Build proof with a small real project (records, an event or a budget), improve Excel and English writing, apply to NGOs, universities, BPOs and RMG firms, and prepare for written tests with Excel and drafting tasks."
+    },
+    {
+      "q": "Which employers pay better, NGO or private?",
+      "a": "It varies. NGO and donor-project posts may state fixed monthly salaries (one August 2026 circular showed Tk 54,250 for a 5-year admin and finance officer), while private pay depends on the sector. Compare the full package including bonus, provident fund and insurance."
+    },
+    {
+      "q": "How do I avoid job scams?",
+      "a": "Never pay anyone for a guaranteed job. Genuine employers do not charge application fees; ActionAid Bangladesh states this on its circular. Check the employer's official website before you send documents."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 19 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** An Admin or Office Executive keeps an office running: files and records, purchasing and vendors, travel and meetings, utilities and repairs, staff support and often some HR or accounts tasks. Employers ask for a bachelor's degree (BBA is common), strong MS Office (Word, Excel, PowerPoint, Outlook), good Bangla and English, and discretion. Pay data is thin. As a rough guide, entry-level pay is about BDT 15,000-28,000 a month, mid-level (3-6 years) about BDT 28,000-50,000, and administration manager roles BDT 50,000-80,000 or more. The honest warning for 2026: routine office-support work is the part most exposed to automation, so the safe path is to move from \"doing paperwork\" to \"running processes, vendors and people\".\n\n## Key facts (as of 19 November 2026)\n\n| Question | Answer | Source type |\n|---|---|---|\n| What does the role do? | Office operations, records, purchasing, vendors, events, staff support, sometimes HR and accounts tasks | Job circulars |\n| Minimum education? | Bachelor's degree in any discipline for many posts; BBA or MBA often preferred | Circulars (MJL, Shikho, Cotton Club) |\n| Experience asked | Fresher to 2 years for executives; 2-5 years for senior executives; 5+ for managers | Circulars |\n| Must-have tools | MS Office (Word, Excel, PowerPoint, Outlook); sometimes ERP, HRIS or accounting software | Circulars |\n| Entry pay (indicative) | About BDT 15,000-28,000 a month. Survey and circular estimates, not verified | Paylab; circulars |\n| Typical employers | RMG and manufacturing, NGOs and donor projects, universities, BPO and IT firms, banks | Circulars |\n| Automation risk | Admin assistant and clerical roles are named among those being reshaped by AI and automation | The Daily Star |\n| Licence needed? | No | General practice |\n\n*Pay and market figures are estimates. Check live circulars before you negotiate.*\n\n## What does an Admin or Office Executive do?\n\nYou are the person who makes sure the office works so that others can do their jobs. Circulars repeat the same duties:\n\n- **Records and documents:** physical filing and digital archiving, application and letter registers, contract and licence files.\n- **Purchasing and vendors:** buying stationery, refreshments and equipment, getting quotations, managing suppliers and paying bills on time.\n- **Facilities:** repairs, cleaning, security, utilities, vehicles and office supplies.\n- **Coordination:** travel bookings, meeting rooms, events, courier and visitor management, and support to managers.\n- **People support:** onboarding paperwork, attendance and leave records, ID cards, and sometimes payroll inputs and compliance files (many \"HR & Admin\" circulars combine the two).\n- **Reports:** monthly expense and asset reports, usually in Excel.\n\n**A normal day:** check emails and calls, approve small purchases, solve a facility problem, update registers, prepare a meeting, chase a vendor and send a short end-of-day report. Pressure comes from many small urgent requests at once.\n\n**Which workplaces differ:** a garment factory adds compliance, security and labour documentation; an NGO adds donor rules, procurement procedures and field logistics; a university adds registrar paperwork and student-facing service; a BPO adds shift planning and flexible hours.\n\n## How is AI changing this job?\n\n- **Routine office support is being reshaped.** The Daily Star's 2026 feature on roles that will emerge and disappear by 2030 says AI-powered assistants, scheduling bots and document-automation tools are redefining office support, including administrative assistants and secretaries.\n- **A second Daily Star report** says traditional desk jobs are in decline and that roles such as cashiers, administrative assistants and clerks are being replaced by automation and self-service technology. These are forecasts and opinions, not exact counts for Bangladesh.\n- **What stays valuable:** judgement, discretion, vendor negotiation, handling people and emergencies, and knowing the real rules (labour law, procurement, donor policy). Dhaka Tribune's September 2026 column on AI in HR makes the same point: AI is strong at data and workflow, but people skills, ethics and trust remain human work.\n- **What to do:** learn Excel properly, learn one system (ERP, HRIS or a project tool), learn to use AI tools for drafting and summarising, and take on responsibility for a process, not just tasks.\n\n## What is the career ladder?\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-1 | Intern / Admin Assistant / Trainee | Filing, MS Office, email etiquette, basic registers |\n| 1-3 | Admin Executive / Office Executive | Purchasing, vendors, travel, events, expense reports |\n| 3-6 | Senior Executive / Officer (Admin) / Executive HR & Admin | Policies, budgets, compliance files, supervising staff |\n| 6-10 | Assistant Manager / Manager (Administration) | Facilities strategy, vendor contracts, cost control, team |\n| 10+ | Senior Manager / Head of Administration / Operations | Multi-site operations, budgets, risk, leadership |\n\n*A typical path, not a guarantee. Many people move into HR, procurement, operations or project coordination.*\n\n## What is the salary and what are the benefits?\n\n| Level | Typical experience | Monthly pay (BDT, indicative) |\n|---|---|---|\n| Entry | 0-2 years | 15,000 - 28,000 |\n| Mid | 3-6 years | 28,000 - 50,000 |\n| Manager | 6+ years | 50,000 - 80,000+ |\n\n**How we got these numbers, and why to be careful.** No official wage survey covers admin executives in Bangladesh, and titles vary a lot (\"Executive\", \"Officer\", \"Associate\", \"Executive - HR & Admin\"). We used what we could find:\n\n- **Paylab** says 80 percent of Office Managers in Bangladesh earn about BDT 17,339 to 60,364 a month gross. It lists Project Assistant at about BDT 15,107-28,702 and Office Manager at BDT 13,634-48,494 on another category page. These are survey ranges.\n- **A donor-project circular** (ESDO, August 2026) advertised an Officer - Admin & Finance post in Cox's Bazar at Tk 54,250 a month for someone with 5 years of experience.\n- **A fintech circular** (aamarpay, January 2026) listed an Executive in Finance & Accounts at about BDT 30,000.\n- **Glassdoor** shows an average base pay of about BDT 48,000 a month for \"Executive Officer\" in Dhaka (range BDT 30,000-75,000), but that title is broader than admin work, so we used it only as a loose upper marker.\n- **Payscale** pages for Bangladesh show very wide and inconsistent figures for Office Administrator and Administrative Manager, so we did not use them.\n\nMany circulars say \"negotiable\". Pay differs sharply between RMG factories, NGOs, banks and BPOs. Always confirm in the actual circular.\n\n**Benefits to look for:** festival bonus, provident fund or gratuity, lunch or transport, health insurance in NGOs and larger firms, and training. Ask for the full package in writing.\n\n## Which skills do employers ask for?\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| MS Office, especially Excel and Outlook | Named in almost every circular | █████ |\n| Bangla and English communication | Letters, emails, calls, minutes | █████ |\n| Organisation and time management | Many small tasks at once | █████ |\n| Document management and filing | Digital archiving and physical records | ████ |\n| Purchasing, vendors and negotiation | Saves money and avoids delays | ████ |\n| HR basics and labour-law awareness | Many posts combine HR and admin | ███ |\n| Systems (ERP, HRIS, project tools) | Some circulars name them | ███ |\n| Discretion and professionalism | You see confidential papers | ████ |\n| Basic accounts and budgeting | Expense control and reports | ███ |\n| AI and automation tools | Fastest-growing; speeds up routine work | ███ |\n\n*Demand bars are our reading of circulars, not a statistical survey.*\n\n## How do I get in?\n\n1. **Get the base right:** a bachelor's degree, and genuinely good Excel and Word. Learn formulas, pivot tables, mail merge and professional formatting.\n2. **Improve your English writing:** emails, short notes and meeting minutes. Employers test this.\n3. **Gain proof:** volunteer for a club's records and budget, intern at an NGO or a company's admin desk, or run an event with a written budget.\n4. **Learn one extra system:** an HRIS, ERP or project tool, or basic Tally or QuickBooks if you want to move toward admin and finance.\n5. **Apply widely:** Bdjobs, LinkedIn, NGO and university career pages, RMG groups and BPO firms. Fresher-friendly examples exist (some circulars say freshers are encouraged).\n6. **Prepare for a test:** written tests often include Excel tasks, English drafting and basic situational questions.\n\n## Where will you find more peace of mind?\n\nAdmin work has frequent interruptions and everyone's request feels urgent. Factory posts bring long hours and compliance pressure; NGO posts bring donor deadlines; university posts are steadier but more bureaucratic. Three habits help:\n\n- **Keep a written task list and a request log** so priorities are visible and disputes are settled by records.\n- **Say yes with a time, not yes to everything.** \"I can do it by 3 pm\" is clearer than silence.\n- **Keep clean papers.** Save approvals, quotations and receipts so every decision can be explained.\n\nIf stress becomes constant, speak to a mentor or a mental health professional early.\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years in an office)\n2. **The type of workplace I want:** (factory, NGO, university, bank, BPO, startup)\n3. **One process I will learn to run:** (purchasing, travel, records, onboarding)\n4. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n5. **My weekly practice hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 4.\n\n## Faith and history: trust (amanah) in a small role\n\n**The Quran.** Allah commands believers to return trusts to those to whom they are due ([4:58 on quran.com](https://quran.com/4/58)). An admin person holds trusts every day: money, keys, files and other people's secrets. Another verse praises those who are faithful to their trusts and promises ([23:8](https://quran.com/23/8)).\n\n**Hadith.** The Prophet (peace be upon him) said that there is no faith for the one who has no trustworthiness (Musnad Ahmad, reported through Anas). For an office, this means honest receipts, honest quotations and no private use of company property.\n\n**History.** Record-keeping, registers and secretaries (the *katib*) were central to Islamic administration from early times, and Bengal had its own long tradition of land and revenue records. Clear paperwork has always been part of a fair society.\n\n## Your contribution to the nation\n\nOffices, factories, universities and NGOs cannot work without people who keep records right, pay vendors fairly and make sure workers' papers, safety checks and leave records are correct. In the RMG sector especially, clear compliance files help factories keep buyers and protect workers.\n\n## Your contribution to the world\n\nBangladeshi admin professionals support international NGOs, UN agencies, global BPO clients and multinational offices. Clear records, honest procurement and respectful service help the country's institutions earn trust.\n\n## If you do not get an admin job at once\n\n- **Start as an assistant, coordinator or data-entry officer** and take on records and vendor tasks.\n- **Try NGO and university internships.** Large NGOs advertise short internships in executive and admin offices.\n- **Build a skill that pairs with admin:** HR basics, procurement, accounts or project coordination.\n- **Consider customer support or operations roles** that lead into office management.\n- **Avoid paying anyone for a \"guaranteed\" job.** Genuine employers, including NGOs, say there is no application fee.\n\n## If you want to be an entrepreneur\n\n- **Office-support service:** document handling, translation, typing and form filling for small firms.\n- **Event and meeting coordination** for companies and NGOs.\n- **Vendor and supplies business** for offices (stationery, cleaning, refreshments), with proper trade licence and records.\n- **Virtual admin assistance** for remote clients, once you have proof of work and clear contracts.\n\nRegister and keep accounts as you grow.\n\n## Research opportunities\n\n- **Topics with real need in Bangladesh:** how automation changes clerical work, procurement transparency in small organisations, and office safety and compliance in RMG.\n- **Where to learn and publish:** business schools, HR and administration associations and your own short case studies on LinkedIn.\n- **Path:** process improvement project → HR or operations role → manager or consultant roles.\n\n## Whom to follow and learn from\n\nFollow official sources first: the Bangladesh Labour Act and Ministry of Labour notices, the Bangladesh Bank and NBR for finance rules relevant to your work, and your employer's policy manuals. For skills, use free [Microsoft Learn](https://learn.microsoft.com) and [Muktopaath](https://muktopaath.gov.bd). On LinkedIn, follow HR and operations leaders who explain real processes.\n\n## Where do I find jobs?\n\n- [Bdjobs](https://www.bdjobs.com) (General Management/Admin category), company and NGO career pages.\n- University career pages (for registrar and administrative posts).\n- LinkedIn, newspaper job pages and employer networks.\n- BRAC and other large NGOs for internships and entry posts.\n\n## How should I write my CV?\n\nYour CV should show records, money and process, not only duties.\n\n| Weak line | Better line |\n|---|---|\n| Handled office work. | Managed purchasing for a 40-person office: collected three quotations, cut monthly stationery cost by 15 percent (use your real figures). |\n| Good at MS Office. | Built an Excel tracker with formulas and pivot tables to monitor 120 files and monthly expenses (use your real details). |\n| Maintained records. | Digitised 2,000 paper files into a searchable folder system with naming rules (use your real numbers). |\n\n*Use only real, provable numbers. If you do not have them yet, start a small project and create them.*\n\n**What to include:** tools (Word, Excel, PowerPoint, Outlook, any ERP or HRIS), languages, certificates, internships and a professional email address. Build the CV free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- Listing \"MS Office\" without showing what you can actually do in Excel.\n- Weak English in the cover email.\n- Vague duties with no numbers.\n- Missing documents or the circular's required format.\n- Taking private favours from vendors.\n- Overpromising and missing deadlines.\n- Paying anyone for a \"guaranteed job\".\n\n## Changelog\n\n- **19 November 2026:** First version. Pay ranges, AI notes and circular facts checked on this date.\n- **To review:** pay ranges when better data is available; automation impact each quarter.\n\n## Sources and method\n\nFigures were checked on 19 November 2026. Pay ranges combine Paylab, a few circulars and Glassdoor and are estimates, not official statistics. Where sources were unclear, we said so.\n\n- Paylab: [Office Manager, Bangladesh](https://www.paylab.com/bd/salaryinfo/administration/office-manager?lang=en); [Administration category](https://paylab.com/bd/salarios/administracao)\n- Glassdoor: [Executive Officer salaries in Dhaka](https://www.glassdoor.com.hk/Salaries/dhaka-bangladesh-executive-officer-salary-SRCH_IL.0,16_IM1237_KO17,34.htm)\n- ESDO (August 2026): [Officer - Admin & Finance circular](https://esdo.net.bd/erp/HR/PDF/VacancyAnnouncement/0710605082026141556.pdf)\n- aamarpay: [Executive circular](https://career.aamarpay.com/career/jobdetails/30)\n- Circulars: [Exotico Solutions (Bdjobs)](https://hotjobs.bdjobs.com/jobs/exoticos/exoticos2.htm); [Cotton Club (LinkedIn)](https://bd.linkedin.com/in/arafat91bd/hi); [Xsellence](https://xsellence-bangladesh-ltd.odoo.com/jobs/executive-accounts-admin-10); [Kazi & Kazi Tea (TBS)](https://www.tbsnews.net/node/1452996); [MJL Bangladesh (TBS)](https://www.tbsnews.net/node/1462896); [Daffodil International University](https://skill.jobs/jobs/assistant-administrative-officer-xVVkYdrO); [ActionAid Bangladesh](https://jobs.actionaidbd.org); [BRAC internship](https://www.brac.net/documents/910/ID-Corporate-EDs-Office-30-07-2026.pdf); [Shikho](https://www.youthop.com/bd/?p=26793)\n- The Daily Star: [Which roles will emerge and disappear by 2030?](https://www.thedailystar.net/news/which-roles-will-emerge-and-disappear-2030-4085371); [Ushering in a new era of work](https://www.thedailystar.net/tech-startup/news/ushering-new-era-work-3822331)\n- Dhaka Tribune (19 September 2026): [Reimagining the 'human' in HR](https://www.dhakatribune.com/opinion/op-ed/420115/reimagining-the-%E2%80%98human%E2%80%99-in-hr)\n- Quran: [quran.com](https://quran.com)\n\n**How to cite this page:** Shishir, D. H. (2026, November 19). *Admin and Office Executive career in Bangladesh: salary, skills, automation risk and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/admin-office-executive\n\n*This guide gives general career information. It does not promise a job or salary. It is not legal, tax or religious advice. Pay and job requirements change, so check live circulars.*\n",
+  "growth_plan": {
+    "y1": "Get strong in Excel and English writing, finish one real records or budget project, learn basic filing and purchasing, and land an intern or junior admin role.",
+    "y2": "Own purchasing, vendors and monthly reports, learn an HRIS or ERP, learn basic labour-law rules and become a confirmed Executive.",
+    "y3": "Run a process end to end, supervise a junior, cut one real cost and move toward Senior Executive or Assistant Manager (Admin)."
+  },
+  "goal_sheet": [
+    "Build one Excel tracker with formulas and a pivot table",
+    "Complete one free Microsoft or Muktopaath course",
+    "Compare three vendor quotations for a real purchase",
+    "Write a one-page monthly report with numbers",
+    "Learn one HRIS, ERP or project tool",
+    "Apply to 10 employers across NGO, RMG and university sectors",
+    "Review pay data in live circulars and set a target salary"
+  ],
+  "test": [
+    {
+      "q": "Which Excel feature quickly summarises a large table by category?",
+      "options": [
+        "Spell check",
+        "PivotTable",
+        "Page border",
+        "Slide show"
+      ],
+      "answer_idx": 1,
+      "explain": "A PivotTable summarises and groups data without rewriting formulas.",
+      "skill_tag": "office"
+    },
+    {
+      "q": "What should you do before buying a significant item for the office?",
+      "options": [
+        "Collect and compare at least three quotations",
+        "Buy from the first seller",
+        "Ask a friend only",
+        "Pay in advance without a bill"
+      ],
+      "answer_idx": 0,
+      "explain": "Comparing quotations supports fair price and an audit trail.",
+      "skill_tag": "purchase"
+    },
+    {
+      "q": "A manager gives you five urgent tasks at once. The best response is to:",
+      "options": [
+        "Do random ones",
+        "Say yes and do none",
+        "Ask which is most urgent and give a time for each",
+        "Ignore the message"
+      ],
+      "answer_idx": 2,
+      "explain": "Clarifying priority and time keeps work visible and expectations realistic.",
+      "skill_tag": "organise"
+    },
+    {
+      "q": "Which is the best way to name digital files?",
+      "options": [
+        "Final final 2 new",
+        "Random letters",
+        "Only the word 'document'",
+        "Consistent naming with date and subject"
+      ],
+      "answer_idx": 3,
+      "explain": "Clear naming rules make files searchable and avoid duplicates.",
+      "skill_tag": "docs"
+    },
+    {
+      "q": "A vendor offers you a private gift after you approve their invoice. You should:",
+      "options": [
+        "Accept quietly",
+        "Decline and report it if the policy requires",
+        "Ask for more",
+        "Hide the invoice"
+      ],
+      "answer_idx": 1,
+      "explain": "Trust (amanah) and conflict-of-interest rules mean no private favours from vendors.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "In a formal email, which opening line is best?",
+      "options": [
+        "Dear Mr. Rahman,",
+        "Hey bro,",
+        "Listen,",
+        "No greeting at all"
+      ],
+      "answer_idx": 0,
+      "explain": "A polite, clear greeting sets a professional tone.",
+      "skill_tag": "comms"
+    },
+    {
+      "q": "The Daily Star says AI and automation are reshaping which office roles?",
+      "options": [
+        "Only surgeons",
+        "Only farmers",
+        "Administrative assistants and secretarial roles",
+        "No office roles"
+      ],
+      "answer_idx": 2,
+      "explain": "It names administrative assistants and secretarial roles as being redefined by AI assistants, scheduling bots and document automation.",
+      "skill_tag": "ai"
+    },
+    {
+      "q": "What is the main purpose of an HRIS?",
+      "options": [
+        "Edit photos",
+        "Design logos",
+        "Print flyers",
+        "Manage employee records, leave and attendance in a system"
+      ],
+      "answer_idx": 3,
+      "explain": "An HRIS stores and manages employee data and processes.",
+      "skill_tag": "systems"
+    },
+    {
+      "q": "Why should you keep receipts and approvals together?",
+      "options": [
+        "So every payment can be explained and audited",
+        "To fill the drawer",
+        "To slow work",
+        "For decoration"
+      ],
+      "answer_idx": 0,
+      "explain": "Receipts and approvals support honest accounts and audits.",
+      "skill_tag": "accounts"
+    },
+    {
+      "q": "Which is a good habit for handling confidential papers?",
+      "options": [
+        "Leave them on the desk",
+        "Store them securely and share only with authorised people",
+        "Post a photo online",
+        "Share with colleagues freely"
+      ],
+      "answer_idx": 1,
+      "explain": "Confidential papers need secure storage and limited access.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "A leave and attendance record helps mainly to:",
+      "options": [
+        "Make the office quieter",
+        "Change office colour",
+        "Pay staff correctly and meet compliance",
+        "Print more paper"
+      ],
+      "answer_idx": 2,
+      "explain": "Accurate records support correct pay and compliance with labour rules.",
+      "skill_tag": "hr"
+    },
+    {
+      "q": "Which Excel formula adds the numbers in cells B2 to B10?",
+      "options": [
+        "=SUM(B2:B10)",
+        "=ADD(B2-B10)",
+        "=TOTAL B2 B10",
+        "=PLUS(B2,B10)"
+      ],
+      "answer_idx": 0,
+      "explain": "SUM adds a range of cells.",
+      "skill_tag": "office"
+    }
+  ],
+  "cv_template_notes": "Use a clean one-page layout (single column, no heavy graphics). Open with a two-line profile, then a Tools line (Word, Excel with pivot tables, Outlook, any ERP or HRIS), then experience and projects with real numbers (files digitised, quotations compared, cost reduced, events managed). Add languages and a professional email address. Name the file YourName_Admin_Executive_CV.pdf. Use only facts you can prove.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Admin Executive position advertised on [site/date]. I hold a [degree] from [university] and have strong Excel, documentation and coordination skills. In [project/internship/club] I [one provable result, e.g. organised 300 files into a searchable system and cut search time].\n\nMy CV is attached. I would be glad to attend an interview or complete a written test.\n\nSincerely,\n[Your name] | [Phone] | [Email]\n",
+  "interview_qs": [
+    "Tell me about yourself and why admin work. (Tip: Link real organising experience to the role.)",
+    "How do you prioritise many urgent requests? (Tip: Ask for deadlines, use a list and tell people when you will finish.)",
+    "How would you handle buying office equipment? (Tip: Need, budget, three quotations, approval and record.)",
+    "What Excel functions do you use often? (Tip: SUM, IF, VLOOKUP or XLOOKUP, pivot tables; show an example.)",
+    "How do you keep records organised? (Tip: Naming rules, folders, a register and regular backup.)",
+    "What would you do if a vendor delivered late? (Tip: Contact, document, escalate politely and plan a backup.)",
+    "How do you handle confidential information? (Tip: Secure storage, need-to-know access and discretion.)",
+    "A colleague asks you to bend a purchasing rule. What do you do? (Tip: Follow policy politely and suggest the proper route.)",
+    "Describe a mistake you made and fixed. (Tip: Own it, fix it and show what changed.)",
+    "How would you organise an office event? (Tip: Budget, venue, schedule, vendors, checklist and review.)",
+    "What do you know about the Bangladesh Labour Act in relation to leave and attendance? (Tip: Be honest and show you know where to check.)",
+    "How can AI tools help your admin work? (Tip: Drafts, summaries and scheduling, with human checking.)",
+    "How do you deal with a difficult manager or visitor? (Tip: Stay calm, listen, restate and offer options.)",
+    "What would you improve in our office process? (Tip: Study first, then suggest one measurable change.)",
+    "Why should we hire you and where do you see yourself in three years? (Tip: Link a real project to a clear next step.)"
+  ]
+}

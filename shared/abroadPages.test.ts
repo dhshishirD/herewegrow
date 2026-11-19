@@ -18,6 +18,12 @@ describe('abroad presets', () => {
     expect(abroadPreset('europass')).toMatchObject({ design: 'classic', showPersonal: false, layout: 'europass' });
     expect(DESIGN_LIST.find((d) => d.id === abroadPreset('europass')!.design)?.pro).toBeFalsy();
   });
+  it('the scholarship and academic presets use the free Classic design with a special layout and personal details off', () => {
+    for (const id of ['scholarship', 'academic'] as const) {
+      expect(abroadPreset(id)).toMatchObject({ design: 'classic', showPersonal: false, layout: id });
+      expect(DESIGN_LIST.find((d) => d.id === abroadPreset(id)!.design)?.pro).toBeFalsy();
+    }
+  });
   it('returns null for unknown, empty or inherited keys', () => {
     expect(abroadPreset('nope')).toBeNull();
     expect(abroadPreset(null)).toBeNull();

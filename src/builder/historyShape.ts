@@ -16,6 +16,7 @@ export const builderHistoryShape: HistoryShape<BuilderState> = {
       d.references.map((x) => x.id).join(),
       d.langLevels.map((x) => x.id).join(),
       d.educationFirst ? 1 : 0,
+      d.refsOnRequest ? 1 : 0,
       d.custom.map((c) => `${c.id}:${c.items.map((i) => i.id).join()}`).join('|'),
       d.order.join(),
       d.hidden.join(),

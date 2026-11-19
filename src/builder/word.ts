@@ -158,6 +158,7 @@ export function sidebarSpec(design: DesignId, accent: string): SidebarSpec | nul
 export async function buildDocx(state: BuilderState, opts: { watermark?: boolean; brand?: string } = {}): Promise<Blob> {
   // The Europass-style layout has its own file (dates left, details right, a real CEFR table)
   if (state.layout === 'europass') return (await import('./wordEuropass')).buildEuropassDocx(state, opts);
+  if (state.layout === 'scholarship' || state.layout === 'academic') return (await import('./wordHigherStudy')).buildHigherStudyDocx(state, opts);
   const d = state.data;
   const L = LABELS[state.headings ?? 'en'];
   const accent = hex(state.accent);

@@ -3,6 +3,8 @@ import { DESIGN_LIST } from '../../shared/designList';
 import { CEFR_LEVEL_INFO, CEFR_NOTE, CEFR_SKILLS, CEFR_SKILL_LABEL, languageLines, usableLanguages } from './cefr';
 import { EUROPASS_LABELS_BN, EUROPASS_LABELS_EN, euDate } from './europass';
 import { findFont } from './fonts';
+import { HIGHER_LABELS_BN, HIGHER_LABELS_EN, REFEREES_ON_REQUEST } from './higherStudy';
+import type { AbroadLayout } from '../../shared/abroadPresets';
 import { DEFAULT_MARGINS, LABELS, clampMargin, lines, list, type CvData, type DesignId, type HeadingLang, type Margins } from './model';
 
 // CV designs, each laid out on an A4 page (794 × 1123 px at 96 dpi).
@@ -1176,11 +1178,71 @@ function Europass({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
   );
 }
 
+/* ── Higher study (scholarship, academic): education first, one column, serif 11 pt, dates on the right, no photo unless added ── */
+
+function HigherStudy({ d, accent, L }: { d: CvData; accent: string; L: Labels }) {
+  const bn = L === LABELS.bn;
+  const HL: Labels = { ...L, ...(bn ? HIGHER_LABELS_BN : HIGHER_LABELS_EN) };
+  const T: Theme = {
+    Title: ({ children }) => (
+      <h2 className="cv-title" style={{ fontFamily: 'inherit', fontSize: 14.67, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: accent, borderBottom: `1px solid ${accent}`, paddingBottom: 2, margin: '14px 0 7px' }}>{children}</h2>
+    ),
+    Entry: ({ title, sub, date, children }) => (
+      <div className="cv-entry" style={{ marginBottom: 7 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+          <strong>{title}</strong>
+          {date && <span style={{ whiteSpace: 'nowrap' }}>{date}</span>}
+        </div>
+        {sub && <div style={{ fontStyle: 'italic' }}>{sub}</div>}
+        {children}
+      </div>
+    ),
+  };
+  const refs = d.references.filter((r) => r.name || r.title || r.org || r.phone || r.email);
+  return (
+    <div className="cv-page cv-pad" style={{ ...PAGE, fontFamily: 'var(--cv-font, "Times New Roman", Times, "Hind Siliguri", serif)', fontSize: 14.67, lineHeight: 1.38, padding: `${my(44)} ${mx(54)}` }}>
+      <header className="cv-keep" style={{ display: 'flex', gap: 16, alignItems: 'center', borderBottom: `2px solid ${accent}`, paddingBottom: 10 }}>
+        {d.photo && <img src={d.photo} alt="" style={{ width: 80, height: 80, borderRadius: 3, objectFit: 'cover', flexShrink: 0 }} />}
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <h1 style={{ fontFamily: 'inherit', fontSize: 26, fontWeight: 700, margin: 0, color: '#111827' }}>{d.name || 'Your Name'}</h1>
+          {d.headline && <p style={{ margin: '1px 0 0', color: accent, fontWeight: 600 }}>{d.headline}</p>}
+          <p style={{ margin: '4px 0 0', color: GREY }}>{contactLine(d).join('  |  ')}</p>
+        </div>
+      </header>
+      {d.order.map((k) => {
+        if (k === 'references') {
+          if (d.hidden.includes(k) || (!refs.length && !d.refsOnRequest)) return null;
+          return (
+            <section key={k}>
+              <T.Title>{HL.references}</T.Title>
+              {d.refsOnRequest ? (
+                <p style={{ margin: 0 }}>{REFEREES_ON_REQUEST[bn ? 'bn' : 'en']}</p>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px' }}>
+                  {refs.map((r) => (
+                    <div key={r.id} className="cv-entry">
+                      <strong>{r.name}</strong>
+                      {r.title && <div>{r.title}</div>}
+                      {r.org && <div>{r.org}</div>}
+                      {(r.email || r.phone) && <div style={{ color: GREY }}>{[r.email, r.phone].filter(Boolean).join(', ')}</div>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          );
+        }
+        return <Section key={k} k={k} d={d} L={HL} T={T} />;
+      })}
+    </div>
+  );
+}
+
 export const DESIGNS = DESIGN_LIST;
 
 export const isProDesign = (id: DesignId) => !!DESIGNS.find((x) => x.id === id)?.pro;
 
-export function CvDocument({ d, design, accent, headings = 'en', margins, font, layout }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins; font?: string; layout?: 'europass' }) {
+export function CvDocument({ d, design, accent, headings = 'en', margins, font, layout }: { d: CvData; design: DesignId; accent: string; headings?: HeadingLang; margins?: Margins; font?: string; layout?: AbroadLayout }) {
   const L = LABELS[headings];
   const f = findFont(font);
   // No wrapper box (display: contents), only the two scale variables for the paddings
@@ -1188,7 +1250,7 @@ export function CvDocument({ d, design, accent, headings = 'en', margins, font, 
     ...(margins ? { '--cvx': clampMargin(margins.x) / DEFAULT_MARGINS.x, '--cvy': clampMargin(margins.y) / DEFAULT_MARGINS.y } : {}),
     ...(f.body ? { '--cv-font': f.body, '--cv-head': f.head } : {}),
   } as CSSProperties;
-  return <div style={{ display: 'contents', ...vars }}>{layout === 'europass' ? <Europass d={d} accent={accent} L={L} /> : <Layout d={d} design={design} accent={accent} L={L} />}</div>;
+  return <div style={{ display: 'contents', ...vars }}>{layout === 'europass' ? <Europass d={d} accent={accent} L={L} /> : layout === 'scholarship' || layout === 'academic' ? <HigherStudy d={d} accent={accent} L={L} /> : <Layout d={d} design={design} accent={accent} L={L} />}</div>;
 }
 
 function Layout({ d, design, accent, L }: { d: CvData; design: DesignId; accent: string; L: Labels }) {

@@ -9,6 +9,13 @@ describe('builder tool views are noindex', () => {
     expect(r.headers.get('X-Robots-Tag')).toBe('noindex, follow');
     expect(r.headers.get('Link')).toBe('<https://herewegrow.pro/europass-cv>; rel="canonical"');
   });
+  it('presets scholarship and academic: noindex and canonical to their pages', () => {
+    for (const [preset, page] of [['scholarship', '/scholarship-cv'], ['academic', '/academic-cv']]) {
+      const r = run(`https://herewegrow.pro/builder?preset=${preset}`);
+      expect(r.headers.get('X-Robots-Tag')).toBe('noindex, follow');
+      expect(r.headers.get('Link')).toBe(`<https://herewegrow.pro${page}>; rel="canonical"`);
+    }
+  });
   it('template and client views are noindex without a canonical link', () => {
     for (const q of ['?template=abc', '?client=1']) {
       const r = run(`https://herewegrow.pro/builder${q}`);

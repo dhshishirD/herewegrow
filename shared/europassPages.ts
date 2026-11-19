@@ -10,6 +10,10 @@ import { PRODUCTS, SUPPORT_WHATSAPP } from './catalog';
 import { PLANS, templatePrice } from './plans';
 import { SINGLE_TEMPLATE_PRICE, TEMPLATES, type Template } from './templates';
 import { isListed, isRetired, isVariant } from './templateTiers';
+import { bdt, blockText, wordCount, type Block, type Choice, type Faq, type Source } from './seoPage';
+
+export { blockText, wordCount };
+export type { Block, Choice, Faq, Source };
 
 export const EUROPASS_UPDATED = '2026-11-19';
 export const EUROPASS_CHECKED = '2026-11-19';
@@ -76,7 +80,6 @@ export function europassSeo(path: string): PageSeo | undefined {
   return (EUROPASS_SEO as Record<string, PageSeo>)[path];
 }
 
-export interface Source { title: string; url: string }
 export const EUROPASS_SOURCES: Source[] = [
   { title: 'Europass portal (European Union): CV, cover letter and profile tools', url: 'https://europass.europa.eu/en' },
   { title: 'Europass: CEFR language self-assessment grid (PDF)', url: 'https://europass.europa.eu/system/files/2020-05/CEFR%20self-assessment%20grid%20EN.pdf' },
@@ -86,18 +89,8 @@ export const EUROPASS_SOURCES: Source[] = [
   { title: 'ENIC-NARIC networks: recognition of foreign qualifications', url: 'https://www.enic-naric.net/' },
 ];
 
-export interface Block {
-  id: string;
-  h2: string;
-  p?: string[];
-  ul?: string[];
-  ol?: string[];
-  table?: { head: string[]; rows: string[][] };
-}
-export interface Faq { q: string; a: string }
 
 // ---------- Prices, taken from the real constants (never typed by hand) ----------
-const bdt = (n: number) => `৳${n}`;
 const PRO_YEAR = PLANS.find((p) => p.id === 'pro-365')!;
 const PRO_SHORT = PLANS.filter((p) => p.templateOff < 100 && p.templateOff > 0);
 const PRO_FROM = Math.min(...PLANS.map((p) => p.price));
@@ -410,7 +403,6 @@ export const WORD_FAQ: Faq[] = [
 ];
 
 // ---------- Choice cards, helper quiz and layout helpers (shared by the app and the prerender) ----------
-export interface Choice { id: 'build' | 'word' | 'expert'; title: string; bn: string; micro: string; cta: string; href: string; external?: boolean }
 
 const CV_WRITING_FROM = Math.min(...PRODUCTS.filter((p) => p.kind === 'service' && p.id.startsWith('cv-') && p.id !== 'cv-review').map((p) => p.price));
 export const EUROPASS_EXPERT_PATH = '/services';
@@ -481,12 +473,6 @@ export const HOW_HEADING = { en: 'How it works', bn: 'কীভাবে কা�
 export const HOW_LABELS = ['Fill the form', 'Check the preview', 'Download'] as const;
 
 // ---------- JSON-LD / HTML helpers shared by scripts/seo.ts ----------
-export const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
-
-export function blockText(b: Block): string {
-  return [b.h2, ...(b.p ?? []), ...(b.ul ?? []), ...(b.ol ?? []), ...(b.table ? [b.table.head.join(' '), ...b.table.rows.map((r) => r.join(' '))] : [])].join(' ');
-}
-
 /** Visible words on each page body (without navigation and footer), used by the tests to keep within the planned lengths. */
 export function pillarWords(): number {
   return wordCount([PILLAR_ANSWER, ...PILLAR_INTRO, ...PILLAR_BLOCKS.map(blockText), ...PILLAR_FAQ.map((f) => `${f.q} ${f.a}`)].join(' '));

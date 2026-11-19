@@ -3,15 +3,15 @@
 
 import { esc } from './pageHtml';
 import {
+  SITE, a, blockHtml, choicesHtml as choicesHtmlG, crumbsLd, faqHtml as faqHtmlG, faqLd, footerHtml as footerHtmlG, quizHtml as quizHtmlG, webPageLd as webPageLdG,
+} from './seoPageHtml';
+import {
   CHOICES_HEADING, EUROPASS_PREVIEW, EUROPASS_WHATSAPP_HREF, PILLAR_FOLDED, QUIZ, QUIZ_HEADING, QUIZ_INTRO, QUIZ_RESULTS, WORD_FOLDED, europassChoices,
   EUROPASS_AUTHOR, EUROPASS_BUILDER_HREF, EUROPASS_CHECKED, EUROPASS_HUB_PATH, EUROPASS_PILLAR_PATH, EUROPASS_PRICES, EUROPASS_PRIVACY,
   EUROPASS_SEO, EUROPASS_SOURCES, EUROPASS_UNOFFICIAL, EUROPASS_UPDATED, EUROPASS_WORD_PATH, HUB_CHOOSE, HUB_FAQ, HUB_INTRO,
   PILLAR_ANSWER, PILLAR_BLOCKS, PILLAR_FAQ, PILLAR_INTRO, WORD_ANSWER, WORD_BLOCKS, WORD_FAQ, europassHubTemplates, imageAlt, EUROPASS_OG,
-  type Block, type Faq, type HubTemplate,
+  type Faq, type HubTemplate,
 } from './europassPages';
-
-const SITE = 'https://herewegrow.pro';
-const a = (href: string, text: string) => `<a href="${href}">${esc(text)}</a>`;
 
 export interface EuropassPage {
   path: string;
@@ -25,53 +25,20 @@ export interface EuropassPage {
   images: string[];
 }
 
-export function blockHtml(b: Block, folded: readonly string[] = []): string {
-  const table = b.table
-    ? `<table><thead><tr>${b.table.head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`
-    : '';
-  const inner = `${(b.p ?? []).map((x) => `<p>${esc(x)}</p>`).join('')}${b.ul ? `<ul>${b.ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${b.ol ? `<ol>${b.ol.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}${table}`;
-  return folded.includes(b.id) ? `<details id="${b.id}"><summary><h2>${esc(b.h2)}</h2></summary>${inner}</details>` : `<section id="${b.id}"><h2>${esc(b.h2)}</h2>${inner}</section>`;
-}
+const choicesHtml = (wordHref: string) => choicesHtmlG(CHOICES_HEADING, europassChoices(wordHref), EUROPASS_WHATSAPP_HREF);
 
-const choicesHtml = (wordHref: string) => {
-  const [build, word, expert] = europassChoices(wordHref);
-  return `<section id="choose-path"><h2>${CHOICES_HEADING.en} <span lang="bn">${CHOICES_HEADING.bn}</span></h2><ul>`
-    + `<li><h3>${esc(build.title)}</h3><p lang="bn">${esc(build.bn)}</p><p>${esc(build.micro)}</p><p>${a(build.href, build.cta)}</p></li>`
-    + `<li><h3>${esc(word.title)}</h3><p lang="bn">${esc(word.bn)}</p><p>${esc(word.micro)}</p><p>${a(word.href, word.cta)}</p></li>`
-    + `<li><h3>${esc(expert.title)}</h3><p lang="bn">${esc(expert.bn)}</p><p>${esc(expert.micro)}</p><p>${a(expert.href, expert.cta)} · <a href="${EUROPASS_WHATSAPP_HREF}" rel="noopener">Ask on WhatsApp</a></p></li>`
-    + `</ul></section>`;
-};
-
-const quizHtml = () =>
-  `<section id="do-i-need"><h2>${QUIZ_HEADING.en} <span lang="bn">${QUIZ_HEADING.bn}</span></h2><p>${esc(QUIZ_INTRO)}</p><ol>${QUIZ.map((q) => `<li>${esc(q.q)} ${q.options.map((o) => esc(o.label)).join(' / ')}</li>`).join('')}</ol><ul>${Object.values(QUIZ_RESULTS).map((r) => `<li><strong>${esc(r.title)}.</strong> ${esc(r.body)}</li>`).join('')}</ul></section>`;
+const quizHtml = () => quizHtmlG({ id: 'do-i-need', heading: QUIZ_HEADING, intro: QUIZ_INTRO, questions: QUIZ, results: Object.values(QUIZ_RESULTS) });
 
 const ownPreviewHtml = () =>
   `<figure><img src="${EUROPASS_PREVIEW.src}" width="${EUROPASS_PREVIEW.w}" height="${EUROPASS_PREVIEW.h}" alt="${esc(EUROPASS_PREVIEW.alt)}" loading="eager" fetchpriority="high" /><figcaption>${esc(EUROPASS_PREVIEW.caption)}</figcaption></figure>`;
 
-const faqHtml = (items: Faq[]) => `<details id="faq" open><summary><h2>Questions about the Europass-style CV</h2></summary>${items.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}</details>`;
+const faqHtml = (items: Faq[]) => faqHtmlG('Questions about the Europass-style CV', items);
 
 const footerHtml = (withSources: boolean) =>
-  `${withSources ? `<section id="sources"><h2>Sources</h2><ul>${EUROPASS_SOURCES.map((s) => `<li><a href="${s.url}" rel="noopener">${esc(s.title)}</a></li>`).join('')}</ul></section>` : ''}<p>Last updated ${EUROPASS_UPDATED}. Last checked ${EUROPASS_CHECKED}. By <a href="${EUROPASS_AUTHOR.url}" rel="author">${EUROPASS_AUTHOR.name}</a>, CV consultant, Career Solutions.</p><p>${esc(EUROPASS_PRIVACY)}</p><p>${esc(EUROPASS_UNOFFICIAL)}</p>`;
+  footerHtmlG({ sources: withSources ? EUROPASS_SOURCES : undefined, updated: EUROPASS_UPDATED, checked: EUROPASS_CHECKED, author: EUROPASS_AUTHOR, lines: [EUROPASS_PRIVACY, EUROPASS_UNOFFICIAL] });
 
-const faqLd = (items: Faq[]) => ({ '@type': 'FAQPage', mainEntity: items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
-const personLd = { '@type': 'Person', name: EUROPASS_AUTHOR.name, url: EUROPASS_AUTHOR.url };
-const crumbsLd = (items: [string, string][]) => ({
-  '@type': 'BreadcrumbList',
-  itemListElement: items.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: `${SITE}${path}` })),
-});
-const webPageLd = (path: string, type: 'WebPage' | 'CollectionPage', extra: Record<string, unknown> = {}) => ({
-  '@type': type,
-  '@id': `${SITE}${path}#webpage`,
-  url: `${SITE}${path}`,
-  name: EUROPASS_SEO[path as keyof typeof EUROPASS_SEO].h1,
-  description: EUROPASS_SEO[path as keyof typeof EUROPASS_SEO].description,
-  inLanguage: ['en', 'bn'],
-  datePublished: EUROPASS_UPDATED,
-  dateModified: EUROPASS_UPDATED,
-  author: personLd,
-  publisher: { '@id': `${SITE}/#org` },
-  ...extra,
-});
+const webPageLd = (path: string, type: 'WebPage' | 'CollectionPage', extra: Record<string, unknown> = {}) =>
+  webPageLdG({ path, type, name: EUROPASS_SEO[path as keyof typeof EUROPASS_SEO].h1, description: EUROPASS_SEO[path as keyof typeof EUROPASS_SEO].description, date: EUROPASS_UPDATED, author: EUROPASS_AUTHOR, extra });
 const imageLd = (t: HubTemplate) => ({ '@type': 'ImageObject', contentUrl: `${SITE}${t.full}`, url: `${SITE}${t.full}`, name: t.name, caption: imageAlt(t), width: t.fullW, height: t.fullH });
 
 const imgHtml = (t: HubTemplate, eager: boolean, full = false) =>

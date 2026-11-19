@@ -13,6 +13,7 @@ import { GUIDES, type Block } from '../shared/guides';
 import { DESIGN_LIST, PRO_DESIGN_COUNT } from '../shared/designList';
 import { ABROAD_PAGES } from '../shared/abroadPages';
 import { europassPages } from '../shared/europassHtml';
+import { higherStudyPages } from '../shared/higherStudyHtml';
 import { PLANS } from '../shared/plans';
 import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
@@ -381,6 +382,9 @@ function pages(): Page[] {
 
   // Europass-style CV: pillar, template hub and Word page (copy in shared/europassPages.ts)
   list.push(...europassPages());
+
+  // Higher study CV: scholarship and academic pages plus a light hub (copy in shared/higherStudyPages.ts)
+  list.push(...higherStudyPages());
 
   for (const t of TEMPLATES) {
     if (isRetired(t.id)) continue; // no page: the Worker answers 301

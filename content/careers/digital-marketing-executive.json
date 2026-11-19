@@ -1,0 +1,355 @@
+{
+  "slug": "digital-marketing-executive",
+  "title_en": "Digital Marketing Executive",
+  "title_bn": "ডিজিটাল মার্কেটিং এক্সিকিউটিভ",
+  "field": "Sales & Marketing",
+  "seo_title": "Digital Marketing Executive in Bangladesh: Salary, Skills (2026)",
+  "seo_desc": "Digital Marketing Executive career in Bangladesh: indicative pay, Meta and Google Ads, SEO, GA4, ad market size, draft DBID policy, CV tips, roadmap and a free skill test.",
+  "summary": "A Digital Marketing Executive runs paid ads, SEO, social media, email and reporting for a business. Entry pay is roughly BDT 18,000-35,000 a month (indicative, crowd-sourced data). About 45 percent of Bangladesh ad spend is reported to be digital. This guide covers the real job, tools, pay caveats, the draft Cross-Border Digital Commerce Policy 2026, how to build proof, a CV, a roadmap and a free test.",
+  "salary": {
+    "entry": "BDT 18,000 - 35,000 per month (indicative; Payscale, Paylab and one circular; not verified)",
+    "mid": "BDT 35,000 - 60,000 per month at 3-6 years (indicative; wide variation by employer)",
+    "senior": "BDT 60,000 - 1,00,000+ per month for manager roles (indicative; Payscale mid-career manager range 491k-1m a year)",
+    "note": "Checked 19 Nov 2026. No official wage survey exists. Payscale figures are annual and converted by us; samples are small. Confirm in live circulars.",
+    "checked": "19 Nov 2026"
+  },
+  "benefits": [
+    "Festival and performance bonus (confirm in the offer letter)",
+    "Paid training and certification support at many agencies and e-commerce firms",
+    "Fast learning on live budgets, especially in agencies",
+    "Remote or flexible work in some listings",
+    "Freelance and overseas client options once you have case studies",
+    "Clear path to Manager, Head of Digital or your own agency"
+  ],
+  "companies": [
+    "E-commerce and f-commerce businesses",
+    "Digital marketing agencies in Dhaka and Chattogram",
+    "Fintech and mobile financial services",
+    "Telecom operators",
+    "Education and coaching businesses",
+    "Healthcare providers and diagnostic centres",
+    "Real-estate and travel firms",
+    "Startups and NGOs"
+  ],
+  "season": [
+    "Pre-Eid and Eid sales (e-commerce ad demand peaks)",
+    "Winter wedding and fashion season",
+    "Admission season for schools, coaching and universities",
+    "Year-end and budget-planning months (agency pitches and hiring)",
+    "Campaign-day sales such as 11.11 and Black Friday style promotions"
+  ],
+  "skills": [
+    {
+      "name": "Meta Ads and Google Ads",
+      "level": "Core",
+      "tag": "paid"
+    },
+    {
+      "name": "GA4, Search Console and Tag Manager",
+      "level": "Core",
+      "tag": "analytics"
+    },
+    {
+      "name": "SEO: on-page, technical basics, content",
+      "level": "Core",
+      "tag": "seo"
+    },
+    {
+      "name": "Social media management",
+      "level": "Core",
+      "tag": "social"
+    },
+    {
+      "name": "Content and copywriting (Bangla and English)",
+      "level": "Important",
+      "tag": "content"
+    },
+    {
+      "name": "Email, SMS and CRM campaigns",
+      "level": "Important",
+      "tag": "crm"
+    },
+    {
+      "name": "Landing pages and WordPress basics",
+      "level": "Important",
+      "tag": "web"
+    },
+    {
+      "name": "Reporting and communication",
+      "level": "Important",
+      "tag": "comms"
+    },
+    {
+      "name": "AI tools for ideas, drafts and analysis",
+      "level": "Growing",
+      "tag": "ai"
+    },
+    {
+      "name": "Honest advertising and platform rules",
+      "level": "Growing",
+      "tag": "ethics"
+    }
+  ],
+  "gaps_checklist": [
+    "I have run at least one real paid campaign with a written result",
+    "I can read a GA4 report and explain it simply",
+    "I have set up conversion tracking (pixel or tag) at least once",
+    "I can do a basic SEO audit of a small website",
+    "I have a content calendar sample for one month",
+    "I can write an ad in clear Bangla and English",
+    "I have a one-page case study with goal, budget, change and result",
+    "I know the platform ad policies and how to avoid account bans",
+    "I have a portfolio link and a clean CV"
+  ],
+  "courses": [
+    {
+      "title": "Google Skillshop (Google Ads and Analytics learning paths)",
+      "provider": "Google",
+      "url": "https://skillshop.withgoogle.com",
+      "is_affiliate": false,
+      "skill_tag": "analytics"
+    },
+    {
+      "title": "Meta Blueprint (Facebook and Instagram ads)",
+      "provider": "Meta",
+      "url": "https://www.facebook.com/business/learn",
+      "is_affiliate": false,
+      "skill_tag": "paid"
+    },
+    {
+      "title": "HubSpot Academy: content and email marketing",
+      "provider": "HubSpot",
+      "url": "https://academy.hubspot.com",
+      "is_affiliate": false,
+      "skill_tag": "content"
+    },
+    {
+      "title": "Semrush Academy: SEO courses",
+      "provider": "Semrush",
+      "url": "https://www.semrush.com/academy/",
+      "is_affiliate": false,
+      "skill_tag": "seo"
+    },
+    {
+      "title": "Muktopaath free online courses",
+      "provider": "Government of Bangladesh (a2i)",
+      "url": "https://muktopaath.gov.bd",
+      "is_affiliate": false,
+      "skill_tag": "comms"
+    }
+  ],
+  "faq": [
+    {
+      "q": "What is the salary of a Digital Marketing Executive in Bangladesh?",
+      "a": "There is no official survey. As of 19 November 2026, our indicative range is about BDT 18,000-35,000 a month at entry level, BDT 35,000-60,000 at 3-6 years and BDT 60,000-1,00,000 or more for managers. These come from Payscale, Paylab and one circular, so treat them as rough and check live job circulars."
+    },
+    {
+      "q": "Do I need a degree to become a digital marketer?",
+      "a": "Not always. Many circulars ask for a bachelor's degree in marketing or business, but some accept fresh graduates with strong practical skills and certificates. What convinces employers most is proof: live campaigns, analytics reports and a short portfolio."
+    },
+    {
+      "q": "Which skills should I learn first?",
+      "a": "Start with one ad platform (Meta Ads or Google Ads), then GA4 and basic SEO. Circulars repeatedly name Google Ads, Meta Ads, Google Analytics, Search Console and Tag Manager. Add copywriting and reporting next."
+    },
+    {
+      "q": "How big is digital advertising in Bangladesh?",
+      "a": "The Observer reported on 17 August 2026 that about 45 percent of ad spend goes to digital and the market could reach about USD 1.2 billion in 2026. Another report (February 2026) gave a higher USD 3.8 billion figure under a different definition, so treat both as rough."
+    },
+    {
+      "q": "What is the DBID policy for digital ads?",
+      "a": "The Ministry of Commerce published a draft Cross-Border Digital Commerce Policy 2026 in July 2026. It would require platforms such as Facebook, YouTube and Google to register (a digital business identification number) before running ads for local users. Comments closed on 6 August 2026. We could not confirm it is adopted, so follow official notices."
+    },
+    {
+      "q": "How can a fresher get the first job?",
+      "a": "Run a small real campaign for a family shop or club, write a one-page case study, set up GA4 on a simple site, build a short portfolio and apply to agencies, which teach fast. Expect a practical test such as writing an ad or reading a results screenshot."
+    },
+    {
+      "q": "Can I earn in dollars as a digital marketer?",
+      "a": "Yes, through freelance marketplaces or foreign agency work, but rates vary widely and work is not steady. Do not treat any single profile's rate as typical, and never pay anyone for a guaranteed job or client."
+    },
+    {
+      "q": "Is digital marketing stressful?",
+      "a": "It can be. Results show daily, ad accounts can be restricted and agencies run many clients. Promise a process and a report, not a fixed sales number, keep clean records and set fixed weekly learning time."
+    }
+  ],
+  "body_md": "**By [Daloyar Hassan Shishir](https://www.dhshishir.com)** · Career consultant, founder of Career Solutions and HereWeGrow · Facts last checked: 19 November 2026 · Last updated: 19 November 2026\n\n> **Quick answer:** A Digital Marketing Executive in Bangladesh plans and runs online promotion for a business: paid ads on Meta (Facebook and Instagram) and Google, search engine optimisation (SEO), social media, email and reporting. No special degree is required, but employers want proof of skill: live campaigns, analytics reports and a portfolio. Pay data is thin and crowd-sourced. As a rough guide, entry-level pay is about BDT 18,000-35,000 a month, mid-level (3-6 years) about BDT 35,000-60,000, and senior or manager roles BDT 60,000-1,00,000 or more, with large variation by employer. Demand is real: one August 2026 report put about 45 percent of Bangladesh's ad spending on digital platforms. One policy risk to watch: a draft \"Cross-Border Digital Commerce Policy 2026\" would require foreign platforms to register before showing ads to local users. It was a draft when we checked, not law.\n\n## Key facts (as of 19 November 2026)\n\n| Question | Answer | Source type |\n|---|---|---|\n| What does the role do? | Plans and runs paid ads, SEO, social media, email and reporting | Job circulars (Lever, Bdjobs listings, LinkedIn) |\n| Minimum education? | Often a bachelor's degree in marketing, business or similar; some employers accept fresh graduates with strong practical skills and certificates | Job circulars |\n| Typical experience asked | 1-3 years for an executive post; fresh graduates sometimes accepted | Job circulars |\n| Entry pay (indicative) | About BDT 18,000-35,000 a month. Crowd-sourced data and a few circulars, not verified | Payscale; Paylab; one circular |\n| Share of ad spend that is digital | About 45 percent, market about USD 1.2 billion in 2026 (one report; other sources give different figures) | The Observer, 17 Aug 2026 |\n| Must-know tools | Google Ads, Meta Ads Manager, GA4, Search Console, Google Tag Manager, Meta Business Suite | Daily Star; job circulars |\n| Policy risk | Draft Cross-Border Digital Commerce Policy 2026: foreign platforms would need a digital business identification number (DBID) to run ads for local users. Draft, comments closed 6 Aug 2026 | The Business Standard; The Observer |\n| Is it a regulated job? | No licence. Advertising must still follow consumer and platform rules | General practice |\n\n*Pay and market numbers are estimates. Check live circulars before you negotiate.*\n\n## What does a Digital Marketing Executive do?\n\nYou turn a business goal (more orders, more leads, more app installs) into online activity you can measure. Job circulars list the same core duties again and again:\n\n- **Run paid campaigns** on Meta Ads (Facebook and Instagram) and Google Ads, sometimes TikTok, YouTube and LinkedIn. You set the budget, audience and creative, test variations and cut what does not work.\n- **Improve search visibility (SEO):** keywords, on-page fixes, content and backlinks so the site appears on Google without paying per click.\n- **Manage social media:** a content calendar, posting, replying to comments and messages, and growing the audience.\n- **Send emails, SMS or push messages** to existing customers.\n- **Track and report:** set up GA4 and conversion tracking, read the numbers and report cost per lead, cost per sale and return on ad spend (ROAS).\n- **Coordinate content:** work with designers, video editors and writers, using tools such as Canva and CapCut.\n\n**A normal day:** check ad spend and results in the morning, adjust budgets and bids, approve posts, answer comments, brief the designer, update a weekly report and test one new idea. Most of the job is small, repeated testing, not one big creative idea.\n\n**Who hires you:** e-commerce and f-commerce (Facebook commerce) businesses, fintech and telecom, education and coaching businesses, healthcare providers, real-estate and travel firms, agencies, startups and NGOs. Agencies handle many clients and teach fast; in-house roles go deeper into one brand.\n\n## How big is the market, and why does it matter to you?\n\n- **Ad money is moving online.** The Observer reported on 17 August 2026 that about 45 percent of Bangladesh's advertising spend now goes to digital platforms, with the digital market expected to reach about USD 1.2 billion in 2026. A market-research report released in February 2026 gave a much higher figure (USD 3.8 billion) for \"digital ad spend\". These definitions differ, so treat both as rough.\n- **Commerce runs on social media.** The Daily Ittefaq reported in June 2026 that active Facebook commerce page entrepreneurs number between 200,000 and 250,000, while the e-Commerce Association of Bangladesh (e-CAB) has about 3,000 members. Each of these sellers needs customers, which is why paid social skills sell.\n- **Two global platforms take most of the money.** The Daily Star has reported that Bangladeshi companies spend nearly Tk 1,000 crore a year on Facebook and Google (an older figure; check for a newer one).\n- **A policy change could affect your tools.** The Ministry of Commerce published a draft \"Cross-Border Digital Commerce Policy 2026\" in July 2026 and asked for comments until 6 August. If adopted, platforms such as Facebook, YouTube and Google would need to register before showing ads aimed at local consumers. We could not confirm that it has been adopted. If you work in ads, follow this closely because it may change who can invoice, how tax is handled and how ad accounts are billed.\n\n## What is the career ladder?\n\n| Years | Typical title | What to master |\n|---|---|---|\n| 0-1 | Intern / Trainee / Junior Executive | Social posting, basic reporting, one ad platform, Canva |\n| 1-3 | Digital Marketing Executive | Own Meta and Google campaigns, GA4, basic SEO, weekly reports |\n| 3-6 | Senior Executive / Specialist | Larger budgets, funnels, tracking set-up, A/B testing, mentoring a junior |\n| 6-10 | Assistant Manager / Digital Marketing Manager | Strategy, team and vendor management, budgets, cross-team work |\n| 10+ | Head of Digital / Marketing Head / Consultant | Brand and revenue targets, hiring, agency selection, leadership |\n\n*A typical path, not a guarantee. Many people also move to freelancing or start an agency.*\n\n## What is the salary and what are the benefits?\n\n| Level | Typical experience | Monthly pay (BDT, indicative) |\n|---|---|---|\n| Entry | 0-2 years | 18,000 - 35,000 |\n| Mid | 3-6 years | 35,000 - 60,000 |\n| Senior | 6+ years, manager level | 60,000 - 1,00,000+ |\n\n**How we got these numbers, and why to be careful.** There is no official wage survey for this role in Bangladesh. We combined three weak sources:\n\n- **Payscale (annual figures, converted by us to monthly):** the entry-level Marketing Executive average is about BDT 216,000 a year (about 18,000 a month), the early-career Digital Marketing Specialist average about BDT 220,000 a year (about 18,000 a month), and the mid-career Digital Marketing Manager average about BDT 648,000 a year (about 54,000 a month), with a middle range of BDT 491,000 to 1 million a year. Samples are small and self-reported.\n- **Paylab:** says 80 percent of Digital Marketing Managers in Bangladesh earn between about BDT 16,000 and 50,000 a month, and one entry for a Digital Marketing Specialist with 1-2 years' experience shows BDT 16,800 a month. These are survey entries, not circulars.\n- **One job advertisement** seen on LinkedIn offered BDT 25,000-35,000 a month for a role asking at least one year of experience in Google and Meta ads.\n\nThe three sources differ, so we show wide ranges and call them indicative. Results are not promises. Freelancing on marketplaces such as Upwork can pay in dollars, but rates vary widely and work is not steady, so do not treat any single profile's rate as typical.\n\n**Benefits to look for:** festival bonus, performance bonus, paid training or certification fees, a laptop or ad-account tools provided, flexible hours or remote options (some listings are remote) and a clear promotion path. Always ask for the full package in writing.\n\n## Which skills do employers ask for?\n\n| Skill | Why it matters | Demand |\n|---|---|---|\n| Meta Ads and Google Ads | The main spend; named in almost every circular | █████ |\n| GA4, Search Console, Google Tag Manager | You must prove what worked | █████ |\n| SEO (on-page, technical basics, content) | Cuts cost per customer over time | ████ |\n| Social media management | Daily work in most posts | ████ |\n| Content and copywriting (Bangla and English) | Ads and posts live or die on the words | ████ |\n| Email, SMS and CRM campaigns | Repeat sales from existing customers | ███ |\n| Landing pages and WordPress basics | Ads need a page that converts | ███ |\n| Reporting and communication | Managers want a clear weekly story | ████ |\n| AI tools for ideas, drafts and analysis | Fastest-growing; speeds up routine work | ███ |\n| Honest advertising and platform rules | Account bans and legal trouble are costly | ███ |\n\n*Demand bars are our reading of circulars and articles, not a statistical survey. The Daily Star has quoted practitioners saying that data analytics tools, SEO and PPC platforms are essential, along with soft skills such as analysing and communicating results.*\n\n## How do I get in?\n\n1. **Choose one platform and learn it properly.** Start with Meta Ads or Google Ads. Use the free official courses (Google Skillshop and Meta Blueprint) listed on this page.\n2. **Build proof, not just certificates.** Run a small real campaign for a family shop, a friend's page or a student club (even BDT 2,000-5,000 of your own money teaches you more than a video). Keep screenshots of results and write a one-page case study: goal, budget, what you changed, result.\n3. **Set up GA4 on a simple website.** Many beginners cannot read analytics. This alone separates you.\n4. **Make a portfolio.** A simple page or PDF with 2-3 case studies, a sample content calendar, an SEO audit of a small site and a sample report.\n5. **Apply in the right places.** Bdjobs and LinkedIn, agency career pages, and direct messages to small businesses with a free audit offer. Agencies are a good first job because you see many accounts quickly.\n6. **Prepare for a practical test.** Many employers give a short task: write an ad, plan a small budget or read a screenshot of results.\n\nYou do not need a marketing degree to start. One Daily Star piece warns that short courses give theory, so practice is what makes you employable.\n\n## Where will you find more peace of mind?\n\nDigital marketing carries pressure that is different from desk jobs. Results show daily, a bad week of numbers is visible to everyone, and ad accounts can be restricted without warning. Agencies usually mean many clients and tight deadlines; in-house roles mean one boss but a deeper commitment to one brand's targets. Three habits help:\n\n- **Do not promise results you cannot control.** Promise a process and a report, not a number of sales.\n- **Keep a clean record.** Save screenshots, budget approvals and reports so that any decision can be explained.\n- **Keep learning on a schedule,** for example two fixed hours a week. Platforms change quickly and the stress comes from falling behind.\n\nIf pressure turns into constant sleeplessness or anxiety, speak to a mentor or a mental health professional early.\n\n## Plan your own path (5-minute worksheet)\n\nCopy these five lines and fill them in today:\n\n1. **My level now:** (student / fresher / ___ years in marketing)\n2. **The one platform I will master first:** (Meta Ads / Google Ads / SEO)\n3. **The real project I will run this month:** (who, budget, goal)\n4. **Three skills I lack** (use the checklist on this page): ___, ___, ___\n5. **My weekly practice hours and day:** ___ hours on ___\n\nThen take the free skill test on this page and compare the result with line 4.\n\n## Faith and history: honesty in trade\n\n**The Quran.** Surah Al-Mutaffifin opens with a warning to those who give less than they should when they measure for others ([83:1-3 on quran.com](https://quran.com/83/1-3)). For a marketer the lesson is plain: do not overstate a product, hide a cost or use fake numbers. Another verse tells believers not to consume one another's wealth unjustly but to trade by mutual consent ([4:29](https://quran.com/4/29)).\n\n**Hadith.** The Prophet (peace be upon him) said that whoever deceives us is not one of us (Sahih Muslim). In advertising, this applies to fake discounts, fake reviews and misleading before-and-after claims.\n\n**History.** Bengal's trade has long moved through markets, ports and word of mouth. Trust was the original brand. Today a Facebook page's comment section plays the role of the old bazaar: people judge you by how you answer and deliver.\n\n## Your contribution to the nation\n\nSmall and medium businesses are many, and many of them still sell without tracking what their advertising earns. A skilled marketer helps a shop owner spend a small budget wisely, reach customers outside Dhaka, keep records and grow. When a business grows it hires, pays tax and supports families. Honest digital marketing also protects customers by keeping fake offers off the market.\n\n## Your contribution to the world\n\nBangladeshi marketers serve overseas clients as freelancers and agency workers, selling skill (not raw labour) in an international market. Evidence from freelance marketplaces shows many Bangladeshi profiles offering Meta Ads, Google Ads, GA4 and SEO services to foreign clients. Honest reporting, clear communication and reliable delivery build a good name for the whole country's digital workforce.\n\n## If you do not get a marketing job at once\n\n- **Freelance or help small sellers** with posts, ad set-up and reports to build your case studies.\n- **Move sideways first:** content writing, graphic design support, customer support for an online shop or sales coordination can lead into marketing.\n- **Join an agency as an intern or trainee** even at low pay, if you learn live accounts.\n- **Specialise:** e-commerce ads, SEO or email each have steady demand.\n- **Keep a project running** (a page, a blog, a small shop). Employers value people who have done it, not only studied it.\n\n## If you want to be an entrepreneur\n\n- **A small agency or freelance practice** serving local SMEs (start with a few clients and clear monthly deliverables).\n- **Your own online shop or niche page,** which teaches you every part of the funnel.\n- **Training or content business** (only with real results to show and no false income promises).\n- **Tools and services around f-commerce:** reporting, creative production or customer-message handling.\n\nRegister and keep proper accounts as you grow. If the DBID rule in the draft policy is adopted, check how it affects the way you buy ads for clients.\n\n## Research opportunities\n\n- **Topics with real need in Bangladesh:** which channels give the lowest cost per customer for small sellers, how Bangla-language content performs, consumer trust and fake reviews, and the effect of ad regulation and platform billing rules.\n- **Where to learn and publish:** business schools, marketing associations, your own case studies on LinkedIn and professional blogs.\n- **Path:** your own tested campaigns → short published case studies → consultant roles or higher studies in marketing or data analytics.\n\n## Whom to follow and learn from\n\nFollow the official learning hubs first: [Google Skillshop](https://skillshop.withgoogle.com), [Meta Blueprint](https://www.facebook.com/business/learn), [HubSpot Academy](https://academy.hubspot.com) and [Semrush Academy](https://www.semrush.com/academy/). On LinkedIn, follow practitioners who publish real case studies with numbers rather than only tips, and read the official platform policy pages before you run ads for a client.\n\n## Where do I find jobs?\n\n- [Bdjobs](https://www.bdjobs.com) (Marketing and Sales category) and agency career pages.\n- LinkedIn job search and direct messages to agency founders and e-commerce teams.\n- Startup and e-commerce company career pages.\n- Remote and freelance marketplaces, once you have case studies.\n\n## How should I write my CV and portfolio?\n\nA good digital marketing CV shows numbers. Name the tools and the result.\n\n| Weak line | Better line |\n|---|---|\n| Managed Facebook page. | Managed a 12,000-follower fashion page: posted 5 times a week, raised average post reach from 800 to 2,100 in 3 months (use your real figures). |\n| Ran Facebook ads. | Ran Meta lead ads on a BDT 20,000 monthly budget and reduced cost per lead from BDT 320 to BDT 210 (use your real figures). |\n| Knows SEO. | Fixed titles, headings and internal links on a 30-page site; moved 6 keywords onto page 1 of Google in 4 months (use your real figures). |\n\n*Use only real, provable numbers. If you do not have them yet, run a small project and create them.*\n\n**What to include:** tools (Meta Ads Manager, Google Ads, GA4, Search Console, Tag Manager, Canva, CapCut, an email tool), certificates with dates, 2-3 short case studies, a link to your portfolio and a professional email address. Build the CV free with the HereWeGrow CV Builder.\n\n## What are the common mistakes?\n\n- Listing every tool but showing no results.\n- Boosting posts with no goal, audience or tracking.\n- Judging success by likes instead of leads and sales.\n- Changing ad settings daily so no test ever finishes.\n- Promising a client a fixed number of sales.\n- Using fake reviews, fake countdowns or misleading claims.\n- Paying anyone for a \"guaranteed job\" or buying fake followers.\n- Ignoring the draft DBID policy and tax questions if you handle client ad money.\n\n## Changelog\n\n- **19 November 2026:** First version. Pay ranges, market figures and policy status checked on this date.\n- **To review:** the Cross-Border Digital Commerce Policy 2026 once a final version appears; pay ranges when better data is available.\n\n## Sources and method\n\nFigures were checked on 19 November 2026. Pay ranges combine Payscale, Paylab and one circular and are estimates, not official statistics. Where sources disagreed we said so.\n\n- Payscale: [Marketing Executive salary, Bangladesh](https://www.payscale.com/research/BD/Job=Marketing_Executive/Salary); [Entry-level](https://www.payscale.com/research/BD/Job=Marketing_Executive/Salary/deb00ccb/Entry-Level); [Digital Marketing Specialist](https://www.payscale.com/research/BD/Job=Digital_Marketing_Specialist/Salary); [Digital Marketing Manager mid-career](https://www.payscale.com/research/BD/Job=Digital_Marketing_Manager/Salary/0b91ec41/Mid-Career)\n- Paylab: [Digital marketing manager, Bangladesh](https://www.paylab.com/bd/salaryinfo/marketing-advertising-pr/digital-marketing-manager?lang=en); [Bangladesh salary entries](https://www.paylab.com/bd/salarios-no-pais)\n- The Observer (17 August 2026): [Digital ad spending rises by leaps and bounds](https://observerbd.com/news/588396)\n- ResearchAndMarkets via GlobeNewswire (10 February 2026): [Bangladesh Digital Ad Spend Business Report 2026](https://www.globenewswire.com/news-release/2026/02/10/3235203/28124/en/Bangladesh-Digital-Ad-Spend-Business-Report-2026.html)\n- The Business Standard: [Govt to enforce registration for foreign cos like Facebook, YouTube, Google to run ads](https://www.tbsnews.net/bangladesh/govt-enforce-registration-foreign-digital-platforms-run-ads-bangladesh-1497896); The Observer (3 August 2026): [Foreign digital firms must get DBID](https://observerbd.com/news/586154); Dhaka Tribune: [Govt drafts policy for mandatory registration of digital ads](https://www.dhakatribune.com/amp/business/416168/govt-drafts-policy-for-mandatory-registration-of)\n- The Daily Ittefaq (June 2026): [Eid online shopping gains momentum](https://en.ittefaq.com.bd/15747/eid-online-shopping-gains-momentum)\n- The Daily Star: [What skills are essential for digital marketers in Bangladesh?](https://images.thedailystar.net/node/3810531); [Bangladesh ad market: two global giants gobble up most](https://tds-images.thedailystar.net/tags/ad-market)\n- Job circulars: [Skillers Zone (Lever)](https://jobs.lever.co/skillerszone/185b9dde-35b8-4ceb-ae4d-7c9c42c56989); [6amTech](https://6amtech.com/digital-marketer/); [Talvette](https://careers-page.com/talvette/job/RYV47X5R); [Bdjobs listing via Arc](https://arc.dev/remote-jobs/j/bdjobs-com-digital-marketing-expert-for-jsk-group-job-id-1507213-p51zc8sy0j)\n- Nextjobz: [Starting a digital marketing career in Bangladesh](https://blog.nextjobz.com.bd/?p=836) (blog, treat as indicative)\n- Upwork: [Digital marketers in Dhaka](https://www.upwork.com/hire/digital-marketers/bd/dhaka/) (shows service types, not typical rates)\n- Quran: [quran.com](https://quran.com)\n\n**How to cite this page:** Shishir, D. H. (2026, November 19). *Digital Marketing Executive career in Bangladesh: salary, skills, tools and roadmap.* HereWeGrow Career Hub. https://herewegrow.pro/careers/digital-marketing-executive\n\n*This guide gives general career information. It does not promise a job, salary or client results. It is not legal, tax or religious advice. Pay and policy details change, so check live circulars and official notices.*\n",
+  "growth_plan": {
+    "y1": "Learn one ad platform and GA4, run two small real campaigns, write two case studies, build a portfolio and land a junior or agency role.",
+    "y2": "Own Meta and Google campaigns, learn SEO and tracking set-up, improve one measurable result and take a Specialist title or a better employer.",
+    "y3": "Lead larger budgets or a small team, specialise (e-commerce ads, SEO or CRM), mentor a junior and move to Senior Executive or Assistant Manager."
+  },
+  "goal_sheet": [
+    "Finish one official course (Skillshop or Meta Blueprint) with certificate",
+    "Run one real campaign with a written goal, budget and result",
+    "Set up GA4 and one conversion event on a test site",
+    "Publish two one-page case studies",
+    "Build a portfolio page with three samples",
+    "Apply to 10 agencies or e-commerce teams",
+    "Review pay data in live circulars and set a target salary"
+  ],
+  "test": [
+    {
+      "q": "What does ROAS stand for?",
+      "options": [
+        "Rate of average sales",
+        "Return on ad spend",
+        "Reach of ad series",
+        "Return on audience size"
+      ],
+      "answer_idx": 1,
+      "explain": "ROAS is return on ad spend: revenue from ads divided by the money spent on them.",
+      "skill_tag": "paid"
+    },
+    {
+      "q": "CTR is calculated as:",
+      "options": [
+        "Clicks divided by impressions",
+        "Impressions divided by clicks",
+        "Sales divided by clicks",
+        "Spend divided by reach"
+      ],
+      "answer_idx": 0,
+      "explain": "Click-through rate is clicks divided by impressions, usually shown as a percentage.",
+      "skill_tag": "paid"
+    },
+    {
+      "q": "Which tool shows how your website appears in Google search results and which queries bring clicks?",
+      "options": [
+        "Canva",
+        "Meta Business Suite",
+        "Google Search Console",
+        "Google Calendar"
+      ],
+      "answer_idx": 2,
+      "explain": "Search Console reports search queries, clicks, impressions and indexing problems.",
+      "skill_tag": "analytics"
+    },
+    {
+      "q": "GA4 measures user activity mainly as:",
+      "options": [
+        "Page hits only",
+        "Print reach",
+        "Email opens only",
+        "Events"
+      ],
+      "answer_idx": 3,
+      "explain": "GA4 is event-based: page views, clicks and purchases are all recorded as events.",
+      "skill_tag": "analytics"
+    },
+    {
+      "q": "What is SEO mainly aimed at?",
+      "options": [
+        "Buying clicks on every keyword",
+        "Earning unpaid (organic) traffic from search engines",
+        "Increasing follower count",
+        "Printing flyers"
+      ],
+      "answer_idx": 1,
+      "explain": "Search engine optimisation improves visibility so a site can earn organic traffic.",
+      "skill_tag": "seo"
+    },
+    {
+      "q": "Which is the best way to know which campaign link brought a visitor?",
+      "options": [
+        "Guessing from likes",
+        "Asking friends",
+        "UTM parameters on the link",
+        "Counting comments"
+      ],
+      "answer_idx": 2,
+      "explain": "UTM tags label source, medium and campaign so analytics can attribute traffic.",
+      "skill_tag": "analytics"
+    },
+    {
+      "q": "A fair way to test two ad images is to:",
+      "options": [
+        "Change only one thing and run both at the same time",
+        "Change image, text and audience together",
+        "Run one this month and one next year",
+        "Stop the ad every day"
+      ],
+      "answer_idx": 0,
+      "explain": "A clean A/B test changes one variable and runs both versions in the same period.",
+      "skill_tag": "paid"
+    },
+    {
+      "q": "A good first step when starting social media for a small business is:",
+      "options": [
+        "Post randomly whenever free",
+        "Buy followers",
+        "Copy a competitor's page fully",
+        "Set a goal and a weekly content calendar"
+      ],
+      "answer_idx": 3,
+      "explain": "A clear goal and a calendar keep posts consistent and measurable.",
+      "skill_tag": "social"
+    },
+    {
+      "q": "Which is a sign of honest advertising?",
+      "options": [
+        "Fake countdown timer",
+        "The claim is true and the price or condition is clear",
+        "Invented customer reviews",
+        "Hidden extra charges"
+      ],
+      "answer_idx": 1,
+      "explain": "Honest ads state true claims and conditions; fake urgency and fake reviews mislead customers and can break platform rules.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "According to our page, the draft Cross-Border Digital Commerce Policy 2026 would require foreign platforms to:",
+      "options": [
+        "Register (DBID) before running ads for local users",
+        "Stop all advertising in Bangladesh",
+        "Pay no tax",
+        "Close Bangladeshi accounts"
+      ],
+      "answer_idx": 0,
+      "explain": "The draft would require registration with a digital business identification number; it was a draft when checked, not confirmed law.",
+      "skill_tag": "ethics"
+    },
+    {
+      "q": "Which message type targets people who already bought from you?",
+      "options": [
+        "Cold billboard",
+        "Random hashtags",
+        "Email or SMS to your customer list (CRM)",
+        "Print flyer only"
+      ],
+      "answer_idx": 2,
+      "explain": "CRM email and SMS reach existing customers and support repeat sales.",
+      "skill_tag": "crm"
+    },
+    {
+      "q": "Which metric best shows an ad actually produced business results?",
+      "options": [
+        "Number of likes",
+        "Page background colour",
+        "Number of shares of a meme",
+        "Cost per lead or cost per sale"
+      ],
+      "answer_idx": 3,
+      "explain": "Cost per lead or sale connects spend to outcomes, which managers want in a report.",
+      "skill_tag": "comms"
+    }
+  ],
+  "cv_template_notes": "Use a clean one-page layout (single column, no heavy graphics). Put a short profile first, then a Tools line (Meta Ads Manager, Google Ads, GA4, Search Console, Tag Manager, Canva, CapCut), then experience and projects with real numbers (budget, cost per lead, reach, rankings). Add 2-3 one-line case studies and a portfolio link. Name the file YourName_Digital_Marketing_CV.pdf. Use only results you can prove and explain.",
+  "cover_letter_md": "Dear Hiring Manager,\n\nI am applying for the Digital Marketing Executive position advertised on [site/date]. I run Meta and Google ad campaigns and report results in GA4. In [project/client/own page] I [one provable result, e.g. reduced cost per lead from BDT 320 to BDT 210 on a BDT 20,000 monthly budget].\n\nMy CV and a short portfolio link are attached. I would be glad to complete a practical task or attend an interview.\n\nSincerely,\n[Your name] | [Phone] | [Email] | [Portfolio link]\n",
+  "interview_qs": [
+    "Walk me through a campaign you ran, from goal to result. (Tip: Use goal, budget, what you changed and the number that moved.)",
+    "How do you decide a Meta ad budget for a small business? (Tip: Start from the goal and cost per lead or sale; test small, then scale what works.)",
+    "What is the difference between SEO and paid ads? (Tip: Organic traffic builds slowly and cheaply; paid is fast but stops when you stop paying.)",
+    "A campaign has many clicks but no sales. What do you check? (Tip: Landing page, offer, tracking, audience match and checkout friction.)",
+    "What is ROAS and how is it different from ROI? (Tip: ROAS is revenue over ad spend; ROI includes all costs and profit.)",
+    "How do you set up conversion tracking? (Tip: Name the pixel or tag, the event and how you test it.)",
+    "Which metrics do you put in a weekly report? (Tip: Spend, results, cost per result, trend and one next action.)",
+    "How would you grow a new Facebook page with a small budget? (Tip: Content calendar, community replies, a small test budget and measured goals.)",
+    "How do you handle a restricted ad account? (Tip: Read the policy, appeal with facts, keep backups and never use shady workarounds.)",
+    "What tools do you use for content and design? (Tip: Name Canva, CapCut or similar, and show a sample.)",
+    "How do you use AI tools in your work? (Tip: Drafts and ideas with human checking; never paste private client data.)",
+    "Tell me about a time a test failed. (Tip: Show what you learned and changed.)",
+    "What would you do if a client demands guaranteed sales? (Tip: Explain what you can control and promise a process and a report.)",
+    "How do you keep up with platform changes? (Tip: Official blogs, a fixed weekly learning slot and small tests.)",
+    "Why do you want this role and where do you see yourself in three years? (Tip: Link a real project to a clear next step, such as Specialist or Manager.)"
+  ]
+}

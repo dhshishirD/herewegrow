@@ -53,6 +53,13 @@ const BiodataStyle = lazy(() => import('./pages/BiodataPages').then((m) => ({ de
 const EuropassPillar = lazy(() => import('./pages/EuropassPages').then((m) => ({ default: m.EuropassPillarPage })));
 const EuropassHub = lazy(() => import('./pages/EuropassPages').then((m) => ({ default: m.EuropassHubPage })));
 const EuropassWord = lazy(() => import('./pages/EuropassPages').then((m) => ({ default: m.EuropassWordPage })));
+const lazyHs = (name: 'AcademicCvPage' | 'ScholarshipCvPage' | 'HigherStudyHubPage') => lazy(() => import('./pages/HigherStudyPages').then((m) => ({ default: m[name] })));
+const AcademicCv = lazyHs('AcademicCvPage');
+const ScholarshipCv = lazyHs('ScholarshipCvPage');
+const HigherStudyHub = lazyHs('HigherStudyHubPage');
+const AcademicCvRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><AcademicCv /></Suspense>;
+const ScholarshipCvRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><ScholarshipCv /></Suspense>;
+const HigherStudyRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><HigherStudyHub /></Suspense>;
 const EuropassPillarRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassPillar /></Suspense>;
 const EuropassWordRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassWord /></Suspense>;
 const PartnerRoute = lazy(() => import('./pages/Partner').then((m) => ({ default: m.PartnerRoute })));
@@ -98,6 +105,9 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/cv-for-gulf-jobs': GulfPage,
   '/europass-cv': EuropassPillarRoute,
   '/europass-cv-template-word': EuropassWordRoute,
+  '/academic-cv': AcademicCvRoute,
+  '/scholarship-cv': ScholarshipCvRoute,
+  '/higher-study': HigherStudyRoute,
   '/contact': ContactPage,
   '/privacy': PrivacyPage,
   '/terms': TermsPage,

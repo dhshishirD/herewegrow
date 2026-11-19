@@ -4,6 +4,8 @@
 const CANONICAL: Record<string, string> = {
   europass: '/europass-cv',
   gulf: '/cv-for-gulf-jobs',
+  scholarship: '/scholarship-cv',
+  academic: '/academic-cv',
 };
 
 export function withBuilderRobots(request: Request, response: Response): Response {

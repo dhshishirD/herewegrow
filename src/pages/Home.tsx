@@ -282,6 +282,7 @@ export function Home() {
           </div>
           <div className="mt-5 flex flex-wrap gap-3 md:mt-0 md:shrink-0">
             <Link href="/europass-cv" onClick={() => track('cta_click', { where: 'home_abroad_europass' })} className="btn btn-primary">{t({ en: 'Europass-style CV', bn: 'ইউরোপাস সিভি' })}</Link>
+            <Link href="/higher-study" onClick={() => track('cta_click', { where: 'home_abroad_higher_study' })} className="btn border border-line bg-white hover:border-leaf">{t({ en: 'Higher study CV', bn: 'উচ্চশিক্ষার সিভি' })}</Link>
             <Link href="/cv-for-gulf-jobs" onClick={() => track('cta_click', { where: 'home_abroad_gulf' })} className="btn border border-line bg-white hover:border-leaf">{t({ en: 'Gulf job CV', bn: 'গাল্ফ চাকরির সিভি' })}</Link>
           </div>
         </div>

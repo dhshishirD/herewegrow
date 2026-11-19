@@ -7,6 +7,7 @@ import { PRODUCTS } from './catalog';
 import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
 import { europassSeo } from './europassPages';
 import { findGuide } from './guides';
+import { higherStudySeo } from './higherStudyPages';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
 import { ON_SALE_COUNT, isVariant, shouldIndex } from './templateTiers';
 
@@ -115,6 +116,8 @@ export function routeSeo(path: string): RouteSeo | undefined {
   if (bio) return { title: bio.title, description: bio.description };
   const ep = europassSeo(path);
   if (ep) return { title: ep.title, description: ep.description };
+  const hs = higherStudySeo(path);
+  if (hs) return { title: hs.title, description: hs.description };
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
   const guide = gm ? findGuide(gm[1]) : undefined;
   if (guide) return { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };

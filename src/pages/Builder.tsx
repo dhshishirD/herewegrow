@@ -48,6 +48,7 @@ import { presetFor } from '../../shared/templatePresets';
 import { abroadPreset } from '../../shared/abroadPresets';
 import { CEFR_LEVELS, CEFR_LEVEL_INFO, CEFR_NOTE, CEFR_SKILLS, CEFR_SKILL_LABEL, newLanguage, setSameLevel, sharedLevel, type CefrLevel, type LanguageEntry } from '../builder/cefr';
 import { EUROPASS_NOTE, applyEducationFirst, withEuropass } from '../builder/europass';
+import { HIGHER_LENGTH, HIGHER_NOTE, HIGHER_PHOTO_NOTE, isHigherLayout, withHigherStudy } from '../builder/higherStudy';
 import { analyzeCv } from '../lib/cvAnalysis';
 import { getClient, markDelivered, partnerErrorText, partnerMe, saveClientCv } from '../lib/partner';
 import { cloudId, createCv, cvTitle, deleteCv, listCvs, loadCv, updateCv, type CvSummary } from '../lib/cvs';
@@ -346,6 +347,7 @@ export function BuilderPage() {
     if (p) return { ...base, design: p.design, accent: p.accent };
     const a = abroadPreset(abroadId);
     if (a?.layout === 'europass') return withEuropass(base);
+    if (isHigherLayout(a?.layout)) return withHigherStudy(base, a.layout);
     // Any other design pick or preset leaves the special layout behind
     return a ? { ...base, layout: undefined, design: a.design, accent: a.accent, data: { ...base.data, showPersonal: a.showPersonal } } : base;
   }, builderHistoryShape);
@@ -466,10 +468,12 @@ export function BuilderPage() {
 
   const d = state.data;
   const euOn = state.layout === 'europass';
+  const hsLayout = isHigherLayout(state.layout) ? state.layout : null;
+  const hsPreset = isHigherLayout(abroadId) ? abroadId : null;
   const showEuFields = euOn || d.langLevels.length > 0 || !!d.digitalSkills || !!d.drivingLicence;
   const score = useMemo(() => analyzeCv(cvText(d), { fromPdf: false, splitRowShare: 0 }), [d]);
   /** A blank CV; the Europass-style layout keeps its section order. */
-  const freshData = (s: BuilderState): BuilderState => (s.layout === 'europass' ? withEuropass({ ...s, layout: undefined, data: emptyCv() }) : { ...s, data: emptyCv() });
+  const freshData = (s: BuilderState): BuilderState => (s.layout === 'europass' ? withEuropass({ ...s, layout: undefined, data: emptyCv() }) : isHigherLayout(s.layout) ? withHigherStudy({ ...s, layout: undefined, data: emptyCv() }, s.layout) : { ...s, data: emptyCv() });
   const set = (patch: Partial<CvData>) => setState((s) => ({ ...s, data: { ...s.data, ...patch } }));
 
   // "Removed. Undo" message for 6 seconds after something is deleted or cleared
@@ -547,7 +551,7 @@ export function BuilderPage() {
     const names: Record<string, { en: string; bn: string }> = {
       summary: { en: 'Summary', bn: 'সামারি' }, experience: { en: 'Work experience', bn: 'কাজের অভিজ্ঞতা' }, education: { en: 'Education', bn: 'শিক্ষাগত যোগ্যতা' },
       skills: { en: 'Skills and languages', bn: 'দক্ষতা ও ভাষা' }, training: { en: 'Training and certificates', bn: 'প্রশিক্ষণ ও সার্টিফিকেট' },
-      personal: { en: 'Personal details', bn: 'ব্যক্তিগত তথ্য' }, references: { en: 'References', bn: 'রেফারেন্স' },
+      personal: { en: 'Personal details', bn: 'ব্যক্তিগত তথ্য' }, references: hsLayout ? { en: 'Referees', bn: 'রেফারি' } : { en: 'References', bn: 'রেফারেন্স' },
       cefr: { en: 'Languages (CEFR levels)', bn: 'ভাষা (CEFR স্তর)' }, digital: { en: 'Digital skills', bn: 'ডিজিটাল দক্ষতা' }, driving: { en: 'Driving licence', bn: 'ড্রাইভিং লাইসেন্স' },
     };
     if (names[k]) return t(names[k]);
@@ -573,8 +577,8 @@ export function BuilderPage() {
       if (hasContent && !window.confirm(t({ en: 'Replace what you have typed with the uploaded CV?', bn: 'আপনার লেখা তথ্যের জায়গায় আপলোড করা সিভি বসাবেন?' }))) return;
       setState((s) => {
         // Language levels, digital skills and driving licence are not in an uploaded CV's text, so they stay
-        const next = { ...s, data: normalise({ ...data, photo: s.data.photo, langLevels: s.data.langLevels, digitalSkills: s.data.digitalSkills, drivingLicence: s.data.drivingLicence, educationFirst: s.data.educationFirst }) };
-        return s.layout === 'europass' ? withEuropass(next) : next;
+        const next = { ...s, data: normalise({ ...data, photo: s.data.photo, langLevels: s.data.langLevels, digitalSkills: s.data.digitalSkills, drivingLicence: s.data.drivingLicence, educationFirst: s.data.educationFirst, refsOnRequest: s.data.refsOnRequest }) };
+        return s.layout === 'europass' ? withEuropass(next) : isHigherLayout(s.layout) ? withHigherStudy(next, s.layout) : next;
       });
       if (hasContent) notify(t({ en: 'Your earlier CV was replaced.', bn: 'আগের সিভির জায়গায় নতুন তথ্য বসেছে।' }));
       const counts = found.filter((f) => f.includes(':')).map((f) => f.split(':')).filter(([, n]) => /^\d+$/.test(n));
@@ -841,6 +845,28 @@ export function BuilderPage() {
                 )}
                 <p className="mt-3 text-sm text-muted">{t(EUROPASS_NOTE)}</p>
                 {euOn && <p className="mt-1 text-sm text-muted">{t({ en: 'Only your name and email are needed. Everything else is optional. Photo, date of birth, nationality and gender stay off unless you add them.', bn: 'শুধু নাম ও ইমেইল দরকার, বাকি সব ঐচ্ছিক। ছবি, জন্মতারিখ, জাতীয়তা ও লিঙ্গ আপনি না দিলে সিভিতে আসবে না।' })}</p>}
+              </section>
+            )}
+            {(hsLayout || hsPreset) && (
+              <section className="rounded-2xl bg-white p-5 ring-1 ring-line max-md:p-4" aria-label="Scholarship and academic CV layout">
+                <label className="flex items-start gap-2">
+                  <input type="checkbox" className="mt-1.5" checked={!!hsLayout} onChange={(e) => setState((s) => (e.target.checked ? withHigherStudy(s, hsLayout ?? hsPreset!) : { ...s, layout: undefined }))} />
+                  <span className="font-semibold">{hsLayout === 'academic' || hsPreset === 'academic'
+                    ? t({ en: 'Academic CV layout: education first, research, teaching, grants, serif 11 pt', bn: 'একাডেমিক সিভি লেআউট: শিক্ষা আগে, গবেষণা, শিক্ষকতা, গ্রান্ট, সেরিফ ১১ পয়েন্ট' })
+                    : t({ en: 'Scholarship CV layout: education first, research, awards, serif 11 pt', bn: 'স্কলারশিপ সিভি লেআউট: শিক্ষা আগে, গবেষণা, পুরস্কার, সেরিফ ১১ পয়েন্ট' })}</span>
+                </label>
+                {hsLayout && (
+                  <>
+                    <label className="mt-3 flex items-start gap-2">
+                      <input type="checkbox" className="mt-1.5" checked={d.refsOnRequest} onChange={(e) => set({ refsOnRequest: e.target.checked })} />
+                      <span>{t({ en: 'Show "Referees available on request" instead of the referee details', bn: 'রেফারির তথ্যের বদলে "রেফারি চাইলে দেওয়া হবে" লিখুন' })}</span>
+                    </label>
+                    <p className="mt-3 text-sm text-muted">{t(HIGHER_LENGTH[hsLayout])}</p>
+                    <p className="mt-1 text-sm text-muted">{t(HIGHER_PHOTO_NOTE)}</p>
+                    <p className="mt-1 text-sm text-muted">{t({ en: 'Write the CGPA with its scale (3.80/4.00), the thesis title under the degree, and test scores with dates (IELTS Academic 7.5, Mar 2025) under Skills and languages.', bn: 'সিজিপিএ স্কেলসহ লিখুন (3.80/4.00), ডিগ্রির নিচে থিসিসের শিরোনাম, আর পরীক্ষার স্কোর তারিখসহ (IELTS Academic 7.5, Mar 2025) দক্ষতা ও ভাষা অংশে লিখুন।' })}</p>
+                  </>
+                )}
+                <p className="mt-3 text-sm text-muted">{t(HIGHER_NOTE)}</p>
               </section>
             )}
             {/* Saved CVs */}

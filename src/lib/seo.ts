@@ -1,7 +1,7 @@
 import { routeSeo } from '../../shared/seo';
 
 /** /builder?preset=<id> is the same app as /builder: keep it out of search results and point it at the page that explains it. */
-const PRESET_PAGES: Record<string, string> = { gulf: '/cv-for-gulf-jobs', europass: '/europass-cv' };
+const PRESET_PAGES: Record<string, string> = { gulf: '/cv-for-gulf-jobs', europass: '/europass-cv', scholarship: '/scholarship-cv', academic: '/academic-cv' };
 
 /** Canonical path and robots rule for a path plus query string. Pure, so it can be tested. */
 export function seoTarget(path: string, search: string): { canonical: string; noindex: boolean } {

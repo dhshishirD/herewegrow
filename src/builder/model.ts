@@ -1,3 +1,4 @@
+import type { AbroadLayout } from '../../shared/abroadPresets';
 import type { DesignId } from '../../shared/designList';
 import { normaliseLanguage, type LanguageEntry } from './cefr';
 export type { LanguageEntry } from './cefr';
@@ -101,6 +102,8 @@ export interface CvData {
   drivingLicence: string;
   /** Education above work experience, for freshers. */
   educationFirst: boolean;
+  /** Higher-study layouts: print "Referees available on request" instead of the two referee slots. */
+  refsOnRequest: boolean;
   /** Order of sections on the CV. Keys: summary, experience, education, skills, training, personal, references, custom:<id>, and when added: cefr, digital, driving. */
   order: string[];
   /** Built-in sections the person has hidden. */
@@ -134,7 +137,7 @@ export interface BuilderState {
   /** Font id from builder/fonts.ts. Unset keeps the design's own fonts. */
   font?: string;
   /** Special layout drawn instead of a design. 'europass' is our own Europass-style layout (free: it sits on the free Classic design). */
-  layout?: 'europass';
+  layout?: AbroadLayout;
 }
 
 /** Sections that exist only once added (the Europass-style layout adds them); every CV has the built-in ones. */
@@ -199,6 +202,7 @@ export const emptyCv = (): CvData => ({
   digitalSkills: '',
   drivingLicence: '',
   educationFirst: false,
+  refsOnRequest: false,
   training: [],
   custom: [],
   showPersonal: false,
@@ -282,6 +286,7 @@ export function normalise(raw: Partial<CvData>): CvData {
   d.digitalSkills = typeof d.digitalSkills === 'string' ? d.digitalSkills : '';
   d.drivingLicence = typeof d.drivingLicence === 'string' ? d.drivingLicence : '';
   d.educationFirst = d.educationFirst === true;
+  d.refsOnRequest = d.refsOnRequest === true;
   // Added sections (cefr, digital, driving) stay only where the CV already lists them, so older CVs keep their exact order
   const added = OPTIONAL_SECTIONS.filter((k) => (raw.order ?? []).includes(k));
   const keys = new Set<string>([...BUILT_IN, ...added, ...d.custom.map((c) => `custom:${c.id}`)]);

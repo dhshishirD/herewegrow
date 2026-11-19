@@ -3,6 +3,7 @@ import { renderRolePage } from './careerPage';
 import { careersSitemap, publishRole, serveCareerPage, unpublishRole } from './careers';
 import { saveRolePack, validateRolePack, type RolePack } from './rolePack';
 import { samplePack } from './rolePack.fixture';
+import { SINGLE_TEMPLATE_PRICE } from '../shared/templates';
 import { fakeD1, fakeKV } from './testkit';
 
 const NOW = Date.UTC(2026, 10, 4, 6);
@@ -51,6 +52,25 @@ describe('renderRolePage', () => {
     expect(faq.mainEntity[0].name).toBe('Is a banking degree needed?');
   });
 
+  it('has the site shell, top and bottom build buttons and the CV checker link', () => {
+    expect(html).toContain('<header class="site">');
+    expect(html).toContain('<footer class="site">');
+    expect(html).toContain('data-build="top"');
+    expect(html).toContain('data-build="bottom"');
+    expect(html).toContain('href="/tools/cv-checker"');
+  });
+
+  it('shows up to 3 related CV formats with previews and the price', () => {
+    expect(html).toContain('<h2>CV formats for this role</h2>');
+    const cards = html.match(/class="tpl"/g)!;
+    expect(cards.length).toBeGreaterThan(0);
+    expect(cards.length).toBeLessThanOrEqual(3);
+    expect(html).toMatch(/src="\/templates\/[a-z0-9-]+\/thumb\.webp" alt="[^"]+ preview" width="420" height="594" loading="lazy"/);
+    expect(html).toContain(`BDT ${SINGLE_TEMPLATE_PRICE}`);
+    expect(html).toContain('href="/templates"');
+    expect(html).not.toContain('europass-003');
+  });
+
   it('omits FAQPage when there are no questions', () => {
     const types = jsonLd(renderRolePage(pack({ faq: [] }), NOW)).map((d) => d['@type']);
     expect(types).not.toContain('FAQPage');
@@ -60,6 +80,10 @@ describe('renderRolePage', () => {
     const evil = renderRolePage(pack({ title_en: 'A</title><script>alert(1)</script>', summary: 'x</script><script>alert(2)</script>' }), NOW);
     expect(evil).not.toContain('<script>alert');
     expect(evil.match(/<script/g)!.length).toBe(jsonLd(evil).length);
+    const evilField = renderRolePage(pack({ title_en: '<b onmouseover=x>Bank</b>', field: '"><img src=x>' }), NOW);
+    expect(evilField).not.toContain('<b onmouseover');
+    expect(evilField).not.toContain('<img src=x>');
+    expect(jsonLd(evilField).length).toBeGreaterThan(0);
   });
 
   it('falls back to a generated title and description without SEO fields', () => {

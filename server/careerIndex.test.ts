@@ -35,11 +35,9 @@ describe('renderCareersIndex', () => {
 
   it('links to every role with a crawlable href and groups them by field', () => {
     for (const r of roles) expect(html).toContain(`href="/careers/${r.slug}"`);
-    expect(html).toContain('<h2>Banking</h2>');
-    expect(html).toContain('<h2>Teaching</h2>');
-    expect(html).toContain('<h2>Other</h2>');
+    for (const f of ['Banking &amp; Finance', 'Teaching', 'Other']) expect(html).toContain(`<span class="kick">${f}</span>`);
     expect(html).toContain('ব্যাংক অফিসার');
-    expect(html.indexOf('<h2>Other</h2>')).toBeGreaterThan(html.indexOf('<h2>Teaching</h2>'));
+    expect(html.indexOf('>Other</span>')).toBeGreaterThan(html.indexOf('>Teaching</span>'));
   });
 
   it('has ItemList and BreadcrumbList JSON-LD listing each role', () => {
@@ -50,9 +48,35 @@ describe('renderCareersIndex', () => {
     expect(list.itemListElement.map((i) => i.url)).toContain('https://herewegrow.pro/careers/teacher');
   });
 
-  it('offers field filter chips only when there is more than one field', () => {
-    expect(html).toContain('class="chips"');
-    expect(renderCareersIndex([roles[0]])).not.toContain('class="chips"');
+  it('hides filter chips at 12 roles or fewer and shows them above that', () => {
+    expect(html).not.toContain('class="chips"');
+    const many = (n: number) => Array.from({ length: n }, (_, i) => ({ ...roles[i % 3], slug: `r-${i}`, title_en: `Role ${i}` }));
+    expect(renderCareersIndex(many(12))).not.toContain('class="chips"');
+    expect(renderCareersIndex(many(13))).toContain('class="chips"');
+  });
+
+  it('has the site shell, funnel strip and a build button on every card', () => {
+    expect(html).toContain('<header class="site">');
+    expect(html).toContain('<footer class="site">');
+    for (const href of ['/builder', '/templates', '/biodata', '/pro', '/privacy', '/terms', '/about', '/contact', '/europass-cv', '/cv-for-gulf-jobs']) expect(html).toContain(`href="${href}"`);
+    expect(html).toContain('class="funnel"');
+    expect(html.match(/Build a CV for this role/g)).toHaveLength(3);
+  });
+
+  it('shows a "more roles are coming" card below 15 roles only', () => {
+    expect(html).toContain('More roles are coming');
+    const many = Array.from({ length: 15 }, (_, i) => ({ ...roles[0], slug: `r-${i}`, title_en: `Role ${i}` }));
+    expect(renderCareersIndex(many)).not.toContain('More roles are coming');
+  });
+
+  it('folds near-duplicate fields into one group', () => {
+    const h = renderCareersIndex([
+      { ...roles[0], field: 'Healthcare & Medicine' },
+      { ...roles[1], field: 'Healthcare & Nursing' },
+    ]);
+    expect(h.match(/>Healthcare<\/span>/g)).toHaveLength(2);
+    const many = Array.from({ length: 13 }, (_, i) => ({ ...roles[0], slug: `r-${i}`, title_en: `Role ${i}`, field: i % 3 === 0 ? 'Teaching' : i % 2 ? 'Healthcare & Medicine' : 'Healthcare & Nursing' }));
+    expect(renderCareersIndex(many).match(/<h2>Healthcare<\/h2>/g)).toHaveLength(1);
   });
 
   it('escapes role text and cannot be broken out of via JSON-LD', () => {

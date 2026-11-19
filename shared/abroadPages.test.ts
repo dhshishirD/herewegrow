@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ABROAD_PAGES } from './abroadPages';
 import { ABROAD_PRESETS, abroadPreset } from './abroadPresets';
-import { DESIGN_IDS } from './designList';
+import { DESIGN_IDS, DESIGN_LIST } from './designList';
 import { routeSeo } from './seo';
 
 describe('abroad presets', () => {
@@ -13,6 +13,10 @@ describe('abroad presets', () => {
   });
   it('the Gulf preset opens a free photo design with personal details on', () => {
     expect(abroadPreset('gulf')).toMatchObject({ design: 'modern', showPersonal: true });
+  });
+  it('the Europass preset is on the free Classic design with the special layout and personal details off', () => {
+    expect(abroadPreset('europass')).toMatchObject({ design: 'classic', showPersonal: false, layout: 'europass' });
+    expect(DESIGN_LIST.find((d) => d.id === abroadPreset('europass')!.design)?.pro).toBeFalsy();
   });
   it('returns null for unknown, empty or inherited keys', () => {
     expect(abroadPreset('nope')).toBeNull();

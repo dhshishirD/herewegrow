@@ -13,6 +13,7 @@ export async function renderCvHtml(state: BuilderState, watermark: boolean): Pro
       headings="en"
       margins={state.margins}
       font={state.font}
+      layout={state.layout}
     />
   );
   return renderToStaticMarkup(cv) + (watermark ? '<div class="cv-watermark">Made with HereWeGrow.pro</div>' : '');

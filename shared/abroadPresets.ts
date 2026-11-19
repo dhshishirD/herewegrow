@@ -8,11 +8,16 @@ export interface AbroadPreset {
   accent: string;
   /** Turns on the personal-details block (nationality, date of birth, marital status). */
   showPersonal: boolean;
+  /** A special layout drawn instead of the design (the design stays the free Classic one). */
+  layout?: 'europass';
 }
 
 export const ABROAD_PRESETS: Record<string, AbroadPreset> = {
   // Photo design that anyone can try for free, one page, personal details on.
   gulf: { design: 'modern', accent: '#0f766e', showPersonal: true },
+  // Europass-style layout (our own, unofficial): one column, dates left, CEFR language grid. Free to preview and print.
+  // Photo, date of birth, nationality and gender stay off.
+  europass: { design: 'classic', accent: '#1d5bd8', showPersonal: false, layout: 'europass' },
 };
 
 export const abroadPreset = (id: string | null | undefined): AbroadPreset | null =>

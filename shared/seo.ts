@@ -5,6 +5,7 @@
 import { biodataSeo } from './biodataStyles';
 import { PRODUCTS } from './catalog';
 import { DESIGN_LIST, FREE_DESIGN_COUNT } from './designList';
+import { europassSeo } from './europassPages';
 import { findGuide } from './guides';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
 import { ON_SALE_COUNT, isVariant, shouldIndex } from './templateTiers';
@@ -19,7 +20,7 @@ const price = (id: string) => PRODUCTS.find((p) => p.id === id)?.price ?? 0;
 
 const STATIC: Record<string, RouteSeo> = {
   '/': {
-    title: 'HereWeGrow | সিভি রাইটিং, সিভি ফরম্যাট ও ফ্রি জব টুলস | CV writing in Bangladesh',
+    title: 'HereWeGrow | সিভি রাইটিং, সিভি ফরম্যাট ও ফ্রি টুলস',
     description:
       'বাংলাদেশের চাকরিপ্রার্থীদের জন্য বিশেষজ্ঞ সিভি রাইটিং, Word-এ এডিটযোগ্য সিভি ফরম্যাট ও ফ্রি টুলস। Expert CV writing, editable CV templates and free tools. বিকাশ, নগদ বা রকেটে পেমেন্ট।',
   },
@@ -28,7 +29,7 @@ const STATIC: Record<string, RouteSeo> = {
     description: `নির্দিষ্ট দামে সিভি রাইটিং (৳${price('cv-fresher')} থেকে), সিভি রিভিউ ৳${price('cv-review')}, লিংকডইন প্রোফাইল ৳${price('linkedin-profile')}, বিডিজবস প্রোফাইল ৳${price('bdjobs-profile')}, SOP ও একাডেমিক সিভি। CV writing, LinkedIn and SOP services in Bangladesh.`,
   },
   '/templates': {
-    title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${ON_SALE_COUNT}+ CV templates Bangladesh | HereWeGrow`,
+    title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${ON_SALE_COUNT}+ CV templates | HereWeGrow`,
     description: `ব্যাংক, কর্পোরেট, ফ্রেশার, ইঞ্জিনিয়ারিং, শিক্ষকতা ও মেডিকেল চাকরির জন্য Word-এ এডিটযোগ্য সিভি ফরম্যাট। প্রতিটি ৳${SINGLE_TEMPLATE_PRICE}, সব ৪০টি ৳${price('pack-best-40')}। Editable CV format for Bangladesh jobs, instant download.`,
   },
   '/about': {
@@ -112,6 +113,8 @@ export function routeSeo(path: string): RouteSeo | undefined {
   if (STATIC[path]) return STATIC[path];
   const bio = biodataSeo(path);
   if (bio) return { title: bio.title, description: bio.description };
+  const ep = europassSeo(path);
+  if (ep) return { title: ep.title, description: ep.description };
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
   const guide = gm ? findGuide(gm[1]) : undefined;
   if (guide) return { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };

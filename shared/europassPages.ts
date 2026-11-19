@@ -41,6 +41,10 @@ export const EUROPASS_LOGO_FLAGGED_IDS: readonly string[] = [
 ];
 
 /** Our own preview of the builder preset (sample data, no logo, no flag). Rendered from the real layout; see public/europass. */
+/** Social share image for all three pages: 1200 x 630, our own layout, no logo or flag. */
+export const EUROPASS_OG = { src: '/europass/europass-style-cv-og-1200x630.jpg', w: 1200, h: 630 } as const;
+
+/** Our own preview of the builder preset (sample data, no logo, no flag). Rendered from the real layout; see public/europass. */
 export const EUROPASS_PREVIEW = {
   src: '/europass/europass-style-cv-preview-a4.webp', w: 1588, h: 2246,
   thumb: '/europass/europass-style-cv-preview-a4-thumb.webp', tw: 360, th: 509,

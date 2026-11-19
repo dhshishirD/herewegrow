@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
-  EUROPASS_LOGO_FLAGGED_IDS, EUROPASS_PREVIEW, EUROPASS_WHATSAPP_HREF, EUROPASS_EXPERT_PATH, PILLAR_FOLDED, QUIZ, QUIZ_RESULTS, WORD_FOLDED, europassChoices, quizResult,
+  EUROPASS_LOGO_FLAGGED_IDS, EUROPASS_OG, EUROPASS_PREVIEW, EUROPASS_WHATSAPP_HREF, EUROPASS_EXPERT_PATH, PILLAR_FOLDED, QUIZ, QUIZ_RESULTS, WORD_FOLDED, europassChoices, quizResult,
   EUROPASS_BN_KEYWORD, EUROPASS_BUILDER_HREF, EUROPASS_EXCLUDED_IDS, EUROPASS_HUB_PATH, EUROPASS_LINKS, EUROPASS_PATHS, EUROPASS_PILLAR_PATH,
   EUROPASS_SEO, EUROPASS_UNOFFICIAL, EUROPASS_WORD_PATH, PILLAR_ANSWER, WORD_ANSWER, allEuropassText, europassHubTemplates, europassSeo, pillarWords, wordCount, wordPageWords,
 } from './europassPages';
@@ -204,5 +204,13 @@ describe('Europass pages: no logo or EU flag in images', () => {
     const clean = TEMPLATES.filter((t) => t.hub === 'europass' && isListed(t.id) && !EUROPASS_EXCLUDED_IDS.includes(t.id) && !EUROPASS_LOGO_FLAGGED_IDS.includes(t.id));
     if (clean.length > 0) for (const t of europassHubTemplates()) expect(EUROPASS_LOGO_FLAGGED_IDS).not.toContain(t.id);
     else expect(europassHubTemplates().length).toBeGreaterThan(0); // known gap: every listed thumb shows the logo; owner decides
+  });
+
+  it('share image is 1200 x 630, exists, and is used as og:image on all three pages', () => {
+    expect(EUROPASS_OG.w).toBe(1200);
+    expect(EUROPASS_OG.h).toBe(630);
+    expect(existsSync(`public${EUROPASS_OG.src}`)).toBe(true);
+    const jpg = readFileSync(`public${EUROPASS_OG.src}`);
+    expect(jpg.readUInt16BE(0)).toBe(0xffd8); // JPEG signature
   });
 });

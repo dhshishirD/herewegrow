@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { recordEvent, recordServerEvent, type TrackInput } from './analytics';
-import { actions, audience, entryPages, funnel, liveNow, overview, parseRange, revenue, sources, topPages } from './stats';
+import { actions, audience, builderHealth, entryPages, funnel, liveNow, overview, parseRange, revenue, sources, topPages } from './stats';
 import { fakeD1 } from './testkit';
 
 // 2026-11-04 12:00 Dhaka = 06:00 UTC.
@@ -273,5 +273,46 @@ describe('forged purchase rows (no purchase: dedupe key)', () => {
     expect((await funnel(db, r)).steps.find((x) => x.key === 'paid')!.visitors).toBe(1);
     expect(await sources(db, r)).toEqual([{ source: 'facebook', medium: '', campaign: '', visitors: 1, paid: 1 }]);
     expect(await actions(db, r)).toContainEqual({ name: 'purchase', n: 1, visitors: 1 });
+  });
+});
+
+describe('builderHealth', () => {
+  const ev = (vid: string, sid: string, name: string, meta: object | null = null) =>
+    input({ vid, sid, type: 'event', name, path: '/builder', meta: meta ? JSON.stringify(meta) : null });
+
+  it('nests the steps, splits by source/device/export kind, and ignores visitors who never opened the Builder', async () => {
+    const db = fakeD1();
+    // v1: ad visitor on mobile, goes all the way to a paid order. v2: opens only. v3: exports without opening (not counted).
+    await recordEvent(db, input({ vid: 'v1', sid: 's1', path: '/builder', utmSource: 'meta', utmMedium: 'paid', utmCampaign: 'phone_cv' }), ctx(D1));
+    for (const [i, n] of ['builder_open', 'builder_start', 'design_pick', 'design_pick', 'paywall_view', 'pro_click'].entries()) {
+      await recordEvent(db, ev('v1', 's1', n), ctx(D1 + (i + 1) * MIN));
+    }
+    await recordEvent(db, ev('v1', 's1', 'cv_export', { format: 'pdf', design: 'classic', premium: 0, pro: 0 }), ctx(D1 + 8 * MIN));
+    await recordServerEvent(db, { name: 'purchase', vid: 'v1', userId: null, dedupeKey: 'purchase:o1', ts: D1 + 9 * MIN });
+    await recordEvent(db, input({ vid: 'v2', sid: 's2', path: '/builder' }), ctx(D1, { device: 'desktop' }));
+    await recordEvent(db, ev('v2', 's2', 'builder_open'), ctx(D1 + MIN, { device: 'desktop' }));
+    await recordEvent(db, ev('v3', 's3', 'cv_export', { format: 'docx' }), ctx(D1));
+    await recordEvent(db, ev('v3', 's3', 'builder_open'), ctx(D2)); // outside the range below
+
+    const h = await builderHealth(db, { from: '2026-11-04', to: '2026-11-04' });
+    expect(h.steps.map((x) => [x.key, x.visitors])).toEqual([
+      ['opened', 2], ['started', 1], ['exported', 1], ['paywall', 1], ['proclick', 1], ['paid', 1],
+    ]);
+    expect(h.byDevice).toEqual([
+      { device: 'desktop', opened: 1, started: 0, exported: 0 },
+      { device: 'mobile', opened: 1, started: 1, exported: 1 },
+    ]);
+    expect(h.bySource.find((x) => x.source === 'meta')).toMatchObject({ campaign: 'phone_cv', opened: 1, started: 1, exported: 1, paywall: 1, paid: 1 });
+    expect(h.bySource.find((x) => x.source === 'direct')).toMatchObject({ opened: 1, started: 0 });
+    expect(h.exports).toEqual([{ format: 'docx', kind: 'unknown', n: 1, visitors: 1 }, { format: 'pdf', kind: 'free design', n: 1, visitors: 1 }]);
+    expect(h.designPicks).toEqual({ picks: 2, visitors: 1 });
+    expect(h.daily).toEqual([{ day: '2026-11-04', opened: 2, started: 1, exported: 2 }]);
+  });
+
+  it('returns zeros for an empty range', async () => {
+    const h = await builderHealth(fakeD1(), { from: '2026-11-04', to: '2026-11-04' });
+    expect(h.steps.every((x) => x.visitors === 0)).toBe(true);
+    expect(h.bySource).toEqual([]);
+    expect(h.designPicks).toEqual({ picks: 0, visitors: 0 });
   });
 });

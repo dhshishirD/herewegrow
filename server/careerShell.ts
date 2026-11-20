@@ -1,6 +1,6 @@
 // Shared site chrome for the server-rendered Career Hub pages (/careers and /careers/<slug>):
 // a header and footer that match the main HereWeGrow site, plus the CSS they need.
-// No client JavaScript: the nav simply wraps on small screens.
+// The nav needs no JavaScript (it wraps on small screens). The only script is /career-track.js, which sends analytics.
 
 const SITE_NAV: [string, string][] = [
   ['/builder', 'CV builder'],

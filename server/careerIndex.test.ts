@@ -83,7 +83,8 @@ describe('renderCareersIndex', () => {
     const evil = renderCareersIndex([{ ...roles[0], title_en: 'A</title><script>alert(1)</script>', summary: '<img src=x onerror=alert(2)>' }]);
     expect(evil).not.toContain('<script>alert');
     expect(evil).not.toContain('<img src=x');
-    expect(evil.match(/<script/g)!.length).toBe(jsonLd(evil).length);
+    expect(evil.match(/<script/g)!.length).toBe(jsonLd(evil).length + 1);
+    expect(evil.match(/<script src="\/career-track\.js" defer><\/script>/g)).toHaveLength(1);
   });
 
   it('is noindex, with no ItemList, while there are no published roles', () => {

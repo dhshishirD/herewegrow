@@ -145,6 +145,7 @@ ${roles.length ? chips + sections + soon : empty}
 </main>
 ${renderSiteFooter()}
 ${script}
+<script src="/career-track.js" defer></script>
 </body>
 </html>
 `;

@@ -152,6 +152,7 @@ ${renderSiteHeader("/careers")}
 ${renderRoleBody(pack)}
 </main>
 ${renderSiteFooter()}
+<script src="/career-track.js" defer></script>
 </body>
 </html>
 `;

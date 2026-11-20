@@ -79,7 +79,9 @@ describe('renderRolePage', () => {
   it('escapes text fields and cannot be broken out of via JSON-LD', () => {
     const evil = renderRolePage(pack({ title_en: 'A</title><script>alert(1)</script>', summary: 'x</script><script>alert(2)</script>' }), NOW);
     expect(evil).not.toContain('<script>alert');
-    expect(evil.match(/<script/g)!.length).toBe(jsonLd(evil).length);
+    // The only non-JSON-LD script is the same-origin tracker; nothing from the role text can add another.
+    expect(evil.match(/<script/g)!.length).toBe(jsonLd(evil).length + 1);
+    expect(evil.match(/<script src="\/career-track\.js" defer><\/script>/g)).toHaveLength(1);
     const evilField = renderRolePage(pack({ title_en: '<b onmouseover=x>Bank</b>', field: '"><img src=x>' }), NOW);
     expect(evilField).not.toContain('<b onmouseover');
     expect(evilField).not.toContain('<img src=x>');

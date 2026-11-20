@@ -19,12 +19,29 @@ interface Overview { visitors: number; sessions: number; pageviews: number; boun
 interface Pages { topPages: { path: string; views: number; visitors: number }[]; entryPages: { path: string; sessions: number }[] }
 interface Sources { sources: { source: string; medium: string; campaign: string; visitors: number; paid: number }[] }
 interface Funnel { steps: { key: 'visit' | 'viewed' | 'order_started' | 'paid'; visitors: number }[] }
+interface BuilderHealth {
+  steps: { key: 'opened' | 'started' | 'exported' | 'paywall' | 'proclick' | 'paid'; visitors: number }[];
+  byDevice: { device: string; opened: number; started: number; exported: number }[];
+  bySource: { source: string; campaign: string; opened: number; started: number; exported: number; paywall: number; paid: number }[];
+  daily: { day: string; opened: number; started: number; exported: number }[];
+  exports: { format: string; kind: string; n: number; visitors: number }[];
+  designPicks: { picks: number; visitors: number };
+}
 interface Revenue { today: number; week: number; proActivations: number; orders: number }
 interface Audience { devices: { device: string; visitors: number }[]; countries: { country: string; visitors: number }[]; newVsReturning: { new: number; returning: number } }
 interface Actions { actions: { name: string; n: number; visitors: number }[] }
 interface Live { count: number; visitors: { page: string; agoSec: number }[]; newMessages?: number }
 type MsgStatus = 'new' | 'replied' | 'closed';
 interface Msg { id: string; createdAt: number; name: string; phone: string; email: string | null; message: string; page: string | null; utmSource: string | null; status: MsgStatus; note: string | null }
+
+const BUILDER_LABEL: Record<BuilderHealth['steps'][number]['key'], string> = {
+  opened: 'Opened the Builder',
+  started: 'Started a CV',
+  exported: 'Exported a CV',
+  paywall: 'Saw the paywall / clean-PDF offer',
+  proclick: 'Clicked Pro',
+  paid: 'Paid',
+};
 
 const STEP_LABEL: Record<Funnel['steps'][number]['key'], string> = {
   visit: 'Visited',
@@ -144,7 +161,7 @@ function Table({ title, head, rows, note }: { title: string; head: string[]; row
   );
 }
 
-function FunnelBars({ steps }: { steps: Funnel['steps'] }) {
+function FunnelBars({ steps, labels }: { steps: { key: string; visitors: number }[]; labels: Record<string, string> }) {
   const max = Math.max(...steps.map((x) => x.visitors), 1);
   const drops = steps.map((st, i) => (i ? dropOff(steps[i - 1].visitors, st.visitors) : null));
   return (
@@ -155,7 +172,7 @@ function FunnelBars({ steps }: { steps: Funnel['steps'] }) {
           return (
             <li key={st.key}>
               <div className="flex items-baseline justify-between gap-3 text-sm">
-                <span className="font-medium">{STEP_LABEL[st.key]}</span>
+                <span className="font-medium">{labels[st.key]}</span>
                 <span className="tabular-nums">
                   <strong className="text-base">{st.visitors}</strong>
                   {drop === 'exceeds' ? <span className="ml-2 text-xs text-muted">—*</span> : drop !== null && <span className="ml-2 text-xs text-muted">{drop}% drop-off</span>}
@@ -278,7 +295,7 @@ export function AdminDashboardPage() {
   const [custom, setCustom] = useState({ from: '', to: '' });
   const [live, setLive] = useState<Live | null>(null);
   const [liveError, setLiveError] = useState<string | null>(null);
-  const [data, setData] = useState<{ overview: Overview; pages: Pages; sources: Sources; audience: Audience; actions: Actions; funnel: Funnel; revenue: Revenue } | null>(null);
+  const [data, setData] = useState<{ overview: Overview; pages: Pages; sources: Sources; audience: Audience; actions: Actions; funnel: Funnel; builder: BuilderHealth; revenue: Revenue } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const isAdmin = !!user?.isAdmin;
 
@@ -319,20 +336,21 @@ export function AdminDashboardPage() {
     setData(null);
     setError(null);
     void (async () => {
-      const [overview, pages, sources, audience, actions, funnel, revenue] = await Promise.all([
+      const [overview, pages, sources, audience, actions, funnel, builder, revenue] = await Promise.all([
         get<Overview>(`/api/admin/stats/overview?${query}`),
         get<Pages>(`/api/admin/stats/pages?${query}`),
         get<Sources>(`/api/admin/stats/sources?${query}`),
         get<Audience>(`/api/admin/stats/audience?${query}`),
         get<Actions>(`/api/admin/stats/actions?${query}`),
         get<Funnel>(`/api/admin/stats/funnel?${query}`),
+        get<BuilderHealth>(`/api/admin/stats/builder?${query}`),
         get<Revenue>('/api/admin/stats/revenue'),
       ]);
       if (cancelled) return;
-      if (overview.ok && pages.ok && sources.ok && audience.ok && actions.ok && funnel.ok && revenue.ok) {
-        setData({ overview: overview.data, pages: pages.data, sources: sources.data, audience: audience.data, actions: actions.data, funnel: funnel.data, revenue: revenue.data });
+      if (overview.ok && pages.ok && sources.ok && audience.ok && actions.ok && funnel.ok && builder.ok && revenue.ok) {
+        setData({ overview: overview.data, pages: pages.data, sources: sources.data, audience: audience.data, actions: actions.data, funnel: funnel.data, builder: builder.data, revenue: revenue.data });
       } else {
-        const bad = [overview, pages, sources, audience, actions, funnel, revenue].find((r) => !r.ok);
+        const bad = [overview, pages, sources, audience, actions, funnel, builder, revenue].find((r) => !r.ok);
         setError(fail(bad && !bad.ok ? bad.error : 'unknown'));
       }
     })();
@@ -431,7 +449,37 @@ export function AdminDashboardPage() {
 
           <div className="mt-5 grid gap-5 lg:grid-cols-2">
             <Card title="Page views per day"><Bars data={o.daily} /></Card>
-            <Card title="Funnel"><FunnelBars steps={data.funnel.steps} /></Card>
+            <Card title="Funnel"><FunnelBars steps={data.funnel.steps} labels={STEP_LABEL} /></Card>
+          </div>
+
+          <h2 className="mt-8 text-lg font-semibold">Builder health</h2>
+          <p className="mt-1 text-xs text-muted">Visitors who opened the Builder in this range, and how far they got. Each step counts only those same visitors, so it never exceeds the step before.</p>
+          <div className="mt-3 grid gap-5 lg:grid-cols-2">
+            <Card title="Builder funnel"><FunnelBars steps={data.builder.steps} labels={BUILDER_LABEL} /></Card>
+            <Table
+              title="By device"
+              head={['Device', 'Opened', 'Started', 'Exported']}
+              rows={data.builder.byDevice.map((d) => [d.device, d.opened, d.started, d.exported])}
+            />
+            <Table
+              title="By source (first touch)"
+              head={['Source', 'Opened', 'Started', 'Exported', 'Paywall', 'Paid']}
+              rows={data.builder.bySource.map((s) => [s.campaign ? `${s.source} / ${s.campaign}` : s.source, s.opened, s.started, s.exported, s.paywall, s.paid])}
+            />
+            <Table
+              title="Exports"
+              head={['Format · design type', 'Exports', 'Visitors']}
+              rows={data.builder.exports.map((e) => [`${e.format} · ${e.kind}`, e.n, e.visitors])}
+              note="Free or premium design is recorded from 21 Nov 2026; earlier exports show as unknown."
+            />
+            <Table
+              title="Builder per day"
+              head={['Day', 'Opened', 'Started', 'Exported']}
+              rows={data.builder.daily.map((d) => [d.day, d.opened, d.started, d.exported])}
+            />
+            <Card title="Design picks">
+              <p className="text-sm"><strong className="text-base tabular-nums">{data.builder.designPicks.picks}</strong> picks from <strong className="text-base tabular-nums">{data.builder.designPicks.visitors}</strong> visitors{data.builder.designPicks.visitors ? ` (${(data.builder.designPicks.picks / data.builder.designPicks.visitors).toFixed(1)} per visitor)` : ''}.</p>
+            </Card>
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-2">

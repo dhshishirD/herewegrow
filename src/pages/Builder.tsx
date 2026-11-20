@@ -636,7 +636,7 @@ export function BuilderPage() {
       a.download = `${(d.name || 'My').replace(/\s+/g, '_')}_CV${asAts ? '_ATS' : ''}.docx`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      track('cv_export', { format: asAts ? 'docx_ats' : 'docx' });
+      track('cv_export', { format: asAts ? 'docx_ats' : 'docx', design: asAts ? 'classic' : state.design, premium: !asAts && isProDesign(state.design) ? 1 : 0, pro: pro ? 1 : 0 });
       offerClean(asAts ? 'docx_ats' : 'docx');
     } catch (err) {
       console.error(err);
@@ -709,7 +709,7 @@ export function BuilderPage() {
 
   /** Prints, and after the print step has finished offers the clean PDF (unless offer is false, e.g. after the user just declined the Pro upsell). */
   const printNow = (opts: { offer?: boolean } = {}) => {
-    track('cv_export', { format: 'pdf' });
+    track('cv_export', { format: 'pdf', design: state.design, premium: isProDesign(state.design) ? 1 : 0, pro: pro ? 1 : 0 });
     const prev = document.title;
     const title = `${(d.name || 'My').replace(/\s+/g, '_')}_CV`;
     const html = document.getElementById('cv-print')?.innerHTML;

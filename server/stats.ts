@@ -219,6 +219,94 @@ export async function funnel(db: D1Like, r: Range) {
   };
 }
 
+const BUILDER_NAMES = ['builder_open', 'builder_start', 'cv_export', 'paywall_view', 'pro_click', 'purchase'];
+
+/**
+ * The Builder path, counted by distinct visitor and NESTED: every later step only counts visitors who also opened the Builder in
+ * the range, so each step is at most the one before it. Also split by device, by first-touch source (each visitor takes the source of
+ * their earliest session in the range), by day, plus the export mix and design-pick habits. Only days that still have raw events.
+ */
+export async function builderHealth(db: D1Like, r: Range) {
+  const marks = BUILDER_NAMES.map(() => '?').join(', ');
+  const flags = `SELECT vid, MAX(device) AS device,
+      MAX(name = 'builder_start') AS started, MAX(name = 'cv_export') AS exported, MAX(name = 'paywall_view') AS paywall,
+      MAX(name = 'pro_click') AS proclick, MAX(name = 'purchase' AND ${PURCHASE_KEY_SQL}) AS paid
+    FROM events WHERE type = 'event' AND vid IS NOT NULL AND name IN (${marks}) AND day BETWEEN ? AND ? AND ${NOT_ROLLED}
+    GROUP BY vid HAVING MAX(name = 'builder_open') = 1`;
+  const flagBinds = [...BUILDER_NAMES, r.from, r.to];
+  const sum = (c: string) => `COALESCE(SUM(${c}), 0)`;
+  const totals = await db
+    .prepare(
+      `SELECT COUNT(*) AS opened, ${sum('started')} AS started, ${sum('exported')} AS exported, ${sum('paywall')} AS paywall,
+              ${sum('proclick')} AS proclick, ${sum('paid')} AS paid FROM (${flags})`,
+    )
+    .bind(...flagBinds)
+    .first<{ opened: number; started: number; exported: number; paywall: number; proclick: number; paid: number }>();
+  const byDevice = await rows<{ device: string; opened: number; started: number; exported: number }>(
+    db,
+    `SELECT COALESCE(device, 'unknown') AS device, COUNT(*) AS opened, ${sum('started')} AS started, ${sum('exported')} AS exported
+     FROM (${flags}) GROUP BY device ORDER BY opened DESC, device`,
+    ...flagBinds,
+  );
+  const bySource = await rows<{ source: string; campaign: string; opened: number; started: number; exported: number; paywall: number; paid: number }>(
+    db,
+    `WITH first_touch AS (
+       SELECT vid, COALESCE(utm_source, ref_host, 'direct') AS source, COALESCE(utm_campaign, '') AS campaign, MIN(ts) AS ts
+       FROM (${SESSION_FIRST_SQL}) GROUP BY vid),
+     flags AS (${flags})
+     SELECT COALESCE(first_touch.source, 'direct') AS source, COALESCE(first_touch.campaign, '') AS campaign, COUNT(*) AS opened,
+            ${sum('flags.started')} AS started, ${sum('flags.exported')} AS exported, ${sum('flags.paywall')} AS paywall, ${sum('flags.paid')} AS paid
+     FROM flags LEFT JOIN first_touch ON first_touch.vid = flags.vid
+     GROUP BY source, campaign ORDER BY opened DESC, source LIMIT 15`,
+    r.from,
+    r.to,
+    ...flagBinds,
+  );
+  const daily = await rows<{ day: string; opened: number; started: number; exported: number }>(
+    db,
+    `SELECT day, COUNT(DISTINCT CASE WHEN name = 'builder_open' THEN vid END) AS opened,
+            COUNT(DISTINCT CASE WHEN name = 'builder_start' THEN vid END) AS started,
+            COUNT(DISTINCT CASE WHEN name = 'cv_export' THEN vid END) AS exported
+     FROM events WHERE type = 'event' AND vid IS NOT NULL AND name IN ('builder_open', 'builder_start', 'cv_export') AND day BETWEEN ? AND ? AND ${NOT_ROLLED}
+     GROUP BY day ORDER BY day`,
+    r.from,
+    r.to,
+  );
+  // meta.premium / meta.pro are only written by exports since 21 Nov 2026; older rows show as 'unknown'.
+  const exports = await rows<{ format: string; kind: string; n: number; visitors: number }>(
+    db,
+    `SELECT COALESCE(CASE WHEN json_valid(meta) THEN json_extract(meta, '$.format') END, 'unknown') AS format,
+            CASE WHEN json_valid(meta) THEN CASE json_extract(meta, '$.premium') WHEN 1 THEN 'premium design' WHEN 0 THEN 'free design' END END AS kind,
+            COUNT(*) AS n, COUNT(DISTINCT vid) AS visitors
+     FROM events WHERE type = 'event' AND name = 'cv_export' AND day BETWEEN ? AND ? AND ${NOT_ROLLED}
+     GROUP BY format, kind ORDER BY n DESC, format, kind`,
+    r.from,
+    r.to,
+  );
+  const picks = await db
+    .prepare(
+      `SELECT COUNT(*) AS n, COUNT(DISTINCT vid) AS visitors FROM events
+       WHERE type = 'event' AND name = 'design_pick' AND day BETWEEN ? AND ? AND ${NOT_ROLLED}`,
+    )
+    .bind(r.from, r.to)
+    .first<{ n: number; visitors: number }>();
+  return {
+    steps: [
+      { key: 'opened' as const, visitors: totals?.opened ?? 0 },
+      { key: 'started' as const, visitors: totals?.started ?? 0 },
+      { key: 'exported' as const, visitors: totals?.exported ?? 0 },
+      { key: 'paywall' as const, visitors: totals?.paywall ?? 0 },
+      { key: 'proclick' as const, visitors: totals?.proclick ?? 0 },
+      { key: 'paid' as const, visitors: totals?.paid ?? 0 },
+    ],
+    byDevice,
+    bySource,
+    daily,
+    exports: exports.map((e) => ({ ...e, kind: e.kind ?? 'unknown' })),
+    designPicks: { picks: picks?.n ?? 0, visitors: picks?.visitors ?? 0 },
+  };
+}
+
 const DHAKA_OFFSET_MS = 6 * 3_600_000;
 
 /** Paid revenue (BDT) for today and the last 7 Dhaka days, plus Pro activations and paid orders in that week. */

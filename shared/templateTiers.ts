@@ -215,10 +215,18 @@ export const isListed = (id: string): boolean => !isRetired(id) && !isVariant(id
 /** How many templates are on sale (cards plus variants). */
 export const ON_SALE_COUNT = TEMPLATES.filter((t) => !isRetired(t.id)).length;
 
+/** Retired categories that get no page of their own (too broad or too small to be a useful buying page): where they redirect instead. */
+export const CATEGORY_REDIRECT: Readonly<Record<string, string>> = {
+  'professional-cv': '/templates',
+  'modern-cv': '/templates',
+  'job-biodata': '/biodata',
+};
+
 /** Where a retired template's page redirects. */
 export function retiredTarget(id: string): string | null {
   const cat = RETIRED[id];
   if (!cat) return null;
+  if (cat in CATEGORY_REDIRECT) return CATEGORY_REDIRECT[cat];
   return CATEGORY_PAGES_LIVE ? `/templates/category/${cat}` : '/templates';
 }
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CATEGORY_PAGES, categoryCards, categoryPath, liveCategoryFor } from './categoryCopy';
 import { categoryPages } from './categoryHtml';
 import { TEMPLATES, hubOf } from './templates';
-import { CATEGORY_PAGES_LIVE, RETIRED, isRetired, isVariant, shouldIndex } from './templateTiers';
+import { CATEGORY_PAGES_LIVE, CATEGORY_REDIRECT, RETIRED, isRetired, retiredTarget, isVariant, shouldIndex } from './templateTiers';
 import { sitemapXml } from '../scripts/seo';
 
 const words = (html: string) => html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
@@ -23,13 +23,14 @@ describe('category pages data', () => {
         const t = TEMPLATES.find((x) => x.id === id);
         expect(t, `${c.slug} -> ${id} exists`).toBeTruthy();
         expect(!isRetired(id) && shouldIndex(t!) && !isVariant(id), `${c.slug} -> ${id} indexable`).toBe(true);
-        expect(hubOf(t!), `${c.slug} -> ${id} hub`).toBe(c.hub);
+        if (c.sector) expect(t!.sector, `${c.slug} -> ${id} sector`).toBe(c.sector);
+        else expect(hubOf(t!), `${c.slug} -> ${id} hub`).toBe(c.hub);
       }
     }
   });
-  it('covers every indexable template of its hub', () => {
+  it('covers every indexable template of its hub (or sector)', () => {
     for (const c of CATEGORY_PAGES) {
-      const all = TEMPLATES.filter((t) => !isRetired(t.id) && shouldIndex(t) && !isVariant(t.id) && hubOf(t) === c.hub).map((t) => t.id);
+      const all = TEMPLATES.filter((t) => !isRetired(t.id) && shouldIndex(t) && !isVariant(t.id) && (c.sector ? t.sector === c.sector : hubOf(t) === c.hub)).map((t) => t.id);
       expect([...c.templateIds].sort(), c.slug).toEqual([...all].sort());
     }
   });
@@ -65,10 +66,23 @@ describe('category pages HTML', () => {
   });
 });
 
-describe('before CATEGORY_PAGES_LIVE is flipped', () => {
-  it('every category a retired template redirects to has a page', () => {
-    if (!CATEGORY_PAGES_LIVE) return;
-    const have = new Set(CATEGORY_PAGES.map((c) => c.slug));
-    for (const [id, cat] of Object.entries(RETIRED)) expect(have.has(cat), `${id} -> ${categoryPath(cat)}`).toBe(true);
+describe('retired templates and category pages', () => {
+  const have = new Set(CATEGORY_PAGES.map((c) => c.slug));
+  // europass-cv has its own hand-built page (src/App.tsx), not an entry in CATEGORY_PAGES.
+  const covered = new Set([...have, 'europass-cv']);
+  it('every retired category has either a page or a redirect override', () => {
+    for (const [id, cat] of Object.entries(RETIRED)) expect(covered.has(cat) || cat in CATEGORY_REDIRECT, `${id} -> ${categoryPath(cat)}`).toBe(true);
+  });
+  it('overrides point at real pages and never at a category page', () => {
+    for (const [cat, to] of Object.entries(CATEGORY_REDIRECT)) {
+      expect(have.has(cat), `${cat} should not also have a page`).toBe(false);
+      expect(['/templates', '/biodata'], cat).toContain(to);
+    }
+  });
+  it('redirects retired templates to the override, else to the category when live', () => {
+    for (const [id, cat] of Object.entries(RETIRED)) {
+      const want = cat in CATEGORY_REDIRECT ? CATEGORY_REDIRECT[cat] : CATEGORY_PAGES_LIVE ? categoryPath(cat) : '/templates';
+      expect(retiredTarget(id), id).toBe(want);
+    }
   });
 });

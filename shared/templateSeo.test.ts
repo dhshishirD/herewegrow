@@ -109,3 +109,38 @@ describe('template page body content', () => {
     expect(new Set(bySector.values()).size).toBeGreaterThan(5);
   });
 });
+
+describe('template page copy: keywords and variety', () => {
+  const sentences = (t: (typeof TEMPLATES)[number]) => {
+    const g = templateGuide(t);
+    return new Set([g.summary, ...g.forWhom.split(/(?<=[।?])\s+/), ...g.contents, ...g.faq.flatMap((f) => [f.q, f.a]), ...g.steps].map((x) => x.trim()));
+  };
+  it('puts the search phrases on every page and never promises "free"', () => {
+    for (const t of INDEXABLE) {
+      const g = templateGuide(t);
+      const text = [g.summary, g.forWhom, ...g.contents, ...g.faq.flatMap((f) => [f.q, f.a])].join(' ');
+      expect(text, t.id).toMatch(/CV|biodata/i);
+      expect(text, t.id).toContain('Word');
+      expect(text, t.id).toContain('বাংলাদেশ');
+      expect(text, t.id).not.toMatch(/\bfree\b|ফ্রি/i);
+    }
+  });
+  it('keeps pages different from each other', () => {
+    const sets = INDEXABLE.map(sentences);
+    let max = 0;
+    let sum = 0;
+    let n = 0;
+    for (let i = 0; i < sets.length; i++) {
+      for (let j = i + 1; j < sets.length; j++) {
+        let same = 0;
+        for (const x of sets[i]) if (sets[j].has(x)) same++;
+        const sim = same / Math.max(sets[i].size, sets[j].size);
+        max = Math.max(max, sim);
+        sum += sim;
+        n++;
+      }
+    }
+    expect(max).toBeLessThan(0.85);
+    expect(sum / n).toBeLessThan(0.5);
+  });
+});

@@ -46,8 +46,8 @@ describe('template tiers, variants and retirements', () => {
     expect(canonicalPathFor('hwg-cv-simple-classic-009')).toBe('/templates/hwg-cv-simple-classic-009');
   });
   it('redirects retired template pages with a 301 target and leaves other paths alone', () => {
-    expect(redirectForPath('/templates/hwg-cv-europass-europass-017')).toBe('/templates');
-    expect(redirectForPath('/templates/hwg-cv-europass-europass-017/')).toBe('/templates');
+    expect(redirectForPath('/templates/hwg-cv-europass-europass-017')).toBe('/templates/category/europass-cv');
+    expect(redirectForPath('/templates/hwg-cv-europass-europass-017/')).toBe('/templates/category/europass-cv');
     expect(redirectForPath('/templates/hwg-cv-europass-europass-016')).toBeNull();
     expect(redirectForPath('/templates/hwg-cv-europass-europass-017/thumb.webp')).toBeNull();
     expect(redirectForPath('/templates')).toBeNull();
@@ -63,8 +63,8 @@ describe('template tiers, variants and retirements', () => {
   it('writes one 301 rule per retired page, with and without the trailing slash', () => {
     const lines = redirectsFile().trim().split('\n');
     expect(lines).toHaveLength(78);
-    expect(lines).toContain('/templates/hwg-cv-europass-europass-017 /templates 301');
-    expect(lines).toContain('/templates/hwg-cv-europass-europass-017/ /templates 301');
-    for (const l of lines) expect(l).toMatch(/^\/templates\/[a-z0-9-]+\/? (\/templates|\/biodata) 301$/);
+    expect(lines).toContain('/templates/hwg-cv-europass-europass-017 /templates/category/europass-cv 301');
+    expect(lines).toContain('/templates/hwg-cv-europass-europass-017/ /templates/category/europass-cv 301');
+    for (const l of lines) expect(l).toMatch(/^\/templates\/[a-z0-9-]+\/? (\/templates|\/biodata|\/templates\/category\/[a-z0-9-]+) 301$/);
   });
 });

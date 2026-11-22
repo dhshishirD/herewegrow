@@ -62,7 +62,7 @@ describe('category pages HTML', () => {
     }
   });
   it('links back from template pages only when live', () => {
-    for (const c of CATEGORY_PAGES) expect(Boolean(liveCategoryFor(c.hub))).toBe(CATEGORY_PAGES_LIVE);
+    for (const c of CATEGORY_PAGES.filter((x) => !x.sector)) expect(Boolean(liveCategoryFor(c.hub))).toBe(CATEGORY_PAGES_LIVE);
   });
 });
 

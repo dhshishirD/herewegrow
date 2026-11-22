@@ -10,8 +10,8 @@
 
 import { TEMPLATES, NEW_DESIGNED_TEMPLATES } from './templates';
 
-/** Flip to true when the /templates/category/<slug> pages exist. Until then retired templates redirect to /templates. */
-export const CATEGORY_PAGES_LIVE = false;
+/** True: the /templates/category/<slug> pages are indexable and retired templates redirect to them. */
+export const CATEGORY_PAGES_LIVE = true;
 
 export type Tier = 'A' | 'B';
 

@@ -110,6 +110,33 @@ function isSharedTitle(en: string): boolean {
   return sharedTitles.has(en);
 }
 
+type SeoTemplate = (typeof TEMPLATES)[number];
+
+/** Search title for a template page without a manual `meta`: at most 60 characters, Bangla name first. */
+export function templateTitle(t: SeoTemplate): string {
+  const tag = isSharedTitle(t.title.en) ? ` (${bn(t.pages)} পৃষ্ঠা)` : '';
+  let name = t.title.bn;
+  // A long leading "প্রফেশনাল সিভি ফরম্যাট – " prefix is dropped when the title would not fit.
+  if ((name + tag).length > 60) name = name.replace(/^[^–]*সিভি ফরম্যাট\s*–\s*/, '');
+  const base = name + tag;
+  for (const suffix of [' | Word CV | HereWeGrow', ' | Word CV', ' | HereWeGrow', '']) {
+    if ((base + suffix).length <= 60) return base + suffix;
+  }
+  return base;
+}
+
+/** Search description for a template page without a manual `meta`: at most 155 characters. */
+export function templateDescription(t: SeoTemplate): string {
+  const sector = SECTORS.find((s) => s.id === t.sector)!;
+  const style = t.style === 'ats' ? 'ATS-ফ্রেন্ডলি' : 'ডিজাইনড';
+  const p = `৳${bn(SINGLE_TEMPLATE_PRICE)}`;
+  const a = `${t.title.bn}: ${bn(t.pages)} পৃষ্ঠার ${style} সিভি, Word-এ এডিট করুন। ${sector.name.bn} চাকরির জন্য। ${p}, বিকাশ/নগদে পেমেন্ট করে সাথে সাথে ডাউনলোড।`;
+  if (a.length <= 155) return a;
+  const b = `${t.title.bn}: ${bn(t.pages)} পৃষ্ঠার ${style} সিভি, Word-এ এডিট করুন। ${p}, সাথে সাথে ডাউনলোড।`;
+  if (b.length <= 155) return b;
+  return `${t.title.bn}: Word সিভি, এডিট করুন। ${p}, সাথে সাথে ডাউনলোড।`;
+}
+
 export function routeSeo(path: string): RouteSeo | undefined {
   if (STATIC[path]) return STATIC[path];
   const bio = biodataSeo(path);
@@ -125,13 +152,5 @@ export function routeSeo(path: string): RouteSeo | undefined {
   const t = m ? findTemplate(m[1]) : undefined;
   if (!t) return undefined;
   if (t.meta) return { title: t.meta.title, description: t.meta.description };
-  const sector = SECTORS.find((s) => s.id === t.sector)!;
-  const style = t.style === 'ats' ? 'ATS-ফ্রেন্ডলি' : 'ডিজাইনড';
-  const shared = isSharedTitle(t.title.en);
-  const pageTag = shared ? ` (${bn(t.pages)} পৃষ্ঠা)` : '';
-  const pageTagEn = shared ? `, ${t.pages} ${t.pages === 1 ? 'page' : 'pages'}` : '';
-  return {
-    title: `${t.title.bn}${pageTag}: Word ফরম্যাট ডাউনলোড | ${t.title.en}${pageTagEn}, Word template | HereWeGrow`,
-    description: `${t.title.bn}: ${bn(t.pages)} পৃষ্ঠার ${style} সিভি ফরম্যাট, Word-এ এডিট করুন। ${sector.name.bn} চাকরির জন্য। মাত্র ৳${SINGLE_TEMPLATE_PRICE}, বিকাশ/নগদে পেমেন্ট করে সাথে সাথে ডাউনলোড। ${t.title.en}, ${t.pages}-page editable Word CV format for Bangladesh.`,
-  };
+  return { title: templateTitle(t), description: templateDescription(t) };
 }

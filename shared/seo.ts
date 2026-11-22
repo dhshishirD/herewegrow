@@ -9,7 +9,7 @@ import { europassSeo } from './europassPages';
 import { findGuide } from './guides';
 import { higherStudySeo } from './higherStudyPages';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, findTemplate } from './templates';
-import { ON_SALE_COUNT, isVariant, shouldIndex } from './templateTiers';
+import { isVariant, shouldIndex } from './templateTiers';
 
 export interface RouteSeo {
   title: string;
@@ -30,8 +30,8 @@ const STATIC: Record<string, RouteSeo> = {
     description: `নির্দিষ্ট দামে সিভি রাইটিং (৳${price('cv-fresher')} থেকে), সিভি রিভিউ ৳${price('cv-review')}, লিংকডইন প্রোফাইল ৳${price('linkedin-profile')}, বিডিজবস প্রোফাইল ৳${price('bdjobs-profile')}, SOP ও একাডেমিক সিভি। CV writing, LinkedIn and SOP services in Bangladesh.`,
   },
   '/templates': {
-    title: `সিভি ফরম্যাট ডাউনলোড (Word) | ${ON_SALE_COUNT}+ CV templates | HereWeGrow`,
-    description: `ব্যাংক, কর্পোরেট, ফ্রেশার, ইঞ্জিনিয়ারিং, শিক্ষকতা ও মেডিকেল চাকরির জন্য Word-এ এডিটযোগ্য সিভি ফরম্যাট। প্রতিটি ৳${SINGLE_TEMPLATE_PRICE}, সব ৪০টি ৳${price('pack-best-40')}। Editable CV format for Bangladesh jobs, instant download.`,
+    title: 'CV Format ও Word CV Template, বাংলাদেশ | HereWeGrow',
+    description: `ATS-ফ্রেন্ডলি ও ডিজাইনড CV format, Word-এ এডিটযোগ্য। প্রতিটি টেমপ্লেট ৳${bn(SINGLE_TEMPLATE_PRICE)}, bKash বা Nagad-এ পেমেন্টের পরই ডাউনলোড।`,
   },
   '/about': {
     title: 'About HereWeGrow and Career Solutions | CV expert in Bangladesh',

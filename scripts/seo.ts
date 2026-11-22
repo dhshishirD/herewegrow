@@ -19,15 +19,16 @@ import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
 import { APP_ONLY_PATHS } from '../shared/appPaths';
 import { BIODATA_FAQ, BIODATA_HUB, BIODATA_HUB_BN, BIODATA_HUB_PATH, BIODATA_MAKER, BIODATA_MAKER_PATH, BIODATA_STYLES, BIODATA_UPDATED, biodataPreview, biodataStylePath } from '../shared/biodataStyles';
-import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages, type Template } from '../shared/templates';
+import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, TEMPLATES_LASTMOD, shownPages, type Template } from '../shared/templates';
 import { templateGuide } from '../shared/templateCopy';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
 const LISTED_TEMPLATES = TEMPLATES.filter((t) => isListed(t.id));
+/** Listed templates that search engines may index (the hub's ItemList and links only point at these). */
+const INDEXABLE_LISTED = LISTED_TEMPLATES.filter((t) => shouldIndex(t));
 
 const SITE = 'https://herewegrow.pro';
-const TODAY = new Date().toISOString().slice(0, 10);
 const bn = (n: number | string) => String(n).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
 const seo = (path: string) => routeSeo(path)!;
 
@@ -123,16 +124,17 @@ function pages(): Page[] {
       path: '/templates',
       ...seo('/templates'),
       image: `${SITE}/templates/${LISTED_TEMPLATES[0].id}/thumb.webp`,
-      body: `<h1>Word-এ এডিট করার মতো সিভি টেমপ্লেট</h1><ul>${LISTED_TEMPLATES.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><h2>প্যাক</h2><ul>${packs.map((p) => `<li>${esc(p.name.bn)}: ৳${p.price}</li>`).join('')}</ul>`,
+      body: `<h1>Word-এ এডিট করার মতো সিভি টেমপ্লেট</h1><ul>${INDEXABLE_LISTED.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><h2>প্যাক</h2><ul>${packs.map((p) => `<li>${esc(p.name.bn)}: ৳${p.price}</li>`).join('')}</ul>`,
       jsonLd: [
         {
           '@type': 'ItemList',
           name: 'CV templates',
-          itemListElement: LISTED_TEMPLATES.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/templates/${t.id}`, name: t.title.en })),
+          itemListElement: INDEXABLE_LISTED.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/templates/${t.id}`, name: t.title.en })),
         },
         crumbs([['HereWeGrow', '/'], ['CV templates', '/templates']]),
       ],
       priority: 0.95,
+      lastmod: TEMPLATES_LASTMOD,
       images: LISTED_TEMPLATES.map((t) => `${SITE}/templates/${t.id}/thumb.webp`),
     },
     {
@@ -445,7 +447,7 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['CV templates', '/templates'], [t.title.en, `/templates/${t.id}`]]),
       ],
       priority: 0.8,
-      lastmod: t.added,
+      lastmod: t.added && t.added > TEMPLATES_LASTMOD ? t.added : TEMPLATES_LASTMOD,
       images,
       noindex: !shouldIndex(t) || (isVariant(t.id) && !!t.lib),
       canonical: isVariant(t.id) ? canonicalPathFor(t.id) : undefined,
@@ -459,7 +461,7 @@ function sitemap(list: Page[]): string {
     .filter((p) => !p.noindex && (!p.canonical || p.canonical === p.path))
     .map((p) => {
       const imgs = (p.images ?? []).map((i) => `<image:image><image:loc>${i}</image:loc></image:image>`).join('');
-      return `  <url><loc>${SITE}${p.path}</loc><lastmod>${p.lastmod ?? TODAY}</lastmod><priority>${p.priority.toFixed(1)}</priority>${imgs}</url>`;
+      return `  <url><loc>${SITE}${p.path}</loc>${p.lastmod ? `<lastmod>${p.lastmod}</lastmod>` : ''}<priority>${p.priority.toFixed(1)}</priority>${imgs}</url>`;
     })
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;

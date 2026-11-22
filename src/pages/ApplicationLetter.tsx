@@ -5,6 +5,7 @@ import { useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
+import { LETTER_LINKS, LETTER_LINKS_HEADING } from '../../shared/letterLinks';
 
 type Field = { key: keyof LetterInput; label: { en: string; bn: string }; rows?: number; req?: boolean };
 
@@ -140,6 +141,12 @@ export function ApplicationLetter() {
                 {t({ en: 'A letter alone is not enough. ', bn: 'শুধু চিঠিতে হয় না। ' })}
                 <Link href="/builder" className="font-semibold text-leaf underline">{t({ en: 'Build a matching CV, free.', bn: 'মানানসই সিভি বানান, ফ্রি।' })}</Link>
               </p>
+              <div className="mt-6">
+                <h2 className="text-lg font-semibold">{LETTER_LINKS_HEADING}</h2>
+                <ul className="mt-2 list-disc space-y-1 pl-5">
+                  {LETTER_LINKS.map((l) => <li key={l.href}><Link href={l.href} className="font-semibold text-leaf underline">{l.text}</Link></li>)}
+                </ul>
+              </div>
             </>
           ) : (
             <div className="rounded-2xl border border-line p-6 text-muted">

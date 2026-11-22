@@ -24,6 +24,7 @@ import { templateGuide } from '../shared/templateCopy';
 import { categoryPages } from '../shared/categoryHtml';
 import { cvFormatPage } from '../shared/cvFormatHtml';
 import { letterPages } from '../shared/letterHtml';
+import { LETTER_LINKS, LETTER_LINKS_HEADING } from '../shared/letterLinks';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
@@ -85,6 +86,7 @@ function templateBody(t: Template): string {
 
 /** Paths of every page the build writes (used by tests). */
 export const seoPagePaths = () => pages().map((p) => p.path);
+export const seoPageBodies = () => pages().map((p) => ({ path: p.path, body: p.body }));
 
 function pages(): Page[] {
   const services = PRODUCTS.filter((p) => p.kind === 'service');
@@ -188,7 +190,7 @@ function pages(): Page[] {
     {
       path: '/tools/application-letter',
       ...seo('/tools/application-letter'),
-      body: '<h1>আবেদনপত্র জেনারেটর</h1><p>সরকারি ও বেসরকারি চাকরির আবেদনপত্র, বাংলা ও ইংরেজিতে।</p>',
+      body: `<h1>আবেদনপত্র জেনারেটর</h1><p>সরকারি ও বেসরকারি চাকরির আবেদনপত্র, বাংলা ও ইংরেজিতে।</p><h2>${esc(LETTER_LINKS_HEADING)}</h2><ul>${LETTER_LINKS.map((l) => `<li>${link(l.href, l.text)}</li>`).join('')}</ul>`,
       jsonLd: [{ '@type': 'WebApplication', name: 'HereWeGrow application letter generator', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
       priority: 0.9,
     },
@@ -318,7 +320,7 @@ function pages(): Page[] {
   list.push({
     path: '/guides',
     ...seo('/guides'),
-    body: `<h1>ক্যারিয়ার গাইড</h1><ul>${GUIDES.map((g) => `<li>${link(`/guides/${g.slug}`, g.title.bn)}: ${esc(g.summary)}</li>`).join('')}</ul>`,
+    body: `<h1>ক্যারিয়ার গাইড</h1><ul>${GUIDES.map((g) => `<li>${link(`/guides/${g.slug}`, g.title.bn)}: ${esc(g.summary)}</li>`).join('')}</ul><h2>${esc(LETTER_LINKS_HEADING)}</h2><ul>${LETTER_LINKS.map((l) => `<li>${link(l.href, l.text)}</li>`).join('')}</ul>`,
     jsonLd: [crumbs([['HereWeGrow', '/'], ['Career guides', '/guides']])],
     priority: 0.8,
   });

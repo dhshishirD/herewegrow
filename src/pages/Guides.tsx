@@ -5,6 +5,7 @@ import { EXPERT } from '../content/expert';
 import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
+import { LETTER_LINKS, LETTER_LINKS_HEADING } from '../../shared/letterLinks';
 import { NotFound } from './Policies';
 
 const GUIDES_CRUMB = { href: '/guides', label: { en: 'Career guides', bn: 'ক্যারিয়ার গাইড' } };
@@ -42,6 +43,12 @@ export function GuidesPage() {
             </li>
           ))}
         </ul>
+        <div className="mt-12">
+          <h2 className="text-2xl">{LETTER_LINKS_HEADING}</h2>
+          <ul className="mt-3 list-disc space-y-1.5 pl-5">
+            {LETTER_LINKS.map((l) => <li key={l.href}><Link href={l.href} className="font-semibold text-leaf underline">{l.text}</Link></li>)}
+          </ul>
+        </div>
       </section>
     </>
   );

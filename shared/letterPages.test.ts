@@ -54,3 +54,18 @@ describe('Bangla letter pages', () => {
     for (const l of LETTER_PAGES) expect(JSON.stringify(l)).not.toMatch(/৩০ দিন|১৪ দিন|৬০ দিন|শ্রম আইনের ধারা/);
   });
 });
+
+describe('links to the letter pages', () => {
+  it('lists exactly the three letter pages', async () => {
+    const { LETTER_LINKS } = await import('./letterLinks');
+    expect(LETTER_LINKS.map((l) => l.href)).toEqual(LETTER_PAGES.map((l) => l.path));
+  });
+  it('appear in the prerendered tool page and guides list', async () => {
+    const { seoPageBodies } = await import('../scripts/seo');
+    const pages = seoPageBodies();
+    for (const path of ['/tools/application-letter', '/guides']) {
+      const body = pages.find((p) => p.path === path)!.body;
+      for (const l of LETTER_PAGES) expect(body, `${path} -> ${l.path}`).toContain(`href="${l.path}"`);
+    }
+  });
+});

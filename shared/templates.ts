@@ -115,6 +115,13 @@ export const TEMPLATES: Template[] = [...NEW_DESIGNED_TEMPLATES, ...CORE_TEMPLAT
 /** Price of one template, in BDT. */
 export const SINGLE_TEMPLATE_PRICE = 29;
 
+/**
+ * Day the template pages' content last changed (YYYY-MM-DD). The sitemap uses it as <lastmod> for the hub and as a floor for
+ * every template page. Bump it by hand when template copy, titles or files change. Never use the build date: a lastmod that
+ * changes on every deploy makes Google ignore it.
+ */
+export const TEMPLATES_LASTMOD = '2026-11-22';
+
 /** Category of any template. Core templates are placed by sector and style. */
 export function hubOf(t: Template): string {
   if (t.hub) return t.hub;

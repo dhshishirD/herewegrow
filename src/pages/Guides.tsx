@@ -115,6 +115,15 @@ export function GuidePage({ slug }: { slug: string }) {
         </div>
       </article>
 
+      {g.related && g.related.length > 0 && (
+        <section className="wrap max-w-3xl pb-6">
+          <h2 className="font-display text-2xl">{t({ en: 'Read next', bn: 'আরও পড়ুন' })}</h2>
+          <ul className="mt-4 list-disc space-y-1.5 pl-5 text-lg">
+            {g.related.map((r) => <li key={r.href}><Link href={r.href} className="font-semibold text-leaf hover:underline">{t(r.label)}</Link></li>)}
+          </ul>
+        </section>
+      )}
+
       <section className="wrap max-w-3xl pb-6">
         <h2 className="font-display text-2xl">{t({ en: 'More guides', bn: 'আরও গাইড' })}</h2>
         <ul className="mt-4 divide-y divide-line border-y border-line">

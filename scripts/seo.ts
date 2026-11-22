@@ -22,6 +22,7 @@ import { BIODATA_FAQ, BIODATA_HUB, BIODATA_HUB_BN, BIODATA_HUB_PATH, BIODATA_MAK
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, TEMPLATES_LASTMOD, shownPages, type Template } from '../shared/templates';
 import { templateGuide } from '../shared/templateCopy';
 import { categoryPages } from '../shared/categoryHtml';
+import { cvFormatPage } from '../shared/cvFormatHtml';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
@@ -125,7 +126,7 @@ function pages(): Page[] {
       path: '/templates',
       ...seo('/templates'),
       image: `${SITE}/templates/${LISTED_TEMPLATES[0].id}/thumb.webp`,
-      body: `<h1>Word-এ এডিট করার মতো সিভি টেমপ্লেট</h1><ul>${INDEXABLE_LISTED.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><h2>প্যাক</h2><ul>${packs.map((p) => `<li>${esc(p.name.bn)}: ৳${p.price}</li>`).join('')}</ul>`,
+      body: `<h1>Word-এ এডিট করার মতো সিভি টেমপ্লেট</h1><ul>${INDEXABLE_LISTED.map((t) => `<li>${link(`/templates/${t.id}`, `${t.title.bn} (${t.title.en})`)}</li>`).join('')}</ul><p>${link('/cv-format-bd', 'সিভি ফরম্যাট: লেখার নিয়ম ও টিপস')}</p><h2>প্যাক</h2><ul>${packs.map((p) => `<li>${esc(p.name.bn)}: ৳${p.price}</li>`).join('')}</ul>`,
       jsonLd: [
         {
           '@type': 'ItemList',
@@ -397,6 +398,9 @@ function pages(): Page[] {
       images: [bioPreview(x.slug)],
     });
   }
+
+  // /cv-format-bd pillar (copy in shared/cvFormatPage.ts)
+  list.push(cvFormatPage());
 
   // Category buying-guide pages (noindex and out of the sitemap until CATEGORY_PAGES_LIVE is true)
   list.push(...categoryPages());

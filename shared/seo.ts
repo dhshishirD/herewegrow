@@ -30,8 +30,8 @@ const STATIC: Record<string, RouteSeo> = {
     description: `নির্দিষ্ট দামে সিভি রাইটিং (৳${price('cv-fresher')} থেকে), সিভি রিভিউ ৳${price('cv-review')}, লিংকডইন প্রোফাইল ৳${price('linkedin-profile')}, বিডিজবস প্রোফাইল ৳${price('bdjobs-profile')}, SOP ও একাডেমিক সিভি। CV writing, LinkedIn and SOP services in Bangladesh.`,
   },
   '/templates': {
-    title: 'CV Format ও Word CV Template, বাংলাদেশ | HereWeGrow',
-    description: `ATS-ফ্রেন্ডলি ও ডিজাইনড CV format, Word-এ এডিটযোগ্য। প্রতিটি টেমপ্লেট ৳${bn(SINGLE_TEMPLATE_PRICE)}, bKash বা Nagad-এ পেমেন্টের পরই ডাউনলোড।`,
+    title: 'Word CV Template ও সিভি টেমপ্লেট, বাংলাদেশ | HereWeGrow',
+    description: `ATS-ফ্রেন্ডলি ও ডিজাইনড Word CV template, নিজে এডিটযোগ্য। প্রতিটি টেমপ্লেট ৳${bn(SINGLE_TEMPLATE_PRICE)}, bKash বা Nagad-এ পেমেন্টের পরই ডাউনলোড।`,
   },
   '/about': {
     title: 'About HereWeGrow and Career Solutions | CV expert in Bangladesh',

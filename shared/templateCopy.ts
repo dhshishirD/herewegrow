@@ -366,7 +366,7 @@ export function templateGuide(t: Template, all: readonly Template[] = TEMPLATES)
   const more: GuideLink[] = [];
   const liveCat = liveCategoryFor(hub);
   if (liveCat) more.push({ href: categoryPath(liveCat.slug), text: liveCat.h1 });
-  more.push({ href: '/templates', text: 'সব সিভি টেমপ্লেট' });
+  more.push({ href: '/templates', text: 'সব সিভি টেমপ্লেট' }, { href: '/cv-format-bd', text: 'সিভি ফরম্যাট: লেখার নিয়ম ও টিপস' });
   const siblings = all.filter((s) => s.id !== t.id && s.sector === t.sector && linkable(s));
   const start = siblings.length ? h % siblings.length : 0;
   for (let i = 0; i < Math.min(4, siblings.length); i++) {

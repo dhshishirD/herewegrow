@@ -12,8 +12,10 @@ describe('/templates hub metadata', () => {
   const { title, description } = routeSeo('/templates')!;
   it('keeps the title within 60 characters and leads with the search phrase', () => {
     expect(title.length).toBeLessThanOrEqual(60);
-    expect(title).toContain('CV Format');
+    expect(title).toContain('CV Template');
     expect(title).toContain('Word');
+    // "CV format" belongs to the /cv-format-bd pillar, so the hub must not compete for it.
+    expect(title).not.toMatch(/cv format|সিভি ফরম্যাট/i);
     expect(title).not.toMatch(/free|ফ্রি/i);
   });
   it('has a description of at most 155 characters with Word, ATS, price and bKash/Nagad', () => {

@@ -195,6 +195,47 @@ const HUB_COPY: Record<string, Copy & { noun: string }> = {
   },
 };
 
+HUB_COPY.europass = {
+  noun: 'সিভি',
+  forWhom: [
+    'ইউরোপাস-ধাঁচের (Europass-style) সিভি ফরম্যাট চাইলে। এটি অফিসিয়াল Europass পোর্টালের ফাইল নয়, সেই ধরনের গোছানো কাঠামোর একটি Word ফরম্যাট।',
+    'বিদেশে পড়াশোনা বা চাকরির আবেদনে ইউরোপাস-ধাঁচের গোছানো সিভি লাগলে। শিক্ষা, অভিজ্ঞতা ও ভাষা-দক্ষতা সারিবদ্ধভাবে দেখানোর জায়গা আছে।',
+  ],
+  tips: [
+    'ভাষা-দক্ষতা ও আপনার শিক্ষা-অভিজ্ঞতার সময়কাল পরিষ্কার লিখুন।',
+    'আবেদনের দেশ বা প্রতিষ্ঠান যে তথ্য চায়, শুধু সেটুকু রাখলে সিভি ছোট থাকে।',
+  ],
+  who: {
+    q: 'এটি কি অফিসিয়াল Europass ফাইল?',
+    a: 'না। এটি Europass-ধাঁচে সাজানো আমাদের নিজস্ব Word ফরম্যাট, তাই নিজের মতো এডিট করা যায়।',
+  },
+} as Copy & { noun: string };
+
+/** English search phrase for the page topic, by hub first and then by sector. Phrases come from the keyword research. */
+const TOPIC_HUB: Record<string, string> = {
+  'marriage-biodata': 'marriage biodata format',
+  'job-biodata': 'job biodata format',
+  gulf: 'Gulf job CV format',
+  'graphic-designer': 'graphic designer CV format',
+  europass: 'Europass CV template',
+  simple: 'simple CV format',
+  modern: 'modern CV template',
+  it: 'CV format for IT jobs',
+  nurse: 'CV format for nurses',
+  teacher: 'CV format for teaching jobs',
+  fresher: 'CV format for freshers',
+};
+const TOPIC_SECTOR: Record<string, string> = {
+  fresher: 'CV format for freshers',
+  banking: 'professional CV format for bank and finance jobs',
+  corporate: 'professional CV format for corporate jobs',
+  teaching: 'CV format for teaching jobs',
+  engineering: 'CV format for engineering and IT jobs',
+  sales: 'professional CV format for sales and marketing jobs',
+  medical: 'CV format for nurses and doctors',
+  other: 'professional CV format for job',
+};
+
 const COLOR_BN: Record<string, string> = {
   Blue: 'নীল',
   'Clean White': 'সাদা',
@@ -204,9 +245,14 @@ const COLOR_BN: Record<string, string> = {
 
 /** Stable string hash so the same template always gets the same variant. */
 export function hashId(id: string): number {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-  return h;
+  // FNV-1a with a final mix, so every bit depends on the whole id.
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619) >>> 0;
+  h ^= h >>> 16;
+  h = Math.imul(h, 2246822507) >>> 0;
+  h ^= h >>> 13;
+  h = Math.imul(h, 3266489909) >>> 0;
+  return (h ^ (h >>> 16)) >>> 0;
 }
 
 export interface GuideLink {
@@ -237,41 +283,82 @@ export function templateGuide(t: Template, all: readonly Template[] = TEMPLATES)
   const copy: Copy = hubCopy ?? SECTOR_COPY[t.sector];
   const noun = hubCopy?.noun ?? 'সিভি';
   const h = hashId(t.id);
+  /** Independent 0/1 choice for a named slot of this template. */
+  const pick = (slot: string): 0 | 1 => (hashId(`${t.id}#${slot}`) % 2) as 0 | 1;
   const price = bnPrice();
   const styleBn = t.style === 'ats' ? 'ATS-ফ্রেন্ডলি' : 'ডিজাইনড';
   const field = hubCopy ? (CATEGORIES.find((c) => c.id === hub)?.name.bn ?? sector.name.bn) : sector.name.bn;
 
-  const summary = `${t.title.bn}: ${bnNum(t.pages)} পৃষ্ঠার ${styleBn} Word ${noun} ফরম্যাট, ${field} ক্ষেত্রের জন্য। মূল্য ${price}।`;
+  const topic = TOPIC_HUB[hub] ?? TOPIC_SECTOR[t.sector];
+  const summary = `${t.title.bn}: ${bnNum(t.pages)} পৃষ্ঠার ${styleBn} Word ${noun} ফরম্যাট (${topic}), ${field} ক্ষেত্রের জন্য। মূল্য ${price}।`;
+  const pageNote =
+    t.pages === 1
+      ? 'এক পৃষ্ঠার ফরম্যাট, তাই সিভি সংক্ষিপ্ত ও এক নজরে পড়ার মতো রাখা সহজ।'
+      : t.pages === 2
+        ? 'দুই পৃষ্ঠায় অভিজ্ঞতা ও দক্ষতা তুলনামূলক বিস্তারিত লেখার জায়গা আছে।'
+        : `${bnNum(t.pages)} পৃষ্ঠার এই ফরম্যাটে বিস্তারিত তথ্য, প্রজেক্ট বা প্রকাশনার জন্য বাড়তি জায়গা মেলে।`;
+  const photoNote =
+    t.photo === true
+      ? 'ছবি বসানোর জায়গা আছে, দরকার না হলে মুছে দেওয়া যায়।'
+      : t.photo === false
+        ? 'এতে ছবির জায়গা নেই, তাই ছবি ছাড়া আবেদনের জন্য সুবিধা।'
+        : '';
+  const kwLine = [
+    `${topic} খুঁজছেন? বাংলাদেশের চাকরির আবেদনের জন্য সাজানো এই Word CV template কিনে সরাসরি নিজের তথ্য বসাতে পারবেন।`,
+    `বাংলাদেশে চাকরির আবেদনে ${topic} হিসেবে ব্যবহার করার মতো একটি ${styleBn} Word ফাইল। কেনার পর নিজের মতো এডিট করা যায়।`,
+  ][pick('kw')];
+  const styleNote =
+    t.style === 'ats'
+      ? [
+          'ATS-ফ্রেন্ডলি লেআউটে জটিল গ্রাফিক কম থাকে, তাই অনলাইন পোর্টালে আপলোড করলেও লেখা সাধারণত সহজে পড়া যায়।',
+          'সাদামাটা ATS-ফ্রেন্ডলি কাঠামো, যা পোর্টালে আপলোড ও প্রিন্ট দুই কাজেই সুবিধাজনক।',
+        ][pick('style')]
+      : [
+          'ডিজাইনড লেআউট প্রথম দেখাতেই চোখে পড়ে। অনলাইন পোর্টালে আপলোডের আগে ATS-ফ্রেন্ডলি ভার্সন লাগবে কি না ভেবে দেখুন।',
+          'এই ডিজাইনড ফরম্যাট প্রিন্ট করা বা সরাসরি ইমেইলে পাঠানো সিভির জন্য ভালো মানায়।',
+        ][pick('style')];
 
-  const contents: string[] = [`${bnNum(t.pages)} পৃষ্ঠার ${noun} ফরম্যাট, Word (.docx) ফাইল হিসেবে`];
+  const contents: string[] = [`${t.title.bn}: ${bnNum(t.pages)} পৃষ্ঠার ${noun} ফরম্যাট, Word (.docx) ফাইল হিসেবে`];
   if (t.photo === true) contents.push('ছবি বসানোর জায়গা আছে');
   else if (t.photo === false) contents.push('ছবি ছাড়া ফরম্যাট');
   if (t.color && COLOR_BN[t.color]) contents.push(`প্রধান রং: ${COLOR_BN[t.color]}`);
   contents.push(
     t.style === 'ats'
-      ? 'ATS-ফ্রেন্ডলি সাদামাটা লেআউট, সহজ হেডিং ও পরিষ্কার সেকশন'
-      : 'ডিজাইনড লেআউট, যেখানে সেকশনগুলো আলাদা ব্লকে সাজানো',
+      ? ['ATS-ফ্রেন্ডলি সাদামাটা লেআউট, সহজ হেডিং ও পরিষ্কার সেকশন', 'সহজ হেডিংসহ ATS-ফ্রেন্ডলি লেআউট, যেখানে সেকশনগুলো আলাদা করে চেনা যায়'][pick('c1')]
+      : ['ডিজাইনড লেআউট, যেখানে সেকশনগুলো আলাদা ব্লকে সাজানো', 'রঙ ও ব্লক ব্যবহার করা ডিজাইনড লেআউট, তবুও সব লেখা এডিট করা যায়'][pick('c1')],
   );
   contents.push('Word-এ লেখা, ফন্ট ও সেকশন নিজের মতো এডিট করা যায়');
   if (t.bonus?.length) contents.push('কেনার সঙ্গে বোনাস ফাইল যুক্ত থাকে');
   else contents.push('PDF হিসেবে সেভ করে সরাসরি আবেদনে পাঠানো যায়');
 
   const steps = [
-    `bKash বা Nagad-এ ${price} পরিশোধ করুন।`,
-    'পরিশোধের পর .docx ফাইলটি ডাউনলোড করুন।',
-    'ফাইলটি Word-এ খুলে নমুনা লেখার জায়গায় নিজের তথ্য বসান।',
-    'শেষে Word থেকেই PDF হিসেবে সেভ করে আবেদনে ব্যবহার করুন।',
+    [`bKash বা Nagad-এ ${price} পরিশোধ করুন।`, `প্রথমে bKash বা Nagad দিয়ে ${price} পেমেন্ট সম্পন্ন করুন।`][pick('s1')],
+    ['পরিশোধের পর .docx ফাইলটি ডাউনলোড করুন।', 'পেমেন্টের পরেই .docx ফাইলটি নিজের ডিভাইসে ডাউনলোড করে নিন।'][pick('s2')],
+    ['ফাইলটি Word-এ খুলে নমুনা লেখার জায়গায় নিজের তথ্য বসান।', 'Word-এ ফাইলটি খুলুন এবং নমুনা লেখাগুলো মুছে নিজের নাম, শিক্ষা ও অভিজ্ঞতা লিখুন।'][pick('s3')],
+    ['শেষে Word থেকেই PDF হিসেবে সেভ করে আবেদনে ব্যবহার করুন।', 'সবশেষে "Save as" দিয়ে PDF করে নিন, তারপর আবেদনে বা ইমেইলে পাঠান।'][pick('s4')],
   ];
 
   const faq = [
-    {
-      q: 'Word-এ এডিট করা যাবে?',
-      a: 'হ্যাঁ। ফাইলটি .docx ফরম্যাটে পাবেন, যা Microsoft Word ও Google Docs-এ খোলে। নমুনা লেখা মুছে নিজের তথ্য বসাতে পারবেন।',
-    },
-    {
-      q: 'পেমেন্টের পর কখন ডাউনলোড করতে পারব?',
-      a: `bKash বা Nagad-এ ${price} পরিশোধের পরেই ডাউনলোড করা যায়।`,
-    },
+    [
+      {
+        q: 'Word-এ এডিট করা যাবে?',
+        a: `হ্যাঁ। ${t.title.bn} ফাইলটি .docx ফরম্যাটে পাবেন, যা Microsoft Word ও Google Docs-এ খোলে। নমুনা লেখা মুছে নিজের তথ্য বসাতে পারবেন।`,
+      },
+      {
+        q: 'এই CV template কি নিজের মতো বদলানো যায়?',
+        a: `হ্যাঁ। ${t.title.bn} একটি .docx ফাইল, তাই Word বা Google Docs-এ লেখা, ফন্ট ও সেকশন নিজের মতো বদলে নিতে পারবেন।`,
+      },
+    ][pick('faq1')],
+    [
+      {
+        q: 'পেমেন্টের পর কখন ডাউনলোড করতে পারব?',
+        a: `bKash বা Nagad-এ ${price} পরিশোধের পরেই ডাউনলোড করা যায়।`,
+      },
+      {
+        q: `${price} দিলে কী পাব, কীভাবে পাব?`,
+        a: `bKash বা Nagad-এ ${price} পরিশোধ করলে ${t.pages > 1 ? `${bnNum(t.pages)} পৃষ্ঠার ` : ''}Word ফাইলটি ডাউনলোডের জন্য পাবেন।`,
+      },
+    ][pick('faq2')],
     copy.who,
   ];
 
@@ -290,7 +377,7 @@ export function templateGuide(t: Template, all: readonly Template[] = TEMPLATES)
   return {
     summary,
     forWhomHeading: 'এই ফরম্যাট কার জন্য',
-    forWhom: `${copy.forWhom[h % 2]} ${copy.tips[(h >>> 1) % 2]}`,
+    forWhom: `${copy.forWhom[pick('who')]} ${kwLine} ${styleNote} ${pageNote} ${photoNote} ${copy.tips[pick('tip')]}`.replace(/\s+/g, ' '),
     contentsHeading: 'ফরম্যাটের ভেতরে কী আছে',
     contents,
     editHeading: 'Word-এ কীভাবে এডিট করবেন',

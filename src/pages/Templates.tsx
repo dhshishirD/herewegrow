@@ -16,6 +16,7 @@ import { setPageMeta } from '../lib/seo';
 import { track } from '../lib/track';
 import { ON_SALE_COUNT, canonicalPathFor, isListed, isRetired, leadOf, shouldIndex, variantsOf } from '../../shared/templateTiers';
 import { NotFound } from './Policies';
+import { templateGuide } from '../../shared/templateCopy';
 
 const PAGE_SIZE = 24;
 const thumb = (id: string) => `/templates/${id}/thumb.webp`;
@@ -387,6 +388,7 @@ export function TemplateDetail({ id }: { id: string }) {
   const packs = PRODUCTS.filter((p) => p.kind === 'pack' && p.templates?.includes(tpl.id)).sort((a, b) => a.price - b.price);
   const moreLayouts = variantsOf(tpl.id).map((x) => findTemplate(x)).filter((x): x is Template => !!x);
   const related = applyOverrides(TEMPLATES.filter((x) => isListed(x.id)), map).filter((x) => hubOf(x) === hubOf(tpl) && x.id !== tpl.id).slice(0, 4);
+  const guide = templateGuide(tpl);
 
   return (
     <>
@@ -518,6 +520,27 @@ export function TemplateDetail({ id }: { id: string }) {
             )}
           </div>
         </aside>
+      </section>
+
+      <section className="wrap max-w-3xl py-10" aria-label={guide.summary}>
+        <p className="text-lg text-muted">{guide.summary}</p>
+        <h2 className="mt-8 text-2xl font-bold">{guide.forWhomHeading}</h2>
+        <p className="mt-3">{guide.forWhom}</p>
+        <h2 className="mt-8 text-2xl font-bold">{guide.contentsHeading}</h2>
+        <ul className="mt-3 list-disc space-y-1.5 pl-6">{guide.contents.map((c) => <li key={c}>{c}</li>)}</ul>
+        <h2 className="mt-8 text-2xl font-bold">{guide.editHeading}</h2>
+        <ol className="mt-3 list-decimal space-y-1.5 pl-6">{guide.steps.map((c) => <li key={c}>{c}</li>)}</ol>
+        <h2 className="mt-8 text-2xl font-bold">{guide.faqHeading}</h2>
+        {guide.faq.map((f) => (
+          <div key={f.q} className="mt-4">
+            <h3 className="text-lg font-semibold">{f.q}</h3>
+            <p className="mt-1">{f.a}</p>
+          </div>
+        ))}
+        <h2 className="mt-8 text-2xl font-bold">{guide.moreHeading}</h2>
+        <ul className="mt-3 list-disc space-y-1.5 pl-6">
+          {guide.more.map((l) => <li key={l.href}><Link href={l.href} className="font-semibold text-leaf hover:underline">{l.text}</Link></li>)}
+        </ul>
       </section>
 
       {moreLayouts.length > 0 && (

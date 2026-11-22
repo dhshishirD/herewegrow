@@ -55,3 +55,57 @@ describe('template page titles and descriptions', () => {
     }
   });
 });
+
+// ---- Prompt 2: real body content ----
+import { templateGuide, bnNum } from './templateCopy';
+import { SINGLE_TEMPLATE_PRICE as PRICE } from './templates';
+import { CATEGORY_PAGES_LIVE as LIVE } from './templateTiers';
+
+const esc2 = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function bodyHtml(t: (typeof TEMPLATES)[number]): string {
+  const g = templateGuide(t);
+  const a = (l: { href: string; text: string }) => `<a href="${l.href}">${esc2(l.text)}</a>`;
+  return [
+    `<h1>${esc2(t.title.bn)}</h1><p>${esc2(g.summary)}</p>`,
+    `<h2>${g.forWhomHeading}</h2><p>${esc2(g.forWhom)}</p>`,
+    `<h2>${g.contentsHeading}</h2><ul>${g.contents.map((c) => `<li>${esc2(c)}</li>`).join('')}</ul>`,
+    `<h2>${g.editHeading}</h2><ol>${g.steps.map((c) => `<li>${esc2(c)}</li>`).join('')}</ol>`,
+    `<h2>${g.faqHeading}</h2>${g.faq.map((f) => `<h3>${esc2(f.q)}</h3><p>${esc2(f.a)}</p>`).join('')}`,
+    `<h2>${g.moreHeading}</h2><ul>${g.more.map((l) => `<li>${a(l)}</li>`).join('')}</ul>`,
+  ].join('');
+}
+const words = (html: string) => html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+
+describe('template page body content', () => {
+  const pages = INDEXABLE;
+  it('has real content on every indexable page', () => {
+    expect(pages.length).toBeGreaterThan(60);
+    for (const t of pages) {
+      const h = bodyHtml(t);
+      expect(words(h), t.id).toBeGreaterThanOrEqual(120);
+      expect((h.match(/<h2>/g) ?? []).length, t.id).toBeGreaterThanOrEqual(2);
+      expect((h.match(/<h1>/g) ?? []).length, t.id).toBe(1);
+      expect(h, t.id).not.toMatch(/undefined|NaN|\[object/);
+      expect(h, t.id).toContain(`৳${bnNum(PRICE)}`);
+    }
+  });
+  it('links only to indexable pages', () => {
+    for (const t of pages) {
+      for (const l of templateGuide(t).more) {
+        const m = l.href.match(/^\/templates\/([^/]+)$/);
+        if (m && m[1] !== 'category') {
+          const o = TEMPLATES.find((x) => x.id === m[1])!;
+          expect(o && !isRetired(o.id) && shouldIndex(o) && !isVariant(o.id), `${t.id} -> ${m[1]}`).toBe(true);
+        }
+        if (l.href.startsWith('/templates/category')) expect(LIVE).toBe(true);
+      }
+    }
+  });
+  it('is deterministic and different across sectors', () => {
+    const t = pages[0];
+    expect(templateGuide(t).forWhom).toBe(templateGuide(t).forWhom);
+    const bySector = new Map<string, string>();
+    for (const x of pages) bySector.set(x.sector + '/' + x.hub, templateGuide(x).forWhom);
+    expect(new Set(bySector.values()).size).toBeGreaterThan(5);
+  });
+});

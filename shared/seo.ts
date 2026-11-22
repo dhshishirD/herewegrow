@@ -147,7 +147,7 @@ export function routeSeo(path: string): RouteSeo | undefined {
   if (hs) return { title: hs.title, description: hs.description };
   const gm = path.match(/^\/guides\/([a-z0-9-]+)$/);
   const guide = gm ? findGuide(gm[1]) : undefined;
-  if (guide) return { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };
+  if (guide) return guide.seo ?? { title: `${guide.title.bn} | HereWeGrow`, description: guide.summary };
   const m = path.match(/^\/templates\/([a-z0-9-]+)$/);
   const t = m ? findTemplate(m[1]) : undefined;
   if (!t) return undefined;

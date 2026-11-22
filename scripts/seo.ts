@@ -332,7 +332,7 @@ function pages(): Page[] {
     list.push({
       path: `/guides/${g.slug}`,
       ...seo(`/guides/${g.slug}`),
-      body: `<article lang="bn"><h1>${esc(g.title.bn)}</h1><p>${esc(g.summary)}</p>${g.body.map(blockHtml).join('')}<p>${link(g.cta.href, g.cta.label.bn)}</p></article>`,
+      body: `<article lang="bn"><h1>${esc(g.title.bn)}</h1><p>${esc(g.summary)}</p>${g.body.map(blockHtml).join('')}<p>${link(g.cta.href, g.cta.label.bn)}</p>${g.related?.length ? `<h2>আরও পড়ুন</h2><ul>${g.related.map((r) => `<li>${link(r.href, r.label.bn)}</li>`).join('')}</ul>` : ''}</article>`,
       jsonLd: [
         {
           '@type': 'Article',
@@ -341,7 +341,7 @@ function pages(): Page[] {
           description: g.summary,
           inLanguage: 'bn',
           datePublished: g.date,
-          dateModified: g.date,
+          dateModified: g.updated ?? g.date,
           mainEntityOfPage: url,
           image: `${SITE}/og.jpg`,
           author: { '@type': 'Person', name: 'Daloyar Hassan Shishir', url: `${SITE}/about` },
@@ -350,6 +350,7 @@ function pages(): Page[] {
         crumbs([['HereWeGrow', '/'], ['Career guides', '/guides'], [g.title.en, `/guides/${g.slug}`]]),
       ],
       priority: 0.8,
+      lastmod: g.updated,
     });
   }
 

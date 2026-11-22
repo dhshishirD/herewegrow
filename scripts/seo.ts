@@ -23,6 +23,7 @@ import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, TEMPLATES_LASTMOD, shownPage
 import { templateGuide } from '../shared/templateCopy';
 import { categoryPages } from '../shared/categoryHtml';
 import { cvFormatPage } from '../shared/cvFormatHtml';
+import { letterPages } from '../shared/letterHtml';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
@@ -402,6 +403,9 @@ function pages(): Page[] {
 
   // /cv-format-bd pillar (copy in shared/cvFormatPage.ts)
   list.push(cvFormatPage());
+
+  // Bangla letter pages: cover letter, application letter, resignation letter (copy in shared/letterPages.ts)
+  list.push(...letterPages());
 
   // Category buying-guide pages (noindex and out of the sitemap until CATEGORY_PAGES_LIVE is true)
   list.push(...categoryPages());

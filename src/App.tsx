@@ -49,6 +49,7 @@ const LazyBiodata = () => (
   </Suspense>
 );
 const CvFormatLazy = lazy(() => import('./pages/CvFormatPage').then((m) => ({ default: m.CvFormatPage })));
+const LetterLazy = lazy(() => import('./pages/LetterPage').then((m) => ({ default: m.LetterPage })));
 const CategoryRoute = lazy(() => import('./pages/CategoryPage').then((m) => ({ default: m.CategoryPage })));
 const BiodataHub = lazy(() => import('./pages/BiodataPages').then((m) => ({ default: m.BiodataHubPage })));
 const BiodataStyle = lazy(() => import('./pages/BiodataPages').then((m) => ({ default: m.BiodataStylePage })));
@@ -63,6 +64,7 @@ const AcademicCvRoute = () => <Suspense fallback={<div className="wrap py-24 tex
 const ScholarshipCvRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><ScholarshipCv /></Suspense>;
 const HigherStudyRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><HigherStudyHub /></Suspense>;
 const CvFormatRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><CvFormatLazy /></Suspense>;
+const letterRoute = (path: string) => () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><LetterLazy path={path} /></Suspense>;
 const EuropassPillarRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassPillar /></Suspense>;
 const EuropassWordRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><EuropassWord /></Suspense>;
 const PartnerRoute = lazy(() => import('./pages/Partner').then((m) => ({ default: m.PartnerRoute })));
@@ -107,6 +109,9 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/bdjobs-profile-optimization': BdjobsPage,
   '/cv-for-gulf-jobs': GulfPage,
   '/cv-format-bd': CvFormatRoute,
+  '/cover-letter': letterRoute('/cover-letter'),
+  '/application-letter-bangla': letterRoute('/application-letter-bangla'),
+  '/resignation-letter-bangla': letterRoute('/resignation-letter-bangla'),
   '/europass-cv': EuropassPillarRoute,
   '/europass-cv-template-word': EuropassWordRoute,
   '/academic-cv': AcademicCvRoute,

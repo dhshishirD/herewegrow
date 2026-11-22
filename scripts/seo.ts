@@ -19,7 +19,8 @@ import { PROFILE_PAGES } from '../shared/profilePages';
 import { routeSeo } from '../shared/seo';
 import { APP_ONLY_PATHS } from '../shared/appPaths';
 import { BIODATA_FAQ, BIODATA_HUB, BIODATA_HUB_BN, BIODATA_HUB_PATH, BIODATA_MAKER, BIODATA_MAKER_PATH, BIODATA_STYLES, BIODATA_UPDATED, biodataPreview, biodataStylePath } from '../shared/biodataStyles';
-import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages } from '../shared/templates';
+import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, shownPages, type Template } from '../shared/templates';
+import { templateGuide } from '../shared/templateCopy';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
@@ -63,6 +64,20 @@ const crumbs = (items: [string, string][]) => ({
 });
 
 const link = (path: string, text: string) => `<a href="${path}">${esc(text)}</a>`;
+
+/** Plain-HTML body of a template page: real Bangla content built only from template data (shared/templateCopy.ts). */
+function templateBody(t: Template): string {
+  const g = templateGuide(t);
+  return [
+    `<h1>${esc(t.title.bn)}</h1>`,
+    `<p>${esc(g.summary)}</p>`,
+    `<h2>${esc(g.forWhomHeading)}</h2><p>${esc(g.forWhom)}</p>`,
+    `<h2>${esc(g.contentsHeading)}</h2><ul>${g.contents.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>`,
+    `<h2>${esc(g.editHeading)}</h2><ol>${g.steps.map((c) => `<li>${esc(c)}</li>`).join('')}</ol>`,
+    `<h2>${esc(g.faqHeading)}</h2>${g.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}`,
+    `<h2>${esc(g.moreHeading)}</h2><ul>${g.more.map((l) => `<li>${link(l.href, l.text)}</li>`).join('')}</ul>`,
+  ].join('');
+}
 
 /** Paths of every page the build writes (used by tests). */
 export const seoPagePaths = () => pages().map((p) => p.path);
@@ -396,7 +411,7 @@ function pages(): Page[] {
       path: `/templates/${t.id}`,
       ...seo(`/templates/${t.id}`),
       image: `${url}/page-1.webp`,
-      body: `<h1>${esc(t.title.bn)}</h1><p>${esc(t.title.en)}. ${bn(t.pages)} পৃষ্ঠা, ${style.bn}। ৳${SINGLE_TEMPLATE_PRICE}।</p><p>${link('/templates', 'সব সিভি টেমপ্লেট')}</p>`,
+      body: templateBody(t),
       jsonLd: [
         {
           '@type': 'Product',

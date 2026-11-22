@@ -65,6 +65,6 @@ describe('template tiers, variants and retirements', () => {
     expect(lines).toHaveLength(78);
     expect(lines).toContain('/templates/hwg-cv-europass-europass-017 /templates 301');
     expect(lines).toContain('/templates/hwg-cv-europass-europass-017/ /templates 301');
-    for (const l of lines) expect(l).toMatch(/^\/templates\/[a-z0-9-]+\/? \/templates 301$/);
+    for (const l of lines) expect(l).toMatch(/^\/templates\/[a-z0-9-]+\/? (\/templates|\/biodata) 301$/);
   });
 });

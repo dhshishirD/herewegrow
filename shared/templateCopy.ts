@@ -2,7 +2,8 @@
 // and the React page (src/pages/Templates.tsx), so crawlers and visitors read the same text.
 // Everything here comes from template data or from short, general sentences. No invented facts.
 import { TEMPLATES, SECTORS, SINGLE_TEMPLATE_PRICE, CATEGORIES, hubOf, type Template } from './templates';
-import { CATEGORY_PAGES_LIVE, isRetired, isVariant, shouldIndex } from './templateTiers';
+import { isRetired, isVariant, shouldIndex } from './templateTiers';
+import { categoryPath, liveCategoryFor } from './categoryCopy';
 
 const DIGITS = '০১২৩৪৫৬৭৮৯';
 export const bnNum = (n: number | string): string => String(n).replace(/\d/g, (d) => DIGITS[Number(d)]);
@@ -363,9 +364,8 @@ export function templateGuide(t: Template, all: readonly Template[] = TEMPLATES)
   ];
 
   const more: GuideLink[] = [];
-  if (CATEGORY_PAGES_LIVE && CATEGORIES.some((c) => c.id === hub)) {
-    more.push({ href: `/templates/category/${hub}`, text: `আরও ${CATEGORIES.find((c) => c.id === hub)!.name.bn} সিভি ফরম্যাট` });
-  }
+  const liveCat = liveCategoryFor(hub);
+  if (liveCat) more.push({ href: categoryPath(liveCat.slug), text: liveCat.h1 });
   more.push({ href: '/templates', text: 'সব সিভি টেমপ্লেট' });
   const siblings = all.filter((s) => s.id !== t.id && s.sector === t.sector && linkable(s));
   const start = siblings.length ? h % siblings.length : 0;

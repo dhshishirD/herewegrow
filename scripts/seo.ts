@@ -21,6 +21,7 @@ import { APP_ONLY_PATHS } from '../shared/appPaths';
 import { BIODATA_FAQ, BIODATA_HUB, BIODATA_HUB_BN, BIODATA_HUB_PATH, BIODATA_MAKER, BIODATA_MAKER_PATH, BIODATA_STYLES, BIODATA_UPDATED, biodataPreview, biodataStylePath } from '../shared/biodataStyles';
 import { SECTORS, SINGLE_TEMPLATE_PRICE, TEMPLATES, TEMPLATES_LASTMOD, shownPages, type Template } from '../shared/templates';
 import { templateGuide } from '../shared/templateCopy';
+import { categoryPages } from '../shared/categoryHtml';
 import { canonicalPathFor, isListed, isRetired, isVariant, redirectsFile, shouldIndex } from '../shared/templateTiers';
 
 /** Retired templates have no page (the Worker answers 301). Tiers and variants: see shared/templateTiers.ts. */
@@ -396,6 +397,9 @@ function pages(): Page[] {
       images: [bioPreview(x.slug)],
     });
   }
+
+  // Category buying-guide pages (noindex and out of the sitemap until CATEGORY_PAGES_LIVE is true)
+  list.push(...categoryPages());
 
   // Europass-style CV: pillar, template hub and Word page (copy in shared/europassPages.ts)
   list.push(...europassPages());

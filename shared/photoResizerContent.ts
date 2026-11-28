@@ -166,6 +166,7 @@ export const PHOTO_FAQ: { q: Bilingual; a: Bilingual }[] = [
 export const PHOTO_RELATED: { href: string; label: Bilingual }[] = [
   { href: '/guides/teletalk-photo-signature-size', label: { en: 'Guide: Teletalk photo and signature rules (Bangla)', bn: 'গাইড: টেলিটকের ছবি ও স্বাক্ষরের নিয়ম' } },
   { href: '/tools/passport-size-photo-maker', label: { en: 'Passport size photo maker (35×45 mm and more)', bn: 'পাসপোর্ট সাইজ ছবি মেকার' } },
+  { href: '/tools/professional-cv-photo', label: { en: 'Professional photo for your CV (white background, framing)', bn: 'সিভির জন্য পেশাদার ছবি (সাদা ব্যাকগ্রাউন্ড, ফ্রেমিং)' } },
   { href: '/builder', label: { en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' } },
   { href: '/tools/cv-checker', label: { en: 'Free CV checker', bn: 'ফ্রি সিভি চেকার' } },
   { href: '/tools/application-letter', label: { en: 'Application letter generator', bn: 'আবেদনপত্র জেনারেটর' } },

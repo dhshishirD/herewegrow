@@ -5,6 +5,7 @@
 
 import { BUILDER_FAQ, BUILDER_STEPS, BUILDER_UPDATED, designsByGroup, templateForDesign } from '../shared/builderContent';
 import { PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FORMATS, PHOTO_INTRO, PHOTO_PRIVACY, PHOTO_SECTIONS, PHOTO_SOURCES, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_STEPS, PHOTO_UPDATED_LABEL } from '../shared/photoResizerContent';
+import { CVPHOTO_ANSWER, CVPHOTO_AUTHOR, CVPHOTO_COLOURS, CVPHOTO_COLOURS_HEADING, CVPHOTO_DOWNLOAD_NOTE, CVPHOTO_FAQ, CVPHOTO_H1, CVPHOTO_INTRO, CVPHOTO_LIMITS, CVPHOTO_MISTAKES, CVPHOTO_NOT, CVPHOTO_NOT_HEADING, CVPHOTO_PASSPORTSTYLE, CVPHOTO_PATH, CVPHOTO_PRIVACY, CVPHOTO_RELATED, CVPHOTO_SOURCES, CVPHOTO_STEPS, CVPHOTO_TAKE, CVPHOTO_TAKE_HEADING, CVPHOTO_TAKE_INTRO, CVPHOTO_UPDATED_LABEL } from '../shared/cvPhotoContent';
 import { PASSPORT_AUTHOR, PASSPORT_FAQ, PASSPORT_INTRO, PASSPORT_MISTAKES, PASSPORT_PATH, PASSPORT_RELATED, PASSPORT_SIZE_NOTE, PASSPORT_SIZE_TABLE, PASSPORT_SOURCES, PASSPORT_STEPS, PASSPORT_TAKE, PASSPORT_UPDATED_LABEL } from '../shared/passportPhotoContent';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -147,7 +148,7 @@ function pages(): Page[] {
     {
       path: '/tools',
       ...seo('/tools'),
-      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/passport-size-photo-maker', 'পাসপোর্ট সাইজ ছবি মেকার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li><li>${link('/tools/scam-shield', 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার')}</li></ul>`,
+      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/passport-size-photo-maker', 'পাসপোর্ট সাইজ ছবি মেকার')}</li><li>${link(CVPHOTO_PATH, 'সিভির জন্য পেশাদার ছবি')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li><li>${link('/tools/scam-shield', 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার')}</li></ul>`,
       priority: 0.7,
     },
     {
@@ -201,6 +202,17 @@ function pages(): Page[] {
         { '@type': 'WebApplication', name: 'Passport size photo maker', url: `${SITE}${PASSPORT_PATH}`, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', inLanguage: ['bn', 'en'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } },
         { '@type': 'FAQPage', mainEntity: PASSPORT_FAQ.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })) },
         crumbs([['HereWeGrow', '/'], ['Free tools', '/tools'], ['Photo and signature resizer', '/tools/photo-signature-resizer'], ['Passport size photo maker', PASSPORT_PATH]]),
+      ],
+      priority: 0.8,
+    },
+    {
+      path: CVPHOTO_PATH,
+      ...seo(CVPHOTO_PATH),
+      body: `<h1>${esc(CVPHOTO_H1.bn)}</h1><p>${esc(CVPHOTO_INTRO.bn)}</p><h2>সংক্ষিপ্ত উত্তর</h2><p>${esc(CVPHOTO_ANSWER.bn)}</p><h2>প্রফেশনাল সিভি ছবি বানানোর ৪ ধাপ</h2><ol>${CVPHOTO_STEPS.map((x) => `<li><strong>${esc(x.title.bn)}</strong> ${esc(x.body.bn)}</li>`).join('')}</ol><p>${esc(CVPHOTO_DOWNLOAD_NOTE.bn)}</p><h2>${esc(CVPHOTO_TAKE_HEADING.bn)}</h2><p>${esc(CVPHOTO_TAKE_INTRO.bn)}</p><ul>${CVPHOTO_TAKE.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>${esc(CVPHOTO_COLOURS_HEADING.bn)}</h2><ul>${CVPHOTO_COLOURS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>সাধারণ ভুল</h2><ul>${CVPHOTO_MISTAKES.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h3>টুল যা ভালো পারে না</h3><ul>${CVPHOTO_LIMITS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>${esc(CVPHOTO_NOT_HEADING.bn)}</h2><ul>${CVPHOTO_NOT.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><p>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')} · ${link('/tools/passport-size-photo-maker', 'পাসপোর্ট সাইজ ছবি মেকার')}</p><h2>${esc(CVPHOTO_PASSPORTSTYLE.h2.bn)}</h2><p>${esc(CVPHOTO_PASSPORTSTYLE.p.bn)}</p><h2>আমার ছবি কি নিরাপদ?</h2><ul>${CVPHOTO_PRIVACY.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>সিভি ছবি মেকার নিয়ে প্রশ্ন</h2><ul>${CVPHOTO_FAQ.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><h2>সূত্র</h2><ul>${CVPHOTO_SOURCES.map((x) => `<li><a href="${x.url}" rel="noopener">${esc(x.label.bn)}</a>: ${esc(x.note.bn)}</li>`).join('')}</ul><h2>আরও দেখুন</h2><ul>${CVPHOTO_RELATED.map((l) => `<li>${link(l.href, l.label.bn)}</li>`).join('')}</ul><p>লেখক: ${link(CVPHOTO_AUTHOR.url, CVPHOTO_AUTHOR.name)}, Career Solutions। সর্বশেষ হালনাগাদ ${CVPHOTO_UPDATED_LABEL.bn}।</p>`,
+      jsonLd: [
+        { '@type': 'WebApplication', name: 'Professional CV photo maker', url: `${SITE}${CVPHOTO_PATH}`, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', inLanguage: ['bn', 'en'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } },
+        { '@type': 'FAQPage', mainEntity: CVPHOTO_FAQ.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })) },
+        crumbs([['HereWeGrow', '/'], ['Free tools', '/tools'], ['Professional CV photo', CVPHOTO_PATH]]),
       ],
       priority: 0.8,
     },

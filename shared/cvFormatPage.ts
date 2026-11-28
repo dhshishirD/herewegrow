@@ -183,6 +183,7 @@ export const CV_FORMAT_LINKS: { href: string; text: string }[] = [
   { href: '/europass-cv', text: 'Europass-ধাঁচের সিভি' },
   { href: '/biodata', text: 'বায়োডাটা বানান' },
   { href: '/tools/cv-checker', text: 'সিভি চেকার' },
+  { href: '/tools/professional-cv-photo', text: 'সিভির জন্য পেশাদার ছবি বানান (ফ্রি টুল)' },
 ];
 
 export const CV_FORMAT_NOTE = 'এই পেজের পরামর্শ সাধারণ নির্দেশনা। নির্দিষ্ট চাকরির বিজ্ঞপ্তিতে যা চাওয়া হয়েছে, সেটিই সবার আগে অনুসরণ করুন।';

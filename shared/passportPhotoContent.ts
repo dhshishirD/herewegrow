@@ -107,6 +107,7 @@ export const PASSPORT_SOURCES: { label: Bilingual; url: string; note: Bilingual 
 
 export const PASSPORT_RELATED: { href: string; label: Bilingual }[] = [
   { href: '/tools/photo-signature-resizer', label: { en: 'Photo and signature resizer (job forms, stamp size, KB)', bn: 'ছবি ও স্বাক্ষর রিসাইজার (চাকরির ফর্ম, স্ট্যাম্প সাইজ, KB)' } },
+  { href: '/tools/professional-cv-photo', label: { en: 'Professional CV photo: change the background and frame it (for CVs, not official forms)', bn: 'সিভির জন্য পেশাদার ছবি: ব্যাকগ্রাউন্ড বদলান ও ফ্রেম করুন (সিভির জন্য, সরকারি ফর্মের জন্য নয়)' } },
   { href: '/guides/teletalk-photo-signature-size', label: { en: 'Guide: photo and signature rules for job applications (Bangla)', bn: 'গাইড: চাকরির আবেদনে ছবি ও স্বাক্ষরের নিয়ম' } },
   { href: '/builder', label: { en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' } },
 ];

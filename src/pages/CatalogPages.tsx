@@ -176,6 +176,17 @@ export function ToolsPage() {
       cta: { en: 'Resize a photo', bn: 'ছবি রিসাইজ করুন' },
     },
     {
+      href: '/tools/professional-cv-photo',
+      badge: <span className="font-display text-[0.8rem] font-semibold leading-tight text-leaf">4:5<br />1:1</span>,
+      tone: 'bg-leaf-soft',
+      name: { en: 'Professional CV photo', bn: 'সিভির জন্য পেশাদার ছবি' },
+      body: {
+        en: 'Remove the background, put your photo on white or a light colour and frame head and shoulders. Free, runs in your browser, nothing is uploaded.',
+        bn: 'ব্যাকগ্রাউন্ড সরিয়ে সাদা বা হালকা রং বসান এবং মাথা-কাঁধ ফ্রেমে সাজান। ফ্রি, ব্রাউজারেই চলে, ছবি আপলোড হয় না।',
+      },
+      cta: { en: 'Make a CV photo', bn: 'সিভির ছবি বানান' },
+    },
+    {
       href: '/tools/application-letter',
       badge: <span className="font-display text-xl font-semibold text-leaf">✉</span>,
       tone: 'bg-leaf-soft',

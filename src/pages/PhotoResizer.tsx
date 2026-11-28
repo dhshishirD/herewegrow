@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'rea
 import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
+import { PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FORMATS, PHOTO_PRIVACY, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_STEPS, PHOTO_UPDATED_LABEL } from '../../shared/photoResizerContent';
 
 type PresetId = 'photo' | 'signature' | 'custom';
 
@@ -307,14 +308,70 @@ export function PhotoResizer() {
           </p>
         </div>
       </section>
-      <section className="wrap pb-6">
-        <p className="text-muted">
-          {t({ en: 'New to Teletalk forms? ', bn: 'টেলিটক ফর্মে নতুন? ' })}
-          <Link href="/guides/teletalk-photo-signature-size" className="font-semibold text-leaf underline underline-offset-4">
-            {t({ en: 'Read our guide to photo and signature rules (Bangla)', bn: 'ছবি ও স্বাক্ষরের নিয়ম নিয়ে আমাদের গাইড পড়ুন' })}
-          </Link>
-        </p>
-      </section>
+      <div className="border-t border-line bg-mist">
+        <div className="wrap grid gap-12 py-12">
+          <section aria-labelledby="photo-how">
+            <h2 id="photo-how" className="text-3xl">{t({ en: 'How to resize your photo and signature', bn: 'ছবি ও স্বাক্ষর রিসাইজ করার নিয়ম' })}</h2>
+            <ol className="mt-6 grid gap-4 md:grid-cols-2">
+              {PHOTO_STEPS.map((s, i) => (
+                <li key={s.title.en} className="rounded-2xl bg-white p-5 ring-1 ring-line">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-leaf text-sm font-bold text-white">{num(i + 1, lang)}</span>
+                  <p className="mt-3 font-display text-lg font-semibold">{t(s.title)}</p>
+                  <p className="mt-1 text-muted">{t(s.body)}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section aria-labelledby="photo-formats">
+            <h2 id="photo-formats" className="text-3xl">{t({ en: 'Supported formats', bn: 'কোন ফরম্যাট চলবে' })}</h2>
+            <ul className="mt-4 max-w-3xl list-disc space-y-2 pl-6 text-muted">
+              {PHOTO_FORMATS.map((f) => <li key={f.en}>{t(f)}</li>)}
+            </ul>
+          </section>
+
+          <section aria-labelledby="photo-privacy">
+            <h2 id="photo-privacy" className="text-3xl">{t({ en: 'Is my photo safe?', bn: 'আমার ছবি কি নিরাপদ?' })}</h2>
+            <p className="mt-4 max-w-3xl text-muted">{t(PHOTO_PRIVACY)}</p>
+          </section>
+
+          <section aria-labelledby="photo-rejected">
+            <h2 id="photo-rejected" className="text-3xl">{t({ en: 'Why was my photo or signature rejected?', bn: 'ছবি বা স্বাক্ষর কেন বাতিল হয়?' })}</h2>
+            <ul className="mt-4 max-w-3xl list-disc space-y-2 pl-6 text-muted">
+              {PHOTO_REJECTIONS.map((r) => <li key={r.en}>{t(r)}</li>)}
+            </ul>
+          </section>
+
+          <section aria-labelledby="photo-faq">
+            <h2 id="photo-faq" className="text-3xl">{t({ en: 'Photo and signature questions', bn: 'ছবি ও স্বাক্ষর নিয়ে প্রশ্ন' })}</h2>
+            <div className="mt-6 max-w-3xl space-y-3">
+              {PHOTO_FAQ.map((f) => (
+                <details key={f.q.en} className="group rounded-2xl bg-white p-5 ring-1 ring-line">
+                  <summary className="cursor-pointer list-none font-semibold marker:hidden">{t(f.q)}</summary>
+                  <p className="mt-2 text-muted">{t(f.a)}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          <section aria-labelledby="photo-next">
+            <h2 id="photo-next" className="text-3xl">{t({ en: 'Next steps for your application', bn: 'আবেদনের পরের ধাপ' })}</h2>
+            <ul className="mt-4 space-y-2">
+              {PHOTO_RELATED.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="font-semibold text-leaf underline underline-offset-4">{t(l.label)}</Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <p className="text-sm text-muted">
+            {t({ en: 'By ', bn: 'লেখক: ' })}
+            <Link href={PHOTO_AUTHOR.url} className="underline underline-offset-4">{PHOTO_AUTHOR.name}</Link>
+            {t({ en: `, Career Solutions. Last updated ${PHOTO_UPDATED_LABEL.en}.`, bn: `, Career Solutions। সর্বশেষ হালনাগাদ ${PHOTO_UPDATED_LABEL.bn}।` })}
+          </p>
+        </div>
+      </div>
     </>
   );
 }

@@ -20,6 +20,7 @@ import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
+import { PassportPhotoMaker } from './pages/PassportPhotoMaker';
 import { ApplicationLetter } from './pages/ApplicationLetter';
 import { JobMatch } from './pages/JobMatch';
 import { ScamShield } from './pages/ScamShield';
@@ -48,6 +49,8 @@ const LazyBiodata = () => (
     <BiodataPageLazy />
   </Suspense>
 );
+const ProCvPhotoLazy = lazy(() => import('./pages/ProCvPhoto').then((m) => ({ default: m.ProCvPhoto })));
+const ProCvPhotoRoute = () => <Suspense fallback={<div className="wrap py-24 text-muted">…</div>}><ProCvPhotoLazy /></Suspense>;
 const CvFormatLazy = lazy(() => import('./pages/CvFormatPage').then((m) => ({ default: m.CvFormatPage })));
 const LetterLazy = lazy(() => import('./pages/LetterPage').then((m) => ({ default: m.LetterPage })));
 const CategoryRoute = lazy(() => import('./pages/CategoryPage').then((m) => ({ default: m.CategoryPage })));
@@ -90,6 +93,8 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/builder': LazyBuilder,
   '/biodata': LazyBiodata,
   '/tools/photo-signature-resizer': PhotoResizer,
+  '/tools/passport-size-photo-maker': PassportPhotoMaker,
+  '/tools/professional-cv-photo': ProCvPhotoRoute,
   '/tools/application-letter': ApplicationLetter,
   '/tools/job-match': JobMatch,
   '/tools/scam-shield': ScamShield,

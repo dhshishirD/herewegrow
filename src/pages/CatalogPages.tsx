@@ -170,10 +170,21 @@ export function ToolsPage() {
       tone: 'bg-gold-soft',
       name: { en: 'Photo and signature resizer', bn: 'ছবি ও স্বাক্ষর রিসাইজার' },
       body: {
-        en: 'Exact Teletalk sizes for government job forms: photo 300×300 under 100 KB, signature 300×80 under 60 KB.',
-        bn: 'সরকারি চাকরির টেলিটক ফর্মের সঠিক মাপ: ছবি ৩০০×৩০০ (১০০ KB-এর কম), স্বাক্ষর ৩০০×৮০ (৬০ KB-এর কম)।',
+        en: 'Photo 300×300 and signature 300×80 for government job forms, plus passport size, stamp size and KB targets. Runs in your browser.',
+        bn: 'সরকারি চাকরির ফর্মের জন্য ছবি ৩০০×৩০০ ও স্বাক্ষর ৩০০×৮০, সাথে পাসপোর্ট সাইজ, স্ট্যাম্প সাইজ ও KB লক্ষ্য। ব্রাউজারেই চলে।',
       },
       cta: { en: 'Resize a photo', bn: 'ছবি রিসাইজ করুন' },
+    },
+    {
+      href: '/tools/professional-cv-photo',
+      badge: <span className="font-display text-[0.8rem] font-semibold leading-tight text-leaf">4:5<br />1:1</span>,
+      tone: 'bg-leaf-soft',
+      name: { en: 'Professional CV photo', bn: 'সিভির জন্য পেশাদার ছবি' },
+      body: {
+        en: 'Remove the background, put your photo on white or a light colour and frame head and shoulders. Free, runs in your browser, nothing is uploaded.',
+        bn: 'ব্যাকগ্রাউন্ড সরিয়ে সাদা বা হালকা রং বসান এবং মাথা-কাঁধ ফ্রেমে সাজান। ফ্রি, ব্রাউজারেই চলে, ছবি আপলোড হয় না।',
+      },
+      cta: { en: 'Make a CV photo', bn: 'সিভির ছবি বানান' },
     },
     {
       href: '/tools/application-letter',

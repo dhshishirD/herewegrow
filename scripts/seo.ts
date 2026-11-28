@@ -4,6 +4,7 @@
 // The React app replaces the static content as soon as it loads.
 
 import { BUILDER_FAQ, BUILDER_STEPS, BUILDER_UPDATED, designsByGroup, templateForDesign } from '../shared/builderContent';
+import { PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FORMATS, PHOTO_PRIVACY, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_STEPS, PHOTO_UPDATED_LABEL } from '../shared/photoResizerContent';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
@@ -183,8 +184,12 @@ function pages(): Page[] {
     {
       path: '/tools/photo-signature-resizer',
       ...seo('/tools/photo-signature-resizer'),
-      body: '<h1>ছবি ও স্বাক্ষর রিসাইজার</h1><p>ছবি 300×300, স্বাক্ষর 300×80।</p>',
-      jsonLd: [{ '@type': 'WebApplication', name: 'Teletalk photo and signature resizer', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } }],
+      body: `<h1>ছবি ও স্বাক্ষর রিসাইজার</h1><p>ছবি 300×300, স্বাক্ষর 300×80।</p><h2>ছবি ও স্বাক্ষর রিসাইজ করার নিয়ম</h2><ol>${PHOTO_STEPS.map((x) => `<li><strong>${esc(x.title.bn)}</strong> ${esc(x.body.bn)}</li>`).join('')}</ol><h2>কোন ফরম্যাট চলবে</h2><ul>${PHOTO_FORMATS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>আমার ছবি কি নিরাপদ?</h2><p>${esc(PHOTO_PRIVACY.bn)}</p><h2>ছবি বা স্বাক্ষর কেন বাতিল হয়?</h2><ul>${PHOTO_REJECTIONS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>ছবি ও স্বাক্ষর নিয়ে প্রশ্ন</h2><ul>${PHOTO_FAQ.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><h2>আবেদনের পরের ধাপ</h2><ul>${PHOTO_RELATED.map((l) => `<li>${link(l.href, l.label.bn)}</li>`).join('')}</ul><p>লেখক: ${link(PHOTO_AUTHOR.url, PHOTO_AUTHOR.name)}, Career Solutions। সর্বশেষ হালনাগাদ ${PHOTO_UPDATED_LABEL.bn}।</p>`,
+      jsonLd: [
+        { '@type': 'WebApplication', name: 'Teletalk photo and signature resizer', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } },
+        { '@type': 'FAQPage', mainEntity: PHOTO_FAQ.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })) },
+        crumbs([['HereWeGrow', '/'], ['Free tools', '/tools'], ['Photo and signature resizer', '/tools/photo-signature-resizer']]),
+      ],
       priority: 0.9,
     },
     {

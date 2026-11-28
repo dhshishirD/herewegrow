@@ -71,7 +71,10 @@ export const PASSPORT_FAQ: { q: Bilingual; a: Bilingual }[] = [
   },
   {
     q: { en: 'Which size does a Bangladesh passport need?', bn: 'বাংলাদেশের পাসপোর্টের জন্য কোন মাপ লাগে?' },
-    a: { en: 'We could not confirm this from an official source. Commercial photo sites give different sizes for Bangladesh (see the sources below), so rely on your application instructions or the issuing office, not on a number from us.', bn: 'আমরা সরকারি সূত্র থেকে এটি যাচাই করতে পারিনি। বাণিজ্যিক ফটো সাইটগুলো বাংলাদেশের জন্য ভিন্ন ভিন্ন মাপ বলে (নিচের সূত্র দেখুন), তাই আমাদের সংখ্যা নয়, আপনার আবেদনের নির্দেশনা বা ইস্যুকারী অফিসের কথাই মানুন।' },
+    a: {
+      en: '35×45 mm is a common passport-photo size and is the size listed by the Bangladesh Embassy in The Hague for e-passport applications (see the sources, checked 29 November 2026). Other offices or forms may ask for a different size (for example 45×55 mm printed or 25×30 mm online), so always follow the instruction of the office or form you are applying to.',
+      bn: '৩৫×৪৫ মিমি পাসপোর্ট ছবির একটি প্রচলিত মাপ, এবং ই-পাসপোর্টের আবেদনে হেগে বাংলাদেশ দূতাবাসও এই মাপই উল্লেখ করেছে (নিচের সূত্র দেখুন, ২৯ নভেম্বর ২০২৬ তারিখে দেখা)। অন্য অফিস বা ফর্মে ভিন্ন মাপ চাওয়া হতে পারে (যেমন ছাপা ছবিতে ৪৫×৫৫ মিমি বা অনলাইনে ২৫×৩০ মিমি), তাই যে অফিস বা ফর্মে আবেদন করছেন তার নির্দেশনাই মানুন।',
+    },
   },
   {
     q: { en: 'What is the difference between passport size and stamp size?', bn: 'পাসপোর্ট সাইজ আর স্ট্যাম্প সাইজে পার্থক্য কী?' },
@@ -89,6 +92,11 @@ export const PASSPORT_FAQ: { q: Bilingual; a: Bilingual }[] = [
 
 export const PASSPORT_SOURCES: { label: Bilingual; url: string; note: Bilingual }[] = [
   {
+    label: { en: 'Bangladesh Embassy in The Hague, e-passport page (mofa.gov.bd)', bn: 'হেগে বাংলাদেশ দূতাবাস, ই-পাসপোর্ট পেজ (mofa.gov.bd)' },
+    url: 'https://hague.mofa.gov.bd/pages/static-pages/e-passport-69595bcb2b767a2ae71c42e3',
+    note: { en: 'Lists “Three (03) passport-size photographs (Size: 35 mm x 45 mm)” for e-passport applications. A government page, but for that mission only. Checked 29 November 2026.', bn: 'ই-পাসপোর্ট আবেদনে “Three (03) passport-size photographs (Size: 35 mm x 45 mm)” লেখা আছে। এটি সরকারি পেজ, তবে শুধু ওই মিশনের জন্য। ২৯ নভেম্বর ২০২৬ তারিখে দেখা।' },
+  },
+  {
     label: { en: 'passport-photo.online stamp size page (commercial)', bn: 'passport-photo.online স্ট্যাম্প সাইজ পেজ (বাণিজ্যিক)' },
     url: 'https://passport-photo.online/en-in/stamp-size-photo',
     note: { en: `Gives ${mmOf('stamp')} as the base stamp size. Checked 28 November 2026. Not an official source.`, bn: `মূল স্ট্যাম্প সাইজ ${bnMm(mmOf('stamp'))}। ২৮ নভেম্বর ২০২৬ তারিখে দেখা। সরকারি সূত্র নয়।` },
@@ -96,7 +104,7 @@ export const PASSPORT_SOURCES: { label: Bilingual; url: string; note: Bilingual 
   {
     label: { en: 'passport-photo.online Bangladesh passport photo page (commercial)', bn: 'passport-photo.online বাংলাদেশ পাসপোর্ট ছবি পেজ (বাণিজ্যিক)' },
     url: 'https://passport-photo.online/bangladesh-passport-photo',
-    note: { en: 'Lists 45×55 mm for a standard passport, 25×30 mm for an e-passport and 35×45 mm for a visa. Checked 28 November 2026. Not an official source.', bn: 'সাধারণ পাসপোর্টে ৪৫×৫৫ মিমি, ই-পাসপোর্টে ২৫×৩০ মিমি ও ভিসায় ৩৫×৪৫ মিমি বলে। ২৮ নভেম্বর ২০২৬ তারিখে দেখা। সরকারি সূত্র নয়।' },
+    note: { en: 'Lists 45×55 mm for a standard passport, 25×30 mm for an e-passport and 35×45 mm for a visa, so commercial sites disagree with each other. Checked 28 November 2026. Not an official source.', bn: 'সাধারণ পাসপোর্টে ৪৫×৫৫ মিমি, ই-পাসপোর্টে ২৫×৩০ মিমি ও ভিসায় ৩৫×৪৫ মিমি বলে। ২৮ নভেম্বর ২০২৬ তারিখে দেখা। সরকারি সূত্র নয়।' },
   },
   {
     label: { en: 'visafoto Bangladesh passport photo requirements (commercial)', bn: 'visafoto বাংলাদেশ পাসপোর্ট ছবির নিয়ম (বাণিজ্যিক)' },

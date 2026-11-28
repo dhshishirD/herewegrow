@@ -51,7 +51,7 @@ const STATIC: Record<string, RouteSeo> = {
   },
   '/tools': {
     title: 'চাকরিপ্রার্থীদের জন্য ফ্রি টুলস | Free job tools | HereWeGrow',
-    description: 'ফ্রি সিভি চেকার, ছবি-স্বাক্ষর রিসাইজার ও পাসপোর্ট সাইজ ছবি মেকার। Free CV checker, photo and signature resizer and passport photo maker.',
+    description: 'ফ্রি সিভি চেকার, সিভির ছবি মেকার, ছবি-স্বাক্ষর রিসাইজার ও পাসপোর্ট সাইজ ছবি মেকার। Free CV checker, CV photo maker and photo resizer.',
   },
   '/builder': {
     title: 'Free CV Maker Bangladesh: ফ্রি সিভি তৈরি অনলাইনে, PDF | HereWeGrow',
@@ -92,6 +92,10 @@ const STATIC: Record<string, RouteSeo> = {
   '/tools/photo-signature-resizer': {
     title: 'ছবি ও স্বাক্ষর রিসাইজ: ৩০০×৩০০, ৩০০×৮০, পাসপোর্ট সাইজ | HereWeGrow',
     description: 'টেলিটক চাকরির ফর্মের ছবি ৩০০×৩০০ ও স্বাক্ষর ৩০০×৮০, পাসপোর্ট ও স্ট্যাম্প সাইজ, KB কমানো। ফ্রি, ব্রাউজারেই চলে। Free photo and signature resizer.',
+  },
+  '/tools/professional-cv-photo': {
+    title: 'সিভির জন্য ছবি: সাদা ব্যাকগ্রাউন্ড | CV photo maker | HereWeGrow',
+    description: 'সিভির জন্য পেশাদার ছবি বানান: ব্যাকগ্রাউন্ড সরিয়ে সাদা বা হালকা রং, ৪:৫ ও ১:১ ফ্রেম। ফ্রি, ব্রাউজারেই চলে, ছবি আপলোড হয় না। Professional photo for CV.',
   },
   '/tools/passport-size-photo-maker': {
     title: 'পাসপোর্ট সাইজ ছবি মেকার | Passport size photo maker | HereWeGrow',

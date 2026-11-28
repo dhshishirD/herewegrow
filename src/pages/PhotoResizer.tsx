@@ -5,7 +5,7 @@ import { num, useLang } from '../lib/lang';
 import { Link } from '../lib/router';
 import { setPageMeta } from '../lib/seo';
 import {
-  PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FORMATS, PHOTO_INTRO, PHOTO_PRIVACY, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_SECTIONS, PHOTO_SOURCES, PHOTO_STEPS, PHOTO_UPDATED_LABEL,
+  PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FIGURES_NOTE, PHOTO_FORMATS, PHOTO_INTRO, PHOTO_PRIVACY, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_SECTIONS, PHOTO_SOURCES, PHOTO_STEPS, PHOTO_UPDATED_LABEL,
 } from '../../shared/photoResizerContent';
 
 export function PhotoResizer() {
@@ -112,6 +112,7 @@ export function PhotoResizer() {
                   {': '}{t(s.note)}
                 </li>
               ))}
+              <li>{t(PHOTO_FIGURES_NOTE)}</li>
               <li>{t({ en: 'Sizes can differ from portal to portal. Always check your own circular or form.', bn: 'পোর্টালভেদে মাপ আলাদা হতে পারে। সবসময় নিজের বিজ্ঞপ্তি বা ফর্ম দেখুন।' })}</li>
             </ul>
           </section>

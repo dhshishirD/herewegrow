@@ -13,6 +13,11 @@ describe('photo resizer hub and passport page', () => {
     for (const id of ['teletalk-300x300', 'signature-300x80', 'passport-size', 'stamp-size', 'compress-kb']) expect(b).toContain(`id="${id}"`);
     expect(PHOTO_SECTIONS.map((s) => s.id)).toEqual(['teletalk-300x300', 'signature-300x80', 'passport-size', 'stamp-size', 'compress-kb']);
     expect(b).toContain('https://admissioncuet.ac.bd/faq');
+    expect(b).toContain('hague.mofa.gov.bd');
+    expect(b).toContain('২৯ নভেম্বর ২০২৬');
+    expect(b).toContain('মূল সার্কুলার PDF খুলে দেখিনি');
+    expect(b).not.toMatch(/teamzlab|দ্বিতীয় সূত্র/i);
+    expect(b).not.toMatch(/official Bangladesh passport size|বাংলাদেশের সরকারি পাসপোর্ট মাপ/i);
     expect(b).toContain('Daloyar Hassan Shishir');
     expect(b).toContain('সর্বশেষ হালনাগাদ');
     expect(b).toContain(`href="${PASSPORT_PATH}"`);
@@ -22,6 +27,10 @@ describe('photo resizer hub and passport page', () => {
   it('prerenders the passport page with computed pixels, FAQ and links both ways', () => {
     const b = body(PASSPORT_PATH);
     expect(b).toContain('৪১৩×৫৩১');
+    expect(b).toContain('hague.mofa.gov.bd');
+    expect(b).toContain('৪৫×৫৫ মিমি');
+    expect(b).toContain('নির্দেশনাই মানুন');
+    expect(b).not.toMatch(/teamzlab/i);
     expect(b).toContain('২৩৬×২৯৫');
     expect(b).toContain(`href="${HUB}"`);
     expect(b).toContain('Daloyar Hassan Shishir');

@@ -197,8 +197,8 @@ export const PHOTO_SECTIONS: SizeSection[] = [
     h2: { en: 'Photo 300×300 px for government job applications', bn: 'সরকারি চাকরির আবেদনের ছবি ৩০০×৩০০ পিক্সেল' },
     p: [
       {
-        en: `Many government job circulars ask for a colour, square photo of ${px('photo').en} px. The KB limit differs: the CUET admission FAQ allows up to 300 KB, while a second-hand source reports 100 KB for a DG Food circular. A file under 100 KB meets both. The “Photo” preset makes ${px('photo').en} px under 100 KB.`,
-        bn: `অনেক সরকারি চাকরির সার্কুলারে ${px('photo').bn} পিক্সেলের রঙিন বর্গাকার ছবি চাওয়া হয়। KB সীমা আলাদা: CUET ভর্তি FAQ-তে সর্বোচ্চ ৩০০ KB, আর একটি দ্বিতীয় সূত্রে ডিজি ফুডের সার্কুলারে ১০০ KB বলা আছে। ১০০ KB-এর নিচে হলে দুটোই মেটে। “ছবি” প্রিসেট ${px('photo').bn} পিক্সেলে ১০০ KB-এর নিচে ফাইল বানায়।`,
+        en: `${px('photo').en} px with up to 100 KB is the colour photo size quoted in many government job circulars, but limits differ by circular and portal: the CUET admission FAQ, for example, allows up to 300 KB. A file under 100 KB fits both. The “Photo” preset makes ${px('photo').en} px under 100 KB. Follow the limits in your own circular.`,
+        bn: `৩০০×৩০০ পিক্সেল, ১০০ KB পর্যন্ত: অনেক সরকারি চাকরির সার্কুলারে রঙিন ছবির জন্য এই মাপই উদ্ধৃত হয়, তবে সার্কুলার ও পোর্টালভেদে সীমা আলাদা; যেমন CUET ভর্তি FAQ-তে সর্বোচ্চ ৩০০ KB। ১০০ KB-এর নিচে হলে দুটোই মেটে। “ছবি” প্রিসেট ${px('photo').bn} পিক্সেলে ১০০ KB-এর নিচে ফাইল বানায়। আপনার নিজের সার্কুলারের সীমাই মানুন।`,
       },
     ],
   },
@@ -208,8 +208,8 @@ export const PHOTO_SECTIONS: SizeSection[] = [
     h2: { en: 'Signature 300×80 px', bn: 'স্বাক্ষর ৩০০×৮০ পিক্সেল' },
     p: [
       {
-        en: `The same circulars ask for a signature of ${px('signature').en} px. CUET allows up to 100 KB; the second-hand source reports 60 KB for the DG Food circular. The “Signature” preset makes ${px('signature').en} px under 60 KB and cleans the background to white.`,
-        bn: `একই সার্কুলারগুলোতে ${px('signature').bn} পিক্সেলের স্বাক্ষর চাওয়া হয়। CUET-এ সর্বোচ্চ ১০০ KB; দ্বিতীয় সূত্রে ডিজি ফুডের সার্কুলারে ৬০ KB বলা আছে। “স্বাক্ষর” প্রিসেট ${px('signature').bn} পিক্সেলে ৬০ KB-এর নিচে ফাইল বানায় ও ব্যাকগ্রাউন্ড সাদা করে।`,
+        en: `${px('signature').en} px with up to 60 KB is the signature size quoted in many government job circulars. Limits differ by circular and portal: CUET allows up to 100 KB, and the limits for some other circulars are reported differently in different places. The “Signature” preset makes ${px('signature').en} px under 60 KB and cleans the background to white. Follow the limits in your own circular.`,
+        bn: `৩০০×৮০ পিক্সেল, ৬০ KB পর্যন্ত: অনেক সরকারি চাকরির সার্কুলারে স্বাক্ষরের জন্য এই মাপই উদ্ধৃত হয়। সার্কুলার ও পোর্টালভেদে সীমা আলাদা: CUET-এ সর্বোচ্চ ১০০ KB, আর অন্য কিছু সার্কুলারের সীমা বিভিন্ন জায়গায় বিভিন্নভাবে বলা হয়েছে। “স্বাক্ষর” প্রিসেট ${px('signature').bn} পিক্সেলে ৬০ KB-এর নিচে ফাইল বানায় ও ব্যাকগ্রাউন্ড সাদা করে। আপনার নিজের সার্কুলারের সীমাই মানুন।`,
       },
     ],
   },
@@ -219,8 +219,8 @@ export const PHOTO_SECTIONS: SizeSection[] = [
     h2: { en: 'Passport size photo', bn: 'পাসপোর্ট সাইজ ছবি' },
     p: [
       {
-        en: `“Passport size” is a printed size in millimetres, not a pixel size. A common one is ${mm('passport')}, which is ${px('passport').en} px at ${PRINT_DPI} DPI. Sizes differ by country and form, so use the size your form names.`,
-        bn: `“পাসপোর্ট সাইজ” মানে ছাপা ছবির মাপ (মিলিমিটারে), পিক্সেল নয়। প্রচলিত একটি মাপ ${bnDigits(mm('passport')).replace('mm', 'মিমি')}, যা ${bnDigits(PRINT_DPI)} DPI-তে ${px('passport').bn} পিক্সেল। দেশ ও ফর্মভেদে মাপ আলাদা, তাই ফর্মে যে মাপ লেখা আছে সেটাই নিন।`,
+        en: `“Passport size” is a printed size in millimetres, not a pixel size. ${mm('passport')} is a common passport-photo size and is the size listed by the Bangladesh Embassy in The Hague for e-passport applications (see the sources, checked 29 November 2026). That is ${px('passport').en} px at ${PRINT_DPI} DPI. Other offices or forms may ask for a different size (for example 45×55 mm printed or 25×30 mm online), so always follow the instruction of the office or form you are applying to.`,
+        bn: `“পাসপোর্ট সাইজ” মানে ছাপা ছবির মাপ (মিলিমিটারে), পিক্সেল নয়। ${bnDigits(mm('passport')).replace('mm', 'মিমি')} পাসপোর্ট ছবির একটি প্রচলিত মাপ, এবং ই-পাসপোর্টের আবেদনে হেগে বাংলাদেশ দূতাবাসও এই মাপ উল্লেখ করেছে (সূত্র দেখুন, ২৯ নভেম্বর ২০২৬ তারিখে দেখা)। ${bnDigits(PRINT_DPI)} DPI-তে এটি ${px('passport').bn} পিক্সেল। অন্য অফিস বা ফর্মে ভিন্ন মাপ চাওয়া হতে পারে (যেমন ছাপা ছবিতে ৪৫×৫৫ মিমি বা অনলাইনে ২৫×৩০ মিমি), তাই যে অফিস বা ফর্মে আবেদন করছেন তার নির্দেশনাই মানুন।`,
       },
     ],
     more: { href: '/tools/passport-size-photo-maker', label: { en: 'How to take and make a passport size photo', bn: 'পাসপোর্ট সাইজ ছবি তোলা ও বানানোর নিয়ম' } },
@@ -255,14 +255,14 @@ export const PHOTO_SOURCES: PhotoSource[] = [
   {
     label: { en: 'CUET admission FAQ', bn: 'CUET ভর্তি FAQ' },
     url: 'https://admissioncuet.ac.bd/faq',
-    note: { en: 'Photo 300×300 px up to 300 KB; signature 300×80 px up to 100 KB. Opened and checked on 28 November 2026.', bn: 'ছবি ৩০০×৩০০ px, সর্বোচ্চ ৩০০ KB; স্বাক্ষর ৩০০×৮০ px, সর্বোচ্চ ১০০ KB। ২৮ নভেম্বর ২০২৬ তারিখে খুলে যাচাই করা।' },
+    note: { en: 'Photo 300×300 px up to 300 KB; signature 300×80 px up to 100 KB. Opened and checked on 28 November 2026. This is an admission portal, not a job circular.', bn: 'ছবি ৩০০×৩০০ px, সর্বোচ্চ ৩০০ KB; স্বাক্ষর ৩০০×৮০ px, সর্বোচ্চ ১০০ KB। ২৮ নভেম্বর ২০২৬ তারিখে খুলে যাচাই করা। এটি ভর্তি পোর্টাল, চাকরির সার্কুলার নয়।' },
     official: true,
   },
   {
-    label: { en: 'Teamz Lab photo resizer page (second-hand)', bn: 'Teamz Lab রিসাইজার পেজ (দ্বিতীয় সূত্র)' },
-    url: 'https://tool.teamzlab.com/bd/photo-signature-resizer/',
-    note: { en: 'Reports 100 KB for the photo and 60 KB for the signature in a DG Food circular (2023) and the same pixel sizes in a DPE instruction. We have not opened those original circulars, so treat these KB figures as unconfirmed.', bn: 'ডিজি ফুডের সার্কুলারে (২০২৩) ছবি ১০০ KB ও স্বাক্ষর ৬০ KB এবং ডিপিই-র নির্দেশনায় একই পিক্সেল মাপ বলা আছে। আমরা মূল সার্কুলার খুলে দেখিনি, তাই এই KB সংখ্যা অনিশ্চিত ধরুন।' },
-    official: false,
+    label: { en: 'Bangladesh Embassy in The Hague, e-passport page (mofa.gov.bd)', bn: 'হেগে বাংলাদেশ দূতাবাস, ই-পাসপোর্ট পেজ (mofa.gov.bd)' },
+    url: 'https://hague.mofa.gov.bd/pages/static-pages/e-passport-69595bcb2b767a2ae71c42e3',
+    note: { en: 'Lists “Three (03) passport-size photographs (Size: 35 mm x 45 mm)” for e-passport applications. A government page, but for that mission only. Checked 29 November 2026.', bn: 'ই-পাসপোর্ট আবেদনে “Three (03) passport-size photographs (Size: 35 mm x 45 mm)” লেখা আছে। এটি সরকারি পেজ, তবে শুধু ওই মিশনের জন্য। ২৯ নভেম্বর ২০২৬ তারিখে দেখা।' },
+    official: true,
   },
   {
     label: { en: 'passport-photo.online stamp size page (commercial)', bn: 'passport-photo.online স্ট্যাম্প সাইজ পেজ (বাণিজ্যিক সাইট)' },
@@ -271,3 +271,9 @@ export const PHOTO_SOURCES: PhotoSource[] = [
     official: false,
   },
 ];
+
+/** Shown under the sources: how far the Teletalk-style figures are checked. */
+export const PHOTO_FIGURES_NOTE: Bilingual = {
+  en: 'We have not opened the original circular PDFs; figures are as quoted in circular texts republished by job sites and may change. Limits differ by circular and portal, and some are reported differently across sources.',
+  bn: 'আমরা মূল সার্কুলার PDF খুলে দেখিনি; সংখ্যাগুলো চাকরির সাইটে পুনঃপ্রকাশিত সার্কুলারের লেখা থেকে নেওয়া এবং বদলাতে পারে। সার্কুলার ও পোর্টালভেদে সীমা আলাদা, আর কিছু সীমা বিভিন্ন সূত্রে বিভিন্নভাবে বলা হয়েছে।',
+};

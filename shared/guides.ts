@@ -41,6 +41,10 @@ export const GUIDES: Guide[] = [
     date: '2026-11-02',
     minutes: 4,
     cta: { href: '/tools/photo-signature-resizer', label: { bn: 'ফ্রিতে ছবি ও স্বাক্ষর রিসাইজ করুন', en: 'Resize your photo and signature for free' } },
+    related: [
+      { href: '/tools/photo-signature-resizer', label: { bn: 'ছবি ও স্বাক্ষর রিসাইজার (৩০০×৩০০, ৩০০×৮০, KB লক্ষ্য)', en: 'Photo and signature resizer' } },
+      { href: '/tools/passport-size-photo-maker', label: { bn: 'পাসপোর্ট সাইজ ছবি মেকার', en: 'Passport size photo maker' } },
+    ],
     body: [
       { p: 'বাংলাদেশের বেশিরভাগ সরকারি চাকরির আবেদন হয় টেলিটকের অনলাইন পোর্টালে। ফরমের সবচেয়ে ঝামেলার অংশ ছবি আর স্বাক্ষর: মাপ বা ফাইল সাইজ একটু এদিক-ওদিক হলেই আপলোড হয় না, আর অস্পষ্ট ছবির কারণে পরে আবেদন বাতিলও হতে পারে।' },
       { h2: 'সাধারণ নিয়ম: কোন মাপ লাগে' },

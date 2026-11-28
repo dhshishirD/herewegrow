@@ -20,6 +20,7 @@ import { GuidePage, GuidesPage } from './pages/Guides';
 import { Home } from './pages/Home';
 import { PaymentCancel, PaymentSuccess } from './pages/PaymentResult';
 import { PhotoResizer } from './pages/PhotoResizer';
+import { PassportPhotoMaker } from './pages/PassportPhotoMaker';
 import { ApplicationLetter } from './pages/ApplicationLetter';
 import { JobMatch } from './pages/JobMatch';
 import { ScamShield } from './pages/ScamShield';
@@ -90,6 +91,7 @@ const ROUTES: Record<string, () => JSX.Element> = {
   '/builder': LazyBuilder,
   '/biodata': LazyBiodata,
   '/tools/photo-signature-resizer': PhotoResizer,
+  '/tools/passport-size-photo-maker': PassportPhotoMaker,
   '/tools/application-letter': ApplicationLetter,
   '/tools/job-match': JobMatch,
   '/tools/scam-shield': ScamShield,

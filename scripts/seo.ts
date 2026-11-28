@@ -4,7 +4,8 @@
 // The React app replaces the static content as soon as it loads.
 
 import { BUILDER_FAQ, BUILDER_STEPS, BUILDER_UPDATED, designsByGroup, templateForDesign } from '../shared/builderContent';
-import { PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FORMATS, PHOTO_PRIVACY, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_STEPS, PHOTO_UPDATED_LABEL } from '../shared/photoResizerContent';
+import { PHOTO_AUTHOR, PHOTO_FAQ, PHOTO_FORMATS, PHOTO_INTRO, PHOTO_PRIVACY, PHOTO_SECTIONS, PHOTO_SOURCES, PHOTO_RELATED, PHOTO_REJECTIONS, PHOTO_STEPS, PHOTO_UPDATED_LABEL } from '../shared/photoResizerContent';
+import { PASSPORT_AUTHOR, PASSPORT_FAQ, PASSPORT_INTRO, PASSPORT_MISTAKES, PASSPORT_PATH, PASSPORT_RELATED, PASSPORT_SIZE_NOTE, PASSPORT_SIZE_TABLE, PASSPORT_SOURCES, PASSPORT_STEPS, PASSPORT_TAKE, PASSPORT_UPDATED_LABEL } from '../shared/passportPhotoContent';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
@@ -146,7 +147,7 @@ function pages(): Page[] {
     {
       path: '/tools',
       ...seo('/tools'),
-      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li><li>${link('/tools/scam-shield', 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার')}</li></ul>`,
+      body: `<h1>ফ্রি টুলস</h1><ul><li>${link('/builder', 'সিভি বিল্ডার')}</li><li>${link('/tools/cv-checker', 'সিভি চেকার')}</li><li>${link('/tools/photo-signature-resizer', 'ছবি ও স্বাক্ষর রিসাইজার')}</li><li>${link('/tools/passport-size-photo-maker', 'পাসপোর্ট সাইজ ছবি মেকার')}</li><li>${link('/tools/application-letter', 'আবেদনপত্র জেনারেটর')}</li><li>${link('/tools/job-match', 'সিভি বনাম বিজ্ঞাপন ম্যাচ')}</li><li>${link('/tools/scam-shield', 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার')}</li></ul>`,
       priority: 0.7,
     },
     {
@@ -184,13 +185,24 @@ function pages(): Page[] {
     {
       path: '/tools/photo-signature-resizer',
       ...seo('/tools/photo-signature-resizer'),
-      body: `<h1>ছবি ও স্বাক্ষর রিসাইজার</h1><p>ছবি 300×300, স্বাক্ষর 300×80।</p><h2>ছবি ও স্বাক্ষর রিসাইজ করার নিয়ম</h2><ol>${PHOTO_STEPS.map((x) => `<li><strong>${esc(x.title.bn)}</strong> ${esc(x.body.bn)}</li>`).join('')}</ol><h2>কোন ফরম্যাট চলবে</h2><ul>${PHOTO_FORMATS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>আমার ছবি কি নিরাপদ?</h2><p>${esc(PHOTO_PRIVACY.bn)}</p><h2>ছবি বা স্বাক্ষর কেন বাতিল হয়?</h2><ul>${PHOTO_REJECTIONS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>ছবি ও স্বাক্ষর নিয়ে প্রশ্ন</h2><ul>${PHOTO_FAQ.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><h2>আবেদনের পরের ধাপ</h2><ul>${PHOTO_RELATED.map((l) => `<li>${link(l.href, l.label.bn)}</li>`).join('')}</ul><p>লেখক: ${link(PHOTO_AUTHOR.url, PHOTO_AUTHOR.name)}, Career Solutions। সর্বশেষ হালনাগাদ ${PHOTO_UPDATED_LABEL.bn}।</p>`,
+      body: `<h1>ছবি ও স্বাক্ষর রিসাইজার</h1><p>${esc(PHOTO_INTRO.bn)}</p><h2>ছবি ও স্বাক্ষর রিসাইজ করার নিয়ম</h2><ol>${PHOTO_STEPS.map((x) => `<li><strong>${esc(x.title.bn)}</strong> ${esc(x.body.bn)}</li>`).join('')}</ol>${PHOTO_SECTIONS.map((x) => `<section id="${x.id}"><h2>${esc(x.h2.bn)}</h2>${x.p.map((q) => `<p>${esc(q.bn)}</p>`).join('')}${x.more ? `<p>${link(x.more.href, x.more.label.bn)}</p>` : ''}</section>`).join('')}<h2>কোন ফরম্যাট চলবে</h2><ul>${PHOTO_FORMATS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>আমার ছবি কি নিরাপদ?</h2><p>${esc(PHOTO_PRIVACY.bn)}</p><h2>ছবি বা স্বাক্ষর কেন বাতিল হয়?</h2><ul>${PHOTO_REJECTIONS.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>ছবি ও স্বাক্ষর নিয়ে প্রশ্ন</h2><ul>${PHOTO_FAQ.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><h2>সূত্র</h2><ul>${PHOTO_SOURCES.map((x) => `<li><a href="${x.url}" rel="noopener">${esc(x.label.bn)}</a>: ${esc(x.note.bn)}</li>`).join('')}</ul><h2>আবেদনের পরের ধাপ</h2><ul>${PHOTO_RELATED.map((l) => `<li>${link(l.href, l.label.bn)}</li>`).join('')}</ul><p>লেখক: ${link(PHOTO_AUTHOR.url, PHOTO_AUTHOR.name)}, Career Solutions। সর্বশেষ হালনাগাদ ${PHOTO_UPDATED_LABEL.bn}।</p>`,
       jsonLd: [
-        { '@type': 'WebApplication', name: 'Teletalk photo and signature resizer', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } },
+        { '@type': 'WebApplication', name: 'Photo and signature resizer', url: `${SITE}/tools/photo-signature-resizer`, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', inLanguage: ['bn', 'en'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } },
         { '@type': 'FAQPage', mainEntity: PHOTO_FAQ.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })) },
         crumbs([['HereWeGrow', '/'], ['Free tools', '/tools'], ['Photo and signature resizer', '/tools/photo-signature-resizer']]),
       ],
       priority: 0.9,
+    },
+    {
+      path: PASSPORT_PATH,
+      ...seo(PASSPORT_PATH),
+      body: `<h1>পাসপোর্ট সাইজ ছবি মেকার</h1><p>${esc(PASSPORT_INTRO.bn)}</p><h2>প্রচলিত প্রিন্ট সাইজ, পিক্সেলে</h2><table><thead><tr><th>মাপ</th><th>মিলিমিটার</th><th>৩০০ DPI-তে পিক্সেল</th></tr></thead><tbody>${PASSPORT_SIZE_TABLE.map((r) => `<tr><td>${esc(r.name.bn)}</td><td>${esc(bn(r.mm))}</td><td>${esc(bn(r.px))}</td></tr>`).join('')}</tbody></table><p>${esc(PASSPORT_SIZE_NOTE.bn)}</p><h2>পাসপোর্ট সাইজ ছবি বানানোর নিয়ম</h2><ol>${PASSPORT_STEPS.map((x) => `<li><strong>${esc(x.title.bn)}</strong> ${esc(x.body.bn)}</li>`).join('')}</ol><h2>ছবি তোলার নিয়ম</h2><ul>${PASSPORT_TAKE.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>সাধারণ ভুল</h2><ul>${PASSPORT_MISTAKES.map((x) => `<li>${esc(x.bn)}</li>`).join('')}</ul><h2>পাসপোর্ট সাইজ ছবি নিয়ে প্রশ্ন</h2><ul>${PASSPORT_FAQ.map((f) => `<li><strong>${esc(f.q.bn)}</strong> ${esc(f.a.bn)}</li>`).join('')}</ul><h2>সূত্র</h2><ul>${PASSPORT_SOURCES.map((x) => `<li><a href="${x.url}" rel="noopener">${esc(x.label.bn)}</a>: ${esc(x.note.bn)}</li>`).join('')}</ul><h2>আরও দেখুন</h2><ul>${PASSPORT_RELATED.map((l) => `<li>${link(l.href, l.label.bn)}</li>`).join('')}</ul><p>লেখক: ${link(PASSPORT_AUTHOR.url, PASSPORT_AUTHOR.name)}, Career Solutions। সর্বশেষ হালনাগাদ ${PASSPORT_UPDATED_LABEL.bn}।</p>`,
+      jsonLd: [
+        { '@type': 'WebApplication', name: 'Passport size photo maker', url: `${SITE}${PASSPORT_PATH}`, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', inLanguage: ['bn', 'en'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'BDT' } },
+        { '@type': 'FAQPage', mainEntity: PASSPORT_FAQ.map((f) => ({ '@type': 'Question', name: f.q.en, acceptedAnswer: { '@type': 'Answer', text: f.a.en } })) },
+        crumbs([['HereWeGrow', '/'], ['Free tools', '/tools'], ['Photo and signature resizer', '/tools/photo-signature-resizer'], ['Passport size photo maker', PASSPORT_PATH]]),
+      ],
+      priority: 0.8,
     },
     {
       path: '/tools/application-letter',

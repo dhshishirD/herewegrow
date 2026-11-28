@@ -1,9 +1,16 @@
 // Words under the photo and signature resizer: how to use it, formats, privacy, why uploads get rejected and the FAQ.
 // Shared so the build-time SEO page (scripts/seo.ts) prints the same text the React page shows.
-// No pixel or KB figures are written here on purpose: they are not tied to an official notice yet.
-// The tool's own presets (src/pages/PhotoResizer.tsx) carry the sizes.
+// Sizes in this copy come from shared/photoPresets.ts (print sizes are computed from millimetres) or from a source
+// listed in PHOTO_SOURCES. Presets are tool options, not a claim that any portal requires them.
+
+import { PRINT_DPI, findPreset, mmLabel } from './photoPresets';
 
 export interface Bilingual { en: string; bn: string }
+
+const bnDigits = (v: number | string) => String(v).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
+const px = (id: string) => { const p = findPreset(id)!; return { en: `${p.w}×${p.h}`, bn: bnDigits(`${p.w}×${p.h}`) }; };
+const mm = (id: string) => mmLabel(findPreset(id)!.mm!);
+export const PHOTO_DPI = PRINT_DPI;
 
 export const PHOTO_UPDATED = '2026-11-28';
 export const PHOTO_UPDATED_LABEL: Bilingual = { en: '28 November 2026', bn: '২৮ নভেম্বর ২০২৬' };
@@ -13,8 +20,8 @@ export const PHOTO_STEPS: { title: Bilingual; body: Bilingual }[] = [
   {
     title: { en: 'Pick photo or signature', bn: 'ছবি না স্বাক্ষর, বেছে নিন' },
     body: {
-      en: 'Tap “Photo” or “Signature” to load the size and file limit. Need something else? Tap “Other size” and type your own width, height and KB.',
-      bn: '“ছবি” বা “স্বাক্ষর” চাপলে মাপ ও ফাইল সাইজের সীমা নিজে থেকে বসে যায়। অন্য কিছু লাগলে “অন্য মাপ” চেপে নিজের প্রস্থ, উচ্চতা ও KB লিখুন।',
+      en: 'Pick a size: “Photo” or “Signature” for job forms, a print size such as passport or stamp, or a KB target. Need something else? Tap “Other size” and type your own width, height and KB. Check your own circular first.',
+      bn: 'মাপ বেছে নিন: চাকরির ফর্মের জন্য “ছবি” বা “স্বাক্ষর”, প্রিন্টের জন্য পাসপোর্ট বা স্ট্যাম্প সাইজ, অথবা KB লক্ষ্য। অন্য কিছু লাগলে “অন্য মাপ” চেপে নিজের প্রস্থ, উচ্চতা ও KB লিখুন। আগে নিজের বিজ্ঞপ্তি দেখে নিন।',
     },
   },
   {
@@ -46,6 +53,10 @@ export const PHOTO_FORMATS: Bilingual[] = [
     bn: 'ইনপুট: আপনার ব্রাউজার যে ছবি খুলতে পারে, সাধারণত JPG ও PNG। কোনো ফাইল না খুললে আগে JPG হিসেবে সেভ করুন বা স্ক্রিনশট নিন।',
   },
   {
+    en: 'iPhone HEIC photos open in Safari, but most other browsers cannot read them. The tool then tells you so. Set the iPhone camera to “Most Compatible” to save JPG, or convert the photo first.',
+    bn: 'আইফোনের HEIC ছবি Safari-তে খোলে, কিন্তু অন্য বেশিরভাগ ব্রাউজারে খোলে না; তখন টুল সেটা জানিয়ে দেয়। আইফোনের ক্যামেরা “Most Compatible”-এ রাখলে JPG সেভ হয়, অথবা আগে ছবিটি কনভার্ট করুন।',
+  },
+  {
     en: 'Out: always a JPG file, so it works on forms that ask for JPG.',
     bn: 'আউটপুট: সবসময় JPG ফাইল, তাই যে ফর্মে JPG চাওয়া হয় সেখানে চলে।',
   },
@@ -68,6 +79,10 @@ export const PHOTO_REJECTIONS: Bilingual[] = [
   {
     en: 'The pixel size is wrong, or the image was stretched. A tall or wide photo squeezed into a square makes the face look distorted. Zoom and drag instead.',
     bn: 'পিক্সেল মাপ ভুল, অথবা ছবি টেনে বিকৃত করা হয়েছে। লম্বাটে বা চওড়া ছবি জোর করে চৌকো করলে মুখ বিকৃত দেখায়। বরং জুম করে ও টেনে সাজান।',
+  },
+  {
+    en: 'An iPhone HEIC photo or another format the portal does not accept. Upload the JPG this tool makes.',
+    bn: 'আইফোনের HEIC ছবি বা পোর্টাল যে ফরম্যাট নেয় না তা। এই টুলের বানানো JPG আপলোড করুন।',
   },
   {
     en: 'The wrong file type, such as PDF, Word, or a screenshot saved in another format. Upload the JPG this tool makes.',
@@ -120,12 +135,139 @@ export const PHOTO_FAQ: { q: Bilingual; a: Bilingual }[] = [
       bn: 'এই টুল থেকে ডাউনলোড করা JPG। ছবির ঘরে ছবির ফাইল ও স্বাক্ষরের ঘরে স্বাক্ষরের ফাইল দিন, আর সাবমিটের আগে ফর্মের প্রিভিউ দেখে নিন।',
     },
   },
+  {
+    q: { en: 'Which size should I pick for a passport size photo?', bn: 'পাসপোর্ট সাইজ ছবির জন্য কোন মাপ বেছে নেব?' },
+    a: {
+      en: `The “Passport size” preset is ${mm('passport')}, which is ${px('passport').en} px at ${PRINT_DPI} DPI. It is a common size, not a rule for every form. If your form or embassy names a different size, use “Other size” and type it.`,
+      bn: `“পাসপোর্ট সাইজ” প্রিসেট ${bnDigits(mm('passport')).replace('mm', 'মিমি')}, যা ${bnDigits(PRINT_DPI)} DPI-তে ${px('passport').bn} পিক্সেল। এটি প্রচলিত একটি মাপ, সব ফর্মের নিয়ম নয়। আপনার ফর্ম বা দূতাবাস অন্য মাপ বললে “অন্য মাপ” চেপে সেটি লিখুন।`,
+    },
+  },
+  {
+    q: { en: 'How many pixels is a 2×2 inch or 1×1 inch photo?', bn: '২×২ ইঞ্চি বা ১×১ ইঞ্চি ছবি কত পিক্সেল?' },
+    a: {
+      en: `At ${PRINT_DPI} DPI a 2×2 inch photo is ${px('inch2').en} px and a 1×1 inch photo is ${px('inch1').en} px. The tool works this out from the size in millimetres.`,
+      bn: `৩০০ DPI-তে ২×২ ইঞ্চি ছবি ${px('inch2').bn} পিক্সেল ও ১×১ ইঞ্চি ছবি ${px('inch1').bn} পিক্সেল। টুল মিলিমিটারের মাপ থেকে হিসাব করে নেয়।`,
+    },
+  },
+  {
+    q: { en: 'Does making a file smaller blur my photo?', bn: 'ফাইল ছোট করলে কি ছবি ঝাপসা হয়?' },
+    a: {
+      en: 'A little, yes. The tool keeps the highest JPG quality that fits your KB target. For a very small target it also shrinks the pixel size step by step, and it tells you the final size. If even that is not enough, it shows the smallest file it could make.',
+      bn: 'কিছুটা হয়। KB লক্ষ্যের মধ্যে টুল সর্বোচ্চ JPG মান রাখে। খুব ছোট লক্ষ্য হলে ধাপে ধাপে পিক্সেলও কমায় এবং চূড়ান্ত মাপ জানিয়ে দেয়। তাতেও না হলে সবচেয়ে ছোট যে ফাইল বানানো গেছে তার সাইজ দেখায়।',
+    },
+  },
+  {
+    q: { en: 'My iPhone photo will not open. Why?', bn: 'আইফোনের ছবি খুলছে না কেন?' },
+    a: { en: 'It is probably a HEIC photo, which most browsers other than Safari cannot read. Open this page in Safari, or set the camera to “Most Compatible” (Settings > Camera > Formats), or save the photo as JPG first.', bn: 'সম্ভবত এটি HEIC ছবি, যা Safari ছাড়া বেশিরভাগ ব্রাউজার পড়তে পারে না। পেজটি Safari-তে খুলুন, অথবা ক্যামেরা “Most Compatible”-এ দিন (Settings > Camera > Formats), অথবা ছবিটি আগে JPG হিসেবে সেভ করুন।' },
+  },
 ];
 
 /** Links that exist in the app (checked against ROUTES in src/App.tsx and shared/guides.ts). */
 export const PHOTO_RELATED: { href: string; label: Bilingual }[] = [
   { href: '/guides/teletalk-photo-signature-size', label: { en: 'Guide: Teletalk photo and signature rules (Bangla)', bn: 'গাইড: টেলিটকের ছবি ও স্বাক্ষরের নিয়ম' } },
+  { href: '/tools/passport-size-photo-maker', label: { en: 'Passport size photo maker (35×45 mm and more)', bn: 'পাসপোর্ট সাইজ ছবি মেকার' } },
   { href: '/builder', label: { en: 'Free CV builder', bn: 'ফ্রি সিভি বিল্ডার' } },
   { href: '/tools/cv-checker', label: { en: 'Free CV checker', bn: 'ফ্রি সিভি চেকার' } },
   { href: '/tools/application-letter', label: { en: 'Application letter generator', bn: 'আবেদনপত্র জেনারেটর' } },
+];
+
+export const PHOTO_VERIFIED: Bilingual = { en: '28 November 2026', bn: '২৮ নভেম্বর ২০২৬' };
+
+/** The direct answer at the top of the hub page (2 to 3 sentences). */
+export const PHOTO_INTRO: Bilingual = {
+  en: 'Many government job circulars ask for a colour photo of 300×300 px and a signature of 300×80 px, but the file-size limit and even the pixel size differ from portal to portal, so check your own circular first. Pick that size, a passport or stamp size, or a KB target below, and download a JPG. Your picture is processed in your browser and never uploaded.',
+  bn: 'অনেক সরকারি চাকরির সার্কুলারে ৩০০×৩০০ পিক্সেলের রঙিন ছবি ও ৩০০×৮০ পিক্সেলের স্বাক্ষর চাওয়া হয়, তবে ফাইল সাইজের সীমা এমনকি পিক্সেল মাপও পোর্টালভেদে আলাদা, তাই আগে নিজের বিজ্ঞপ্তি দেখুন। নিচে ওই মাপ, পাসপোর্ট বা স্ট্যাম্প সাইজ, অথবা KB লক্ষ্য বেছে JPG ডাউনলোড করুন। ছবি আপনার ব্রাউজারেই প্রসেস হয়, আপলোড হয় না।',
+};
+
+export interface SizeSection {
+  id: string;
+  /** Preset the “use this size” button selects. */
+  preset: string;
+  h2: Bilingual;
+  p: Bilingual[];
+  /** Link to a dedicated page, when there is one. */
+  more?: { href: string; label: Bilingual };
+}
+
+/** Anchored sections of the hub: one per size group. Each id is a #fragment people can link to. */
+export const PHOTO_SECTIONS: SizeSection[] = [
+  {
+    id: 'teletalk-300x300',
+    preset: 'photo',
+    h2: { en: 'Photo 300×300 px for government job applications', bn: 'সরকারি চাকরির আবেদনের ছবি ৩০০×৩০০ পিক্সেল' },
+    p: [
+      {
+        en: `Many government job circulars ask for a colour, square photo of ${px('photo').en} px. The KB limit differs: the CUET admission FAQ allows up to 300 KB, while a second-hand source reports 100 KB for a DG Food circular. A file under 100 KB meets both. The “Photo” preset makes ${px('photo').en} px under 100 KB.`,
+        bn: `অনেক সরকারি চাকরির সার্কুলারে ${px('photo').bn} পিক্সেলের রঙিন বর্গাকার ছবি চাওয়া হয়। KB সীমা আলাদা: CUET ভর্তি FAQ-তে সর্বোচ্চ ৩০০ KB, আর একটি দ্বিতীয় সূত্রে ডিজি ফুডের সার্কুলারে ১০০ KB বলা আছে। ১০০ KB-এর নিচে হলে দুটোই মেটে। “ছবি” প্রিসেট ${px('photo').bn} পিক্সেলে ১০০ KB-এর নিচে ফাইল বানায়।`,
+      },
+    ],
+  },
+  {
+    id: 'signature-300x80',
+    preset: 'signature',
+    h2: { en: 'Signature 300×80 px', bn: 'স্বাক্ষর ৩০০×৮০ পিক্সেল' },
+    p: [
+      {
+        en: `The same circulars ask for a signature of ${px('signature').en} px. CUET allows up to 100 KB; the second-hand source reports 60 KB for the DG Food circular. The “Signature” preset makes ${px('signature').en} px under 60 KB and cleans the background to white.`,
+        bn: `একই সার্কুলারগুলোতে ${px('signature').bn} পিক্সেলের স্বাক্ষর চাওয়া হয়। CUET-এ সর্বোচ্চ ১০০ KB; দ্বিতীয় সূত্রে ডিজি ফুডের সার্কুলারে ৬০ KB বলা আছে। “স্বাক্ষর” প্রিসেট ${px('signature').bn} পিক্সেলে ৬০ KB-এর নিচে ফাইল বানায় ও ব্যাকগ্রাউন্ড সাদা করে।`,
+      },
+    ],
+  },
+  {
+    id: 'passport-size',
+    preset: 'passport',
+    h2: { en: 'Passport size photo', bn: 'পাসপোর্ট সাইজ ছবি' },
+    p: [
+      {
+        en: `“Passport size” is a printed size in millimetres, not a pixel size. A common one is ${mm('passport')}, which is ${px('passport').en} px at ${PRINT_DPI} DPI. Sizes differ by country and form, so use the size your form names.`,
+        bn: `“পাসপোর্ট সাইজ” মানে ছাপা ছবির মাপ (মিলিমিটারে), পিক্সেল নয়। প্রচলিত একটি মাপ ${bnDigits(mm('passport')).replace('mm', 'মিমি')}, যা ${bnDigits(PRINT_DPI)} DPI-তে ${px('passport').bn} পিক্সেল। দেশ ও ফর্মভেদে মাপ আলাদা, তাই ফর্মে যে মাপ লেখা আছে সেটাই নিন।`,
+      },
+    ],
+    more: { href: '/tools/passport-size-photo-maker', label: { en: 'How to take and make a passport size photo', bn: 'পাসপোর্ট সাইজ ছবি তোলা ও বানানোর নিয়ম' } },
+  },
+  {
+    id: 'stamp-size',
+    preset: 'stamp',
+    h2: { en: 'Stamp size photo', bn: 'স্ট্যাম্প সাইজ ছবি' },
+    p: [
+      {
+        en: `A stamp size photo is smaller than a passport photo. ${mm('stamp')} is often quoted, which is ${px('stamp').en} px at ${PRINT_DPI} DPI, but other stamp sizes exist. Check the size your form asks for.`,
+        bn: `স্ট্যাম্প সাইজ ছবি পাসপোর্ট সাইজের চেয়ে ছোট। প্রায়ই ${bnDigits(mm('stamp')).replace('mm', 'মিমি')} বলা হয়, যা ${bnDigits(PRINT_DPI)} DPI-তে ${px('stamp').bn} পিক্সেল; তবে অন্য স্ট্যাম্প মাপও আছে। আপনার ফর্মে কোন মাপ চাওয়া হয়েছে দেখে নিন।`,
+      },
+    ],
+  },
+  {
+    id: 'compress-kb',
+    preset: 'kb-100',
+    h2: { en: 'Make a photo smaller in KB', bn: 'ছবির ফাইল সাইজ KB-তে কমানো' },
+    p: [
+      {
+        en: 'If a form only limits the file size, pick about 20, 50, 100 or 200 KB. The picture keeps its own shape and is not cropped. The tool keeps the best JPG quality under the target (1 KB is counted as 1,024 bytes), shrinks the pixels step by step if it must, and shows the smallest size it reached if the target is too low.',
+        bn: 'ফর্মে শুধু ফাইল সাইজের সীমা থাকলে প্রায় ২০, ৫০, ১০০ বা ২০০ KB বেছে নিন। ছবির আকৃতি অপরিবর্তিত থাকে, কাটা হয় না। টুল KB লক্ষ্যের মধ্যে সবচেয়ে ভালো JPG মান রাখে (১ KB = ১,০২৪ বাইট ধরা হয়), দরকার হলে ধাপে ধাপে পিক্সেল কমায়, আর লক্ষ্য খুব কম হলে সবচেয়ে ছোট যে সাইজে পৌঁছেছে তা দেখায়।',
+      },
+    ],
+  },
+];
+
+export interface PhotoSource { label: Bilingual; url: string; note: Bilingual; official: boolean }
+
+export const PHOTO_SOURCES: PhotoSource[] = [
+  {
+    label: { en: 'CUET admission FAQ', bn: 'CUET ভর্তি FAQ' },
+    url: 'https://admissioncuet.ac.bd/faq',
+    note: { en: 'Photo 300×300 px up to 300 KB; signature 300×80 px up to 100 KB. Opened and checked on 28 November 2026.', bn: 'ছবি ৩০০×৩০০ px, সর্বোচ্চ ৩০০ KB; স্বাক্ষর ৩০০×৮০ px, সর্বোচ্চ ১০০ KB। ২৮ নভেম্বর ২০২৬ তারিখে খুলে যাচাই করা।' },
+    official: true,
+  },
+  {
+    label: { en: 'Teamz Lab photo resizer page (second-hand)', bn: 'Teamz Lab রিসাইজার পেজ (দ্বিতীয় সূত্র)' },
+    url: 'https://tool.teamzlab.com/bd/photo-signature-resizer/',
+    note: { en: 'Reports 100 KB for the photo and 60 KB for the signature in a DG Food circular (2023) and the same pixel sizes in a DPE instruction. We have not opened those original circulars, so treat these KB figures as unconfirmed.', bn: 'ডিজি ফুডের সার্কুলারে (২০২৩) ছবি ১০০ KB ও স্বাক্ষর ৬০ KB এবং ডিপিই-র নির্দেশনায় একই পিক্সেল মাপ বলা আছে। আমরা মূল সার্কুলার খুলে দেখিনি, তাই এই KB সংখ্যা অনিশ্চিত ধরুন।' },
+    official: false,
+  },
+  {
+    label: { en: 'passport-photo.online stamp size page (commercial)', bn: 'passport-photo.online স্ট্যাম্প সাইজ পেজ (বাণিজ্যিক সাইট)' },
+    url: 'https://passport-photo.online/en-in/stamp-size-photo',
+    note: { en: `Lists ${mm('stamp')} as the base stamp size and mentions other variants. Not an official source. Checked on 28 November 2026.`, bn: `${bnDigits(mm('stamp')).replace('mm', 'মিমি')}-কে মূল স্ট্যাম্প সাইজ বলে এবং অন্য মাপের কথাও বলে। সরকারি সূত্র নয়। ২৮ নভেম্বর ২০২৬ তারিখে দেখা।` },
+    official: false,
+  },
 ];

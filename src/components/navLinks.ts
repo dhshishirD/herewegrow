@@ -52,6 +52,7 @@ export const LINK_GROUPS: LinkGroup[] = [
     links: [
       { href: '/tools/cv-checker', label: { en: 'CV checker', bn: 'সিভি চেকার' } },
       { href: '/tools/photo-signature-resizer', label: { en: 'Photo and signature resizer', bn: 'ছবি ও স্বাক্ষর রিসাইজার' } },
+      { href: '/tools/passport-size-photo-maker', label: { en: 'Passport size photo maker', bn: 'পাসপোর্ট সাইজ ছবি মেকার' } },
       { href: '/tools/application-letter', label: { en: 'Application letter', bn: 'আবেদনপত্র জেনারেটর' } },
       { href: '/tools/job-match', label: { en: 'CV and job ad match', bn: 'সিভি বনাম বিজ্ঞাপন ম্যাচ' } },
       { href: '/tools/scam-shield', label: { en: 'Fake job ad checker', bn: 'ভুয়া চাকরির বিজ্ঞপ্তি চেকার' } },
